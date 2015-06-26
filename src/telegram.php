@@ -1,7 +1,7 @@
 <?php
 namespace TelegramApi;
 
-class TelegramApi
+class Telegram
 {
 	private $api_key = '';
 
