@@ -1,5 +1,5 @@
 {
-    "name": "longman/telegramapi",
+    "name": "longman/telegram-api",
     "type": "library",
     "description": "PHP library",
     "keywords": ["string", "utilities", "translit"],

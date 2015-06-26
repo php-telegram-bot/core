@@ -1,5 +1,5 @@
 <?php
-namespace TelegramApi\entities;
+namespace Longman\TelegramApi\entities;
 
 
 
