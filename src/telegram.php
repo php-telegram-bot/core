@@ -1,5 +1,5 @@
 <?php
-namespace TelegramApi;
+namespace Longman\TelegramApi;
 
 class Telegram
 {
