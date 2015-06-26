@@ -1,13 +1,13 @@
 {
     "name": "longman/telegram-api",
     "type": "library",
-    "description": "PHP library for convert KA letters to LAT and back",
-    "keywords": ["ka", "georgia", "converter", "string", "utilities", "translit"],
+    "description": "PHP library",
+    "keywords": ["string", "utilities", "translit"],
     "license": "MIT",
-    "homepage": "https://github.com/akalongman/kautilities",
+    "homepage": "https://github.com/akalongman/telegram-api",
     "support": {
-        "issues": "https://github.com/akalongman/kautilities/issues",
-        "source": "https://github.com/akalongman/kautilities"
+        "issues": "https://github.com/akalongman/telegram-api/issues",
+        "source": "https://github.com/akalongman/telegram-api"
     },
     "authors": [
         {
