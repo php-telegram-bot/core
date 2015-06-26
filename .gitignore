@@ -1,6 +1,29 @@
+# IDE & System Related Files #
+.buildpath
+.project
+.settings
+.DS_Store
+.idea
+.phpintel
 composer.phar
+
+# Local System Files (i.e. cache, logs, etc.) #
+/cache
+/build/logs
+/build/coverage
+/tmp
+
+# Test Related Files #
+/phpunit.xml
+
+# Composer
 vendor/
 
-# Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
-# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
-# composer.lock
+
+# phpDocumentor Logs #
+phpdoc-*
+
+# OSX #
+._*
+.Spotlight-V100
+.Trashes
