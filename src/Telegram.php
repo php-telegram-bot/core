@@ -16,7 +16,7 @@ ini_set('memory_limit', -1);
 date_default_timezone_set('UTC');
 
 
-define('VERSION', '0.0.1');
+define('VERSION', '0.0.2');
 
 
 use Longman\TelegramBot\Entities\Update;
@@ -26,7 +26,7 @@ use Longman\TelegramBot\Entities\Update;
  * @author 		Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
  * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/telegram-api
+ * @link 			http://www.github.com/akalongman/telegram-bot
  */
 class Telegram
 {
