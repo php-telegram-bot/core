@@ -1,13 +1,13 @@
 {
-    "name": "longman/telegram-api",
+    "name": "longman/telegram-bot",
     "type": "library",
-    "description": "PHP library",
-    "keywords": ["string", "utilities", "translit"],
+    "description": "PHP telegram bot",
+    "keywords": ["telegram", "bot", "api"],
     "license": "MIT",
-    "homepage": "https://github.com/akalongman/telegram-api",
+    "homepage": "https://github.com/akalongman/php-telegram-bot",
     "support": {
-        "issues": "https://github.com/akalongman/telegram-api/issues",
-        "source": "https://github.com/akalongman/telegram-api"
+        "issues": "https://github.com/akalongman/php-telegram-bot/issues",
+        "source": "https://github.com/akalongman/php-telegram-bot"
     },
     "authors": [
         {
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Longman\\TelegramApi\\": "src/"
+            "Longman\\TelegramBot\\": "src/"
         }
     },
     "autoload-dev": {

@@ -13,7 +13,7 @@ use Longman\TelegramApi\Request;
 use Longman\TelegramApi\Command;
 use Longman\TelegramApi\Entities\Update;
 
-class EchoCommand extends Command
+class HelpCommand extends Command
 {
 
 	public function execute() {
@@ -28,7 +28,7 @@ class EchoCommand extends Command
 
   		$data = array();
   		$data['chat_id'] = $chat_id;
-  		$data['text'] = $text;
+  		$data['text'] = 'GeoBot v. '.VERSION;
 
 
 		$result = Request::sendMessage($data);

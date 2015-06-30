@@ -12,7 +12,8 @@ namespace Longman\TelegramApi;
 
 class Request
 {
-	private static $api_key = '';
+	private static $telegram;
+	private static $input;
 
 	private static $methods = array(
 		'getMe',
@@ -32,31 +33,55 @@ class Request
 
 
 
-	public static function setApiKey($api_key) {
-		self::$api_key = $api_key;
-		if (empty(self::$api_key)) {
-			throw new Exception('API KEY not defined!');
-		}
+	public static function initialize(Telegram $telegram) {
+		self::$telegram = $telegram;
 	}
 
 
 	public static function getInput() {
-		$input = file_get_contents('php://input');
-		return $input;
+		if ($update = self::$telegram->getCustomUpdate()) {
+			self::$input = $update;
+		} else {
+			self::$input = file_get_contents('php://input');
+		}
+		self::log();
+		return self::$input;
 	}
+
+
+	private static function log() {
+		if (!self::$telegram->getLogRequests()) {
+			return false;
+		}
+		$path = self::$telegram->getLogPath();
+		if (!$path) {
+			return false;
+		}
+
+		$status = file_put_contents($path, self::$input."\n", FILE_APPEND);
+
+		return $status;
+	}
+
 
 
 	public static function send($action, array $data = null) {
 		$ch = curl_init();
 		$curlConfig = array(
-		    CURLOPT_URL					=> 'https://api.telegram.org/bot'.self::$api_key.'/'.$action,
+		    CURLOPT_URL					=> 'https://api.telegram.org/bot'.self::$telegram->getApiKey().'/'.$action,
 		    CURLOPT_POST 				=> true,
 		    CURLOPT_RETURNTRANSFER	=> true,
+		    //CURLOPT_HTTPHEADER 		=> array('Content-Type: application/x-www-form-urlencoded'),
 		    //CURLOPT_HTTPHEADER 		=> array('Content-Type: text/plain'),
 		    //CURLOPT_POSTFIELDS			=> $data
 		);
 
 		if (!empty($data)) {
+			if (substr($data['text'], 0, 1) === '@') {
+				$data['text'] = ' '.$data['text'];
+			}
+
+			//$data = array_map('urlencode', $data);
 			$curlConfig[CURLOPT_POSTFIELDS] = $data;
 		}
 

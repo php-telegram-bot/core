@@ -13,6 +13,11 @@ namespace Longman\TelegramApi;
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
+date_default_timezone_set('UTC');
+
+
+define('VERSION', '0.0.1');
+
 
 use Longman\TelegramApi\Entities\Update;
 
@@ -54,13 +59,28 @@ class Telegram
 	protected $update;
 
 	/**
+	* Log Requests
+	*
+	* @var bool
+	*/
+	protected $log_requests;
+
+	/**
+	* Log path
+	*
+	* @var string
+	*/
+	protected $log_path;
+
+
+	/**
 	* Constructor
 	*
 	* @param string $api_key
 	*/
 	public function __construct($api_key) {
 		$this->api_key = $api_key;
-		Request::setApiKey($this->api_key);
+		Request::initialize($this);
 	}
 
 
@@ -77,6 +97,61 @@ class Telegram
 	}
 
 	/**
+	* Get custom update string for debug purposes
+	*
+	* @return string $update
+	*/
+	public function getCustomUpdate() {
+		return $this->update;
+	}
+
+	/**
+	* Set log requests
+	*
+	* @param bool $log_requests
+	*
+	* @return \Longman\TelegramApi\Telegram
+	*/
+	public function setLogRequests($log_requests) {
+		$this->log_requests = $log_requests;
+		return $this;
+	}
+
+	/**
+	* Get log requests
+	*
+	* @return bool
+	*/
+	public function getLogRequests() {
+		return $this->log_requests;
+	}
+
+
+
+	/**
+	* Set log path
+	*
+	* @param string $log_path
+	*
+	* @return \Longman\TelegramApi\Telegram
+	*/
+	public function setLogPath($log_path) {
+		$this->log_path = $log_path;
+		return $this;
+	}
+
+	/**
+	* Get log path
+	*
+	* @param string $log_path
+	*
+	* @return string
+	*/
+	public function getLogPath() {
+		return $this->log_path;
+	}
+
+	/**
 	* Handle bot request
 	*
 	* @return \Longman\TelegramApi\Telegram
@@ -85,9 +160,6 @@ class Telegram
 
 
 		$this->input = Request::getInput();
-		if (!empty($this->update)) {
-			$this->input = $this->update;
-		}
 
 
 		if (empty($this->input)) {
@@ -162,5 +234,16 @@ class Telegram
 		}
 		$this->commands_dir[] = $folder;
 	}
+
+	/**
+	* Get API KEY
+	*
+	* @return string
+	*/
+	public function getApiKey() {
+		return $this->api_key;
+	}
+
+
 
 }
