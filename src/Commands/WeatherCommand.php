@@ -36,7 +36,7 @@ class WeatherCommand extends Command
 
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if ($http_code !== 200) {
-			throw new Exception('Error receiving data from url');
+			throw new \Exception('Error receiving data from url');
 		}
 		curl_close($ch);
 

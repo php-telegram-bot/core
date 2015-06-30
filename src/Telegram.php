@@ -163,14 +163,14 @@ class Telegram
 
 
 		if (empty($this->input)) {
-			throw new Exception('Input is empty!');
+			throw new \Exception('Input is empty!');
 		}
 
 
 
 		$post = json_decode($this->input, true);
 		if (empty($post)) {
-			throw new Exception('Invalid JSON!');
+			throw new \Exception('Invalid JSON!');
 		}
 
 
@@ -230,7 +230,7 @@ class Telegram
 	*/
 	public function addCommandsPath($folder) {
 		if (!is_dir($folder)) {
-			throw new Exception('Commands folder not exists!');
+			throw new \Exception('Commands folder not exists!');
 		}
 		$this->commands_dir[] = $folder;
 	}

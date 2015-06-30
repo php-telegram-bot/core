@@ -28,7 +28,7 @@ class Update
 		$message = isset($data['message']) ? $data['message'] : null;
 
 		if (empty($update_id)) {
-			throw new Exception('update_id is empty!');
+			throw new \Exception('update_id is empty!');
 		}
 
 		$this->update_id = $update_id;

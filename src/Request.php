@@ -98,7 +98,7 @@ class Request
 	public static function sendMessage(array $data) {
 
 		if (empty($data)) {
-			throw new Exception('Data is empty!');
+			throw new \Exception('Data is empty!');
 		}
 
 		$result = self::send('sendMessage', $data);

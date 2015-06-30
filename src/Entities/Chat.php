@@ -23,7 +23,7 @@ class Chat
 
 		$this->id = isset($data['id']) ? $data['id'] : null;
 		if (empty($this->id)) {
-			throw new Exception('id is empty!');
+			throw new \Exception('id is empty!');
 		}
 
 	}

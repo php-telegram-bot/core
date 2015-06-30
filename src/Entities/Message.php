@@ -64,19 +64,19 @@ class Message
 
 		$this->message_id = isset($data['message_id']) ? $data['message_id'] : null;
 		if (empty($this->message_id)) {
-			throw new Exception('message_id is empty!');
+			throw new \Exception('message_id is empty!');
 		}
 
 		$this->from = isset($data['from']) ? $data['from'] : null;
 		if (empty($this->from)) {
-			throw new Exception('from is empty!');
+			throw new \Exception('from is empty!');
 		}
 		$this->from = new User($this->from);
 
 
 		$this->date = isset($data['date']) ? $data['date'] : null;
 		if (empty($this->date)) {
-			throw new Exception('date is empty!');
+			throw new \Exception('date is empty!');
 		}
 
 		$this->chat = isset($data['chat']) ? $data['chat'] : null;
