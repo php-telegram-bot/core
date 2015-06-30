@@ -1,13 +1,13 @@
 <?php
 /*
- * This file is part of the TelegramApi package.
+ * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Longman\TelegramApi;
+namespace Longman\TelegramBot;
 
 
 ini_set('max_execution_time', 0);
@@ -19,7 +19,7 @@ date_default_timezone_set('UTC');
 define('VERSION', '0.0.1');
 
 
-use Longman\TelegramApi\Entities\Update;
+use Longman\TelegramBot\Entities\Update;
 
 /**
  * @package 		Telegram
@@ -54,7 +54,7 @@ class Telegram
 	/**
 	* Update object
 	*
-	* @var \Longman\TelegramApi\Entities\Update
+	* @var \Longman\TelegramBot\Entities\Update
 	*/
 	protected $update;
 
@@ -89,7 +89,7 @@ class Telegram
 	*
 	* @param string $update
 	*
-	* @return \Longman\TelegramApi\Telegram
+	* @return \Longman\TelegramBot\Telegram
 	*/
 	public function setCustomUpdate($update) {
 		$this->update = $update;
@@ -110,7 +110,7 @@ class Telegram
 	*
 	* @param bool $log_requests
 	*
-	* @return \Longman\TelegramApi\Telegram
+	* @return \Longman\TelegramBot\Telegram
 	*/
 	public function setLogRequests($log_requests) {
 		$this->log_requests = $log_requests;
@@ -133,7 +133,7 @@ class Telegram
 	*
 	* @param string $log_path
 	*
-	* @return \Longman\TelegramApi\Telegram
+	* @return \Longman\TelegramBot\Telegram
 	*/
 	public function setLogPath($log_path) {
 		$this->log_path = $log_path;
@@ -154,7 +154,7 @@ class Telegram
 	/**
 	* Handle bot request
 	*
-	* @return \Longman\TelegramApi\Telegram
+	* @return \Longman\TelegramBot\Telegram
 	*/
 	public function handle() {
 
