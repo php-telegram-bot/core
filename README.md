@@ -14,7 +14,7 @@ Instructions
 1. Message @botfather https://telegram.me/botfather with the following text: `/newbot`
    If you don't know how to message by username, click the search field on your Telegram app and type `@botfather`, you should be able to initiate a conversation. Be careful not to send it to the wrong contact, because some users has similar usernames to `botfather`.
 
-   ![botfather initial conversation](http://imgur.com/aI26ixR)
+   ![botfather initial conversation](http://i.imgur.com/aI26ixR.png)
 
 2. @botfather replies with `Alright, a new bot. How are we going to call it? Please choose a name for your bot.`
 
@@ -37,7 +37,7 @@ Instructions
 
 8. Type `/setprivacy` to @botfather.
 
-   ![botfather later conversation](http://imgur.com/tWDVvh4)
+   ![botfather later conversation](http://i.imgur.com/tWDVvh4.png)
 
 9. @botfather replies with `Choose a bot to change group messages settings.`
 
