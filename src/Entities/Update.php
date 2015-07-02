@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities;
 
 
 
-class Update
+class Update extends Entity
 {
 
 	protected $update_id;

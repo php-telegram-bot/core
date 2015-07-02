@@ -72,6 +72,29 @@ class Telegram
 	*/
 	protected $log_path;
 
+	/**
+	* MySQL Integration
+	*
+	* @var boolean
+	*/
+	protected $mysql_enabled;
+
+
+	/**
+	* MySQL credentials
+	*
+	* @var array
+	*/
+	protected $mysql_credentials = array();
+
+
+	/**
+	* PDO object
+	*
+	* @var \PDO
+	*/
+	protected $pdo;
+
 
 	/**
 	* Constructor
@@ -175,10 +198,15 @@ class Telegram
 
 
 		$update = new Update($post);
+
+		$this->insertRequest($update);
+
 		$command = $update->getMessage()->getCommand();
 		if (!empty($command)) {
 			return $this->executeCommand($command, $update);
 		}
+
+
 
 	}
 
@@ -223,6 +251,77 @@ class Telegram
 		return false;
 	}
 
+
+	/**
+	* Insert request in db
+	*
+	* @return bool
+	*/
+	protected function insertRequest(Update $update) {
+		if (empty($this->pdo)) {
+			return false;
+		}
+
+		try {
+			$sth = $this->pdo->prepare('INSERT INTO `messages`
+				(
+				`update_id`, `message_id`, `from`, `date`, `chat`, `forward_from`,
+				`forward_date`, `reply_to_message`, `text`
+				)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+
+			$message = $update->getMessage();
+
+			$update_id = $update->getUpdateId();
+			$message_id = $message->getMessageId();
+			$from = $message->getFrom()->toJSON();
+			$date = $message->getDate();
+			$chat = $message->getChat()->toJSON();
+			$forward_from = $message->getForwardFrom();
+			$forward_date = $message->getForwardDate();
+			$reply_to_message = $message->getReplyToMessage();
+			if (is_object($reply_to_message)) {
+				$reply_to_message = $reply_to_message->toJSON();
+			}
+			$text = $message->getText();
+
+
+			$sth->bindParam(1, $update_id, \PDO::PARAM_INT);
+			$sth->bindParam(2, $message_id, \PDO::PARAM_INT);
+			$sth->bindParam(3, $from, \PDO::PARAM_STR, 255);
+			$sth->bindParam(4, $date, \PDO::PARAM_INT);
+			$sth->bindParam(5, $chat, \PDO::PARAM_STR);
+			$sth->bindParam(6, $forward_from, \PDO::PARAM_STR);
+			$sth->bindParam(7, $forward_date, \PDO::PARAM_INT);
+			$sth->bindParam(8, $reply_to_message, \PDO::PARAM_STR);
+			$sth->bindParam(9, $text, \PDO::PARAM_STR);
+
+			$status = $sth->execute();
+
+
+
+
+
+			/*$status = $executeQuery->execute(
+				array(
+					$update_id, $message_id, $from, $date, $chat, $forward_from,
+					$forward_date, $reply_to_message, $text,
+					)
+
+				);*/
+
+
+
+		}
+		catch(PDOException $e) {
+			throw new \Exception($e->getMessage());
+		}
+
+
+		return true;
+	}
+
+
 	/**
 	* Add custom commands path
 	*
@@ -242,6 +341,47 @@ class Telegram
 	*/
 	public function getApiKey() {
 		return $this->api_key;
+	}
+
+	/**
+	* Set Webhook for bot
+	*
+	* @return string
+	*/
+	public function setWebHook($url){
+		return Request::send('setWebhook', array('url'=>$url));
+	}
+
+
+	/**
+	* Enable MySQL integration
+	*
+	* @param array $credentials MySQL credentials
+	*
+	* @return string
+	*/
+	public function enableMySQL(array $credentials){
+		if (empty($credentials)) {
+			throw new \Exception('MySQL credentials not provided!');
+		}
+		$this->mysql_credentials = $credentials;
+
+		$dsn = 'mysql:host='.$credentials['host'].';dbname='.$credentials['database'];
+		$options = array(
+			\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+		);
+		try {
+			$pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
+			$pdo->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+		}
+		catch (\PDOException $e) {
+			throw new \Exception($e->getMessage());
+		}
+
+		$this->pdo = $pdo;
+		$this->mysql_enabled = true;
+
+		return $this;
 	}
 
 

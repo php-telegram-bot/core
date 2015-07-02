@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities;
 
 
 
-class Message
+class Message extends Entity
 {
 	protected $message_id;
 
@@ -88,6 +88,19 @@ class Message
 
 		$this->text = isset($data['text']) ? $data['text'] : null;
 
+
+		$this->forward_from = isset($data['forward_from']) ? $data['forward_from'] : null;
+		if (!empty($this->forward_from)) {
+			$this->forward_from = new User($this->forward_from);
+		}
+
+		$this->forward_date = isset($data['forward_date']) ? $data['forward_date'] : null;
+
+		$this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
+		if (!empty($this->reply_to_message)) {
+			$this->reply_to_message = new Message($this->reply_to_message);
+		}
+
 	}
 
 
@@ -129,6 +142,21 @@ class Message
 	public function getChat() {
 
 		return $this->chat;
+	}
+
+	public function getForwardFrom() {
+
+		return $this->forward_from;
+	}
+
+	public function getForwardDate() {
+
+		return $this->forward_date;
+	}
+
+	public function getReplyToMessage() {
+
+		return $this->reply_to_message;
 	}
 
 	public function getText($without_cmd = false) {

@@ -59,7 +59,7 @@ Instructions
 ## Installation
 You need server with https and composer support.
 
-Create composer.json filde:
+Create composer.json file:
 ```js
 {
     "name": "yourproject/yourproject",
@@ -97,7 +97,7 @@ $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
 
 ```
 
-After c reate hook.php and put:
+After create hook.php and put:
 ```php
 <?php
 
@@ -110,6 +110,16 @@ $telegram = new Longman\TelegramBot\Telegram($API_KEY);
 
 // handle telegram webhook request
 $telegram->handle();
+
+```
+
+If you want insert in database messages for further usage in commands, create database and import structure.sql and enable mysql support after object creation and BEFORE handle method
+```php
+<?php
+
+$credentials = array('host'=>'localhost', 'user'=>'dbuser', 'password'=>'dbpass', 'database'=>'dbname');
+
+$telegram->enableMySQL($credentials);
 
 ```
 

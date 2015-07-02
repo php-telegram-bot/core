@@ -10,7 +10,7 @@
 namespace Longman\TelegramBot\Entities;
 
 
-class Chat
+class Chat extends Entity
 {
 
 	protected $id;
@@ -25,6 +25,11 @@ class Chat
 		if (empty($this->id)) {
 			throw new \Exception('id is empty!');
 		}
+
+		$this->title = isset($data['title']) ? $data['title'] : null;
+		$this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
+		$this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
+		$this->username = isset($data['username']) ? $data['username'] : null;
 
 	}
 

@@ -70,14 +70,11 @@ class Request
 		$curlConfig = array(
 		    CURLOPT_URL					=> 'https://api.telegram.org/bot'.self::$telegram->getApiKey().'/'.$action,
 		    CURLOPT_POST 				=> true,
-		    CURLOPT_RETURNTRANSFER	=> true,
-		    //CURLOPT_HTTPHEADER 		=> array('Content-Type: application/x-www-form-urlencoded'),
-		    //CURLOPT_HTTPHEADER 		=> array('Content-Type: text/plain'),
-		    //CURLOPT_POSTFIELDS			=> $data
+		    CURLOPT_RETURNTRANSFER	=> true
 		);
 
 		if (!empty($data)) {
-			if (substr($data['text'], 0, 1) === '@') {
+			if (!empty($data['text']) && substr($data['text'], 0, 1) === '@') {
 				$data['text'] = ' '.$data['text'];
 			}
 

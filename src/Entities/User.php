@@ -10,7 +10,7 @@
 namespace Longman\TelegramBot\Entities;
 
 
-class User
+class User extends Entity
 {
 
 	protected $id;
