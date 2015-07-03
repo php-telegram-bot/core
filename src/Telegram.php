@@ -128,6 +128,29 @@ class Telegram
 		return $this->update;
 	}
 
+
+	/**
+	* Get commands list
+	*
+	* @return string $update
+	*/
+	public function getCommandsList() {
+		// iterate files
+		// getCommandClass
+
+
+
+
+
+
+
+		return $this->update;
+	}
+
+
+
+
+
 	/**
 	* Set log requests
 	*
@@ -229,7 +252,7 @@ class Telegram
 	*
 	* @return object
 	*/
-	protected function getCommandClass($command, Update $update) {
+	protected function getCommandClass($command, Update $update = null) {
 		$this->commands_dir = array_unique($this->commands_dir);
 		$this->commands_dir = array_reverse($this->commands_dir);
 		$class_name = ucfirst($command).'Command';
@@ -237,13 +260,21 @@ class Telegram
 		foreach($this->commands_dir as $dir) {
 			if (is_file($dir.'/'.$class_name.'.php')) {
 				require_once($dir.'/'.$class_name.'.php');
-				$class = new $class_name($update);
+				$class = new $class_name($this);
+				if (!empty($update)) {
+					$class->setUpdate($update);
+				}
+
 				return $class;
 			}
 		}
 
 		$class_name = __NAMESPACE__ . '\\Commands\\' . $class_name;
-		$class = new $class_name($update);
+		$class = new $class_name($this);
+		if (!empty($update)) {
+			$class->setUpdate($update);
+		}
+
 		if (is_object($class)) {
 			return $class;
 		}

@@ -15,6 +15,8 @@ use Longman\TelegramBot\Entities\Update;
 
 class HelpCommand extends Command
 {
+	protected $usage = 'Usage: /help <command>';
+	protected $version = '1.0.0';
 
 	public function execute() {
 		$update = $this->getUpdate();

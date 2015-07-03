@@ -13,14 +13,22 @@ use Longman\TelegramBot\Entities\Update;
 
 abstract class Command
 {
+	protected $telegram;
 	protected $update;
 	protected $message;
 	protected $command;
 
-	public function __construct(Update $update) {
+	protected $usage = 'Command help text';
+	protected $version = '1.0.0';
+
+	public function __construct(Telegram $telegram) {
+		$this->telegram = $telegram;
+	}
+
+	public function setUpdate(Update $update) {
 		$this->update = $update;
 		$this->message = $this->update->getMessage();
-
+		return $this;
 	}
 
 
@@ -35,11 +43,26 @@ abstract class Command
 		return $this->message;
 	}
 
+
+	public function getTelegram() {
+		return $this->telegram;
+	}
+
 	public function setCommand($command) {
 		$this->command = $command;
 		return $this;
 	}
 
+	public function getUsage() {
+		return $this->usage;
+	}
 
+	public function getVersion() {
+		return $this->version;
+	}
+
+	public function getHelp() {
+		return $this->getUsage()."\n".$this->getVersion();
+	}
 
 }
