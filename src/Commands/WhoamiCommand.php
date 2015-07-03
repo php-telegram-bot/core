@@ -6,7 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * writteno by Marco Boretto <marco.bore@gmail.com>
+ *
+ * Written by Marco Boretto <marco.bore@gmail.com>
  */
 
 namespace Longman\TelegramBot\Commands;
@@ -25,13 +26,14 @@ class WhoamiCommand extends Command
 
 
 		$chat_id = $message->getChat()->getId();
+		$message_id = $message->getMessageId();
 		$text = $message->getText(true);
-
-		$from = $message->getFrom()->getFirstName().' '.$message->getFrom()->getLastName().' '.$message->getFrom()->getUsername();
 
   		$data = array();
   		$data['chat_id'] = $chat_id;
-  		$data['text'] = 'Your name is: ' . $from;
+   		$data['reply_to_message_id'] = $message_id;
+  		$data['text'] = 'Your name is: ' . $message->getFrom()->getFirstName().' '.$message->getFrom()->getLastName();
+  		$data['text'] = "\n".'Username: ' . $message->getFrom()->getUsername();
 
 
 		$result = Request::sendMessage($data);
