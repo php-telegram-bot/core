@@ -23,24 +23,27 @@ class CalcCommand extends Command
 		$message = $this->getMessage();
 
 
-
 		$chat_id = $message->getChat()->getId();
 		$message_id = $message->getMessageId();
 		$text = $message->getText(true);
 
 
-		$text = preg_replace('/[^0-9\+\-\*\/\(\) ]/i', '', trim($text));
-		$compute = create_function('', 'return (' . trim($text) . ');' );
-
-
   		$data = array();
   		$data['chat_id'] = $chat_id;
    		$data['reply_to_message_id'] = $message_id;
-  		$data['text'] = 0 + $compute();
+  		$data['text'] = $this->compute($text);
 
 
 		$result = Request::sendMessage($data);
 
+	}
+
+
+	protected function compute($text) {
+		$text = preg_replace('/[^0-9\+\-\*\/\(\) ]/i', '', trim($text));
+		$compute = create_function('', 'return (' . trim($text) . ');' );
+		$result = 0 + $compute();
+		return $result;
 	}
 
 
