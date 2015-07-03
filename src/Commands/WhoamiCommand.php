@@ -32,8 +32,9 @@ class WhoamiCommand extends Command
   		$data = array();
   		$data['chat_id'] = $chat_id;
    		$data['reply_to_message_id'] = $message_id;
-  		$data['text'] = 'Your name is: ' . $message->getFrom()->getFirstName().' '.$message->getFrom()->getLastName();
-  		$data['text'] = "\n".'Username: ' . $message->getFrom()->getUsername();
+  		$data['text'] = 'Your Id: ' . $message->getFrom()->getId();
+  		$data['text'] .= "\n".'Name: ' . $message->getFrom()->getFirstName().' '.$message->getFrom()->getLastName();
+  		$data['text'] .= "\n".'Username: ' . $message->getFrom()->getUsername();
 
 
 		$result = Request::sendMessage($data);

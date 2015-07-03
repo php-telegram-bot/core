@@ -33,16 +33,27 @@ class CalcCommand extends Command
    		$data['reply_to_message_id'] = $message_id;
   		$data['text'] = $this->compute($text);
 
-
 		$result = Request::sendMessage($data);
 
 	}
 
 
-	protected function compute($text) {
-		$text = preg_replace('/[^0-9\+\-\*\/\(\) ]/i', '', trim($text));
-		$compute = create_function('', 'return (' . trim($text) . ');' );
-		$result = 0 + $compute();
+	protected function compute($expression) {
+
+		// Load the compiler
+		$compiler = \Hoa\Compiler\Llk::load(
+		    new \Hoa\File\Read('hoa://Library/Math/Arithmetic.pp')
+		);
+
+		// Load the visitor, aka the "evaluator"
+		$visitor = new \Hoa\Math\Visitor\Arithmetic();
+
+		// Parse the expression
+		$ast = $compiler->parse($expression);
+
+		// Evaluate
+		$result = $visitor->visit($ast);
+
 		return $result;
 	}
 
