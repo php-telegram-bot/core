@@ -88,12 +88,13 @@ Create set.php and put:
 $loader = require __DIR__.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
+$BOT_NAME = 'namebot';
 
 // create Telegram API object
-$telegram = new Longman\TelegramBot\Telegram($API_KEY);
+$telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
 
 // set webhook
-$telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
+echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
 
 ```
 
@@ -104,9 +105,9 @@ After create hook.php and put:
 $loader = require __DIR__.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
-
+$BOT_NAME = 'namebot';
 // create Telegram API object
-$telegram = new Longman\TelegramBot\Telegram($API_KEY);
+$telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
 
 // handle telegram webhook request
 $telegram->handle();

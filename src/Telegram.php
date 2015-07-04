@@ -37,6 +37,14 @@ class Telegram
 	*/
 	protected $api_key = '';
 
+       /**
+        * Telegram API name 
+        *
+        * @var string
+        */
+        protected $bot_name = '';
+
+
 	/**
 	* Raw request data
 	*
@@ -101,8 +109,10 @@ class Telegram
 	*
 	* @param string $api_key
 	*/
-	public function __construct($api_key) {
+	public function __construct($api_key,$bot_name) {
 		$this->api_key = $api_key;
+                $this->bot_name = $bot_name;
+
 		Request::initialize($this);
 	}
 
@@ -220,7 +230,7 @@ class Telegram
 		}
 
 
-		$update = new Update($post);
+		$update = new Update($post,$this->bot_name);
 
 		$this->insertRequest($update);
 
@@ -373,6 +383,15 @@ class Telegram
 	public function getApiKey() {
 		return $this->api_key;
 	}
+
+        /**
+        * Get BOT NAME 
+        *
+        * @return string
+        */
+        public function getBotName() {
+                return $this->bot_name;
+        }
 
 	/**
 	* Set Webhook for bot

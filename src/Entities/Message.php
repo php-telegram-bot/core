@@ -59,8 +59,11 @@ class Message extends Entity
 
 	protected $_command;
 
+        protected $bot_name;
 
-	public function __construct(array $data) {
+	publicfunction __construct(array $data,$bot_name) {
+
+		$this->bot_name = $bot_name;
 
 		$this->message_id = isset($data['message_id']) ? $data['message_id'] : null;
 		if (empty($this->message_id)) {
@@ -102,7 +105,12 @@ class Message extends Entity
 		}
 
 	}
+	//return the entire command like /echo or /echo@bot1 if specified
+        public function getFullCommand(){
 
+                return  strtok($this->text,  ' ');
+
+        }
 
 
 	public function getCommand() {
@@ -110,13 +118,24 @@ class Message extends Entity
 			return $this->_command;
 		}
 
-
-		$cmd = strtok($this->text,  ' ');
-
+		$cmd = $this->getFullCommand();
+		
 		if (substr($cmd, 0, 1) === '/') {
 			$cmd = substr($cmd, 1);
-			return $this->_command = $cmd;
+		
+			//check if command is follow by botname
+			$split_cmd = explode('@', $cmd);
+			if(isset($split_cmd[1])){
+			        //command is followed by name check if is addressed to me
+			        if(strtolower($split_cmd[1]) == strtolower($this->bot_name)){
+			                return $this->_command = $split_cmd[0];
+			        }
+			}else{
+			        //command is not followed by name
+			        return $this->_command = $cmd;
+			}
 		}
+
 		return false;
 	}
 
@@ -162,8 +181,8 @@ class Message extends Entity
 	public function getText($without_cmd = false) {
 		$text = $this->text;
 		if ($without_cmd) {
-			$command = $this->getCommand();
-			$text = substr($text, strlen('/'.$command.' '), strlen($text));
+			$command = $this->getFullCommand();
+			$text = substr($text, strlen($command.' '), strlen($text));
 		}
 
 		return $text;

@@ -17,11 +17,12 @@ class Update extends Entity
 
 	protected $update_id;
 	protected $message;
+        protected $bot_name;
 
 
 
 
-	public function __construct(array $data) {
+	public function __construct(array $data, $bot_name) {
 
 		$update_id = isset($data['update_id']) ? $data['update_id'] : null;
 
@@ -31,8 +32,9 @@ class Update extends Entity
 			throw new \Exception('update_id is empty!');
 		}
 
+		$this->bot_name = $bot_name;
 		$this->update_id = $update_id;
-		$this->message = new Message($message);
+		$this->message = new Message($message,$bot_name);
 
 	}
 
