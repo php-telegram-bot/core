@@ -61,7 +61,7 @@ class Message extends Entity
 
         protected $bot_name;
 
-	publicfunction __construct(array $data,$bot_name) {
+	public function __construct(array $data,$bot_name) {
 
 		$this->bot_name = $bot_name;
 
