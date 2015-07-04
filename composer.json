@@ -1,5 +1,5 @@
 {
-    "name": "mboretto/php-telegram-bot",
+    "name": "longman/telegram-bot",
     "type": "library",
     "description": "PHP telegram bot",
     "keywords": ["telegram", "bot", "api"],
@@ -7,7 +7,7 @@
     "homepage": "https://github.com/akalongman/php-telegram-bot",
     "support": {
         "issues": "https://github.com/akalongman/php-telegram-bot/issues",
-        "source": "https://github.com/mboretto/php-telegram-bot"
+        "source": "https://github.com/akalongman/php-telegram-bot"
     },
     "authors": [
         {
@@ -19,7 +19,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+	"hoa/math":"~0.0"
         
     },
     "autoload": {
