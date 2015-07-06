@@ -3,7 +3,7 @@
 
 [![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/kautilities)
+[![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
@@ -106,14 +106,13 @@ $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 
 try {
-	// create Telegram API object
-	$telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
+    // create Telegram API object
+    $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
-	// set webhook
-	echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
-}
-catch (Longman\TelegramBot\Exception\TelegramException $e) {
-	echo $e->getMessage();
+    // set webhook
+    echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
+} catch (Longman\TelegramBot\Exception\TelegramException $e) {
+    echo $e->getMessage();
 }
 ```
 And open your set.php via browser
@@ -129,15 +128,14 @@ $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 
 try {
-	// create Telegram API object
-	$telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
+    // create Telegram API object
+    $telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
 
-	// handle telegram webhook request
-	$telegram->handle();
-}
-catch (Longman\TelegramBot\Exception\TelegramException $e) {
-	// log telegram errors
-	// echo $e->getMessage();
+    // handle telegram webhook request
+    $telegram->handle();
+} catch (Longman\TelegramBot\Exception\TelegramException $e) {
+    // log telegram errors
+    // echo $e->getMessage();
 }
 ```
 

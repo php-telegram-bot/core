@@ -1,7 +1,7 @@
 Contributing
 -------------
 
-Before you contribute code to php-telegram-bot, please make sure it conforms to the PHPCS coding standard and that the php-telegram-bot unit tests still pass. The easiest way to contribute is to work on a checkout of the repository, or your own fork, rather than an installed PEAR version. If you do this, you can run the following commands to check if everything is ready to submit:
+Before you contribute code to php-telegram-bot, please make sure it conforms to the PSR-2 coding standard and that the php-telegram-bot unit tests still pass. The easiest way to contribute is to work on a checkout of the repository, or your own fork. If you do this, you can run the following commands to check if everything is ready to submit:
 
     cd php-telegram-bot
     composer update
