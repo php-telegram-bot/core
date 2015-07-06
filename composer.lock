@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "02634aa637830c6e9324925abceb4624",
+    "hash": "e4b463e1eea6333a1eaf38457a54b29c",
     "packages": [
         {
             "name": "hoa/compiler",
@@ -1868,7 +1868,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "ext-pdo": "*"
     },
     "platform-dev": []

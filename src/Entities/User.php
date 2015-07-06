@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the TelegramBot package.
  *
@@ -6,7 +7,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- */
+*/
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -14,57 +15,49 @@ use Longman\TelegramBot\Exception\TelegramException;
 class User extends Entity
 {
 
-	protected $id;
-	protected $first_name;
-	protected $last_name;
-	protected $username;
+    protected $id;
+    protected $first_name;
+    protected $last_name;
+    protected $username;
 
+    public function __construct(array $data)
+    {
 
+        $this->id = isset($data['id']) ? $data['id'] : null;
+        if (empty($this->id)) {
+            throw new TelegramException('id is empty!');
+        }
 
+        $this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
+        if (empty($this->first_name)) {
+            throw new TelegramException('first_name is empty!');
+        }
 
-	public function __construct(array $data) {
+        $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
+        $this->username = isset($data['username']) ? $data['username'] : null;
+    }
 
-		$this->id = isset($data['id']) ? $data['id'] : null;
-		if (empty($this->id)) {
-			throw new TelegramException('id is empty!');
-		}
+    public function getId()
+    {
 
-		$this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
-		if (empty($this->first_name)) {
-			throw new TelegramException('first_name is empty!');
-		}
+        return $this->id;
+    }
 
-		$this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
-		$this->username = isset($data['username']) ? $data['username'] : null;
+    public function getFirstName()
+    {
 
-	}
+        return $this->first_name;
+    }
 
+    public function getLastName()
+    {
 
-	public function getId() {
+        return $this->last_name;
+    }
 
-		return $this->id;
-	}
+    public function getUsername()
+    {
 
-	public function getFirstName() {
-
-		return $this->first_name;
-	}
-
-	public function getLastName() {
-
-		return $this->last_name;
-	}
-
-
-	public function getUsername() {
-
-		return $this->username;
-	}
-
-
-
-
-
-
-
+        return $this->username;
+    }
 }

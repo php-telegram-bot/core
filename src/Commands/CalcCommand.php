@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the TelegramBot package.
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  *
  * Written by Marco Boretto <marco.bore@gmail.com>
- */
+*/
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Request;
@@ -17,52 +18,45 @@ use Longman\TelegramBot\Entities\Update;
 
 class CalcCommand extends Command
 {
-	protected $name = 'calc';
-	protected $description = 'Calculate math expression';
-	protected $usage = '/calc <expression>';
-	protected $version = '1.0.0';
-	protected $enabled = true;
+    protected $name = 'calc';
+    protected $description = 'Calculate math expression';
+    protected $usage = '/calc <expression>';
+    protected $version = '1.0.0';
+    protected $enabled = true;
 
+    public function execute()
+    {
+        $update = $this->getUpdate();
+        $message = $this->getMessage();
 
-	public function execute() {
-		$update = $this->getUpdate();
-		$message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+        $message_id = $message->getMessageId();
+        $text = $message->getText(true);
 
+        $data = array();
+        $data['chat_id'] = $chat_id;
+        $data['reply_to_message_id'] = $message_id;
+        $data['text'] = $this->compute($text);
 
-		$chat_id = $message->getChat()->getId();
-		$message_id = $message->getMessageId();
-		$text = $message->getText(true);
+        $result = Request::sendMessage($data);
+        return $result;
+    }
 
+    protected function compute($expression)
+    {
 
-  		$data = array();
-  		$data['chat_id'] = $chat_id;
-   		$data['reply_to_message_id'] = $message_id;
-  		$data['text'] = $this->compute($text);
+        // Load the compiler
+        $compiler = \Hoa\Compiler\Llk::load(new \Hoa\File\Read('hoa://Library/Math/Arithmetic.pp'));
 
-		$result = Request::sendMessage($data);
-		return $result;
-	}
+        // Load the visitor, aka the "evaluator"
+        $visitor = new \Hoa\Math\Visitor\Arithmetic();
 
+        // Parse the expression
+        $ast = $compiler->parse($expression);
 
-	protected function compute($expression) {
+        // Evaluate
+        $result = $visitor->visit($ast);
 
-		// Load the compiler
-		$compiler = \Hoa\Compiler\Llk::load(
-		    new \Hoa\File\Read('hoa://Library/Math/Arithmetic.pp')
-		);
-
-		// Load the visitor, aka the "evaluator"
-		$visitor = new \Hoa\Math\Visitor\Arithmetic();
-
-		// Parse the expression
-		$ast = $compiler->parse($expression);
-
-		// Evaluate
-		$result = $visitor->visit($ast);
-
-		return $result;
-	}
-
-
+        return $result;
+    }
 }
-

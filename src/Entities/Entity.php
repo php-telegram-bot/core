@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the TelegramBot package.
  *
@@ -6,36 +7,28 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- */
+*/
 namespace Longman\TelegramBot\Entities;
-
 
 class Entity
 {
 
+    public function toJSON()
+    {
+        $reflection = new \ReflectionObject($this);
+        $properties = $reflection->getProperties();
 
-	public function toJSON() {
-		$reflection = new \ReflectionObject($this);
-		$properties = $reflection->getProperties();
+        $fields = array();
 
-		$fields = array();
+        foreach ($properties as $property) {
+            $name = $property->getName();
+            $property->setAccessible(true);
+            $value = $property->getValue($this);
+            $fields[$name] = $value;
+        }
 
-		foreach($properties as $property) {
-			$name = $property->getName();
-			$property->setAccessible(true);
-			$value = $property->getValue($this);
-			$fields[$name] = $value;
-		}
+        $json = json_encode($fields);
 
-		$json = json_encode($fields);
-
-		return $json;
-	}
-
-
-
-
-
-
-
+        return $json;
+    }
 }

@@ -100,14 +100,14 @@ Create set.php and put:
 ```php
 <?php
 
-$loader = require __DIR__.'/vendor/autoload.php';
+$loader = require \_\_DIR\_\_.'/vendor/autoload.php';
 
-$API_KEY = 'your_bot_api_key';
+$API\_KEY = 'your\_bot\_api\_key';
 $BOT_NAME = 'namebot';
 
 try {
 	// create Telegram API object
-	$telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
+	$telegram = new Longman\TelegramBot\Telegram($API\_KEY, $BOT\_NAME);
 
 	// set webhook
 	echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
@@ -123,9 +123,9 @@ After create hook.php and put:
 ```php
 <?php
 
-$loader = require __DIR__.'/vendor/autoload.php';
+$loader = require \_\_DIR\_\_.'/vendor/autoload.php';
 
-$API_KEY = 'your_bot_api_key';
+$API\_KEY = 'your\_bot\_api\_key';
 $BOT_NAME = 'namebot';
 
 try {
@@ -154,9 +154,17 @@ $telegram->enableMySQL($credentials);
 
 This code is available on [Github][0]. Pull requests are welcome.
 
+
 Troubleshooting
----------------
+-------------
+
 If you like living on the edge, please report any bugs you find on the [PHP Telegram Bot issues](https://github.com/akalongman/php-telegram-bot/issues) page.
+
+
+Contributing
+-------------
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
 
 
 ## Credits
