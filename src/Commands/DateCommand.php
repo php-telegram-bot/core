@@ -46,7 +46,7 @@ class DateCommand extends Command
   		$data = json_decode($data, true);
     		if (empty($data)) {
   			return false;
-  		}
+		}
 
   		if ($data['status'] !== 'OK') {
   			return false;
@@ -82,7 +82,7 @@ class DateCommand extends Command
   		$data = json_decode($data, true);
     		if (empty($data)) {
   			return false;
-  		}
+		}
 
   		if ($data['status'] !== 'OK') {
   			return false;
