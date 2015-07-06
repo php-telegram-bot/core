@@ -4,10 +4,10 @@
 [![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/kautilities)
-[![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/php-telegram-bot)
-[![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/php-telegram-bot)
-[![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/php-telegram-bot)
-[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://packagist.org/packages/stichoza/longman/php-telegram-bot)
+[![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 
 
 A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
@@ -76,7 +76,7 @@ Create composer.json file:
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "longman/telegram-bot": "*"
     }
 }
@@ -100,14 +100,14 @@ Create set.php and put:
 ```php
 <?php
 
-$loader = require \_\_DIR\_\_.'/vendor/autoload.php';
+$loader = require __DIR__.'/vendor/autoload.php';
 
-$API\_KEY = 'your\_bot\_api\_key';
+$API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 
 try {
 	// create Telegram API object
-	$telegram = new Longman\TelegramBot\Telegram($API\_KEY, $BOT\_NAME);
+	$telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
 	// set webhook
 	echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
@@ -123,9 +123,9 @@ After create hook.php and put:
 ```php
 <?php
 
-$loader = require \_\_DIR\_\_.'/vendor/autoload.php';
+$loader = require __DIR__.'/vendor/autoload.php';
 
-$API\_KEY = 'your\_bot\_api\_key';
+$API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 
 try {
