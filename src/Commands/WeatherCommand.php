@@ -15,6 +15,12 @@ use Longman\TelegramBot\Entities\Update;
 
 class WeatherCommand extends Command
 {
+	protected $name = 'weather';
+	protected $description = 'Show weather by location';
+	protected $usage = '/weather <location>';
+	protected $version = '1.0.0';
+	protected $enabled = true;
+
 
 	private function getWeather($location) {
 		$url = 'http://api.openweathermap.org/data/2.5/weather?q='.$location.'&units=metric';
@@ -115,6 +121,7 @@ class WeatherCommand extends Command
 
 
 		$result = Request::sendMessage($data);
+		return $result;
 	}
 
 

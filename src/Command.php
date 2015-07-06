@@ -18,8 +18,11 @@ abstract class Command
 	protected $message;
 	protected $command;
 
-	protected $usage = 'Command help text';
+	protected $description = 'Command help';
+	protected $usage = 'Command usage';
 	protected $version = '1.0.0';
+	protected $enabled = true;
+	protected $name = '';
 
 	public function __construct(Telegram $telegram) {
 		$this->telegram = $telegram;
@@ -61,8 +64,15 @@ abstract class Command
 		return $this->version;
 	}
 
-	public function getHelp() {
-		return $this->getUsage()."\n".$this->getVersion();
+	public function getDescription() {
+		return $this->description;
 	}
 
+	public function getName() {
+		return $this->name;
+	}
+
+	public function isEnabled() {
+		return $this->enabled;
+	}
 }

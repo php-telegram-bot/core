@@ -16,20 +16,28 @@ ini_set('memory_limit', -1);
 date_default_timezone_set('UTC');
 
 
-define('VERSION', '0.0.2');
+define('BASE_PATH', dirname(__FILE__));
 
 
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @package 		Telegram
  * @author 		Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
  * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/telegram-bot
+ * @link 			http://www.github.com/akalongman/php-telegram-bot
  */
 class Telegram
 {
+	/**
+	* Version
+	*
+	* @var string
+	*/
+	protected $version = '0.0.5';
+
 	/**
 	* Telegram API key
 	*
@@ -37,12 +45,12 @@ class Telegram
 	*/
 	protected $api_key = '';
 
-       /**
-        * Telegram API name 
-        *
-        * @var string
-        */
-        protected $bot_name = '';
+	/**
+	* Telegram Bot name
+	*
+	* @var string
+	*/
+	protected $bot_name = '';
 
 
 	/**
@@ -109,9 +117,18 @@ class Telegram
 	*
 	* @param string $api_key
 	*/
-	public function __construct($api_key,$bot_name) {
+	public function __construct($api_key, $bot_name) {
+		if (empty($api_key)) {
+			throw new TelegramException('API KEY not defined!');
+		}
+
+		if (empty($bot_name)) {
+			throw new TelegramException('Bot Username not defined!');
+		}
+
+
 		$this->api_key = $api_key;
-                $this->bot_name = $bot_name;
+		$this->bot_name = $bot_name;
 
 		Request::initialize($this);
 	}
@@ -142,19 +159,41 @@ class Telegram
 	/**
 	* Get commands list
 	*
-	* @return string $update
+	* @return array $commands
 	*/
 	public function getCommandsList() {
-		// iterate files
-		// getCommandClass
 
+		$commands = array();
+		try {
+			$files = new \DirectoryIterator(BASE_PATH.'/Commands');
+		}
+		catch(\Exception $e) {
+			throw new TelegramException('Can not open path: '.BASE_PATH.'/Commands');
+		}
 
+		foreach ($files as $fileInfo) {
+			if ($fileInfo->isDot()) continue;
+			$name = $fileInfo->getFilename();
+			$name = strtolower(str_replace('Command.php', '', $name));
+			$commands[$name] = $this->getCommandClass($name);
+		}
 
+		if (!empty($this->commands_dir)) {
+			foreach ($this->commands_dir as $dir) {
+				if (!is_dir($dir)) {
+					continue;
+				}
 
+				foreach (new \DirectoryIterator($dir) as $fileInfo) {
+					if ($fileInfo->isDot()) continue;
+					$name = $fileInfo->getFilename();
+					$name = strtolower(str_replace('Command.php', '', $name));
+					$commands[$name] = $this->getCommandClass($name);
+				}
+			}
+		}
 
-
-
-		return $this->update;
+		return $commands;
 	}
 
 
@@ -219,18 +258,19 @@ class Telegram
 
 
 		if (empty($this->input)) {
-			throw new \Exception('Input is empty!');
+			throw new TelegramException('Input is empty!');
 		}
 
 
 
 		$post = json_decode($this->input, true);
 		if (empty($post)) {
-			throw new \Exception('Invalid JSON!');
+			throw new TelegramException('Invalid JSON!');
 		}
 
 
-		$update = new Update($post,$this->bot_name);
+
+		$update = new Update($post, $this->bot_name);
 
 		$this->insertRequest($update);
 
@@ -262,7 +302,7 @@ class Telegram
 	*
 	* @return object
 	*/
-	protected function getCommandClass($command, Update $update = null) {
+	public function getCommandClass($command, Update $update = null) {
 		$this->commands_dir = array_unique($this->commands_dir);
 		$this->commands_dir = array_reverse($this->commands_dir);
 		$class_name = ucfirst($command).'Command';
@@ -355,7 +395,7 @@ class Telegram
 
 		}
 		catch(PDOException $e) {
-			throw new \Exception($e->getMessage());
+			throw new TelegramException($e->getMessage());
 		}
 
 
@@ -370,9 +410,10 @@ class Telegram
 	*/
 	public function addCommandsPath($folder) {
 		if (!is_dir($folder)) {
-			throw new \Exception('Commands folder not exists!');
+			throw new TelegramException('Commands folder not exists!');
 		}
 		$this->commands_dir[] = $folder;
+		return $this;
 	}
 
 	/**
@@ -384,14 +425,23 @@ class Telegram
 		return $this->api_key;
 	}
 
-        /**
-        * Get BOT NAME 
-        *
-        * @return string
-        */
-        public function getBotName() {
-                return $this->bot_name;
-        }
+	/**
+	* Get BOT NAME
+	*
+	* @return string
+	*/
+	public function getBotName() {
+		return $this->bot_name;
+	}
+
+	/**
+	* Get Version
+	*
+	* @return string
+	*/
+	public function getVersion() {
+		return $this->version;
+	}
 
 	/**
 	* Set Webhook for bot
@@ -399,7 +449,16 @@ class Telegram
 	* @return string
 	*/
 	public function setWebHook($url){
-		return Request::send('setWebhook', array('url'=>$url));
+		if (empty($url)) {
+			throw new TelegramException('Hook url is empty!');
+		}
+		$result = Request::setWebhook($url);
+
+		if (!$result['ok']) {
+			throw new TelegramException('Webhook was not set! Error: '.$result['description']);
+		}
+
+		return $result['description'];
 	}
 
 
@@ -412,7 +471,7 @@ class Telegram
 	*/
 	public function enableMySQL(array $credentials){
 		if (empty($credentials)) {
-			throw new \Exception('MySQL credentials not provided!');
+			throw new TelegramException('MySQL credentials not provided!');
 		}
 		$this->mysql_credentials = $credentials;
 
@@ -425,7 +484,7 @@ class Telegram
 			$pdo->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
 		}
 		catch (\PDOException $e) {
-			throw new \Exception($e->getMessage());
+			throw new TelegramException($e->getMessage());
 		}
 
 		$this->pdo = $pdo;

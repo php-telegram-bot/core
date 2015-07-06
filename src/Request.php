@@ -9,6 +9,7 @@
  */
 namespace Longman\TelegramBot;
 
+use Longman\TelegramBot\Exception\TelegramException;
 
 class Request
 {
@@ -66,6 +67,10 @@ class Request
 
 
 	public static function send($action, array $data = null) {
+		if (defined('PHPUNIT_TESTSUITE')) {
+			return $data;
+		}
+
 		$ch = curl_init();
 		$curlConfig = array(
 		    CURLOPT_URL					=> 'https://api.telegram.org/bot'.self::$telegram->getApiKey().'/'.$action,
@@ -77,8 +82,6 @@ class Request
 			if (!empty($data['text']) && substr($data['text'], 0, 1) === '@') {
 				$data['text'] = ' '.$data['text'];
 			}
-
-			//$data = array_map('urlencode', $data);
 			$curlConfig[CURLOPT_POSTFIELDS] = $data;
 		}
 
@@ -87,7 +90,7 @@ class Request
 		$result = curl_exec($ch);
 		curl_close($ch);
 
-		return $result;
+		return !empty($result) ? json_decode($result, true) : false;
 	}
 
 
@@ -95,12 +98,21 @@ class Request
 	public static function sendMessage(array $data) {
 
 		if (empty($data)) {
-			throw new \Exception('Data is empty!');
+			throw new TelegramException('Data is empty!');
 		}
 
 		$result = self::send('sendMessage', $data);
 		return $result;
 	}
+
+
+	public static function setWebhook($url) {
+		$result = self::send('setWebhook', array('url'=>$url));
+		return $result;
+	}
+
+
+
 
 
 }

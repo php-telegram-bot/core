@@ -15,6 +15,11 @@ use Longman\TelegramBot\Entities\Update;
 
 class EchoCommand extends Command
 {
+	protected $name = 'echo';
+	protected $description = 'Show text';
+	protected $usage = '/echo <text>';
+	protected $version = '1.0.0';
+	protected $enabled = true;
 
 	public function execute() {
 		$update = $this->getUpdate();
@@ -32,7 +37,7 @@ class EchoCommand extends Command
 
 
 		$result = Request::sendMessage($data);
-
+		return $result;
 	}
 
 

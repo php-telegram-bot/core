@@ -59,6 +59,8 @@ Instructions
 ## Installation
 You need server with https and composer support.
 
+Install this package through [Composer](https://getcomposer.org/). Edit your project's `composer.json` file to require `longman/telegram-bot`.
+
 Create composer.json file:
 ```js
 {
@@ -70,9 +72,13 @@ Create composer.json file:
     }
 }
 ```
-
 And run composer update
 
+**Or** run a command in your command line:
+
+```
+composer require longman/telegram-bot
+```
 
 ###### bot token
 You will notice that the Telegram Bot wants a value for `API_KEY`. This token may be obtained via a telegram client for your bot. See [this](https://core.telegram.org/bots#botfather) link if you are unsure of how to so this.
@@ -90,13 +96,19 @@ $loader = require __DIR__.'/vendor/autoload.php';
 $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 
-// create Telegram API object
-$telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
+try {
+	// create Telegram API object
+	$telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
-// set webhook
-echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
-
+	// set webhook
+	echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
+}
+catch (Longman\TelegramBot\Exception\TelegramException $e) {
+	echo $e->getMessage();
+}
 ```
+And open your set.php via browser
+
 
 After create hook.php and put:
 ```php
@@ -106,12 +118,18 @@ $loader = require __DIR__.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
-// create Telegram API object
-$telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
 
-// handle telegram webhook request
-$telegram->handle();
+try {
+	// create Telegram API object
+	$telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
 
+	// handle telegram webhook request
+	$telegram->handle();
+}
+catch (Longman\TelegramBot\Exception\TelegramException $e) {
+	// log telegram errors
+	// echo $e->getMessage();
+}
 ```
 
 If you want insert in database messages for further usage in commands, create database and import structure.sql and enable mysql support after object creation and BEFORE handle method

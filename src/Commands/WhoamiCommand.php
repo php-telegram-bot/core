@@ -18,6 +18,11 @@ use Longman\TelegramBot\Entities\Update;
 
 class WhoamiCommand extends Command
 {
+	protected $name = 'whoami';
+	protected $description = 'Show your id, name and username';
+	protected $usage = '/whoami';
+	protected $version = '1.0.0';
+	protected $enabled = true;
 
 	public function execute() {
 		$update = $this->getUpdate();
@@ -38,7 +43,7 @@ class WhoamiCommand extends Command
 
 
 		$result = Request::sendMessage($data);
-
+		return $result;
 	}
 
 

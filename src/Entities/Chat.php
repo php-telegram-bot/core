@@ -9,6 +9,7 @@
  */
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Exception\TelegramException;
 
 class Chat extends Entity
 {
@@ -23,7 +24,7 @@ class Chat extends Entity
 
 		$this->id = isset($data['id']) ? $data['id'] : null;
 		if (empty($this->id)) {
-			throw new \Exception('id is empty!');
+			throw new TelegramException('id is empty!');
 		}
 
 		$this->title = isset($data['title']) ? $data['title'] : null;

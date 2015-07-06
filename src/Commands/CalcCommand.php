@@ -17,6 +17,12 @@ use Longman\TelegramBot\Entities\Update;
 
 class CalcCommand extends Command
 {
+	protected $name = 'calc';
+	protected $description = 'Calculate math expression';
+	protected $usage = '/calc <expression>';
+	protected $version = '1.0.0';
+	protected $enabled = true;
+
 
 	public function execute() {
 		$update = $this->getUpdate();
@@ -34,7 +40,7 @@ class CalcCommand extends Command
   		$data['text'] = $this->compute($text);
 
 		$result = Request::sendMessage($data);
-
+		return $result;
 	}
 
 

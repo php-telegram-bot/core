@@ -9,7 +9,7 @@
  */
 namespace Longman\TelegramBot\Entities;
 
-
+use Longman\TelegramBot\Exception\TelegramException;
 
 
 class Update extends Entity
@@ -17,7 +17,7 @@ class Update extends Entity
 
 	protected $update_id;
 	protected $message;
-        protected $bot_name;
+	protected $bot_name;
 
 
 
@@ -29,12 +29,12 @@ class Update extends Entity
 		$message = isset($data['message']) ? $data['message'] : null;
 
 		if (empty($update_id)) {
-			throw new \Exception('update_id is empty!');
+			throw new TelegramException('update_id is empty!');
 		}
 
 		$this->bot_name = $bot_name;
 		$this->update_id = $update_id;
-		$this->message = new Message($message,$bot_name);
+		$this->message = new Message($message, $bot_name);
 
 	}
 

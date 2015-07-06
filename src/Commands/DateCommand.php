@@ -15,6 +15,13 @@ use Longman\TelegramBot\Entities\Update;
 
 class DateCommand extends Command
 {
+	protected $name = 'date';
+	protected $description = 'Show date/time by location';
+	protected $usage = '/date <location>';
+	protected $version = '1.0.0';
+	protected $enabled = true;
+
+
 	private $google_api_key = '';
 	private $base_url = 'https://maps.googleapis.com/maps/api';
 	private $date_format = 'd-m-Y H:i:s';

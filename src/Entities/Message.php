@@ -10,6 +10,7 @@
 namespace Longman\TelegramBot\Entities;
 
 
+use Longman\TelegramBot\Exception\TelegramException;
 
 
 class Message extends Entity
@@ -59,32 +60,32 @@ class Message extends Entity
 
 	protected $_command;
 
-        protected $bot_name;
+	protected $bot_name;
 
-	public function __construct(array $data,$bot_name) {
+	public function __construct(array $data, $bot_name) {
 
 		$this->bot_name = $bot_name;
 
 		$this->message_id = isset($data['message_id']) ? $data['message_id'] : null;
 		if (empty($this->message_id)) {
-			throw new \Exception('message_id is empty!');
+			throw new TelegramException('message_id is empty!');
 		}
 
 		$this->from = isset($data['from']) ? $data['from'] : null;
 		if (empty($this->from)) {
-			throw new \Exception('from is empty!');
+			throw new TelegramException('from is empty!');
 		}
 		$this->from = new User($this->from);
 
 
 		$this->date = isset($data['date']) ? $data['date'] : null;
 		if (empty($this->date)) {
-			throw new \Exception('date is empty!');
+			throw new TelegramException('date is empty!');
 		}
 
 		$this->chat = isset($data['chat']) ? $data['chat'] : null;
 		if (empty($this->chat)) {
-			throw new Exception('chat is empty!');
+			throw new TelegramException('chat is empty!');
 		}
 		$this->chat = new Chat($this->chat);
 
@@ -105,12 +106,13 @@ class Message extends Entity
 		}
 
 	}
+
+
 	//return the entire command like /echo or /echo@bot1 if specified
-        public function getFullCommand(){
+	public function getFullCommand(){
 
-                return  strtok($this->text,  ' ');
-
-        }
+		return  strtok($this->text, ' ');
+	}
 
 
 	public function getCommand() {
@@ -119,20 +121,20 @@ class Message extends Entity
 		}
 
 		$cmd = $this->getFullCommand();
-		
+
 		if (substr($cmd, 0, 1) === '/') {
-			$cmd = substr($cmd, 1);
-		
-			//check if command is follow by botname
-			$split_cmd = explode('@', $cmd);
-			if(isset($split_cmd[1])){
-			        //command is followed by name check if is addressed to me
-			        if(strtolower($split_cmd[1]) == strtolower($this->bot_name)){
-			                return $this->_command = $split_cmd[0];
-			        }
-			}else{
-			        //command is not followed by name
-			        return $this->_command = $cmd;
+		$cmd = substr($cmd, 1);
+
+		//check if command is follow by botname
+		$split_cmd = explode('@', $cmd);
+		if (isset($split_cmd[1])) {
+				//command is followed by name check if is addressed to me
+				if (strtolower($split_cmd[1]) == strtolower($this->bot_name)){
+					return $this->_command = $split_cmd[0];
+				}
+			} else {
+				//command is not followed by name
+				return $this->_command = $cmd;
 			}
 		}
 
