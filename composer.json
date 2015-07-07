@@ -1,5 +1,5 @@
 {
-    "name": "MBoretto/telegram-bot",
+    "name": "mboretto/telegram-bot",
     "type": "library",
     "description": "PHP telegram bot",
     "keywords": ["telegram", "bot", "api"],
@@ -7,7 +7,7 @@
     "homepage": "https://github.com/MBoretto/php-telegram-bot",
     "support": {
         "issues": "https://github.com/MBoretto/php-telegram-bot/issues",
-        "source": "https://github.com/MBoretto/php-telegram-bot"
+        "source": "https://github.com/mboretto/php-telegram-bot"
     },
     "authors": [
         {
