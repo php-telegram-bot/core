@@ -1,5 +1,5 @@
 {
-    "name": "longman/telegram-bot",
+    "name": "mboretto/telegram-bot",
     "type": "library",
     "description": "PHP telegram bot",
     "keywords": ["telegram", "bot", "api"],
