@@ -17,6 +17,12 @@
         "role": "Developer"
         }
     ],
+    "repositories": [
+            {
+                "type": "vcs",
+                "url": "https://github.com/MBoretto/php-telegram-bot"
+            }
+        ],
     "require": {
         "php": ">=5.4.0",
         "ext-pdo": "*",
