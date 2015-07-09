@@ -25,7 +25,7 @@ $root = realpath(dirname(dirname(__FILE__)));
  * Check that --dev composer installation was done
  */
 if (!file_exists($root . '/vendor/autoload.php')) {
-    throw new Exception(
+    throw new \Exception(
         'Please run "php composer.phar install --dev" in root directory '
         . 'to setup unit test dependencies before running the tests'
     );

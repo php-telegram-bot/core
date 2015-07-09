@@ -20,7 +20,7 @@ class DateCommand extends Command
     protected $name = 'date';
     protected $description = 'Show date/time by location';
     protected $usage = '/date <location>';
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
     protected $enabled = true;
 
     private $base_url = 'https://maps.googleapis.com/maps/api';
@@ -32,8 +32,10 @@ class DateCommand extends Command
 
         $url = $this->base_url . '/geocode/json?';
         $params = 'address=' . urlencode($location);
-        if (!empty($google_api_key = $this->getConfig('google_api_key'))) {
-            $params.= '&key=' . $google_api_key;
+
+        $google_api_key = $this->getConfig('google_api_key');
+        if (!empty($google_api_key)) {
+            $params .= '&key=' . $google_api_key;
         }
 
         $data = $this->request($url . $params);
@@ -62,13 +64,14 @@ class DateCommand extends Command
     {
         $url = $this->base_url . '/timezone/json?';
 
-
         $date_utc = new \DateTime(null, new \DateTimeZone("UTC"));
 
         $timestamp = $date_utc->format('U');
 
         $params = 'location=' . urlencode($lat) . ',' . urlencode($lng) . '&timestamp=' . urlencode($timestamp);
-        if (!empty($google_api_key = $this->getConfig('google_api_key'))) {
+
+        $google_api_key = $this->getConfig('google_api_key');
+        if (!empty($google_api_key)) {
             $params.= '&key=' . $google_api_key;
         }
 
