@@ -25,9 +25,13 @@ abstract class Command
     protected $enabled = true;
     protected $name = '';
 
+
+    protected $config;
+
     public function __construct(Telegram $telegram)
     {
         $this->telegram = $telegram;
+        $this->config = $telegram->getCommandConfig($this->name);
     }
 
     public function setUpdate(Update $update)
@@ -47,6 +51,17 @@ abstract class Command
     public function getMessage()
     {
         return $this->message;
+    }
+
+    public function getConfig($name = null)
+    {
+        if (isset($this->config[$name])) {
+            return $this->config[$name];
+        } else {
+            return null;
+        }
+
+        return $this->config;
     }
 
     public function getTelegram()
