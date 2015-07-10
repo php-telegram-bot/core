@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.0.7';
+    protected $version = '0.0.8';
 
     /**
      * Telegram API key
@@ -318,6 +318,10 @@ class Telegram
         }
 
         $class_name = __NAMESPACE__ . '\\Commands\\' . $class_name;
+        if (!class_exists($class_name)) {
+            return false;
+        }
+
         $class = new $class_name($this);
         if (!empty($update)) {
             $class->setUpdate($update);
