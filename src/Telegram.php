@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.0.5';
+    protected $version = '0.0.7';
 
     /**
      * Telegram API key
@@ -101,6 +101,18 @@ class Telegram
      * @var \PDO
      */
     protected $pdo;
+
+
+    /**
+     * Commands config
+     *
+     * @var array
+     */
+    protected $commands_config;
+
+
+
+
 
     /**
      * Constructor
@@ -364,13 +376,6 @@ class Telegram
 
             $status = $sth->execute();
 
-            /*$status = $executeQuery->execute(
-            array(
-            $update_id, $message_id, $from, $date, $chat, $forward_from,
-            $forward_date, $reply_to_message, $text,
-            )
-
-            );*/
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -391,6 +396,29 @@ class Telegram
         $this->commands_dir[] = $folder;
         return $this;
     }
+
+
+    /**
+     * Set command config
+     *
+     * @return object
+     */
+    public function setCommandConfig($command, array $array)
+    {
+        $this->commands_config[$command] = $array;
+        return $this;
+    }
+
+    /**
+     * Get command config
+     *
+     * @return object
+     */
+    public function getCommandConfig($command)
+    {
+        return isset($this->commands_config[$command]) ? $this->commands_config[$command] : array();
+    }
+
 
     /**
      * Get API KEY

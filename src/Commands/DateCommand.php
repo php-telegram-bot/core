@@ -20,19 +20,22 @@ class DateCommand extends Command
     protected $name = 'date';
     protected $description = 'Show date/time by location';
     protected $usage = '/date <location>';
-    protected $version = '1.0.0';
+    protected $version = '1.2.0';
     protected $enabled = true;
 
-    private $google_api_key = '';
     private $base_url = 'https://maps.googleapis.com/maps/api';
     private $date_format = 'd-m-Y H:i:s';
 
     private function getCoordinates($location)
     {
+
+
         $url = $this->base_url . '/geocode/json?';
         $params = 'address=' . urlencode($location);
-        if (!empty($this->google_api_key)) {
-            $params.= '&key=' . $this->google_api_key;
+
+        $google_api_key = $this->getConfig('google_api_key');
+        if (!empty($google_api_key)) {
+            $params .= '&key=' . $google_api_key;
         }
 
         $data = $this->request($url . $params);
@@ -61,11 +64,15 @@ class DateCommand extends Command
     {
         $url = $this->base_url . '/timezone/json?';
 
-        $timestamp = time();
+        $date_utc = new \DateTime(null, new \DateTimeZone("UTC"));
+
+        $timestamp = $date_utc->format('U');
 
         $params = 'location=' . urlencode($lat) . ',' . urlencode($lng) . '&timestamp=' . urlencode($timestamp);
-        if (!empty($this->google_api_key)) {
-            $params.= '&key=' . $this->google_api_key;
+
+        $google_api_key = $this->getConfig('google_api_key');
+        if (!empty($google_api_key)) {
+            $params.= '&key=' . $google_api_key;
         }
 
         $data = $this->request($url . $params);
@@ -100,11 +107,9 @@ class DateCommand extends Command
 
         list($local_time, $timezone_id) = $this->getDate($lat, $lng);
 
-        $date_utc = new \DateTime(date('Y-m-d H:i:s', $local_time), new \DateTimeZone($timezone_id));
+        $date_utc = new \DateTime(gmdate('Y-m-d H:i:s', $local_time), new \DateTimeZone($timezone_id));
 
-        //$timestamp = $date_utc->format($this->date_format);
-
-        $return = 'The local time in ' . $timezone_id . ' is: ' . date($this->date_format, $local_time) . '';
+        $return = 'The local time in ' . $timezone_id . ' is: ' . $date_utc->format($this->date_format) . '';
 
         return $return;
     }
