@@ -100,6 +100,26 @@ class Message extends Entity
         if (!empty($this->reply_to_message)) {
             $this->reply_to_message = new Message($this->reply_to_message);
         }
+
+        $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
+        if (!empty($this->new_chat_participant)) {
+            $this->new_chat_participant = new User($this->new_chat_participant);
+        }
+
+        $this->left_chat_participant = isset($data['left_chat_participant']) ? $data['left_chat_participant'] : null;
+        if (!empty($this->left_chat_participant)) {
+            $this->left_chat_participant = new User($this->left_chat_participant);
+        }
+
+        $this->new_chat_title = isset($data['new_chat_title']) ? $data['new_chat_title'] : null;
+
+        $this->delete_chat_photo = isset($data['delete_chat_photo']) ? $data['delete_chat_photo'] : null;
+
+        $this->group_chat_created = isset($data['group_chat_created']) ? $data['group_chat_created'] : null;
+
+
+
+
     }
 
     //return the entire command like /echo or /echo@bot1 if specified
@@ -176,6 +196,36 @@ class Message extends Entity
     {
 
         return $this->reply_to_message;
+    }
+
+    public function getNewChatParticipant()
+    {
+
+        return $this->new_chat_participant;
+    }
+
+    public function getLeftChatParticipant()
+    {
+
+        return $this->left_chat_participant;
+    }
+
+    public function getNewChatTitle()
+    {
+
+        return $this->new_chat_title;
+    }
+
+    public function getDeleteChatPhoto()
+    {
+
+        return $this->delete_chat_photo;
+    }
+
+    public function getGroupChatCreated()
+    {
+
+        return $this->group_chat_created;
     }
 
     public function getText($without_cmd = false)
