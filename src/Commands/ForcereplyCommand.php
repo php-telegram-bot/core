@@ -14,7 +14,10 @@ namespace Longman\TelegramBot\Commands;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\ReplyMarkup;
+
+use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
+use Longman\TelegramBot\Entities\ReplyKeyboardHide;
+use Longman\TelegramBot\Entities\ForceReply;
 
 class ForceReplyCommand extends Command
 {
@@ -38,13 +41,17 @@ class ForceReplyCommand extends Command
         $data['text'] = 'Write something:';
         #$data['reply_to_message_id'] = $message_id;
 
-        $markup = new ReplyMarkup;
+        $json =  (
+            new ForceReply(
+                array(
+                    'selective' => false
+                )
+            )
+        )->toJSON();
 
-        //$markup->addForceReply($selective = false)
-        $markup->addForceReply(false);
-
-        $json = $markup->getJsonQuery();
+        #echo $json;
         $data['reply_markup'] = $json;
+
 
         $result = Request::sendMessage($data);
         return $result;

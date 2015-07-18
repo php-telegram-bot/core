@@ -14,7 +14,10 @@ namespace Longman\TelegramBot\Commands;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\ReplyMarkup;
+
+use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
+use Longman\TelegramBot\Entities\ReplyKeyboardHide;
+use Longman\TelegramBot\Entities\ForceReply;
 
 class HidekeyboardCommand extends Command
 {
@@ -38,10 +41,14 @@ class HidekeyboardCommand extends Command
         $data['text'] = 'Keyboard Hided';
         #$data['reply_to_message_id'] = $message_id;
 
-        $markup = new ReplyMarkup;
-        //$markup->addKeyBoardHide($selective = false){
-        $markup->addKeyBoardHide(false);
-        $json = $markup->getJsonQuery();
+        $json = (
+            new ReplyKeyBoardHide(
+                array(
+                    'selective' => false
+                )
+            )
+        )->toJSON();
+
         $data['reply_markup'] = $json;
 
         $result = Request::sendMessage($data);

@@ -14,7 +14,10 @@ namespace Longman\TelegramBot\Commands;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\ReplyMarkup;
+
+use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
+use Longman\TelegramBot\Entities\ReplyKeyboardHide;
+use Longman\TelegramBot\Entities\ForceReply;
 
 class KeyboardCommand extends Command
 {
@@ -39,24 +42,59 @@ class KeyboardCommand extends Command
         #$data['reply_to_message_id'] = $message_id;
 
 
-        $markup = new ReplyMarkup;
 
-        //$markup->addKeyBoard($options,$resize=false,$once=false,$selective=false)
-        //onother keyboard example
-        #$markup->addKeyBoard(array('A','B','C'),true,false,false);
-        //onother keyboard example
-        #$markup->addKeyBoard(array('A',array('B','B1'),'C'),true,false,false);
+        #Keyboard examples
+        $keyboards = array();
+
+        //0
+        $keyboard[0] = array('7','8','9');
+        $keyboard[1] = array('4','5','6');
+        $keyboard[2] = array('1','2','3');
+        $keyboard[3] = array(' ','0',' ');
+       
+        $keyboards[] = $keyboard;
+        unset($keyboard);
+
+        //1
+        $keyboard[0] = array('7','8','9','+');
+        $keyboard[1] = array('4','5','6','-');
+        $keyboard[2] = array('1','2','3','*');
+        $keyboard[3] = array(' ','0',' ','/');
+
+        $keyboards[] = $keyboard;
+        unset($keyboard);
+
+
+        //2
+        $keyboard[0] = array('A');
+        $keyboard[1] = array('B');
+        $keyboard[2] = array('C');
+
+        $keyboards[] = $keyboard;
+        unset($keyboard);
 
 
 
-        $markup->addKeyBoard(array(
-            array('7','8','9'),
-            array('4','5','6'),
-            array('1','2','3'),
-            array('0')
-            ), true, false, false);
+        //3
+        $keyboard[0] = array('A');
+        $keyboard[1] = array('B');
+        $keyboard[2] = array('C','D');
 
-        $json = $markup->getJsonQuery();
+        $keyboards[] = $keyboard;
+        unset($keyboard);
+
+
+        $json = (
+            new ReplyKeyboardMarkup(
+                array(
+                    'keyboard' => $keyboards[1] ,
+                    'resize_keyboard' => true,
+                    'one_time_keyboard' => false,
+                    'selective' => false
+                )
+            )
+        )->toJSON();
+        #echo $json;
         $data['reply_markup'] = $json;
 
         $result = Request::sendMessage($data);
