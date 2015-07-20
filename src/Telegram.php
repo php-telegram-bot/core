@@ -284,7 +284,7 @@ class Telegram
      *
      * @return mixed
      */
-    protected function executeCommand($command, Update $update)
+    public function executeCommand($command, Update $update)
     {
         $class = $this->getCommandClass($command, $update);
         if (empty($class)) {
