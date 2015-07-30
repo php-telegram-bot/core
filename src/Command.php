@@ -19,6 +19,7 @@ abstract class Command
     protected $message;
     protected $command;
 
+    protected $public = false;
     protected $description = 'Command help';
     protected $usage = 'Command usage';
     protected $version = '1.0.0';
@@ -98,5 +99,10 @@ abstract class Command
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    public function isPublic()
+    {
+        return $this->public;
     }
 }

@@ -17,7 +17,6 @@ class Update extends Entity
 
     protected $update_id;
     protected $message;
-    protected $bot_name;
 
     public function __construct(array $data, $bot_name)
     {

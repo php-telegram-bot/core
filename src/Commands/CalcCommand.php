@@ -23,6 +23,7 @@ class CalcCommand extends Command
     protected $usage = '/calc <expression>';
     protected $version = '1.0.0';
     protected $enabled = true;
+    protected $public = true;
 
     public function execute()
     {

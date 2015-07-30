@@ -21,6 +21,7 @@ class WeatherCommand extends Command
     protected $usage = '/weather <location>';
     protected $version = '1.0.0';
     protected $enabled = true;
+    protected $public = true;
 
     private function getWeather($location)
     {

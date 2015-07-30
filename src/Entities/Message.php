@@ -58,12 +58,12 @@ class Message extends Entity
 
     protected $command;
 
-    protected $bot_name;
+    private $type;
 
     public function __construct(array $data, $bot_name)
     {
-
         $this->bot_name = $bot_name;
+        $this->type = 'text';
 
         $this->message_id = isset($data['message_id']) ? $data['message_id'] : null;
         if (empty($this->message_id)) {
@@ -89,6 +89,11 @@ class Message extends Entity
 
         $this->text = isset($data['text']) ? $data['text'] : null;
 
+        $command = $this->getCommand();
+        if (!empty($command)) {
+            $this->type = 'command';
+        }
+
         $this->forward_from = isset($data['forward_from']) ? $data['forward_from'] : null;
         if (!empty($this->forward_from)) {
             $this->forward_from = new User($this->forward_from);
@@ -104,19 +109,29 @@ class Message extends Entity
         $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
         if (!empty($this->new_chat_participant)) {
             $this->new_chat_participant = new User($this->new_chat_participant);
+            $this->type = 'new_chat_participant';
         }
 
         $this->left_chat_participant = isset($data['left_chat_participant']) ? $data['left_chat_participant'] : null;
         if (!empty($this->left_chat_participant)) {
             $this->left_chat_participant = new User($this->left_chat_participant);
+            $this->type = 'left_chat_participant';
         }
 
         $this->new_chat_title = isset($data['new_chat_title']) ? $data['new_chat_title'] : null;
+        if ($this->new_chat_title) {
+            $this->type = 'new_chat_title';
+        }
 
         $this->delete_chat_photo = isset($data['delete_chat_photo']) ? $data['delete_chat_photo'] : null;
+        if ($this->delete_chat_photo) {
+            $this->type = 'delete_chat_photo';
+        }
 
         $this->group_chat_created = isset($data['group_chat_created']) ? $data['group_chat_created'] : null;
-
+        if ($this->group_chat_created) {
+            $this->type = 'group_chat_created';
+        }
 
 
 
@@ -237,5 +252,22 @@ class Message extends Entity
         }
 
         return $text;
+    }
+
+
+    public function botAddedInChat()
+    {
+        if (!empty($this->new_chat_participant)) {
+            if ($this->new_chat_participant->getUsername() == $this->getBotName()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getType()
+    {
+
+        return $this->type;
     }
 }

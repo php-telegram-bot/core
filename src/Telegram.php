@@ -17,7 +17,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @package         Telegram
- * @author      Avtandil Kikabidze <akalongman@gmail.com>
+ * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
  * @link            http://www.github.com/akalongman/php-telegram-bot
@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.0.8';
+    protected $version = '0.0.10';
 
     /**
      * Telegram API key
@@ -109,6 +109,17 @@ class Telegram
      * @var array
      */
     protected $commands_config;
+
+
+
+    /**
+     * Commands config
+     *
+     * @var array
+     */
+    protected $message_types = array('text', 'command', 'new_chat_participant',
+        'left_chat_participant', 'new_chat_title', 'delete_chat_photo', 'group_chat_created'
+        );
 
 
 
@@ -273,11 +284,94 @@ class Telegram
 
         $this->insertRequest($update);
 
-        $command = $update->getMessage()->getCommand();
-        if (!empty($command)) {
-            return $this->executeCommand($command, $update);
+        $message = $update->getMessage();
+
+
+
+        // check type
+        $type = $message->getType();
+
+        switch ($type) {
+            default:
+            case 'text':
+                // do nothing
+
+                break;
+
+            case 'command':
+                // execute command
+                $command = $message->getCommand();
+                return $this->executeCommand($command, $update);
+                break;
+
+            case 'new_chat_participant':
+                // trigger new participant
+                $command = 'new_chat_participant';
+                return $this->executeCommand($command, $update);
+                break;
+
+            case 'left_chat_participant':
+                // trigger left chat participant
+                $command = 'left_chat_participant';
+                return $this->executeCommand($command, $update);
+                break;
+
+
+            case 'new_chat_title':
+                // trigger new_chat_title
+
+
+                break;
+
+
+            case 'delete_chat_photo':
+                // trigger delete_chat_photo
+
+
+                break;
+
+
+            case 'group_chat_created':
+                // trigger group_chat_created
+
+
+                break;
+
+
+
+
+        }
+
+    }
+
+
+    public function eventUserAddedToChat(Update $update)
+    {
+        $message = $update->getMessage();
+
+
+        $participant = $message->getNewChatParticipant();
+        if (!empty($participant)) {
+            $chat_id = $message->getChat()->getId();
+            $data = array();
+            $data['chat_id'] = $chat_id;
+
+            if ($participant->getUsername() == $this->getBotName()) {
+                $text = 'Hi there';
+            } else {
+                if ($participant->getUsername()) {
+                    $text = 'Hi @'.$participant->getUsername();
+                } else {
+                    $text = 'Hi '.$participant->getFirstName();
+                }
+            }
+
+            $data['text'] = $text;
+            $result = Request::sendMessage($data);
+            return $result;
         }
     }
+
 
     /**
      * Execute /command
@@ -291,6 +385,11 @@ class Telegram
             return false;
         }
 
+        if (!$class->isEnabled()) {
+            return false;
+        }
+
+
         return $class->execute();
     }
 
@@ -303,12 +402,18 @@ class Telegram
     {
         $this->commands_dir = array_unique($this->commands_dir);
         $this->commands_dir = array_reverse($this->commands_dir);
+
+        $command = $this->sanitizeCommand($command);
         $class_name = ucfirst($command) . 'Command';
 
         foreach ($this->commands_dir as $dir) {
             if (is_file($dir . '/' . $class_name . '.php')) {
                 require_once($dir . '/' . $class_name . '.php');
+                if (!class_exists($class_name)) {
+                    continue;
+                }
                 $class = new $class_name($this);
+
                 if (!empty($update)) {
                     $class->setUpdate($update);
                 }
@@ -318,21 +423,30 @@ class Telegram
         }
 
         $class_name = __NAMESPACE__ . '\\Commands\\' . $class_name;
-        if (!class_exists($class_name)) {
-            return false;
+        if (class_exists($class_name)) {
+            $class = new $class_name($this);
+            if (!empty($update)) {
+                $class->setUpdate($update);
+            }
+
+            if (is_object($class)) {
+                return $class;
+            }
         }
 
-        $class = new $class_name($this);
-        if (!empty($update)) {
-            $class->setUpdate($update);
-        }
-
-        if (is_object($class)) {
-            return $class;
-        }
 
         return false;
     }
+
+
+    protected function sanitizeCommand($string, $capitalizeFirstCharacter = false)
+    {
+        $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+        //$str[0] = strtolower($str[0]);
+        return $str;
+    }
+
+
 
     /**
      * Insert request in db
@@ -345,19 +459,47 @@ class Telegram
             return false;
         }
 
+        $message = $update->getMessage();
+
         try {
-            $sth = $this->pdo->prepare('INSERT INTO `messages`
+            $sth1 = $this->pdo->prepare('INSERT INTO `users`
                 (
-                `update_id`, `message_id`, `from`, `date`, `chat`, `forward_from`,
+                `id`, `username`, `first_name`, `last_name`
+                )
+                VALUES (:id, :username, :first_name, :last_name)
+                ON DUPLICATE KEY UPDATE `username`=:username, `first_name`=:first_name, `last_name`=:last_name
+                ');
+
+            $from = $message->getFrom();
+            $user_id = $from->getId();
+            $username = $from->getUsername();
+            $first_name = $from->getFirstName();
+            $last_name = $from->getLastName();
+
+
+            $sth1->bindParam(':id', $user_id, \PDO::PARAM_INT);
+            $sth1->bindParam(':username', $username, \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':first_name', $first_name, \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':last_name', $last_name, \PDO::PARAM_STR, 255);
+
+
+            $status = $sth1->execute();
+
+
+
+            $sth = $this->pdo->prepare('INSERT IGNORE INTO `messages`
+                (
+                `update_id`, `message_id`, `user_id`, `date`, `chat`, `forward_from`,
                 `forward_date`, `reply_to_message`, `text`
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-
-            $message = $update->getMessage();
+                VALUES (:update_id, :message_id, :user_id,
+                :date, :chat, :forward_from,
+                :forward_date, :reply_to_message, :text)');
 
             $update_id = $update->getUpdateId();
             $message_id = $message->getMessageId();
             $from = $message->getFrom()->toJSON();
+            $user_id = $message->getFrom()->getId();
             $date = $message->getDate();
             $chat = $message->getChat()->toJSON();
             $forward_from = $message->getForwardFrom();
@@ -368,15 +510,15 @@ class Telegram
             }
             $text = $message->getText();
 
-            $sth->bindParam(1, $update_id, \PDO::PARAM_INT);
-            $sth->bindParam(2, $message_id, \PDO::PARAM_INT);
-            $sth->bindParam(3, $from, \PDO::PARAM_STR, 255);
-            $sth->bindParam(4, $date, \PDO::PARAM_INT);
-            $sth->bindParam(5, $chat, \PDO::PARAM_STR);
-            $sth->bindParam(6, $forward_from, \PDO::PARAM_STR);
-            $sth->bindParam(7, $forward_date, \PDO::PARAM_INT);
-            $sth->bindParam(8, $reply_to_message, \PDO::PARAM_STR);
-            $sth->bindParam(9, $text, \PDO::PARAM_STR);
+            $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
+            $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+            $sth->bindParam(':date', $date, \PDO::PARAM_INT);
+            $sth->bindParam(':chat', $chat, \PDO::PARAM_STR);
+            $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
+            $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_INT);
+            $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
+            $sth->bindParam(':text', $text, \PDO::PARAM_STR);
 
             $status = $sth->execute();
 
@@ -386,6 +528,8 @@ class Telegram
 
         return true;
     }
+
+
 
     /**
      * Add custom commands path
@@ -500,5 +644,15 @@ class Telegram
         $this->mysql_enabled = true;
 
         return $this;
+    }
+
+    /**
+     * Get available message types
+     *
+     * @return array
+     */
+    public function getMessageTypes()
+    {
+        return $this->message_types;
     }
 }

@@ -21,6 +21,7 @@ class HelpCommand extends Command
     protected $usage = '/help or /help <command>';
     protected $version = '1.0.0';
     protected $enabled = true;
+    protected $public = true;
 
     public function execute()
     {
@@ -34,22 +35,30 @@ class HelpCommand extends Command
         $commands = $this->telegram->getCommandsList();
         if (empty($text)) {
             $msg = 'GeoBot v. ' . $this->telegram->getVersion() . "\n\n";
-            $msg.= 'Commands List:' . "\n";
+            $msg .= 'Commands List:' . "\n";
             foreach ($commands as $command) {
                 if (!$command->isEnabled()) {
                     continue;
                 }
-                $msg.= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
+                if (!$command->isPublic()) {
+                    continue;
+                }
+
+                $msg .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
             }
 
-            $msg.= "\n" . 'For exact command help type: /help <command>';
+            $msg .= "\n" . 'For exact command help type: /help <command>';
         } else {
             $text = str_replace('/', '', $text);
             if (isset($commands[$text])) {
                 $command = $commands[$text];
-                $msg = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
-                $msg.= 'Description: ' . $command->getDescription() . "\n";
-                $msg.= 'Usage: ' . $command->getUsage();
+                if (!$command->isEnabled() || !$command->isPublic()) {
+                    $msg = 'Command ' . $text . ' not found';
+                } else {
+                    $msg = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
+                    $msg .= 'Description: ' . $command->getDescription() . "\n";
+                    $msg .= 'Usage: ' . $command->getUsage();
+                }
             } else {
                 $msg = 'Command ' . $text . ' not found';
             }
