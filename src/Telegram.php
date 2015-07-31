@@ -405,14 +405,15 @@ class Telegram
 
         $command = $this->sanitizeCommand($command);
         $class_name = ucfirst($command) . 'Command';
+        $class_name_space = __NAMESPACE__ . '\\Commands\\' . $class_name;
 
         foreach ($this->commands_dir as $dir) {
             if (is_file($dir . '/' . $class_name . '.php')) {
                 require_once($dir . '/' . $class_name . '.php');
-                if (!class_exists($class_name)) {
+                if (!class_exists($class_name_space)) {
                     continue;
                 }
-                $class = new $class_name($this);
+                $class = new $class_name_space($this);
 
                 if (!empty($update)) {
                     $class->setUpdate($update);
@@ -422,9 +423,8 @@ class Telegram
             }
         }
 
-        $class_name = __NAMESPACE__ . '\\Commands\\' . $class_name;
-        if (class_exists($class_name)) {
-            $class = new $class_name($this);
+        if (class_exists($class_name_space)) {
+            $class = new $class_name_space($this);
             if (!empty($update)) {
                 $class->setUpdate($update);
             }
