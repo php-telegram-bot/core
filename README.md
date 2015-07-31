@@ -14,7 +14,7 @@ A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.or
 
 
 ## introduction
-This is a pure php Telegram Bot, fully extensible via plugins. Telegram recently announced official support for a [Bot API](https://telegram.org/blog/bot-revolution) allowing integrators of all sorts to bring automated interactions to the mobile platform. This Bot aims to provide a platform where one could simply write a plugin and have interactions in a matter of minutes.  
+This is a pure php Telegram Bot, fully extensible via plugins. Telegram recently announced official support for a [Bot API](https://telegram.org/blog/bot-revolution) allowing integrators of all sorts to bring automated interactions to the mobile platform. This Bot aims to provide a platform where one could simply write a plugin and have interactions in a matter of minutes.
 The Bot support Reply Markup and handle commands in the group chat.
 
 
@@ -143,7 +143,7 @@ try {
 }
 ```
 
-If you want insert in database messages for further usage in commands, create database and import structure.sql and enable mysql support after object creation and BEFORE handle method
+If you want insert in database messages/users for further usage in commands, create database and import structure.sql and enable mysql support after object creation and BEFORE handle method
 ```php
 <?php
 
