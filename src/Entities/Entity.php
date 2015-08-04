@@ -12,6 +12,16 @@ namespace Longman\TelegramBot\Entities;
 
 class Entity
 {
+    protected $bot_name;
+
+
+    public function getBotName()
+    {
+
+        return $this->bot_name;
+    }
+
+
 
     public function toJSON()
     {

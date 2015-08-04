@@ -1,7 +1,7 @@
 CREATE TABLE `messages` (
   `update_id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
   `message_id` bigint COMMENT 'Unique message identifier',
-  `from` CHAR(255) COMMENT 'User object',
+  `user_id` bigint COMMENT 'User identifier',
   `date` int(11) UNSIGNED COMMENT 'Date the message was sent in Unix time',
   `chat` CHAR(255) COMMENT 'User or GroupChat object. Conversation the message belongs to — user in case of a private message, GroupChat in case of a group',
   `forward_from` CHAR(255) DEFAULT '' COMMENT 'User object. For forwarded messages, sender of the original message',
@@ -22,5 +22,15 @@ CREATE TABLE `messages` (
   `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group photo was deleted',
   `group_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group has been created',
   PRIMARY KEY (`update_id`),
-  KEY `message_id` (`message_id`)
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+
+CREATE TABLE `users` (
+  `id` bigint UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Unique user identifier',
+  `username` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User username',
+  `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User first name',
+  `last_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User last name',
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
