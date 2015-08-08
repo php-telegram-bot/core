@@ -14,7 +14,7 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class NewChatParticipantCommand extends Command
+class NewchatparticipantCommand extends Command
 {
     protected $name = 'new_chat_participant';
     protected $description = 'New Chat Participant';
