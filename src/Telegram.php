@@ -189,8 +189,11 @@ class Telegram
                 continue;
             }
             $name = $fileInfo->getFilename();
-            $name = strtolower(str_replace('Command.php', '', $name));
-            $commands[$name] = $this->getCommandClass($name);
+
+            if (substr($name, -11, 11) === 'Command.php') {
+                $name = strtolower(str_replace('Command.php', '', $name));
+                $commands[$name] = $this->getCommandClass($name);
+            }
         }
 
         if (!empty($this->commands_dir)) {
@@ -204,12 +207,13 @@ class Telegram
                         continue;
                     }
                     $name = $fileInfo->getFilename();
-                    $name = strtolower(str_replace('Command.php', '', $name));
-                    $commands[$name] = $this->getCommandClass($name);
+                    if (substr($name, -11, 11) === 'Command.php') {
+                        $name = strtolower(str_replace('Command.php', '', $name));
+                        $commands[$name] = $this->getCommandClass($name);
+                    }
                 }
             }
         }
-
         return $commands;
     }
 
