@@ -14,13 +14,14 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class Newchatparticipantcommand extends Command
+class NewchatparticipantCommand extends Command
 {
     protected $name = 'new_chat_participant';
     protected $description = 'New Chat Participant';
     protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
+    protected $public = true;
 
     public function execute()
     {

@@ -311,13 +311,13 @@ class Telegram
             case 'new_chat_participant':
                 // trigger new participant
                 $command = 'new_chat_participant';
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand(Newchatparticipant, $update);
                 break;
 
             case 'left_chat_participant':
                 // trigger left chat participant
                 $command = 'left_chat_participant';
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand(Leftchatparticipant, $update);
                 break;
 
 
