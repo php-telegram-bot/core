@@ -189,8 +189,11 @@ class Telegram
                 continue;
             }
             $name = $fileInfo->getFilename();
-            $name = strtolower(str_replace('Command.php', '', $name));
-            $commands[$name] = $this->getCommandClass($name);
+
+            if (substr($name, -11, 11) === 'Command.php') {
+                $name = strtolower(str_replace('Command.php', '', $name));
+                $commands[$name] = $this->getCommandClass($name);
+            }
         }
 
         if (!empty($this->commands_dir)) {
@@ -204,12 +207,13 @@ class Telegram
                         continue;
                     }
                     $name = $fileInfo->getFilename();
-                    $name = strtolower(str_replace('Command.php', '', $name));
-                    $commands[$name] = $this->getCommandClass($name);
+                    if (substr($name, -11, 11) === 'Command.php') {
+                        $name = strtolower(str_replace('Command.php', '', $name));
+                        $commands[$name] = $this->getCommandClass($name);
+                    }
                 }
             }
         }
-
         return $commands;
     }
 
@@ -295,7 +299,6 @@ class Telegram
             default:
             case 'text':
                 // do nothing
-
                 break;
 
             case 'command':
@@ -306,42 +309,30 @@ class Telegram
 
             case 'new_chat_participant':
                 // trigger new participant
-                $command = 'new_chat_participant';
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Newchatparticipant', $update);
                 break;
 
             case 'left_chat_participant':
                 // trigger left chat participant
-                $command = 'left_chat_participant';
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Leftchatparticipant', $update);
                 break;
 
 
             case 'new_chat_title':
                 // trigger new_chat_title
-
-
                 break;
 
 
             case 'delete_chat_photo':
                 // trigger delete_chat_photo
-
-
                 break;
 
 
             case 'group_chat_created':
                 // trigger group_chat_created
-
-
                 break;
 
-
-
-
         }
-
     }
 
 

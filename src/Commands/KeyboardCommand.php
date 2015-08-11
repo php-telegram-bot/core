@@ -47,28 +47,28 @@ class KeyboardCommand extends Command
         $keyboards = array();
 
         //0
-        $keyboard[0] = array('7','8','9');
-        $keyboard[1] = array('4','5','6');
-        $keyboard[2] = array('1','2','3');
-        $keyboard[3] = array(' ','0',' ');
+        $keyboard[] = ['7','8','9'];
+        $keyboard[] = ['4','5','6'];
+        $keyboard[] = ['1','2','3'];
+        $keyboard[] = [' ','0',' '];
        
         $keyboards[] = $keyboard;
         unset($keyboard);
 
         //1
-        $keyboard[0] = array('7','8','9','+');
-        $keyboard[1] = array('4','5','6','-');
-        $keyboard[2] = array('1','2','3','*');
-        $keyboard[3] = array(' ','0',' ','/');
+        $keyboard[] = ['7','8','9','+'];
+        $keyboard[] = ['4','5','6','-'];
+        $keyboard[] = ['1','2','3','*'];
+        $keyboard[] = [' ','0',' ','/'];
 
         $keyboards[] = $keyboard;
         unset($keyboard);
 
 
         //2
-        $keyboard[0] = array('A');
-        $keyboard[1] = array('B');
-        $keyboard[2] = array('C');
+        $keyboard[] = ['A'];
+        $keyboard[] = ['B'];
+        $keyboard[] = ['C'];
 
         $keyboards[] = $keyboard;
         unset($keyboard);
@@ -76,9 +76,9 @@ class KeyboardCommand extends Command
 
 
         //3
-        $keyboard[0] = array('A');
-        $keyboard[1] = array('B');
-        $keyboard[2] = array('C','D');
+        $keyboard[] = ['A'];
+        $keyboard[] = ['B'];
+        $keyboard[] = ['C','D'];
 
         $keyboards[] = $keyboard;
         unset($keyboard);

@@ -33,18 +33,21 @@ class HelpCommand extends Command
         $text = $message->getText(true);
 
         $commands = $this->telegram->getCommandsList();
+
         if (empty($text)) {
             $msg = 'GeoBot v. ' . $this->telegram->getVersion() . "\n\n";
             $msg .= 'Commands List:' . "\n";
             foreach ($commands as $command) {
-                if (!$command->isEnabled()) {
-                    continue;
-                }
-                if (!$command->isPublic()) {
-                    continue;
-                }
+                if (is_object($command)) {
+                    if (!$command->isEnabled()) {
+                        continue;
+                    }
+                    if (!$command->isPublic()) {
+                        continue;
+                    }
 
-                $msg .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
+                    $msg .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
+                }
             }
 
             $msg .= "\n" . 'For exact command help type: /help <command>';
