@@ -140,8 +140,11 @@ class Message extends Entity
     //return the entire command like /echo or /echo@bot1 if specified
     public function getFullCommand()
     {
-
-        return strtok($this->text, ' ');
+        if (substr($this->text, 0, 1) === '/') {
+            return strtok($this->text, ' ');
+        }else{
+            return null;
+        }
     }
 
     public function getCommand()
@@ -248,7 +251,9 @@ class Message extends Entity
         $text = $this->text;
         if ($without_cmd) {
             $command = $this->getFullCommand();
-            $text = substr($text, strlen($command . ' '), strlen($text));
+            if(!empty($command)){
+                $text = substr($text, strlen($command . ' '), strlen($text));
+                }
         }
 
         return $text;
