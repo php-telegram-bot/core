@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
 */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -103,7 +104,7 @@ class Message extends Entity
 
         $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
         if (!empty($this->reply_to_message)) {
-            $this->reply_to_message = new Message($this->reply_to_message);
+            $this->reply_to_message = new self($this->reply_to_message);
         }
 
         $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
@@ -132,16 +133,16 @@ class Message extends Entity
         if ($this->group_chat_created) {
             $this->type = 'group_chat_created';
         }
-
-
-
     }
 
     //return the entire command like /echo or /echo@bot1 if specified
     public function getFullCommand()
     {
-
-        return strtok($this->text, ' ');
+        if (substr($this->text, 0, 1) === '/') {
+            return strtok($this->text, ' ');
+        } else {
+            return;
+        }
     }
 
     public function getCommand()
@@ -173,73 +174,61 @@ class Message extends Entity
 
     public function getMessageId()
     {
-
         return $this->message_id;
     }
 
     public function getDate()
     {
-
         return $this->date;
     }
 
     public function getFrom()
     {
-
         return $this->from;
     }
 
     public function getChat()
     {
-
         return $this->chat;
     }
 
     public function getForwardFrom()
     {
-
         return $this->forward_from;
     }
 
     public function getForwardDate()
     {
-
         return $this->forward_date;
     }
 
     public function getReplyToMessage()
     {
-
         return $this->reply_to_message;
     }
 
     public function getNewChatParticipant()
     {
-
         return $this->new_chat_participant;
     }
 
     public function getLeftChatParticipant()
     {
-
         return $this->left_chat_participant;
     }
 
     public function getNewChatTitle()
     {
-
         return $this->new_chat_title;
     }
 
     public function getDeleteChatPhoto()
     {
-
         return $this->delete_chat_photo;
     }
 
     public function getGroupChatCreated()
     {
-
         return $this->group_chat_created;
     }
 
@@ -248,12 +237,13 @@ class Message extends Entity
         $text = $this->text;
         if ($without_cmd) {
             $command = $this->getFullCommand();
-            $text = substr($text, strlen($command . ' '), strlen($text));
+            if (!empty($command)) {
+                $text = substr($text, strlen($command.' '), strlen($text));
+            }
         }
 
         return $text;
     }
-
 
     public function botAddedInChat()
     {
@@ -262,12 +252,12 @@ class Message extends Entity
                 return true;
             }
         }
+
         return false;
     }
 
     public function getType()
     {
-
         return $this->type;
     }
 }
