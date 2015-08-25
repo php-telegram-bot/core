@@ -144,6 +144,7 @@ try {
 ```
 
 If you want insert in database messages/users for further usage in commands, create database and import structure.sql and enable mysql support after object creation and BEFORE handle method
+
 ```php
 <?php
 
@@ -151,27 +152,29 @@ $credentials = array('host'=>'localhost', 'user'=>'dbuser', 'password'=>'dbpass'
 
 $telegram->enableMySQL($credentials);
 
+```
+
 Utilis
 ------
 
 Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding before the method:
 
-'''php
+```php
 
 $COMMANDS_FOLDER = __DIR__.'/Commands/';
 $telegram->addCommandsPath($COMMANDS_FOLDER);
 
 
 
-'''
+```
 
 You can also log incoming messages on a text file, set this option with the methods:
-'''php
+```php
 
     $telegram->setLogRequests(true);
     $telegram->setLogPath($BOT_NAME.'.log');
 
-'''
+```
 
 
 
