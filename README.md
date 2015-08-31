@@ -100,7 +100,6 @@ You must set [WebHook](https://core.telegram.org/bots/api#setwebhook)
 Create set.php and put:
 ```php
 <?php
-
 $loader = require __DIR__.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
@@ -109,7 +108,6 @@ $BOT_NAME = 'namebot';
 try {
     // create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
-
     // set webhook
     echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
@@ -122,7 +120,6 @@ And open your set.php via browser
 After create hook.php and put:
 ```php
 <?php
-
 $loader = require __DIR__.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
@@ -131,7 +128,6 @@ $BOT_NAME = 'namebot';
 try {
     // create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY,$BOT_NAME);
-
     // here you can set some command specified parameters, for example, google geocode/timezone api key for date command:
     $telegram->setCommandConfig('date', array('google_api_key'=>'your_google_api_key_here'));
 
@@ -147,11 +143,9 @@ If you want insert in database messages/users for further usage in commands, cre
 
 ```php
 <?php
-
 $credentials = array('host'=>'localhost', 'user'=>'dbuser', 'password'=>'dbpass', 'database'=>'dbname');
 
 $telegram->enableMySQL($credentials);
-
 ```
 You can set a custom prefix to all the tables while you are enabling mysql:
 
@@ -172,8 +166,8 @@ It can execute command triggering a chat event. Here's the list:
 - Left chat participant (**LeftchatparticipantCommand.php**)
 
 **GenericCommand.php** let you handle commands that non exist or use commands as var:  
-Favourite colour? **/blac /red**  
-Favourite number? **/1 /134 **  
+Favourite colour? **/black /red**  
+Favourite number? **/1 /134**  
 
 
 Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding before the method:
