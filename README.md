@@ -165,15 +165,15 @@ Commads
 The bot is able to recognise commands in chat with multiple bot.
 It can execute command triggering a chat event. Here's the list:
 
--Groupchatcreated (GroupchatcreatedCommand.php)
--Newchatparticipant (NewchatparticipantCommand.php)
--Deletechatphoto (DeletechatphotoCommand.php)
--Newchattitle (NewchattitleCommand.php)
--Leftchatparticipant (LeftchatparticipantCommand.php)
+- Group chat created (**GroupchatcreatedCommand.php**)
+- New chat participant (**NewchatparticipantCommand.php**)
+- Delete chat photo (**DeletechatphotoCommand.php**)
+- New chat title (**NewchattitleCommand.php**)
+- Left chat participant (**LeftchatparticipantCommand.php**)
 
-GenericCommand.php let you handle commands that non exist or use commands as var:  
-Favourite colour? /black /red 
-Favourite number? /1 /134 
+**GenericCommand.php** let you handle commands that non exist or use commands as var:  
+Favourite colour? **/blac /red**  
+Favourite number? **/1 /134 **  
 
 
 Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding before the method:
@@ -188,7 +188,7 @@ $telegram->addCommandsPath($COMMANDS_FOLDER);
 
 Send message to all active chats (new!)
 ---------------------------------------
-To do this you have to enable the mysql connections.
+To do this you have to enable the mysql connection.
 Here's an example of use:
 
 ```php
