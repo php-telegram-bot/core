@@ -2,8 +2,8 @@ CREATE TABLE `messages` (
   `update_id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
   `message_id` bigint COMMENT 'Unique message identifier',
   `user_id` bigint COMMENT 'User identifier',
-  `date` int(11) UNSIGNED COMMENT 'Date the message was sent in Unix time',
-  `chat` CHAR(255) COMMENT 'User or GroupChat object. Conversation the message belongs to — user in case of a private message, GroupChat in case of a group',
+  `date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Date the message was sent in timestamp format',
+  `chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'User or GroupChat object. Conversation the message belongs to — user in case of a private message, GroupChat in case of a group',
   `forward_from` CHAR(255) DEFAULT '' COMMENT 'User object. For forwarded messages, sender of the original message',
   `forward_date` int(11) UNSIGNED DEFAULT 0 COMMENT 'For forwarded messages, date the original message was sent in Unix time',
   `reply_to_message` LONGTEXT COMMENT 'Message object. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.',
@@ -24,13 +24,37 @@ CREATE TABLE `messages` (
   PRIMARY KEY (`update_id`),
   KEY `message_id` (`message_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `users` (
-  `id` bigint UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Unique user identifier',
-  `username` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User username',
+  `id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique user identifier',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User first name',
-  `last_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User last name',
+  `last_name` CHAR(255) DEFAULT '' COMMENT 'User last name',
+  `username` CHAR(255) DEFAULT '' COMMENT 'User username',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update',
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+CREATE TABLE `chats` (
+  `id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique user or chat identifier',
+  `title` CHAR(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+CREATE TABLE `users_chats` (
+  `user_id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique user identifier',
+  `chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique user or chat identifier',
+  PRIMARY KEY (`user_id`, `chat_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`chat_id`) REFERENCES `chats` (`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+
+

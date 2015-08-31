@@ -15,7 +15,7 @@ A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.or
 
 ## introduction
 This is a pure php Telegram Bot, fully extensible via plugins. Telegram recently announced official support for a [Bot API](https://telegram.org/blog/bot-revolution) allowing integrators of all sorts to bring automated interactions to the mobile platform. This Bot aims to provide a platform where one could simply write a plugin and have interactions in a matter of minutes.
-The Bot support Reply Markup and handle commands in group chat.
+The Bot supports Reply Markup and handle commands in group chat with multiple bot.
 
 
 Instructions
@@ -153,30 +153,65 @@ $credentials = array('host'=>'localhost', 'user'=>'dbuser', 'password'=>'dbpass'
 $telegram->enableMySQL($credentials);
 
 ```
+You can set a custom prefix to all the tables while you are enabling mysql:
 
-Utilis
-------
+```php
+$telegram->enableMySQL($credentials, $BOT_NAME.'_');
+
+```
+
+Commads
+--------------
+The bot is able to recognise commands in chat with multiple bot.
+It can execute command triggering a chat event. Here's the list:
+
+-Groupchatcreated (GroupchatcreatedCommand.php)
+-Newchatparticipant (NewchatparticipantCommand.php)
+-Deletechatphoto (DeletechatphotoCommand.php)
+-Newchattitle (NewchattitleCommand.php)
+-Leftchatparticipant (LeftchatparticipantCommand.php)
+
+GenericCommand.php let you handle commands that non exist or use commands as var:  
+Favourite colour? /black /red 
+Favourite number? /1 /134 
+
 
 Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding before the method:
 
 ```php
-
 $COMMANDS_FOLDER = __DIR__.'/Commands/';
 $telegram->addCommandsPath($COMMANDS_FOLDER);
 
-
-
 ```
 
+
+
+Send message to all active chats (new!)
+---------------------------------------
+To do this you have to enable the mysql connections.
+Here's an example of use:
+
+```php
+$results = $telegram->sendToActiveChats(
+        'sendMessage', //callback function to execute (see Request.php methods)
+        array('text'=>'Hey! Checkout the new feature!!'), //Param to evaluate the request
+        true, //Send to chats (group chat)
+        true, //Send to users (single chat)
+        null, //'yyyy-mm-dd hh:mm:ss' date range from
+        null  //'yyyy-mm-dd hh:mm:ss' date range to
+    );
+
+print_r($results);
+```
+
+Utilis
+------
 You can also log incoming messages on a text file, set this option with the methods:
 ```php
-
-    $telegram->setLogRequests(true);
-    $telegram->setLogPath($BOT_NAME.'.log');
+$telegram->setLogRequests(true);
+$telegram->setLogPath($BOT_NAME.'.log');
 
 ```
-
-
 
 This code is available on [Github][0]. Pull requests are welcome.
 

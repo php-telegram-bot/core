@@ -14,10 +14,10 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class LeftchatparticipantCommand extends Command
+class DeletechatphotoCommand extends Command
 {
-    protected $name = 'leftchatparticipant';
-    protected $description = 'Left Chat Participant';
+    protected $name = 'Deletechatphoto';
+    protected $description = 'Delete chat photo';
     protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
@@ -27,7 +27,7 @@ class LeftchatparticipantCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
 
-        $participant = $message->getLeftChatParticipant();
+        $delete_chat_photo = $message->getDeleteChatPhoto();
 
         // temporary do nothing
 

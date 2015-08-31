@@ -14,10 +14,10 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class LeftchatparticipantCommand extends Command
+class NewchattitleCommand extends Command
 {
-    protected $name = 'leftchatparticipant';
-    protected $description = 'Left Chat Participant';
+    protected $name = 'Newchattitle';
+    protected $description = 'New chat Title';
     protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
@@ -27,7 +27,7 @@ class LeftchatparticipantCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
 
-        $participant = $message->getLeftChatParticipant();
+        $new_chat_title = $message->getNewChatTitle();
 
         // temporary do nothing
 

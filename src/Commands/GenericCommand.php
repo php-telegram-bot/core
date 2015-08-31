@@ -14,10 +14,10 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class NewchatparticipantCommand extends Command
+class GenericCommand extends Command
 {
-    protected $name = 'Newchatparticipant';
-    protected $description = 'New Chat Participant';
+    protected $name = 'Generic';
+    protected $description = 'Handle genric commands or is executed by defaul when a command is not found';
     protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
@@ -26,24 +26,10 @@ class NewchatparticipantCommand extends Command
     {
         $update = $this->getUpdate();
         $message = $this->getMessage();
-
-        $participant = $message->getNewChatParticipant();
-
-        $chat_id = $message->getChat()->getId();
-        $data = array();
-        $data['chat_id'] = $chat_id;
-
-        if ($participant->getUsername() == $this->getTelegram()->getBotName()) {
-            $text = 'Hi there';
-        } else {
-            if ($participant->getUsername()) {
-                $text = 'Hi @'.$participant->getUsername();
-            } else {
-                $text = 'Hi '.$participant->getFirstName();
-            }
-        }
-
-        $data['text'] = $text;
+        //you can use $command as param
+        $command = $message->getCommand();
+ 
+        $data['text'] = 'Command: '.$command.' not found.. :(';
         $result = Request::sendMessage($data);
         return $result;
     }

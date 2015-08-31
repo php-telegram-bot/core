@@ -102,6 +102,14 @@ class Request
         return $result;
     }
 
+    public static function getMe()
+    {
+
+        $result = self::send('getMe');
+        return $result;
+    }
+
+
     public static function setWebhook($url)
     {
         $result = self::send('setWebhook', array('url' => $url));

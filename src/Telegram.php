@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.0.11';
+    protected $version = '0.0.15';
 
     /**
      * Telegram API key
@@ -120,9 +120,6 @@ class Telegram
     protected $message_types = array('text', 'command', 'new_chat_participant',
         'left_chat_participant', 'new_chat_title', 'delete_chat_photo', 'group_chat_created'
         );
-
-
-
 
 
     /**
@@ -274,11 +271,9 @@ class Telegram
     {
 
         $this->input = Request::getInput();
-
         if (empty($this->input)) {
             throw new TelegramException('Input is empty!');
         }
-
         $post = json_decode($this->input, true);
         if (empty($post)) {
             throw new TelegramException('Invalid JSON!');
@@ -289,8 +284,6 @@ class Telegram
         $this->insertRequest($update);
 
         $message = $update->getMessage();
-
-
 
         // check type
         $type = $message->getType();
@@ -317,52 +310,24 @@ class Telegram
                 return $this->executeCommand('Leftchatparticipant', $update);
                 break;
 
-
             case 'new_chat_title':
                 // trigger new_chat_title
+                return $this->executeCommand('Newchattitle', $update);
                 break;
 
 
             case 'delete_chat_photo':
                 // trigger delete_chat_photo
+                return $this->executeCommand('Deletechatphoto', $update);
                 break;
 
 
             case 'group_chat_created':
                 // trigger group_chat_created
+                return $this->executeCommand('Groupchatcreated', $update);
                 break;
-
         }
     }
-
-
-    public function eventUserAddedToChat(Update $update)
-    {
-        $message = $update->getMessage();
-
-
-        $participant = $message->getNewChatParticipant();
-        if (!empty($participant)) {
-            $chat_id = $message->getChat()->getId();
-            $data = array();
-            $data['chat_id'] = $chat_id;
-
-            if ($participant->getUsername() == $this->getBotName()) {
-                $text = 'Hi there';
-            } else {
-                if ($participant->getUsername()) {
-                    $text = 'Hi @'.$participant->getUsername();
-                } else {
-                    $text = 'Hi '.$participant->getFirstName();
-                }
-            }
-
-            $data['text'] = $text;
-            $result = Request::sendMessage($data);
-            return $result;
-        }
-    }
-
 
     /**
      * Execute /command
@@ -372,8 +337,11 @@ class Telegram
     public function executeCommand($command, Update $update)
     {
         $class = $this->getCommandClass($command, $update);
-        if (empty($class)) {
-            return false;
+
+        //print_r($class);
+        if (!$class) {
+            //handle a generic command or non existing one
+            return $this->executeCommand('Generic', $update);
         }
 
         if (!$class->isEnabled()) {
@@ -438,13 +406,68 @@ class Telegram
     }
 
 
+    /**
+     *DB Mehods
+     *
+     *
+     */
+
+
+//TODO
+//Documentation write send message to all
+
+    /**
+     * Enable MySQL integration
+     *
+     * @param array $credentials MySQL credentials
+     *
+     * @return string
+     */
+    public function enableMySQL(array $credentials, $table_prefix = null)
+    {
+        if (empty($credentials)) {
+            throw new TelegramException('MySQL credentials not provided!');
+        }
+        $this->mysql_credentials = $credentials;
+
+        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        $options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',);
+        try {
+            $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+            //Define table
+            define('TB_MESSAGES', $table_prefix.'messages');
+            define('TB_USERS', $table_prefix.'users');
+            define('TB_CHATS', $table_prefix.'chats');
+            define('TB_USERS_CHATS', $table_prefix.'users_chats');
+        } catch (\PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        $this->pdo = $pdo;
+        $this->mysql_enabled = true;
+
+        return $this;
+    }
+
+    /**
+     * Convert from unix timestamp to timestamp
+     *
+     * @return string
+     */
+    protected function toTimestamp($time)
+    {
+        return date('Y-m-d H:i:s', $time);
+    }
 
     /**
      * Insert request in db
      *
      * @return bool
      */
-    protected function insertRequest(Update $update)
+ //   protected function insertRequest(Update $update)
+
+    public function insertRequest(Update $update)
     {
         if (empty($this->pdo)) {
             return false;
@@ -453,61 +476,91 @@ class Telegram
         $message = $update->getMessage();
 
         try {
-            $sth1 = $this->pdo->prepare('INSERT INTO `users`
+            //Users table
+            $sth1 = $this->pdo->prepare('INSERT INTO `'.TB_USERS.'`
                 (
-                `id`, `username`, `first_name`, `last_name`
+                `id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`
                 )
-                VALUES (:id, :username, :first_name, :last_name)
-                ON DUPLICATE KEY UPDATE `username`=:username, `first_name`=:first_name, `last_name`=:last_name
-                ');
+                VALUES (
+                :id, :username, :first_name, :last_name, :date, :date
+                )
+                ON DUPLICATE KEY UPDATE `username`=:username, `first_name`=:first_name, 
+                `last_name`=:last_name, `updated_at`=:date
+               ');
 
             $from = $message->getFrom();
+            $date = $this->toTimestamp($message->getDate());
             $user_id = $from->getId();
             $username = $from->getUsername();
             $first_name = $from->getFirstName();
             $last_name = $from->getLastName();
 
-
             $sth1->bindParam(':id', $user_id, \PDO::PARAM_INT);
             $sth1->bindParam(':username', $username, \PDO::PARAM_STR, 255);
             $sth1->bindParam(':first_name', $first_name, \PDO::PARAM_STR, 255);
             $sth1->bindParam(':last_name', $last_name, \PDO::PARAM_STR, 255);
-
+            $sth1->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth1->execute();
 
-
-
-            $sth = $this->pdo->prepare('INSERT IGNORE INTO `messages`
+            //chats table
+            $sth2 = $this->pdo->prepare('INSERT INTO `'.TB_CHATS.'`
                 (
-                `update_id`, `message_id`, `user_id`, `date`, `chat`, `forward_from`,
+                `id`, `title`, `created_at` ,`updated_at`
+                )
+                VALUES (:id, :title, :date, :date)
+                ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date
+                ');
+
+            $chat_id = $message->getChat()->getId();
+            $chat_title = $message->getChat()->getTitle();
+
+            $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
+            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
+
+            $status = $sth2->execute();
+
+            //user_chat table
+            $sth3 = $this->pdo->prepare('INSERT IGNORE INTO `'.TB_USERS_CHATS.'`
+                (
+                `user_id`, `chat_id`
+                )
+                VALUES (:user_id, :chat_id)
+                ');
+
+            $sth3->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+            $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+
+            $status = $sth3->execute();
+
+            //Messages Table
+            $sth = $this->pdo->prepare('INSERT IGNORE INTO `'.TB_MESSAGES.'`
+                (
+                `update_id`, `message_id`, `user_id`, `date`, `chat_id`, `forward_from`,
                 `forward_date`, `reply_to_message`, `text`
                 )
-                VALUES (:update_id, :message_id, :user_id,
-                :date, :chat, :forward_from,
+                VALUES (:update_id, :message_id, :user_id, :date, :chat_id, :forward_from,
                 :forward_date, :reply_to_message, :text)');
 
             $update_id = $update->getUpdateId();
             $message_id = $message->getMessageId();
-            $from = $message->getFrom()->toJSON();
-            $user_id = $message->getFrom()->getId();
-            $date = $message->getDate();
-            $chat = $message->getChat()->toJSON();
             $forward_from = $message->getForwardFrom();
-            $forward_date = $message->getForwardDate();
+            $forward_date = $this->toTimestamp($message->getForwardDate());
             $reply_to_message = $message->getReplyToMessage();
             if (is_object($reply_to_message)) {
                 $reply_to_message = $reply_to_message->toJSON();
             }
             $text = $message->getText();
 
+    
             $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth->bindParam(':date', $date, \PDO::PARAM_INT);
-            $sth->bindParam(':chat', $chat, \PDO::PARAM_STR);
+            $sth->bindParam(':date', $date, \PDO::PARAM_STR);
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
-            $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_INT);
+            $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
             $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
 
@@ -519,6 +572,97 @@ class Telegram
 
         return true;
     }
+
+
+    /**
+     * Send Message in all the active chat
+     *
+     * @param date string yyyy-mm-dd hh:mm:ss
+     *
+     * @return bool
+     */
+
+    public function sendToActiveChats(
+        $callback_function,
+        array $data,
+        $send_chats = true,
+        $send_users = true,
+        $date_from = null,
+        $date_to = null
+    ) {
+        if (empty($this->pdo)) {
+            return false;
+        }
+
+        $callback_path = __NAMESPACE__ .'\Request';
+        if (! method_exists($callback_path, $callback_function)) {
+            throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
+        }
+
+        if (!$send_chats & !$send_users) {
+            return false;
+        }
+
+
+        try {
+            $query = 'SELECT * ,  
+                '.TB_CHATS.'.`id` AS `chat_id`,
+                '.TB_CHATS.'.`updated_at` AS `chat_updated_at`
+                FROM `'.TB_CHATS.'` LEFT JOIN `'.TB_USERS.'`
+                ON '.TB_CHATS.'.`id`='.TB_USERS.'.`id`';
+
+            //Building parts of query
+            $chat_or_user = '';
+            $where = [];
+            $tokens = [];
+            if ($send_chats & !$send_users) {
+                $where[] = TB_CHATS.'.`id` < 0';
+            } elseif (!$send_chats & $send_users) {
+                $where[] = TB_CHATS.'.`id` > 0';
+            }
+
+            if (! is_null($date_from)) {
+                $where[] = TB_CHATS.'.`updated_at` >= :date_from';
+                $tokens[':date_from'] =  $date_from;
+            }
+
+            if (! is_null($date_to)) {
+                $where[] = TB_CHATS.'.`updated_at` <= :date_to';
+                $tokens[':date_to'] = $date_to;
+            }
+
+            $a=0;
+            foreach ($where as $part) {
+                if ($a) {
+                    $query .= ' AND '.$part;
+                } else {
+                    $query .= ' WHERE '.$part;
+                    ++$a;
+                }
+            }
+            echo $query."\n";
+
+            $sth = $this->pdo->prepare($query);
+            $sth->execute($tokens);
+
+            $results = [];
+            while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                print_r($row);
+                $data['chat_id'] = $row['chat_id'];
+                $results[] = call_user_func_array($callback_path.'::'.$callback_function, array( $data));
+            }
+
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        return $results;
+    }
+
+    /**
+     *End DB Mehods
+     *
+     */
 
 
 
@@ -606,35 +750,6 @@ class Telegram
         }
 
         return $result['description'];
-    }
-
-    /**
-     * Enable MySQL integration
-     *
-     * @param array $credentials MySQL credentials
-     *
-     * @return string
-     */
-    public function enableMySQL(array $credentials)
-    {
-        if (empty($credentials)) {
-            throw new TelegramException('MySQL credentials not provided!');
-        }
-        $this->mysql_credentials = $credentials;
-
-        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        $options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',);
-        try {
-            $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
-        } catch (\PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
-
-        $this->pdo = $pdo;
-        $this->mysql_enabled = true;
-
-        return $this;
     }
 
     /**
