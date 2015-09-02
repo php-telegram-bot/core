@@ -299,12 +299,12 @@ class Telegram
         if ($this->admin_enabled) {
             $message = $update->getMessage();
 
-            $from = $message->getFrom();
-            $user_id = $from->getId();
+            //$from = $message->getFrom();
+            //$user_id = $from->getId();
 
             //Admin command avaiable only in single chat with the bot
-            //$chat = $message->getChat();
-            //$user_id = $chat->getId();
+            $chat = $message->getChat();
+            $user_id = $chat->getId();
 
             if (in_array($user_id, $this->admins_list)) {
                 $this->addCommandsPath(BASE_PATH.'/Admin');
@@ -791,11 +791,11 @@ class Telegram
         }
         $result = Request::setWebhook($url);
 
-        if (!$result['ok']) {
-            throw new TelegramException('Webhook was not set! Error: '.$result[error_code].' '. $result['description']);
+        if (!$result->isOk()) {
+            throw new TelegramException('Webhook was not set! Error: '.$result->getErrorCode().' '. $result->getDescription());
         }
 
-        return $result['description'];
+        return $result;
     }
 
     /**
