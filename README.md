@@ -13,7 +13,7 @@
 A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
 
 
-## introduction
+## Introduction
 This is a pure php Telegram Bot, fully extensible via plugins. Telegram recently announced official support for a [Bot API](https://telegram.org/blog/bot-revolution) allowing integrators of all sorts to bring automated interactions to the mobile platform. This Bot aims to provide a platform where one could simply write a plugin and have interactions in a matter of minutes.
 The Bot supports Reply Markup and handle commands in group chat with multiple bot.
 
@@ -139,6 +139,7 @@ try {
 }
 ```
 
+##MySQL storage
 If you want insert in database messages/users for further usage in commands, create database and import structure.sql and enable mysql support after object creation and BEFORE handle method
 
 ```php
@@ -154,8 +155,7 @@ $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 
 ```
 
-Commads
---------------
+##Commands
 The bot is able to recognise commands in chat with multiple bot.
 It can execute command triggering a chat event. Here's the list:
 
@@ -165,12 +165,12 @@ It can execute command triggering a chat event. Here's the list:
 - New chat title (**NewchattitleCommand.php**)
 - Left chat participant (**LeftchatparticipantCommand.php**)
 
-**GenericCommand.php** let you handle commands that non exist or use commands as var:  
-Favourite colour? **/black /red**  
-Favourite number? **/1 /134**  
+**GenericCommand.php** let you handle commands that non exists or use commands as variable:  
+Favourite colour? **/black, /red**  
+Favourite number? **/1, /134**  
 
 
-Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding before the method:
+Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding the method:
 
 ```php
 $COMMANDS_FOLDER = __DIR__.'/Commands/';
@@ -178,10 +178,18 @@ $telegram->addCommandsPath($COMMANDS_FOLDER);
 
 ```
 
+##Admin Commands (new!)
+Enabling this feature, the admin bot can perform some super user command like send message to all.  
+You can specify one or more admin with this option:
 
+```php
+$telegram->enableAdmins(array('TelegramUserID','Othersid'));
+```
+Telegram user id can be retrieved with the command /whoami.
+Admin commands are stored in src/Admin/ folder.
+To know all the commands avaiable type /help. 
 
-Send message to all active chats (new!)
----------------------------------------
+##Send message to all active chats
 To do this you have to enable the mysql connection.
 Here's an example of use:
 
@@ -198,8 +206,7 @@ $results = $telegram->sendToActiveChats(
 print_r($results);
 ```
 
-Utilis
-------
+##Utilis
 You can also log incoming messages on a text file, set this option with the methods:
 ```php
 $telegram->setLogRequests(true);
@@ -210,14 +217,12 @@ $telegram->setLogPath($BOT_NAME.'.log');
 This code is available on [Github][0]. Pull requests are welcome.
 
 
-Troubleshooting
--------------
+##Troubleshooting
 
 If you like living on the edge, please report any bugs you find on the [PHP Telegram Bot issues](https://github.com/akalongman/php-telegram-bot/issues) page.
 
 
-Contributing
--------------
+##Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
 

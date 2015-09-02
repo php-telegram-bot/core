@@ -34,7 +34,19 @@ class Chat extends Entity
         $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
         $this->username = isset($data['username']) ? $data['username'] : null;
     }
+    public function isGroupChat()
+    {
+        if ($this->id < 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public function isSingleChat()
+    {
+        return ! $this->isGroupChat();
+    }
     public function getId()
     {
 

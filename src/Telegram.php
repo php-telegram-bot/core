@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.0.15';
+    protected $version = '0.0.16';
 
     /**
      * Telegram API key
@@ -113,14 +113,28 @@ class Telegram
 
 
     /**
-     * Commands config
+     * Message types
      *
      * @var array
      */
     protected $message_types = array('text', 'command', 'new_chat_participant',
         'left_chat_participant', 'new_chat_title', 'delete_chat_photo', 'group_chat_created'
         );
+    /**
+     * Admins List
+     *
+     * @var array
+     */
+    protected $admins_list = [];
 
+
+    /**
+     * Admin
+     *
+     * @var boolean
+     */
+
+    protected $admin_enabled = false;
 
     /**
      * Constructor
@@ -281,6 +295,22 @@ class Telegram
 
         $update = new Update($post, $this->bot_name);
 
+        //Load admin Commands
+        if ($this->admin_enabled) {
+            $message = $update->getMessage();
+
+            $from = $message->getFrom();
+            $user_id = $from->getId();
+
+            //Admin command avaiable only in single chat with the bot
+            //$chat = $message->getChat();
+            //$user_id = $chat->getId();
+
+            if (in_array($user_id, $this->admins_list)) {
+                $this->addCommandsPath(BASE_PATH.'/Admin');
+            }
+        }
+
         $this->insertRequest($update);
 
         $message = $update->getMessage();
@@ -404,17 +434,33 @@ class Telegram
         //$str[0] = strtolower($str[0]);
         return $str;
     }
+    /**
+     * Enable Admin Account
+     *
+     * @param array list of admins
+     *
+     * @return string
+     */
+    public function enableAdmins(array $admins_list)
+    {
+        foreach ($admins_list as $admin) {
+            if ($admin > 0) {
+                $this->admins_list[] = $admin;
+            } else {
+                throw new TelegramException('Only users can be admin not chat!');
+            }
+        }
 
+        $this->admin_enabled = true;
+
+        return $this;
+    }
 
     /**
      *DB Mehods
      *
      *
      */
-
-
-//TODO
-//Documentation write send message to all
 
     /**
      * Enable MySQL integration
@@ -640,14 +686,14 @@ class Telegram
                     ++$a;
                 }
             }
-            echo $query."\n";
+            //echo $query."\n";
 
             $sth = $this->pdo->prepare($query);
             $sth->execute($tokens);
 
             $results = [];
             while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                print_r($row);
+                //print_r($row);
                 $data['chat_id'] = $row['chat_id'];
                 $results[] = call_user_func_array($callback_path.'::'.$callback_function, array( $data));
             }
@@ -746,7 +792,7 @@ class Telegram
         $result = Request::setWebhook($url);
 
         if (!$result['ok']) {
-            throw new TelegramException('Webhook was not set! Error: ' . $result['description']);
+            throw new TelegramException('Webhook was not set! Error: '.$result[error_code].' '. $result['description']);
         }
 
         return $result['description'];
@@ -760,5 +806,14 @@ class Telegram
     public function getMessageTypes()
     {
         return $this->message_types;
+    }
+    /**
+     * Get list of admins
+     *
+     * @return array
+     */
+    public function getAdminList()
+    {
+        return $this->admins_list;
     }
 }

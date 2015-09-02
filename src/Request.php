@@ -11,6 +11,8 @@
 namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Entities\User;
 
 class Request
 {
@@ -66,8 +68,24 @@ class Request
 
     public static function send($action, array $data = null)
     {
+
+        if (!in_array($action, self::$methods)) {
+            throw new TelegramException('This methods doesn\'t exixt!');
+        }
+
         if (defined('PHPUNIT_TESTSUITE')) {
-            return $data;
+            $fake_response['ok'] = 1;
+
+            //some fake data just to let iniatilize the class
+            $data['message_id'] = '123';
+            $data['date'] = '123';
+
+            $data['from'] = array( 'id' => 123,'first_name' => 'botname', 'username'=> 'namebot');
+
+            $data['chat'] = array('id'=> $data['chat_id'] );
+            $fake_response['result'] = $data;
+
+            return new ServerResponse($fake_response, self::$telegram->getBotName());
         }
 
         $ch = curl_init();
@@ -88,7 +106,13 @@ class Request
         $result = curl_exec($ch);
         curl_close($ch);
 
-        return !empty($result) ? json_decode($result, true) : false;
+        if (empty($result)) {
+            $response['ok'] = 1;
+            $response['error_code'] = 1;
+            $response['description'] = 'Empty server response';
+        }
+
+        return new ServerResponse(json_decode($result, true), self::$telegram->getBotName());
     }
 
     public static function sendMessage(array $data)
@@ -108,7 +132,6 @@ class Request
         $result = self::send('getMe');
         return $result;
     }
-
 
     public static function setWebhook($url)
     {

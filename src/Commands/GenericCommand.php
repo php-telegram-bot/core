@@ -17,7 +17,7 @@ use Longman\TelegramBot\Entities\Update;
 class GenericCommand extends Command
 {
     protected $name = 'Generic';
-    protected $description = 'Handle genric commands or is executed by defaul when a command is not found';
+    protected $description = 'Handle generic commands or is executed by defaul when a command is not found';
     protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
@@ -26,9 +26,12 @@ class GenericCommand extends Command
     {
         $update = $this->getUpdate();
         $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
         //you can use $command as param
         $command = $message->getCommand();
  
+        $data = [];
+        $data['chat_id'] = $chat_id;
         $data['text'] = 'Command: '.$command.' not found.. :(';
         $result = Request::sendMessage($data);
         return $result;
