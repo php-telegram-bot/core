@@ -9,6 +9,7 @@
  *
 */
 namespace Longman\TelegramBot\Commands;
+
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
@@ -31,8 +32,10 @@ class SlapCommand extends Command
         $sender='@'.$message->getFrom()->getUsername();
 
         //username validation
-        $test=preg_match('/@[\w_]{5,}/',$text);
-        if($test===0) return false;
+        $test=preg_match('/@[\w_]{5,}/', $text);
+        if ($test===0) {
+            return false;
+        }
 
         $data = array();
         $data['chat_id'] = $chat_id;
