@@ -32,7 +32,7 @@ class ServerResponse extends Entity
                 $this->result = new Message($data['result'], $bot_name);
                 $this->error_code = null;
                 $this->description = null;
-            } elseif($data['ok'] & $data['result'] == 1) {
+            } elseif ($data['ok'] & $data['result'] == 1) {
                 //Response from setWebhook set
                 $this->ok = $data['ok'];
                 $this->result = $data['result'];

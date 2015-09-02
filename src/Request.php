@@ -76,7 +76,7 @@ class Request
             $fake_response['ok'] = 1; // :)
 
             //some fake data just to let iniatilize the class method SendMessage
-            if (isset( $data['chat_id'])) {
+            if (isset($data['chat_id'])) {
                 $data['message_id'] = '123';
                 $data['date'] = '123';
                 $data['chat'] = array('id'=> $data['chat_id'] );
@@ -135,7 +135,6 @@ class Request
 
     public static function setWebhook($url)
     {
-
         $result = self::send('setWebhook', array('url' => $url));
         return $result;
     }
