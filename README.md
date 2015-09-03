@@ -229,5 +229,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
 
 ## Credits
 
-Credit list in [CREDITS.md](CREDITS.md)
+Credit list in [CREDITS](CREDITS)
 
