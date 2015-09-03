@@ -90,14 +90,14 @@ And run composer update
 composer require longman/telegram-bot
 ```
 
-###### bot token
+###### Bot token
 You will notice that the Telegram Bot wants a value for `API_KEY`. This token may be obtained via a telegram client for your bot. See [this](https://core.telegram.org/bots#botfather) link if you are unsure of how to so this.
 
 
 ## Usage
-You must set [WebHook](https://core.telegram.org/bots/api#setwebhook)
+You must set a [WebHook](https://core.telegram.org/bots/api#setwebhook)
 
-Create set.php and put:
+Create set.php and put into it:
 ```php
 <?php
 $loader = require __DIR__.'/vendor/autoload.php';
@@ -165,9 +165,9 @@ It can execute command triggering a chat event. Here's the list:
 - New chat title (**NewchattitleCommand.php**)
 - Left chat participant (**LeftchatparticipantCommand.php**)
 
-**GenericCommand.php** let you handle commands that non exists or use commands as variable:  
-Favourite colour? **/black, /red**  
-Favourite number? **/1, /134**  
+**GenericCommand.php** lets you handle commands that don't exist or to use commands as a variable:
+Favourite colour? **/black, /red**
+Favourite number? **/1, /134**
 
 
 Maybe you would like to develop your own commands. A good practice is to store them outside vendor/. This can be done adding the method:
