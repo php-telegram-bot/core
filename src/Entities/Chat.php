@@ -45,7 +45,11 @@ class Chat extends Entity
 
     public function isSingleChat()
     {
-        return ! $this->isGroupChat();
+        if ($this->id > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public function getId()
     {

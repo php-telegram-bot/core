@@ -12,3 +12,14 @@ Which should give you no output, indicating that there are no coding standard er
     phpunit
 
 Which should give you no failures or errors. You can ignore any skipped tests as these are for external tools.
+
+Pushing
+-------
+
+Development is based on the git flow branching model (see http://nvie.com/posts/a-successful-git-branching-model/ )
+If you fix a bug please push in hotfix branch.
+If you develop a new feature please create a new branch.  
+
+Version
+-------
+Version number: 0.#version.#hotfix
