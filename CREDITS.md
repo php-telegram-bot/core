@@ -1,0 +1,18 @@
+    This is at least a partial credits-file of people that have
+    contributed to the current project. It is sorted by name and
+    formatted to allow easy grepping and beautification by
+    scripts. The fields are: name (N), email (E), web-address
+    (W) and description (D).
+    Thanks,
+
+            Avtandil Kikabidze
+----------
+
+N: Avtandil Kikabidze aka LONGMAN
+E: akalongman@gmail.com
+W: http://longman.ge
+D: Project owner, Maintainer
+
+N: Marco Boretto
+E: marco.bore@gmail.com
+D: Maintainer and Collaborator
