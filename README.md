@@ -179,7 +179,7 @@ $telegram->addCommandsPath($COMMANDS_FOLDER);
 ```
 
 ##Admin Commands (new!)
-Enabling this feature, the admin bot can perform some super user command like send message to all.  
+Enabling this feature, the admin bot can perform some super user command like send message to all.
 You can specify one or more admin with this option:
 
 ```php
@@ -187,7 +187,7 @@ $telegram->enableAdmins(array('TelegramUserID','Othersid'));
 ```
 Telegram user id can be retrieved with the command /whoami.
 Admin commands are stored in src/Admin/ folder.
-To know all the commands avaiable type /help. 
+To know all the commands avaiable type /help.
 
 ##Send message to all active chats
 To do this you have to enable the mysql connection.
@@ -214,7 +214,7 @@ $telegram->setLogPath($BOT_NAME.'.log');
 
 ```
 
-This code is available on [Github][0]. Pull requests are welcome.
+This code is available on [Github](https://github.com/akalongman/php-telegram-bot). Pull requests are welcome.
 
 
 ##Troubleshooting
@@ -229,7 +229,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
 
 ## Credits
 
-Created by [Avtandil Kikabidze][1].
+Credit list in [CREDITS](CREDITS)
 
-[0]: https://github.com/akalongman/php-telegram-bot
-[1]: mailto:akalongman@gmail.com
