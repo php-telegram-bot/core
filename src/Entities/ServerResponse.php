@@ -26,18 +26,24 @@ class ServerResponse extends Entity
     {
 
         if (isset($data['ok']) & isset($data['result'])) {
-            if ($data['ok'] & $data['result'] != 1) {
+            if ($data['ok'] & is_array($data['result'])) {
                 //Response from sendMessage set
                 $this->ok = $data['ok'];
                 $this->result = new Message($data['result'], $bot_name);
                 $this->error_code = null;
                 $this->description = null;
-            } elseif ($data['ok'] & $data['result'] == 1) {
+
+            } elseif ($data['ok'] & $data['result'] == true) {
                 //Response from setWebhook set
                 $this->ok = $data['ok'];
-                $this->result = $data['result'];
+                $this->result = true;
                 $this->error_code = null;
-                $this->description = $data['description'];
+
+                if (isset($data['description'])) {
+                    $this->description = $data['description'];
+                } else {
+                    $this->description = '';
+                }
 
             } else {
                 $this->ok = false;
@@ -67,7 +73,7 @@ class ServerResponse extends Entity
                 $this->description = null;
             }
 
-    //throw new TelegramException('ok(variable) is not set!');
+            //throw new TelegramException('ok(variable) is not set!');
         }
     }
 
@@ -87,45 +93,4 @@ class ServerResponse extends Entity
     {
         return $this->description;
     }
-//Succes request
-//Array
-//(
-//    [ok] => 1
-//    [result] => Array
-//        (
-//            [message_id] => 3582
-//            [from] => Array
-//                (
-//                    [id] => 12345678
-//                    [first_name] => name
-//                    [username] => botname
-//                )
-//
-//            [chat] => Array
-//                (
-//                    [id] => 123456789
-//                    [first_name] => name
-//                    [username] => Surname
-//                )
-//
-//            [date] => 1441194780
-//            [text] => hello 
-//        )
-//
-//)
-
-// Error Request
-//
-//Array
-//(
-//    [ok] => 
-//    [error_code] => 401
-//    [description] => Error: Unauthorized
-//)
-
-//Array
-//(
-//    [chat_id] => 110751663
-//    [text] => ciao
-//)
 }
