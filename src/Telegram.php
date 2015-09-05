@@ -86,7 +86,7 @@ class Telegram
      *
      * @var boolean
      */
-    protected $mysql_enabled;
+    protected $mysql_enabled = false;
 
     /**
      * MySQL credentials
@@ -345,12 +345,10 @@ class Telegram
                 return $this->executeCommand('Newchattitle', $update);
                 break;
 
-
             case 'delete_chat_photo':
                 // trigger delete_chat_photo
                 return $this->executeCommand('Deletechatphoto', $update);
                 break;
-
 
             case 'group_chat_created':
                 // trigger group_chat_created
@@ -378,8 +376,9 @@ class Telegram
             return false;
         }
 
-
-        return $class->execute();
+        //execute methods will be execute after preexecution 
+        //this for prevent to execute db query witout connection
+        return $class->preExecute();
     }
 
     /**
@@ -507,15 +506,44 @@ class Telegram
     }
 
     /**
+     * check id user require the db connection
+     *
+     * @return bool
+     */
+
+    public function isDbEnabled()
+    {
+        if ($this->mysql_enabled) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * check if database Connection has been created
+     *
+     * @return bool
+     */
+
+    public function isDbConnected()
+    {
+        if (empty($this->pdo)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Insert request in db
      *
      * @return bool
      */
- //   protected function insertRequest(Update $update)
-
     public function insertRequest(Update $update)
     {
-        if (empty($this->pdo)) {
+        if (!$this->isDbConnected()) {
             return false;
         }
 
@@ -686,6 +714,9 @@ class Telegram
                     ++$a;
                 }
             }
+
+
+            $query .= ' ORDER BY '.TB_CHATS.'.`updated_at` ASC';
             //echo $query."\n";
 
             $sth = $this->pdo->prepare($query);

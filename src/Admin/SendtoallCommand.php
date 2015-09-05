@@ -23,7 +23,21 @@ class SendtoallCommand extends Command
     protected $version = '1.2.0';
     protected $enabled = true;
     protected $public = true;
+    //need Mysql
+    protected $need_mysql = true;
 
+    public function executeFail()
+    {
+                                                                                                                                                                                                               
+        //Database not setted or without connection
+        //Preparing message
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+        $data = array();
+        $data['chat_id'] = $chat_id;
+        $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
+        return Request::sendMessage($data);
+    }
 
     public function execute()
     {
