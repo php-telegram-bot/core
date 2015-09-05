@@ -31,15 +31,17 @@ class SlapCommand extends Command
         
         $sender='@'.$message->getFrom()->getUsername();
 
+        $data = array();
+        $data['chat_id'] = $chat_id;
+
         //username validation
         $test=preg_match('/@[\w_]{5,}/', $text);
         if ($test===0) {
-            return false;
+            $data['text'] = $sender.' sorry no one to slap around..';
+        } else {
+            $data['text'] = $sender.' slaps '.$text.' around a bit with a large trout';
         }
 
-        $data = array();
-        $data['chat_id'] = $chat_id;
-        $data['text'] = $sender.' slaps '.$text.' around a bit with a large trout';
         $result = Request::sendMessage($data);
         return $result;
     }
