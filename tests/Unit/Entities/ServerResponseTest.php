@@ -164,7 +164,7 @@ class ServerResponseTest extends TestCase
 
 
         //sendMessage ok
-        $fake_response = Request::generateGeneralFakeServerSesponse(['chat_id' => 123456789]);
+        $fake_response = Request::generateGeneralFakeServerSesponse(['chat_id' => 123456789, 'text' => 'hello']);
 
         $this->server =  new ServerResponse($fake_response, 'testbot');
 

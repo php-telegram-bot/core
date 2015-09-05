@@ -68,10 +68,10 @@ class Request
     public static function generateGeneralFakeServerSesponse($data = null)
     {
         //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
-        //Maybe this in not the best possible implementation
+        //Maybe this is not the best possible implementation
 
         //No value set in $data ie testing setWekhook
-        //Provided $data['chat_id'] testing sendMessage
+        //Provided $data['chat_id'] ie testing sendMessage
 
         $fake_response['ok'] = true; // :)
 
@@ -83,7 +83,6 @@ class Request
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
             $data['date'] = '1441378360';
-            $data['text'] = 'hello';
             $data['from'] = array( 'id' => 123456789 ,'first_name' => 'botname', 'username'=> 'namebot');
             $data['chat'] = array('id'=> $data['chat_id'] );
 
@@ -127,12 +126,12 @@ class Request
             $response['ok'] = 1;
             $response['error_code'] = 1;
             $response['description'] = 'Empty server response';
+            $result =$response;
         }
 
-//        return json_decode($result, true);
 
-        return $result;
-        //return new ServerResponse(json_decode($result, true), self::$telegram->getBotName());
+        //return $result;
+        return new ServerResponse(json_decode($result, true), self::$telegram->getBotName());
     }
 
     public static function sendMessage(array $data)
