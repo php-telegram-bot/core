@@ -45,10 +45,8 @@ abstract class Command
 
     public function preExecute()
     {
-
-    
         if (!$this->need_mysql |
-            $this->need_mysql & $this->telegram->isDbEnabled() & $this->telegram->isDbConnected()
+            $this->need_mysql & $this->telegram->isDbEnabled() & DB::isDbConnected()
         ) {
             return $this->execute();
         }
@@ -58,7 +56,8 @@ abstract class Command
     abstract public function execute();
 
     //this methods is executed if $need_mysql is true but DB connection for some reason is not avaiable
-    public function executeFail(){
+    public function executeFail()
+    {
 
     }
 
