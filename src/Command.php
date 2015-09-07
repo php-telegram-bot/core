@@ -50,13 +50,13 @@ abstract class Command
         ) {
             return $this->execute();
         }
-        return $this->executeFail();
+        return $this->executeNoDB();
     }
 
     abstract public function execute();
 
     //this methods is executed if $need_mysql is true but DB connection for some reason is not avaiable
-    public function executeFail()
+    public function executeNoDB()
     {
 
     }

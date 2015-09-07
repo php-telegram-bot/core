@@ -17,6 +17,7 @@ class Request
 {
     private static $telegram;
     private static $input;
+    private static $server_response;
 
     private static $methods = array(
         'getMe',
@@ -36,7 +37,11 @@ class Request
 
     public static function initialize(Telegram $telegram)
     {
-        self::$telegram = $telegram;
+        if (is_object($telegram)) {
+            self::$telegram = $telegram;
+        } else {
+            throw new TelegramException('Telegram pointer is empty!');
+        }
     }
 
     public static function getInput()
@@ -49,6 +54,18 @@ class Request
         self::log();
         return self::$input;
     }
+
+    public static function getUpdates($data)
+    {
+        if ($update = self::$telegram->getCustomUpdate()) {
+            self::$input = $update;
+        } else {
+            self::$input = self::send('getUpdates', $data);
+        }
+        self::log(); //TODO
+        return self::$input;
+    }
+
 
     private static function log()
     {
@@ -126,12 +143,13 @@ class Request
             $response['ok'] = 1;
             $response['error_code'] = 1;
             $response['description'] = 'Empty server response';
-            $result =$response;
+            $result =json_encode($response);
         }
 
-
         //return $result;
-        return new ServerResponse(json_decode($result, true), self::$telegram->getBotName());
+
+        $bot_name = self::$telegram->getBotName();
+        return new ServerResponse(json_decode($result, true), $bot_name);
     }
 
     public static function sendMessage(array $data)

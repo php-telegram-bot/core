@@ -104,7 +104,7 @@ class Message extends Entity
 
         $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
         if (!empty($this->reply_to_message)) {
-            $this->reply_to_message = new self($this->reply_to_message);
+            $this->reply_to_message = new Message($this->reply_to_message, $this->bot_name);
         }
 
         $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;

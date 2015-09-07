@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.16.0';
+    protected $version = '0.17.0';
 
     /**
      * Telegram API key
@@ -153,29 +153,6 @@ class Telegram
     }
 
     /**
-     * Set custom update string for debug purposes
-     *
-     * @param string $update
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setCustomUpdate($update)
-    {
-        $this->update = $update;
-        return $this;
-    }
-
-    /**
-     * Get custom update string for debug purposes
-     *
-     * @return string $update
-     */
-    public function getCustomUpdate()
-    {
-        return $this->update;
-    }
-
-    /**
      * Get commands list
      *
      * @return array $commands
@@ -271,8 +248,71 @@ class Telegram
         return $this->log_path;
     }
 
+
     /**
-     * Handle bot request
+     * Set custom update string for debug purposes
+     *
+     * @param string $update
+     *
+     * @return \Longman\TelegramBot\Telegram
+     */
+    public function setCustomUpdate($update)
+    {
+        $this->update = $update;
+        return $this;
+    }
+
+
+    /**
+     * Get custom update string for debug purposes
+     *
+     * @return string $update in json
+     */
+    public function getCustomUpdate()
+    {
+        return $this->update;
+    }
+
+
+    /**
+     * Handle getUpdates method
+     *
+     * @return \Longman\TelegramBot\Telegram
+     */
+
+    public function handleGetUpdates($limit = null, $timeout = null)
+    {
+        //DB Query
+        $last_message = DB::selectMessages(1);
+
+        if (isset($last_message[0]['update_id'])) {
+            //As explained in the telegram bot api documentation
+            $offset = $last_message[0]['update_id']+1;
+        } else {
+            $offset = null;
+        }
+        //arrive a server Response object
+        $ServerResponse = Request::getUpdates([
+            'offset' => $offset ,
+            'limit' => $limit,
+            'timeout' => $timeout
+        ]);
+        if ($ServerResponse->isOk()) {
+            $results = '';
+            $n_update = count($ServerResponse->getResult());
+            for ($a = 0; $a < $n_update; $a++) {
+                $result = $this->processUpdate($ServerResponse->getResult()[$a]);
+            }
+            print(date('Y-m-d H:i:s', time()).' - Processed '.$a." updates\n");
+        } else {
+            print(date('Y-m-d H:i:s', time())." - Fail fetch updates\n");
+        }
+
+        //return $results
+    }
+
+    /**
+     * Handle bot request from wekhook
      *
      * @return \Longman\TelegramBot\Telegram
      */
@@ -289,6 +329,17 @@ class Telegram
         }
 
         $update = new Update($post, $this->bot_name);
+        return $this->processUpdate($update);
+    }
+
+    /**
+     * Process Handle bot request
+     *
+     * @return \Longman\TelegramBot\Telegram
+     */
+
+    public function processUpdate(update $update)
+    {
 
         //Load admin Commands
         if ($this->admin_enabled) {
@@ -308,9 +359,8 @@ class Telegram
 
         DB::insertRequest($update);
 
-        $message = $update->getMessage();
-
         // check type
+        $message = $update->getMessage();
         $type = $message->getType();
 
         switch ($type) {
@@ -321,29 +371,40 @@ class Telegram
             case 'command':
                 // execute command
                 $command = $message->getCommand();
+
+                return $this->executeCommand($command, $update);
                 break;
             case 'new_chat_participant':
                 // trigger new participant
                 $command = 'Newchatparticipant';
+
+                return $this->executeCommand($command, $update);
                 break;
             case 'left_chat_participant':
                 // trigger left chat participant
                 $command = 'Leftchatparticipant';
+
+                return $this->executeCommand($command, $update);
                 break;
             case 'new_chat_title':
                 // trigger new_chat_title
                 $command = 'Newchattitle';
+
+                return $this->executeCommand($command, $update);
                 break;
             case 'delete_chat_photo':
                 // trigger delete_chat_photo
                 $command = 'Deletechatphoto';
+
+                return $this->executeCommand($command, $update);
                 break;
             case 'group_chat_created':
                 // trigger group_chat_created
                 $command = 'Groupchatcreated';
+
+                return $this->executeCommand($command, $update);
                 break;
         }
-        return $this->executeCommand($command, $update);
     }
 
     /**

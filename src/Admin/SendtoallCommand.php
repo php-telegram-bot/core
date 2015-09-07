@@ -27,7 +27,7 @@ class SendtoallCommand extends Command
     //need Mysql
     protected $need_mysql = true;
 
-    public function executeFail()
+    public function executeNoDB()
     {
         //Database not setted or without connection
         //Preparing message

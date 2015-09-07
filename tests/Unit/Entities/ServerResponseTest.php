@@ -151,6 +151,71 @@ class ServerResponseTest extends TestCase
     }
 
 
+
+    /**
+     * @test
+     */
+
+    public function getUpdatesArray()
+    {
+        return '{
+            "ok":true,
+            "result":[
+                {"update_id":123,
+                    "message":{
+                        "message_id":90,
+                        "from":{"id":123456789,"first_name":"John","username":"Mjohn"},
+                        "chat":{"id":123456789,"first_name":"John","username":"Mjohn"},
+                        "date":1441569067,
+                        "text":"\/start"}
+                },
+                {"update_id":124,
+                    "message":{
+                        "message_id":91,
+                        "from":{"id":123456788,"first_name":"Patrizia","username":"Patry"},
+                        "chat":{"id":123456788,"first_name":"Patrizia","username":"Patry"},
+                        "date":1441569073,
+                        "text":"Hello!"}
+                    },
+                {"update_id":125,
+                    "message":{
+                        "message_id":92,
+                        "from":{"id":123456789,"first_name":"John","username":"MJohn"},
+                        "chat":{"id":123456789,"first_name":"John","username":"MJohn"},
+                        "date":1441569094,
+                        "text":"\/echo hello!"}
+                    },
+                {"update_id":126,
+                "message":{
+                    "message_id":93,
+                    "from":{"id":123456788,"first_name":"Patrizia","username":"Patry"},
+                    "chat":{"id":123456788,"first_name":"Patrizia","username":"Patry"},
+                    "date":1441569112,
+                    "text":"\/echo the best"
+                    }
+                }
+            ]
+        }';
+    }
+
+
+    /**
+     * @test
+     */
+
+    public function getUpdatesEmpty()
+    {
+        return '{"ok":true,"result":[]}';
+    }
+
+
+
+
+
+    /**
+     * @test
+     */
+
     public function testSetGeneralTestFakeResponse() {
         //setWebhook ok
         $fake_response = Request::generateGeneralFakeServerSesponse();

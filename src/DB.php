@@ -82,7 +82,44 @@ class DB
         }
     }
 
+    /**
+     * fetch message from DB
+     *
+     * @param fetch Message from the DB
+     *
+     * @return bool/ array with data
+     */
 
+    public static function selectMessages($limit = null)
+    {
+
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $query = 'SELECT * FROM `'.TB_MESSAGES.'`';
+            $query .= ' ORDER BY '.TB_MESSAGES.'.`update_id` DESC';
+
+            $tokens = [];
+            if (!is_null($limit)) {
+                //$query .=' LIMIT :limit ';
+                //$tokens[':limit'] = $limit;
+
+                $query .=' LIMIT '.$limit;
+            }
+            //echo $query;
+            $sth = self::$pdo->prepare($query);
+            //$sth->execute($tokens);
+            $sth->execute();
+            $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+        return $results;
+    }
+  
     /**
      * Convert from unix timestamp to timestamp
      *
@@ -211,7 +248,7 @@ class DB
      *
      * @return bool
      */
-
+//TODO separe send from query?
     public static function sendToActiveChats(
         $callback_function,
         array $data,
