@@ -11,19 +11,33 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 
 class SendtoallCommand extends Command
 {
-    protected $name = 'sendall';
+    protected $name = 'sendtoall';
     protected $description = 'Send the message to all the user\'s bot';
     protected $usage = '/sendall <message to send>';
     protected $version = '1.2.0';
     protected $enabled = true;
     protected $public = true;
+    //need Mysql
+    protected $need_mysql = true;
 
+    public function executeNoDB()
+    {
+        //Database not setted or without connection
+        //Preparing message
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+        $data = array();
+        $data['chat_id'] = $chat_id;
+        $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
+        return Request::sendMessage($data);
+    }
 
     public function execute()
     {
@@ -37,7 +51,7 @@ class SendtoallCommand extends Command
         if (empty($text)) {
             $text = 'Write te message to sent: /sendall <message>';
         } else {
-            $results = $this->telegram->sendToActiveChats(
+            $results = DB::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
                 array('text'=> $text), //Param to evaluate the request
                 true, //Send to chats (group chat)

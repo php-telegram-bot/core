@@ -23,6 +23,7 @@ abstract class Command
     protected $description = 'Command help';
     protected $usage = 'Command usage';
     protected $version = '1.0.0';
+    protected $need_mysql = false;
     protected $enabled = true;
     protected $name = '';
 
@@ -42,7 +43,23 @@ abstract class Command
         return $this;
     }
 
+    public function preExecute()
+    {
+        if (!$this->need_mysql |
+            $this->need_mysql & $this->telegram->isDbEnabled() & DB::isDbConnected()
+        ) {
+            return $this->execute();
+        }
+        return $this->executeNoDB();
+    }
+
     abstract public function execute();
+
+    //this methods is executed if $need_mysql is true but DB connection for some reason is not avaiable
+    public function executeNoDB()
+    {
+
+    }
 
     public function getUpdate()
     {

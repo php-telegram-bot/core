@@ -17,6 +17,7 @@ class Request
 {
     private static $telegram;
     private static $input;
+    private static $server_response;
 
     private static $methods = array(
         'getMe',
@@ -36,7 +37,11 @@ class Request
 
     public static function initialize(Telegram $telegram)
     {
-        self::$telegram = $telegram;
+        if (is_object($telegram)) {
+            self::$telegram = $telegram;
+        } else {
+            throw new TelegramException('Telegram pointer is empty!');
+        }
     }
 
     public static function getInput()
@@ -49,6 +54,18 @@ class Request
         self::log();
         return self::$input;
     }
+
+    public static function getUpdates($data)
+    {
+        if ($update = self::$telegram->getCustomUpdate()) {
+            self::$input = $update;
+        } else {
+            self::$input = self::send('getUpdates', $data);
+        }
+        self::log(); //TODO
+        return self::$input;
+    }
+
 
     private static function log()
     {
@@ -65,6 +82,33 @@ class Request
         return $status;
     }
 
+    public static function generateGeneralFakeServerSesponse($data = null)
+    {
+        //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
+        //Maybe this is not the best possible implementation
+
+        //No value set in $data ie testing setWekhook
+        //Provided $data['chat_id'] ie testing sendMessage
+
+        $fake_response['ok'] = true; // :)
+
+        if (!isset($data)) {
+            $fake_response['result'] = true;
+        }
+
+        //some data to let iniatilize the class method SendMessage
+        if (isset($data['chat_id'])) {
+            $data['message_id'] = '1234';
+            $data['date'] = '1441378360';
+            $data['from'] = array( 'id' => 123456789 ,'first_name' => 'botname', 'username'=> 'namebot');
+            $data['chat'] = array('id'=> $data['chat_id'] );
+
+            $fake_response['result'] = $data;
+        }
+
+        return $fake_response;
+    }
+
     public static function send($action, array $data = null)
     {
 
@@ -73,17 +117,7 @@ class Request
         }
 
         if (defined('PHPUNIT_TESTSUITE')) {
-            $fake_response['ok'] = 1; // :)
-
-            //some fake data just to let iniatilize the class method SendMessage
-            if (isset($data['chat_id'])) {
-                $data['message_id'] = '123';
-                $data['date'] = '123';
-                $data['chat'] = array('id'=> $data['chat_id'] );
-                $data['from'] = array( 'id' => 123,'first_name' => 'botname', 'username'=> 'namebot');
-                $fake_response['result'] = $data;
-            }
-
+            $fake_response = self::generateGeneralFakeServerSesponse($data);
             return new ServerResponse($fake_response, self::$telegram->getBotName());
         }
 
@@ -109,10 +143,13 @@ class Request
             $response['ok'] = 1;
             $response['error_code'] = 1;
             $response['description'] = 'Empty server response';
+            $result =json_encode($response);
         }
 
-        //return json_decode($result, true);
-        return new ServerResponse(json_decode($result, true), self::$telegram->getBotName());
+        //return $result;
+
+        $bot_name = self::$telegram->getBotName();
+        return new ServerResponse(json_decode($result, true), $bot_name);
     }
 
     public static function sendMessage(array $data)

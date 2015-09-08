@@ -22,29 +22,52 @@ class ServerResponse extends Entity
     protected $error_code;
     protected $description;
 
+
     public function __construct(array $data, $bot_name)
     {
-
         if (isset($data['ok']) & isset($data['result'])) {
-            if ($data['ok'] & $data['result'] != 1) {
-                //Response from sendMessage set
-                $this->ok = $data['ok'];
-                $this->result = new Message($data['result'], $bot_name);
-                $this->error_code = null;
-                $this->description = null;
-            } elseif ($data['ok'] & $data['result'] == 1) {
-                //Response from setWebhook set
-                $this->ok = $data['ok'];
-                $this->result = $data['result'];
-                $this->error_code = null;
-                $this->description = $data['description'];
+            if (is_array($data['result'])) {
+                if ($data['ok'] & !$this->isAssoc($data['result'])) {
+                    //update id
+                    $this->ok = $data['ok'];
+                    //$this->result =[];
+                    foreach ($data['result'] as $update) {
+                        $this->result[] = new Update($update, $bot_name);
+                    }
+                    $this->error_code = null;
+                    $this->description = null;
+    
+                } elseif ($data['ok'] & $this->isAssoc($data['result'])) {
+                    //Response from sendMessage set
+                    $this->ok = $data['ok'];
+                    $this->result = new Message($data['result'], $bot_name);
+                    $this->error_code = null;
+                    $this->description = null;
+                }
+    
+
 
             } else {
-                $this->ok = false;
-                $this->result = null;
-                $this->error_code = $data['error_code'];
-                $this->description = $data['description'];
+                if ($data['ok'] & $data['result'] == true) {
+                    //Response from setWebhook set
+                    $this->ok = $data['ok'];
+                    $this->result = true;
+                    $this->error_code = null;
+    
+                    if (isset($data['description'])) {
+                        $this->description = $data['description'];
+                    } else {
+                        $this->description = '';
+                    }
+                } else {
+                    $this->ok = false;
+                    $this->result = null;
+                    $this->error_code = $data['error_code'];
+                    $this->description = $data['description'];
+                }
+
             }
+
         } else {
             //webHook not set
             $this->ok = false;
@@ -67,10 +90,15 @@ class ServerResponse extends Entity
                 $this->description = null;
             }
 
-    //throw new TelegramException('ok(variable) is not set!');
+            //throw new TelegramException('ok(variable) is not set!');
         }
     }
 
+    //must be an array
+    protected function isAssoc(array $array)
+    {
+        return (bool)count(array_filter(array_keys($array), 'is_string'));
+    }
     public function isOk()
     {
         return $this->ok;
@@ -87,45 +115,4 @@ class ServerResponse extends Entity
     {
         return $this->description;
     }
-//Succes request
-//Array
-//(
-//    [ok] => 1
-//    [result] => Array
-//        (
-//            [message_id] => 3582
-//            [from] => Array
-//                (
-//                    [id] => 12345678
-//                    [first_name] => name
-//                    [username] => botname
-//                )
-//
-//            [chat] => Array
-//                (
-//                    [id] => 123456789
-//                    [first_name] => name
-//                    [username] => Surname
-//                )
-//
-//            [date] => 1441194780
-//            [text] => hello 
-//        )
-//
-//)
-
-// Error Request
-//
-//Array
-//(
-//    [ok] => 
-//    [error_code] => 401
-//    [description] => Error: Unauthorized
-//)
-
-//Array
-//(
-//    [chat_id] => 110751663
-//    [text] => ciao
-//)
 }
