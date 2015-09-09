@@ -170,7 +170,30 @@ You need the database Mysql active.
 Create *getUpdateCLI.php* (just edit *example-getUpdateCLI.php*) and
 put into it:
 ```php
-code
+
+
+
+
+#!/usr/bin/env php
+<?php
+$loader = require __DIR__.'/vendor/autoload.php';
+
+$API_KEY = 'your_bot_api_key';
+$BOT_NAME = 'namebot';
+$credentials = array('host'=>'localhost', 'user'=>'dbuser', 'password'=>'dbpass', 'database'=>'dbname');
+
+try {
+    // create Telegram API object
+    $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
+    $telegram->enableMySQL($credentials);
+    // handle telegram getUpdate request
+    $telegram->handleGetUpdates();
+} catch (Longman\TelegramBot\Exception\TelegramException $e) {
+    // log telegram errors
+     echo $e->getMessage();
+}                
+
+
 ```
 give to the file the permission for execution:
 ```
