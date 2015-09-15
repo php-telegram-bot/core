@@ -87,6 +87,12 @@ class Telegram
      * @var boolean
      */
     protected $mysql_enabled = false;
+    /**
+     * PDO object
+     *
+     * @var \PDO
+     */
+    protected $pdo;
 
     /**
      * Commands config
@@ -148,7 +154,7 @@ class Telegram
      */
     public function enableMySQL(array $credential, $table_prefix = null)
     {
-        DB::initialize($credential, $table_prefix);
+        $this->pdo = DB::initialize($credential, $table_prefix);
         $this->mysql_enabled = true;
     }
 

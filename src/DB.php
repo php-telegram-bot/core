@@ -65,6 +65,7 @@ class DB
         }
 
         self::$pdo = $pdo;
+        return self::$pdo;
     }
 
     /**
