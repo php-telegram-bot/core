@@ -128,19 +128,26 @@ You must set a [WebHook](https://core.telegram.org/bots/api#setwebhook)
 Create *set.php* (just edit *example-set.php*) and put into it:
 ```php
 <?php
+//Composer Loader
 $loader = require __DIR__.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
-
+$link = 'https://yourdomain/yourpath_to_hook.php';
 try {
     // create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
     // set webhook
-    echo $telegram->setWebHook('https://yourdomain/yourpath_to_hook.php');
+    $result = $telegram->setWebHook($link);
+    if ($result->isOk()) {
+        echo $result->getDescription();
+    }
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     echo $e->getMessage();
 }
+
+
+
 ```
 And open your *set.php* via browser.
 
