@@ -228,7 +228,12 @@ class DB
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             //TODO insert the user in users table?
-            $sth->bindParam(':forward_from', $forward_from->toJSON(), \PDO::PARAM_STR);
+            if (is_object($forward_from)) {
+                $forward = $forward_from->toJSON();
+            } else {
+                $forward = '';
+            }
+            $sth->bindParam(':forward_from', $forward, \PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
             $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
