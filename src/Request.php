@@ -17,6 +17,7 @@ class Request
 {
     private static $telegram;
     private static $input;
+    private static $input_raw;
     private static $server_response;
 
     private static $methods = array(
@@ -44,25 +45,36 @@ class Request
         }
     }
 
+    public static function setInputRaw($input_raw)
+    {
+        if (is_string($input_raw)) {
+            self::$input_raw = $input_raw;
+        } else {
+            throw new TelegramException("Log input is not a string");
+        }
+    }
+
     public static function getInput()
     {
         if ($update = self::$telegram->getCustomUpdate()) {
-            self::$input = $update;
+            self::setInputRaw($update);
         } else {
-            self::$input = file_get_contents('php://input');
+            self::setInputRaw(file_get_contents('php://input'));
         }
         self::log();
-        return self::$input;
+        return self::$input_raw;
     }
 
     public static function getUpdates($data)
     {
         if ($update = self::$telegram->getCustomUpdate()) {
+            //Cannot be used for testing yet json update have to be converted in a ServerResponse Object
             self::$input = $update;
         } else {
             self::$input = self::send('getUpdates', $data);
         }
-        self::log(); //TODO
+        //In send methods is set input_raw
+        self::log();
         return self::$input;
     }
 
@@ -77,7 +89,7 @@ class Request
             return false;
         }
 
-        $status = file_put_contents($path, self::$input . "\n", FILE_APPEND);
+        $status = file_put_contents($path, self::$input_raw . "\n", FILE_APPEND);
 
         return $status;
     }
@@ -111,9 +123,8 @@ class Request
 
     public static function send($action, array $data = null)
     {
-
         if (!in_array($action, self::$methods)) {
-            throw new TelegramException('This methods doesn\'t exixt!');
+            throw new TelegramException('This methods doesn\'t exist!');
         }
 
         if (defined('PHPUNIT_TESTSUITE')) {
@@ -145,8 +156,8 @@ class Request
             $response['description'] = 'Empty server response';
             $result =json_encode($response);
         }
-
-        //return $result;
+        //For the getUpdate method log
+        self::setInputRaw($result);
 
         $bot_name = self::$telegram->getBotName();
         return new ServerResponse(json_decode($result, true), $bot_name);

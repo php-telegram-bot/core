@@ -177,10 +177,6 @@ You need the database Mysql active.
 Create *getUpdateCLI.php* (just edit *example-getUpdateCLI.php*) and
 put into it:
 ```php
-
-
-
-
 #!/usr/bin/env php
 <?php
 $loader = require __DIR__.'/vendor/autoload.php';
@@ -217,7 +213,6 @@ in commands, create database and import *structure.sql* and enable
 Mysql support after object creation and BEFORE handle method:
 
 ```php
-
 $credentials = array('host'=>'localhost', 'user'=>'dbuser',
 'password'=>'dbpass', 'database'=>'dbname');
 
@@ -291,8 +286,7 @@ print_r($results);
 ```
 
 ### Logging
-You can also log incoming messages on a text file, set this option
-with the methods:
+You can also log incoming messages on a text file, set this option with the methods:  
 ```php
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');

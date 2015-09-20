@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.17.0';
+    protected $version = '0.17.2';
 
     /**
      * Telegram API key
@@ -258,7 +258,7 @@ class Telegram
     /**
      * Set custom update string for debug purposes
      *
-     * @param string $update
+     * @param string $update (json format)
      *
      * @return \Longman\TelegramBot\Telegram
      */
