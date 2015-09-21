@@ -20,5 +20,4 @@ class TelegramException extends \Exception
         $status = file_put_contents($path, date('Y-m-d H:i:s', time()) .' '. self::__toString() . "\n", FILE_APPEND);
 
     }
-
 }
