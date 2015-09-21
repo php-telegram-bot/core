@@ -143,7 +143,7 @@ try {
         echo $result->getDescription();
     }
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-    echo $e->getMessage();
+    echo $e;
 }
 
 
@@ -168,7 +168,7 @@ try {
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
-    // echo $e->getMessage();
+    // echo $e;
 }
 ```
 ## getUpdate installation NEW!
@@ -193,7 +193,7 @@ try {
     $telegram->handleGetUpdates();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
-     echo $e->getMessage();
+     echo $e;
 }                
 
 
@@ -291,9 +291,9 @@ You can also log incoming messages on a text file, set this option with the meth
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');
 ```
------
+Thrown Exception are stored in TelegramException.log file.
 
-
+-----  
 This code is available on
 [Github](https://github.com/akalongman/php-telegram-bot). Pull
 requests are welcome.
