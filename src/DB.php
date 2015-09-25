@@ -39,6 +39,13 @@ class DB
     static protected $pdo;
 
     /**
+     * table prefix
+     *
+     * @var string
+     */
+    static protected $table_prefix;
+
+    /**
      * Initialize
      *
      * @param array credential, string table_prefix
@@ -49,6 +56,7 @@ class DB
             throw new TelegramException('MySQL credentials not provided!');
         }
         self::$mysql_credentials = $credentials;
+        self::$table_prefix = $table_prefix;
 
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         $options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',);
@@ -56,10 +64,20 @@ class DB
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
             //Define table
-            define('TB_MESSAGES', $table_prefix.'messages');
-            define('TB_USERS', $table_prefix.'users');
-            define('TB_CHATS', $table_prefix.'chats');
-            define('TB_USERS_CHATS', $table_prefix.'users_chats');
+
+            if (!defined('TB_MESSAGES')) {
+                define('TB_MESSAGES', self::$table_prefix.'messages');
+            }
+            if (!defined('TB_USERS')) {
+                define('TB_USERS', self::$table_prefix.'users');
+            }
+            if (!defined('TB_CHATS')) {
+                define('TB_CHATS', self::$table_prefix.'chats');
+            }
+            if (!defined('TB_USERS_CHATS')) {
+                define('TB_USERS_CHATS', self::$table_prefix.'users_chats');
+            }
+
         } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
