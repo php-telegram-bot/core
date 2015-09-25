@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.17.2';
+    protected $version = '0.17.3';
 
     /**
      * Telegram API key
@@ -372,43 +372,32 @@ class Telegram
         switch ($type) {
             default:
             case 'text':
-                // do nothing
+                return $this->executeCommand('Genericmessage', $update);
                 break;
             case 'command':
                 // execute command
                 $command = $message->getCommand();
-
                 return $this->executeCommand($command, $update);
                 break;
             case 'new_chat_participant':
                 // trigger new participant
-                $command = 'Newchatparticipant';
-
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Newchatparticipant', $update);
                 break;
             case 'left_chat_participant':
                 // trigger left chat participant
-                $command = 'Leftchatparticipant';
-
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Leftchatparticipant', $update);
                 break;
             case 'new_chat_title':
                 // trigger new_chat_title
-                $command = 'Newchattitle';
-
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Newchattitle', $update);
                 break;
             case 'delete_chat_photo':
                 // trigger delete_chat_photo
-                $command = 'Deletechatphoto';
-
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Deletechatphoto', $update);
                 break;
             case 'group_chat_created':
                 // trigger group_chat_created
-                $command = 'Groupchatcreated';
-
-                return $this->executeCommand($command, $update);
+                return $this->executeCommand('Groupchatcreated', $update);
                 break;
         }
     }

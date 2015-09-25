@@ -14,10 +14,10 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class GenericCommand extends Command
+class GenericmessageCommand extends Command
 {
-    protected $name = 'Generic';
-    protected $description = 'Handle generic commands or is executed by default when a command is not found';
+    protected $name = 'Genericmessage';
+    protected $description = 'Handle generic message';
     protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
@@ -32,11 +32,6 @@ class GenericCommand extends Command
  
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
-
-        $data = array();
-        $data['chat_id'] = $chat_id;
-        $data['text'] = 'Command: '.$command.' not found.. :(';
-        $result = Request::sendMessage($data);
-        return $result;
+        //Do nothing
     }
 }
