@@ -21,7 +21,6 @@ class Video extends Entity
     protected $thumb;
     protected $mime_type;
     protected $file_size;
-    protected $caption;
 
     public function __construct(array $data)
     {
@@ -52,7 +51,6 @@ class Video extends Entity
 
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-        $this->caption = isset($data['caption']) ? $data['caption'] : null;
     }
 
     public function getFileId()
@@ -84,9 +82,5 @@ class Video extends Entity
     public function getFileSize()
     {
          return $this->file_size;
-    }
-    public function getCaption()
-    {
-         return $this->caption;
     }
 }

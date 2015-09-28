@@ -225,10 +225,17 @@ class DB
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_MESSAGES.'`
                 (
                 `update_id`, `message_id`, `user_id`, `date`, `chat_id`, `forward_from`,
-                `forward_date`, `reply_to_message`, `text`
+                `forward_date`, `reply_to_message`, `text`, `audio`, `document`,
+                `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
+                `location`, `new_chat_participant`, `left_chat_participant`,
+                `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`
                 )
                 VALUES (:update_id, :message_id, :user_id, :date, :chat_id, :forward_from,
-                :forward_date, :reply_to_message, :text)');
+                :forward_date, :reply_to_message, :text, :audio, :document,
+                :photo, :sticker, :video, :voice, :caption, :contact,
+                :location, :new_chat_participant, :left_chat_participant,
+                :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created
+                )');
 
             $update_id = $update->getUpdateId();
             $message_id = $message->getMessageId();
@@ -239,22 +246,64 @@ class DB
                 $reply_to_message = $reply_to_message->toJSON();
             }
             $text = $message->getText();
-    
+            $audio = $message->getAudio();
+            $document = $message->getDocument();
+            $photo = $message->getPhoto();
+            $sticker = $message->getSticker();
+            $video = $message->getVideo();
+            $voice = $message->getVoice();
+            $caption = $message->getCaption();
+            $contact = $message->getContact();
+            $location = $message->getLocation();
+            $new_chat_participant = $message->getNewChatParticipant();
+            $left_chat_participant = $message->getLeftChatParticipant();
+            $new_chat_title = $message->getNewChatTitle();
+            $delete_chat_photo = $message->getDeleteChatPhoto();
+            $group_chat_created = $message->getGroupChatCreated();
+
             $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
-            //TODO insert the user in users table?
-            if (is_object($forward_from)) {
-                $forward = $forward_from->toJSON();
-            } else {
-                $forward = '';
-            }
-            $sth->bindParam(':forward_from', $forward, \PDO::PARAM_STR);
+            //TODO insert the user in users tabl
+            $forward_from = is_object($forward_from) ? $forward_from->toJSON(): '';
+            $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
             $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
+
+            $audio = is_object($audio) ? $audio->toJSON(): '';
+            $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
+            $document = is_object($document) ? $document->toJSON(): '';
+            $sth->bindParam(':document', $document, \PDO::PARAM_STR);
+            //Array of photosize...
+            $sth->bindParam(':photo', !!, \PDO::PARAM_STR);
+
+            $sticker = is_object($sticker) ? $sticker->toJSON(): '';
+            $sth->bindParam(':sticker', $sticker, \PDO::PARAM_STR);
+            $video = is_object($video) ? $video->toJSON(): '';
+            $sth->bindParam(':video' , $video, \PDO::PARAM_STR);
+            $voice = is_object($voice) ? $voice->toJSON(): '';
+            $sth->bindParam(':voice', $voice, \PDO::PARAM_STR);
+            $sth->bindParam(':caption', !!, \PDO::PARAM_STR);
+            $contanct = is_object($contanct) ? $contanct->toJSON(): '';
+            $sth->bindParam(':contact', $contanct, \PDO::PARAM_STR);
+            $location = is_object($location) ? $location->toJSON(): '';
+            $sth->bindParam(':location', $location, \PDO::PARAM_STR);
+
+
+            //TODO in table users
+            $sth->bindParam(':new_chat_participant', !!, \PDO::PARAM_STR);
+            $sth->bindParam(':left_chat_participant', !!, \PDO::PARAM_STR);
+
+            $sth->bindParam(':new_chat_title', !!, \PDO::PARAM_STR);
+            //Array of Photosize
+            $sth->bindParam(':new_chat_photo', !!, \PDO::PARAM_STR);
+
+            $sth->bindParam(':delete_chat_photo', !!, \PDO::PARAM_STR);
+            $sth->bindParam(':group_chat_created', !!, \PDO::PARAM_STR);
+
 
             $status = $sth->execute();
 

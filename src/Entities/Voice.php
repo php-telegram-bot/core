@@ -12,12 +12,10 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class Audio extends Entity
+class Voice extends Entity
 {
     protected $file_id;
     protected $duration;
-    protected $performer;
-    protected $title;
     protected $mime_type;
     protected $file_size;
 
@@ -35,9 +33,6 @@ class Audio extends Entity
             throw new TelegramException('duration is empty!');
         }
 
-        $this->performer = isset($data['performer']) ? $data['performer'] : null;
-
-        $this->title = isset($data['title']) ? $data['title'] : null;
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
 
@@ -53,14 +48,6 @@ class Audio extends Entity
          return $this->duration;
     }
 
-    public function getPerformer()
-    {
-        return $this->performer;
-    }
-    public function getTitle()
-    {
-        return $this->title;
-    }
     public function getMimeType()
     {
          return $this->mime_type;

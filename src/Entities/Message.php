@@ -41,6 +41,10 @@ class Message extends Entity
 
     protected $video;
 
+    protected $voice;
+
+    protected $caption;
+
     protected $contact;
 
     protected $location;
@@ -88,13 +92,6 @@ class Message extends Entity
         }
         $this->chat = new Chat($this->chat);
 
-        $this->text = isset($data['text']) ? $data['text'] : null;
-
-        $command = $this->getCommand();
-        if (!empty($command)) {
-            $this->type = 'command';
-        }
-
         $this->forward_from = isset($data['forward_from']) ? $data['forward_from'] : null;
         if (!empty($this->forward_from)) {
             $this->forward_from = new User($this->forward_from);
@@ -105,6 +102,58 @@ class Message extends Entity
         $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
         if (!empty($this->reply_to_message)) {
             $this->reply_to_message = new Message($this->reply_to_message, $this->bot_name);
+        }
+
+        $this->text = isset($data['text']) ? $data['text'] : null;
+        $command = $this->getCommand();
+        if (!empty($command)) {
+            $this->type = 'command';
+        }
+
+        $this->audio = isset($data['audio']) ? $data['audio'] : null;
+        if (!empty($this->audio)) {
+            $this->audio = new Audio($this->audio);
+        }
+
+        $this->document = isset($data['document']) ? $data['document'] : null;
+        if (!empty($this->document)) {
+            $this->document = new Document($this->document);
+        }
+
+        $this->photo = isset($data['photo']) ? $data['photo'] : null; //array of photosize
+        if (!empty($this->photo)) {
+            foreach($this->photo as $photo){
+                if(!empty($photo)) {
+                    $photos[] = new PhotoSize($photo); 
+                }
+            }
+            $this->photo = $photos;
+        }
+        $this->sticker = isset($data['sticker']) ? $data['sticker'] : null;
+        if (!empty($this->sticker)) {
+            $this->sticker = new Sticker($this->sticker);
+        }
+
+        $this->video = isset($data['video']) ? $data['video'] : null;
+        if (!empty($this->video)) {
+            $this->video = new Video($this->video);
+        }
+
+        $this->voice = isset($data['voice']) ? $data['voice'] : null;
+        if (!empty($this->voice)) {
+            $this->voice = new Voice($this->voice);
+        }
+
+        $this->caption = isset($data['caption']) ? $data['caption'] : null;//string
+
+        $this->contact = isset($data['contact']) ? $data['contact'] : null;
+        if (!empty($this->contact)) {
+            $this->contact = new Contact($this->contact);
+        }
+
+        $this->location = isset($data['location']) ? $data['location'] : null;
+        if (!empty($this->location)) {
+            $this->location = new Location($this->location);
         }
 
         $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
@@ -177,14 +226,14 @@ class Message extends Entity
         return $this->message_id;
     }
 
-    public function getDate()
-    {
-        return $this->date;
-    }
-
     public function getFrom()
     {
         return $this->from;
+    }
+
+    public function getDate()
+    {
+        return $this->date;
     }
 
     public function getChat()
@@ -205,6 +254,63 @@ class Message extends Entity
     public function getReplyToMessage()
     {
         return $this->reply_to_message;
+    }
+
+    public function getText($without_cmd = false)
+    {
+        $text = $this->text;
+        if ($without_cmd) {
+            $command = $this->getFullCommand();
+            if (!empty($command)) {
+                $text = substr($text, strlen($command.' '), strlen($text));
+            }
+        }
+
+        return $text;
+    }
+
+    public function getAudio()
+    {
+        return $this->audio;
+    }
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    public function getSticker()
+    {
+        return $this->sticker;
+    }
+
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    public function getVoice()
+    {
+        return $this->voice;
+    }
+
+    public function getCaption()
+    {
+        return $this->caption;
+    }
+
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    public function getLocation()
+    {
+        return $this->location;
     }
 
     public function getNewChatParticipant()
@@ -232,18 +338,6 @@ class Message extends Entity
         return $this->group_chat_created;
     }
 
-    public function getText($without_cmd = false)
-    {
-        $text = $this->text;
-        if ($without_cmd) {
-            $command = $this->getFullCommand();
-            if (!empty($command)) {
-                $text = substr($text, strlen($command.' '), strlen($text));
-            }
-        }
-
-        return $text;
-    }
 
     public function botAddedInChat()
     {
