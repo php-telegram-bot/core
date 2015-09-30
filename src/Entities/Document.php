@@ -29,10 +29,9 @@ class Document extends Entity
         }
 
         $this->thumb = isset($data['thumb']) ? $data['thumb'] : null;
-        if (empty($this->file_id)) {
-            throw new TelegramException('thumb is empty!');
+        if (!empty($this->thumb)) {
+            $this->thumb = new PhotoSize($this->thumb);
         }
-        $this->thumb = new PhotoSize($this->thumb);
 
         $this->file_name = isset($data['file_name']) ? $data['file_name'] : null;
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;

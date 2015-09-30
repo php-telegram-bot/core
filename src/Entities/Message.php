@@ -122,9 +122,9 @@ class Message extends Entity
 
         $this->photo = isset($data['photo']) ? $data['photo'] : null; //array of photosize
         if (!empty($this->photo)) {
-            foreach($this->photo as $photo){
-                if(!empty($photo)) {
-                    $photos[] = new PhotoSize($photo); 
+            foreach ($this->photo as $photo) {
+                if (!empty($photo)) {
+                    $photos[] = new PhotoSize($photo);
                 }
             }
             $this->photo = $photos;

@@ -12,6 +12,8 @@
 namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\User;
+use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -150,17 +152,23 @@ class DB
     }
 
     /**
-     * Insert request in db
+     * Insert users eventually connection to  chats
      *
      * @return bool
      */
-    public static function insertRequest(Update $update)
+
+    public static function insertUser(User $user, $date, Chat $chat = null)
     {
         if (!self::isDbConnected()) {
             return false;
         }
 
-        $message = $update->getMessage();
+        $user_id = $user->getId();
+        $username = $user->getUsername();
+        $first_name = $user->getFirstName();
+        $last_name = $user->getLastName();
+
+        $chat_id = $chat->getId();
 
         try {
             //Users table
@@ -175,13 +183,6 @@ class DB
                 `last_name`=:last_name, `updated_at`=:date
                ');
 
-            $from = $message->getFrom();
-            $date = self::toTimestamp($message->getDate());
-            $user_id = $from->getId();
-            $username = $from->getUsername();
-            $first_name = $from->getFirstName();
-            $last_name = $from->getLastName();
-
             $sth1->bindParam(':id', $user_id, \PDO::PARAM_INT);
             $sth1->bindParam(':username', $username, \PDO::PARAM_STR, 255);
             $sth1->bindParam(':first_name', $first_name, \PDO::PARAM_STR, 255);
@@ -190,6 +191,104 @@ class DB
 
             $status = $sth1->execute();
 
+
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+        //insert also the relationship to the chat
+        if (!is_null($chat)) {
+            try {
+                //user_chat table
+                $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_USERS_CHATS.'`
+                    (
+                    `user_id`, `chat_id`
+                    )
+                    VALUES (:user_id, :chat_id)
+                    ');
+
+                $sth3->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+                $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+
+                $status = $sth3->execute();
+
+            } catch (PDOException $e) {
+                throw new TelegramException($e->getMessage());
+            }
+        }
+    }
+
+
+
+    /**
+     * Insert request in db
+     *
+     * @return bool
+     */
+    public static function insertRequest(Update $update)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        $update_id = $update->getUpdateId();
+        $message = $update->getMessage();
+        $from = $message->getFrom();
+        $chat = $message->getChat();
+
+        $user_id = $from->getId();
+
+        $chat_id = $chat->getId();
+        $chat_title = $chat->getTitle();
+
+        $date = self::toTimestamp($message->getDate());
+        $message_id = $message->getMessageId();
+        $forward_from = $message->getForwardFrom();
+        $forward_date = self::toTimestamp($message->getForwardDate());
+        $reply_to_message = $message->getReplyToMessage();
+        $text = $message->getText();
+        $audio = $message->getAudio();
+        $document = $message->getDocument();
+        $photo = $message->getPhoto();
+        $sticker = $message->getSticker();
+        $video = $message->getVideo();
+        $voice = $message->getVoice();
+        $caption = $message->getCaption();
+        $contact = $message->getContact();
+        $location = $message->getLocation();
+        $new_chat_participant = $message->getNewChatParticipant();
+        $left_chat_participant = $message->getLeftChatParticipant();
+        $new_chat_title = $message->getNewChatTitle();
+        $delete_chat_photo = $message->getDeleteChatPhoto();
+        $group_chat_created = $message->getGroupChatCreated();
+
+        //inser user and the relation with the chat
+        self::insertUser($from, $date, $chat);
+
+        //Insert the forwarded message user in users table
+        if (is_object($forward_from)) {
+            self::insertUser($forward_from, $forward_date);
+            $forward_from = $forward_from->getId();
+        } else {
+            $forward_from = '';
+        }
+
+        //Insert the new chat user
+        if (is_object($new_chat_participant)) {
+            self::insertUser($new_chat_participant, $date, $chat);
+            $new_chat_participant = $new_chat_participant->getId();
+        } else {
+            $new_chat_participant = '';
+        }
+
+        //Insert the left chat user
+        if (is_object($left_chat_participant)) {
+            self::insertUser($left_chat_participant, $date, $chat);
+            $left_chat_participant = $left_chat_participant->getId();
+        } else {
+            $left_chat_participant = '';
+        }
+
+        try {
             //chats table
             $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
                 (
@@ -199,27 +298,12 @@ class DB
                 ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date
                 ');
 
-            $chat_id = $message->getChat()->getId();
-            $chat_title = $message->getChat()->getTitle();
 
             $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
             $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth2->execute();
-
-            //user_chat table
-            $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_USERS_CHATS.'`
-                (
-                `user_id`, `chat_id`
-                )
-                VALUES (:user_id, :chat_id)
-                ');
-
-            $sth3->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
-
-            $status = $sth3->execute();
 
             //Messages Table
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_MESSAGES.'`
@@ -237,39 +321,18 @@ class DB
                 :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created
                 )');
 
-            $update_id = $update->getUpdateId();
-            $message_id = $message->getMessageId();
-            $forward_from = $message->getForwardFrom();
-            $forward_date = self::toTimestamp($message->getForwardDate());
-            $reply_to_message = $message->getReplyToMessage();
-            if (is_object($reply_to_message)) {
-                $reply_to_message = $reply_to_message->toJSON();
-            }
-            $text = $message->getText();
-            $audio = $message->getAudio();
-            $document = $message->getDocument();
-            $photo = $message->getPhoto();
-            $sticker = $message->getSticker();
-            $video = $message->getVideo();
-            $voice = $message->getVoice();
-            $caption = $message->getCaption();
-            $contact = $message->getContact();
-            $location = $message->getLocation();
-            $new_chat_participant = $message->getNewChatParticipant();
-            $left_chat_participant = $message->getLeftChatParticipant();
-            $new_chat_title = $message->getNewChatTitle();
-            $delete_chat_photo = $message->getDeleteChatPhoto();
-            $group_chat_created = $message->getGroupChatCreated();
 
             $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
-            //TODO insert the user in users tabl
-            $forward_from = is_object($forward_from) ? $forward_from->toJSON(): '';
+
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
+
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
+
+            $reply_to_message = is_object($reply_to_message) ? $reply_to_message->toJSON(): '';
             $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
 
@@ -277,33 +340,42 @@ class DB
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
             $document = is_object($document) ? $document->toJSON(): '';
             $sth->bindParam(':document', $document, \PDO::PARAM_STR);
-            //Array of photosize...
-            $sth->bindParam(':photo', !!, \PDO::PARAM_STR);
+
+            //TODO what about the Entities array of photosize?
+            $var = [];
+            if (is_array($photo)) {
+                foreach ($photo as $elm) {
+                    $var[] = json_decode($elm->toJSON(), true);
+                }
+
+                $photo = json_encode($var);
+            } else {
+                $forward_from = '';
+            }
+
+            $sth->bindParam(':photo', $photo, \PDO::PARAM_STR);
 
             $sticker = is_object($sticker) ? $sticker->toJSON(): '';
             $sth->bindParam(':sticker', $sticker, \PDO::PARAM_STR);
             $video = is_object($video) ? $video->toJSON(): '';
-            $sth->bindParam(':video' , $video, \PDO::PARAM_STR);
+            $sth->bindParam(':video', $video, \PDO::PARAM_STR);
             $voice = is_object($voice) ? $voice->toJSON(): '';
             $sth->bindParam(':voice', $voice, \PDO::PARAM_STR);
-            $sth->bindParam(':caption', !!, \PDO::PARAM_STR);
-            $contanct = is_object($contanct) ? $contanct->toJSON(): '';
-            $sth->bindParam(':contact', $contanct, \PDO::PARAM_STR);
+            $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
+            $contact = is_object($contact) ? $contact->toJSON(): '';
+            $sth->bindParam(':contact', $contact, \PDO::PARAM_STR);
             $location = is_object($location) ? $location->toJSON(): '';
             $sth->bindParam(':location', $location, \PDO::PARAM_STR);
 
+            $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_STR);
+            $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_STR);
 
-            //TODO in table users
-            $sth->bindParam(':new_chat_participant', !!, \PDO::PARAM_STR);
-            $sth->bindParam(':left_chat_participant', !!, \PDO::PARAM_STR);
-
-            $sth->bindParam(':new_chat_title', !!, \PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
             //Array of Photosize
-            $sth->bindParam(':new_chat_photo', !!, \PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_photo', $new_chat_photo, \PDO::PARAM_STR);
 
-            $sth->bindParam(':delete_chat_photo', !!, \PDO::PARAM_STR);
-            $sth->bindParam(':group_chat_created', !!, \PDO::PARAM_STR);
-
+            $sth->bindParam(':delete_chat_photo', $delete_chat_photo, \PDO::PARAM_STR);
+            $sth->bindParam(':group_chat_created', $group_chat_created, \PDO::PARAM_STR);
 
             $status = $sth->execute();
 

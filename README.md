@@ -124,7 +124,7 @@ The bot can handle updates with **webhook** or **getUpdate** method:
 
 ## Webhook installation
 You need server with https and composer support.
-You must set a [WebHook](https://core.telegram.org/bots/api#setwebhook)
+You must set a [WebHook](https://core.telegram.org/bots/api#setwebhook).
 Create *set.php* (just edit *example-set.php*) and put into it:
 ```php
 <?php
@@ -145,14 +145,12 @@ try {
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     echo $e;
 }
-
-
-
 ```
+
 And open your *set.php* via browser.
 
 
-After create *hook.php* (just edit *example-hook.php*) and put:
+After, create *hook.php* (or just edit *example-hook.php*) and put:
 ```php
 <?php
 $loader = require __DIR__.'/vendor/autoload.php';
@@ -171,11 +169,10 @@ try {
     // echo $e;
 }
 ```
-## getUpdate installation NEW!
+## getUpdate installation
 You need the database Mysql active.
 
-Create *getUpdateCLI.php* (just edit *example-getUpdateCLI.php*) and
-put into it:
+Create *getUpdateCLI.php* (just edit *example-getUpdateCLI.php*) and put into it:
 ```php
 #!/usr/bin/env php
 <?php
@@ -223,6 +220,8 @@ You can set a custom prefix to all the tables while you are enabling Mysql:
 ```php
 $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 ```
+### Types New!
+All types implemented (except InputFile) according to Telegram API (2015 September 18).
 
 ### Commands
 The bot is able to recognise commands in chat with multiple bot(
@@ -241,16 +240,15 @@ Favourite colour? **/black, /red**
 Favourite number? **/1, /134**
 
 Maybe you would like to develop your own commands. A good practice is
-to store them outside vendor/. This can be done adding the method:
+to store them outside *vendor/*. This can be done adding the method:
 
 ```php
 $COMMANDS_FOLDER = __DIR__.'/Commands/';
 $telegram->addCommandsPath($COMMANDS_FOLDER);
 ```
 
-### Admin Commands (new!)
-Enabling this feature, the admin bot can perform some super user
-command like send message to all.
+### Admin Commands 
+Enabling this feature, the admin bot can perform some super user command like send message to all.
 You can specify one or more admin with this option:
 
 ```php
@@ -286,12 +284,13 @@ print_r($results);
 ```
 
 ### Logging
+Thrown Exception are stored in TelegramException.log file.
+
 You can also log incoming messages on a text file, set this option with the methods:  
 ```php
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');
 ```
-Thrown Exception are stored in TelegramException.log file.
 
 -----  
 This code is available on
