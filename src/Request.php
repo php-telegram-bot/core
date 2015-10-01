@@ -29,6 +29,7 @@ class Request
         'sendDocument',
         'sendSticker',
         'sendVideo',
+        'sendVoice',
         'sendLocation',
         'sendChatAction',
         'getUserProfilePhotos',
@@ -63,19 +64,6 @@ class Request
         }
         self::log();
         return self::$input_raw;
-    }
-
-    public static function getUpdates($data)
-    {
-        if ($update = self::$telegram->getCustomUpdate()) {
-            //Cannot be used for testing yet json update have to be converted in a ServerResponse Object
-            self::$input = $update;
-        } else {
-            self::$input = self::send('getUpdates', $data);
-        }
-        //In send methods is set input_raw
-        self::log();
-        return self::$input;
     }
 
 
@@ -163,6 +151,13 @@ class Request
         return new ServerResponse(json_decode($result, true), $bot_name);
     }
 
+    public static function getMe()
+    {
+
+        $result = self::send('getMe');
+        return $result;
+    }
+
     public static function sendMessage(array $data)
     {
 
@@ -174,11 +169,48 @@ class Request
         return $result;
     }
 
-    public static function getMe()
+    //TODO forwardMessage
+    //sendPhoto
+    //sendAudio
+    //sendDocument
+    //sendSticker
+    //sendVideo
+    //sendVoice
+    public static function sendLocation(array $data)
     {
 
-        $result = self::send('getMe');
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        $result = self::send('sendLocation', $data);
         return $result;
+    }
+
+    public static function sendChatAction(array $data)
+    {
+
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        $result = self::send('sendChatAction', $data);
+        return $result;
+    }
+
+    //getUserProfilePhotos
+
+    public static function getUpdates($data)
+    {
+        if ($update = self::$telegram->getCustomUpdate()) {
+            //Cannot be used for testing yet json update have to be converted in a ServerResponse Object
+            self::$input = $update;
+        } else {
+            self::$input = self::send('getUpdates', $data);
+        }
+        //In send methods is set input_raw
+        self::log();
+        return self::$input;
     }
 
     public static function setWebhook($url)
@@ -186,4 +218,6 @@ class Request
         $result = self::send('setWebhook', array('url' => $url));
         return $result;
     }
+
+    //getFile
 }
