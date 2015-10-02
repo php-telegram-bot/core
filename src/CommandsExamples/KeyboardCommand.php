@@ -84,18 +84,16 @@ class KeyboardCommand extends Command
         unset($keyboard);
 
 
-        $json = (
-            new ReplyKeyboardMarkup(
-                array(
-                    'keyboard' => $keyboards[1] ,
-                    'resize_keyboard' => true,
-                    'one_time_keyboard' => false,
-                    'selective' => false
-                )
-            )
-        )->toJSON();
+        $reply_keyboard_markup = new ReplyKeyboardMarkup(
+            [
+                'keyboard' => $keyboards[1] ,
+                'resize_keyboard' => true,
+                'one_time_keyboard' => false,
+                'selective' => false
+            ]
+        );
         #echo $json;
-        $data['reply_markup'] = $json;
+        $data['reply_markup'] = $reply_keyboard_markup;
 
         $result = Request::sendMessage($data);
         return $result;

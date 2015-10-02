@@ -279,7 +279,7 @@ class DB
 
 
             $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
-            $sth2->bindParam(':title',$chat->getTitle() , \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':title', $chat->getTitle(), \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth2->execute();

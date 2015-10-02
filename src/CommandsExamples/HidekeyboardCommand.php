@@ -7,7 +7,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * Written by <marco.bore@gmail.com>
+ * Written by Marco Boretto <marco.bore@gmail.com>
 */
 namespace Longman\TelegramBot\Commands;
 
@@ -19,11 +19,11 @@ use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
 use Longman\TelegramBot\Entities\ReplyKeyboardHide;
 use Longman\TelegramBot\Entities\ForceReply;
 
-class ForceReplyCommand extends Command
+class HidekeyboardCommand extends Command
 {
-    protected $name = 'forcereply';
-    protected $description = 'Force reply with reply markup';
-    protected $usage = '/forcereply';
+    protected $name = 'hidekeyboard';
+    protected $description = 'Hide the custom keyboard';
+    protected $usage = '/hidekeyboard';
     protected $version = '0.0.5';
     protected $enabled = true;
 
@@ -38,20 +38,12 @@ class ForceReplyCommand extends Command
 
         $data = array();
         $data['chat_id'] = $chat_id;
-        $data['text'] = 'Write something:';
+        $data['text'] = 'Keyboard Hided';
         #$data['reply_to_message_id'] = $message_id;
 
-        $json =  (
-            new ForceReply(
-                array(
-                    'selective' => false
-                )
-            )
-        )->toJSON();
+        $reply_keyboard_hide = new ReplyKeyboardHide([ 'selective' => false]);
 
-        #echo $json;
-        $data['reply_markup'] = $json;
-
+        $data['reply_markup'] = $reply_keyboard_hide;
 
         $result = Request::sendMessage($data);
         return $result;
