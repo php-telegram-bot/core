@@ -41,4 +41,9 @@ class Entity
 
         return $json;
     }
+
+    public function __toString()
+    {
+        return $this->toJSON();
+    }
 }

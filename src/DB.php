@@ -164,11 +164,6 @@ class DB
         }
 
         $user_id = $user->getId();
-        $username = $user->getUsername();
-        $first_name = $user->getFirstName();
-        $last_name = $user->getLastName();
-
-        $chat_id = $chat->getId();
 
         try {
             //Users table
@@ -184,9 +179,9 @@ class DB
                ');
 
             $sth1->bindParam(':id', $user_id, \PDO::PARAM_INT);
-            $sth1->bindParam(':username', $username, \PDO::PARAM_STR, 255);
-            $sth1->bindParam(':first_name', $first_name, \PDO::PARAM_STR, 255);
-            $sth1->bindParam(':last_name', $last_name, \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':username', $user->getUsername(), \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':first_name', $user->getFirstName(), \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':last_name', $user->getLastName(), \PDO::PARAM_STR, 255);
             $sth1->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth1->execute();
@@ -207,7 +202,7 @@ class DB
                     ');
 
                 $sth3->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-                $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+                $sth3->bindParam(':chat_id', $chat->getId(), \PDO::PARAM_INT);
 
                 $status = $sth3->execute();
 
@@ -230,36 +225,20 @@ class DB
             return false;
         }
 
-        $update_id = $update->getUpdateId();
         $message = $update->getMessage();
+
         $from = $message->getFrom();
         $chat = $message->getChat();
 
-        $user_id = $from->getId();
 
         $chat_id = $chat->getId();
-        $chat_title = $chat->getTitle();
 
         $date = self::toTimestamp($message->getDate());
-        $message_id = $message->getMessageId();
         $forward_from = $message->getForwardFrom();
         $forward_date = self::toTimestamp($message->getForwardDate());
-        $reply_to_message = $message->getReplyToMessage();
-        $text = $message->getText();
-        $audio = $message->getAudio();
-        $document = $message->getDocument();
         $photo = $message->getPhoto();
-        $sticker = $message->getSticker();
-        $video = $message->getVideo();
-        $voice = $message->getVoice();
-        $caption = $message->getCaption();
-        $contact = $message->getContact();
-        $location = $message->getLocation();
         $new_chat_participant = $message->getNewChatParticipant();
         $left_chat_participant = $message->getLeftChatParticipant();
-        $new_chat_title = $message->getNewChatTitle();
-        $delete_chat_photo = $message->getDeleteChatPhoto();
-        $group_chat_created = $message->getGroupChatCreated();
 
         //inser user and the relation with the chat
         self::insertUser($from, $date, $chat);
@@ -300,7 +279,7 @@ class DB
 
 
             $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
-            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':title',$chat->getTitle() , \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth2->execute();
@@ -322,60 +301,55 @@ class DB
                 )');
 
 
-            $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+            $sth->bindParam(':update_id', $update->getUpdateId(), \PDO::PARAM_INT);
+            $sth->bindParam(':message_id', $message->getMessageId(), \PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $from->getId(), \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
-
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
-
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
-
-            $reply_to_message = is_object($reply_to_message) ? $reply_to_message->toJSON(): '';
-            $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
-            $sth->bindParam(':text', $text, \PDO::PARAM_STR);
-
-            $audio = is_object($audio) ? $audio->toJSON(): '';
-            $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
-            $document = is_object($document) ? $document->toJSON(): '';
-            $sth->bindParam(':document', $document, \PDO::PARAM_STR);
-
-            //TODO what about the Entities array of photosize?
+            $sth->bindParam(':reply_to_message', $message->getReplyToMessage(), \PDO::PARAM_STR);
+            $sth->bindParam(':text', $message->getText(), \PDO::PARAM_STR);
+            $sth->bindParam(':audio', $message->getAudio(), \PDO::PARAM_STR);
+            $sth->bindParam(':document', $message->getDocument(), \PDO::PARAM_STR);
+//Try with to magic shoud work
             $var = [];
             if (is_array($photo)) {
                 foreach ($photo as $elm) {
-                    $var[] = json_decode($elm->toJSON(), true);
+                    $var[] = json_decode($elm, true);
                 }
 
                 $photo = json_encode($var);
             } else {
-                $forward_from = '';
+                $photo = '';
             }
 
             $sth->bindParam(':photo', $photo, \PDO::PARAM_STR);
-
-            $sticker = is_object($sticker) ? $sticker->toJSON(): '';
-            $sth->bindParam(':sticker', $sticker, \PDO::PARAM_STR);
-            $video = is_object($video) ? $video->toJSON(): '';
-            $sth->bindParam(':video', $video, \PDO::PARAM_STR);
-            $voice = is_object($voice) ? $voice->toJSON(): '';
-            $sth->bindParam(':voice', $voice, \PDO::PARAM_STR);
-            $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
-            $contact = is_object($contact) ? $contact->toJSON(): '';
-            $sth->bindParam(':contact', $contact, \PDO::PARAM_STR);
-            $location = is_object($location) ? $location->toJSON(): '';
-            $sth->bindParam(':location', $location, \PDO::PARAM_STR);
-
+            $sth->bindParam(':sticker', $message->getSticker(), \PDO::PARAM_STR);
+            $sth->bindParam(':video', $message->getVideo(), \PDO::PARAM_STR);
+            $sth->bindParam(':voice', $message->getVoice(), \PDO::PARAM_STR);
+            $sth->bindParam(':caption', $message->getCaption(), \PDO::PARAM_STR);
+            $sth->bindParam(':contact', $message->getContact(), \PDO::PARAM_STR);
+            $sth->bindParam(':location', $message->getLocation(), \PDO::PARAM_STR);
             $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_STR);
             $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_STR);
-
-            $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_title', $message->getNewChatTitle(), \PDO::PARAM_STR);
             //Array of Photosize
-            $sth->bindParam(':new_chat_photo', $new_chat_photo, \PDO::PARAM_STR);
 
-            $sth->bindParam(':delete_chat_photo', $delete_chat_photo, \PDO::PARAM_STR);
-            $sth->bindParam(':group_chat_created', $group_chat_created, \PDO::PARAM_STR);
+            $var = [];
+            if (is_array($new_chat_photo)) {
+                foreach ($new_chat_photo as $elm) {
+                    $var[] = json_decode($elm, true);
+                }
+
+                $new_chat_photo = json_encode($var);
+            } else {
+                $new_chat_photo = '';
+            }
+
+            $sth->bindParam(':new_chat_photo', $new_chat_photo, \PDO::PARAM_STR);
+            $sth->bindParam(':delete_chat_photo', $message->getDeleteChatPhoto(), \PDO::PARAM_STR);
+            $sth->bindParam(':group_chat_created', $message->getGroupChatCreated(), \PDO::PARAM_STR);
 
             $status = $sth->execute();
 
