@@ -238,6 +238,8 @@ class DB
         $forward_date = self::toTimestamp($message->getForwardDate());
         $photo = $message->getPhoto();
         $new_chat_participant = $message->getNewChatParticipant();
+
+        $new_chat_photo = $message->getNewChatPhoto();
         $left_chat_participant = $message->getLeftChatParticipant();
 
         //inser user and the relation with the chat

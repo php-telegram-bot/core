@@ -1,5 +1,4 @@
 # PHP Telegram Bot
-======================
 
 [![Join the chat at
 https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -192,9 +191,8 @@ try {
     // log telegram errors
      echo $e;
 }                
-
-
 ```
+
 give to the file the permission for execution:
 ```
 chmod 775 getUpdateCLI.php
@@ -224,8 +222,7 @@ $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 All types implemented (except InputFile) according to Telegram API (2015 September 18).
 
 ### Commands
-The bot is able to recognise commands in chat with multiple bot(
-/command@mybot ).
+The bot is able to recognise commands in chat with multiple bot(/command@mybot ).
 It can execute command triggering a chat event. Here's the list:
 
 - Group chat created (**GroupchatcreatedCommand.php**)
@@ -234,10 +231,12 @@ It can execute command triggering a chat event. Here's the list:
 - New chat title (**NewchattitleCommand.php**)
 - Left chat participant (**LeftchatparticipantCommand.php**)
 
-**GenericCommand.php** lets you handle commands that don't exist or to
+**GenericCommand.php** let you handle commands that don't exist or to
 use commands as a variable:
 Favourite colour? **/black, /red**
 Favourite number? **/1, /134**
+
+**GenericmessageCommand.php** let you handle any type of message.
 
 Maybe you would like to develop your own commands. A good practice is
 to store them outside *vendor/*. This can be done adding the method:
@@ -246,6 +245,8 @@ to store them outside *vendor/*. This can be done adding the method:
 $COMMANDS_FOLDER = __DIR__.'/Commands/';
 $telegram->addCommandsPath($COMMANDS_FOLDER);
 ```
+
+Inside *CommandsExamples/* there are some sample that show how to use types.
 
 ### Admin Commands 
 Enabling this feature, the admin bot can perform some super user command like send message to all.
@@ -286,7 +287,7 @@ print_r($results);
 ### Logging
 Thrown Exception are stored in TelegramException.log file.
 
-You can also log incoming messages on a text file, set this option with the methods:  
+Incoming update can be logged on a text file, set this option with the methods:  
 ```php
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');

@@ -129,6 +129,7 @@ class Message extends Entity
             }
             $this->photo = $photos;
         }
+
         $this->sticker = isset($data['sticker']) ? $data['sticker'] : null;
         if (!empty($this->sticker)) {
             $this->sticker = new Sticker($this->sticker);
@@ -171,6 +172,16 @@ class Message extends Entity
         $this->new_chat_title = isset($data['new_chat_title']) ? $data['new_chat_title'] : null;
         if ($this->new_chat_title) {
             $this->type = 'new_chat_title';
+        }
+
+        $this->new_chat_photo = isset($data['new_chat_photo']) ? $data['new_chat_photo'] : null; //array of photosize
+        if (!empty($this->new_chat_photo)) {
+            foreach ($this->new_chat_photo as $photo) {
+                if (!empty($photo)) {
+                    $photos[] = new PhotoSize($photo);
+                }
+            }
+            $this->new_chat_photo = $photos;
         }
 
         $this->delete_chat_photo = isset($data['delete_chat_photo']) ? $data['delete_chat_photo'] : null;
@@ -327,6 +338,13 @@ class Message extends Entity
     {
         return $this->new_chat_title;
     }
+
+
+    public function getNewChatPhoto()
+    {
+        return $this->new_chat_photo;
+    }
+
 
     public function getDeleteChatPhoto()
     {
