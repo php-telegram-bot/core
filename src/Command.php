@@ -122,4 +122,13 @@ abstract class Command
     {
         return $this->public;
     }
+
+    public function tryMention(User $user)
+    {
+        if (!is_null($participant->getUsername())) {
+            return '@'.$participant->getUsername();
+        } else {
+            return $participant->getFirstName();
+        }
+    }
 }

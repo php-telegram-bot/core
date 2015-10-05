@@ -33,14 +33,10 @@ class NewchatparticipantCommand extends Command
         $data = array();
         $data['chat_id'] = $chat_id;
 
-        if ($participant->getUsername() == $this->getTelegram()->getBotName()) {
+        if (strtolower($participant->getUsername()) == strtolower($this->getTelegram()->getBotName())) {
             $text = 'Hi there';
         } else {
-            if ($participant->getUsername()) {
-                $text = 'Hi @'.$participant->getUsername();
-            } else {
-                $text = 'Hi '.$participant->getFirstName();
-            }
+            $text = 'Hi '.$this->tryMention($partecipant);
         }
 
         $data['text'] = $text;
