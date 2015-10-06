@@ -120,7 +120,12 @@ class Request
             return new ServerResponse($fake_response, self::$telegram->getBotName());
         }
 
+
         $ch = curl_init();
+        if ($ch === FALSE) {
+            throw new TelegramException('Curl Failed to initialize');
+        }
+
         $curlConfig = array(
             CURLOPT_URL => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
             CURLOPT_POST => true,
@@ -136,6 +141,10 @@ class Request
 
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
+
+        if ($result === FALSE) {
+            throw new TelegramException(curl_error($ch), curl_errno($ch));
+        }
         curl_close($ch);
 
         if (empty($result)) {
