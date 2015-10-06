@@ -109,17 +109,8 @@ class Request
         return $fake_response;
     }
 
-    public static function send($action, array $data = null)
+    public static function executeCurl(i$action, array $data)
     {
-        if (!in_array($action, self::$methods)) {
-            throw new TelegramException('This methods doesn\'t exist!');
-        }
-
-        if (defined('PHPUNIT_TESTSUITE')) {
-            $fake_response = self::generateGeneralFakeServerSesponse($data);
-            return new ServerResponse($fake_response, self::$telegram->getBotName());
-        }
-
 
         $ch = curl_init();
         if ($ch === false) {
@@ -146,6 +137,21 @@ class Request
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
         curl_close($ch);
+        return $result;
+    }
+
+    public static function send($action, array $data = null)
+    {
+        if (!in_array($action, self::$methods)) {
+            throw new TelegramException('This methods doesn\'t exist!');
+        }
+
+        if (defined('PHPUNIT_TESTSUITE')) {
+            $fake_response = self::generateGeneralFakeServerSesponse($data);
+            return new ServerResponse($fake_response, self::$telegram->getBotName());
+        }
+
+        $result = self::executeCurl($action, $data);
 
         if (empty($result)) {
             $response['ok'] = 1;
@@ -154,7 +160,7 @@ class Request
             $result =json_encode($response);
         }
         //For the getUpdate method log
-        self::setInputRaw($result);
+        //self::setInputRaw($result);
 
         $bot_name = self::$telegram->getBotName();
         return new ServerResponse(json_decode($result, true), $bot_name);
@@ -211,15 +217,28 @@ class Request
 
     public static function getUpdates($data)
     {
+
         if ($update = self::$telegram->getCustomUpdate()) {
-            //Cannot be used for testing yet json update have to be converted in a ServerResponse Object
-            self::$input = $update;
+            self::setInputRaw($update);
         } else {
-            self::$input = self::send('getUpdates', $data);
+
+            $result = self::executeCurl('getUpdates', $data);
+
+            if (empty($result)) {
+                $response['ok'] = 1;
+                $response['error_code'] = 1;
+                $response['description'] = 'Empty server response';
+                $result =json_encode($response);
+            }
+            self::setInputRaw($result);
+
         }
-        //In send methods is set input_raw
+
         self::log();
-        return self::$input;
+
+        $bot_name = self::$telegram->getBotName();
+        return new ServerResponse(json_decode($result, true), $bot_name);
+
     }
 
     public static function setWebhook($url)
