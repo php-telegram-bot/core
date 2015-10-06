@@ -199,6 +199,15 @@ class ServerResponseTest extends TestCase
     }
 
 
+    public function testGetUpdatesArray() {
+        $result = $this->getUpdatesArray();
+        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+
+        $this->assertCount(4, $this->server->getResult());
+
+        $this->assertInstanceOf('\Longman\TelegramBot\Entities\Update', $this->server->getResult()[0]);
+    }
+
     /**
      * @test
      */
@@ -209,8 +218,11 @@ class ServerResponseTest extends TestCase
     }
 
 
-
-
+    public function testGetUpdatesEmpty() {
+        $result = $this->getUpdatesEmpty();
+        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+        $this->assertNull(0, $this->server->getResult());
+    }
 
     /**
      * @test

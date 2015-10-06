@@ -122,7 +122,7 @@ class Request
 
 
         $ch = curl_init();
-        if ($ch === FALSE) {
+        if ($ch === false) {
             throw new TelegramException('Curl Failed to initialize');
         }
 
@@ -142,7 +142,7 @@ class Request
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
 
-        if ($result === FALSE) {
+        if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
         curl_close($ch);
