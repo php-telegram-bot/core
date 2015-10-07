@@ -17,8 +17,6 @@ class Request
 {
     private static $telegram;
     private static $input;
-    private static $input_raw;
-    private static $server_response;
 
     private static $methods = array(
         'getMe',
@@ -46,10 +44,10 @@ class Request
         }
     }
 
-    public static function setInputRaw($input_raw)
+    public static function setInputRaw($input)
     {
-        if (is_string($input_raw)) {
-            self::$input_raw = $input_raw;
+        if (is_string($input)) {
+            self::$input = $input;
         } else {
             throw new TelegramException("Log input is not a string");
         }
@@ -63,7 +61,7 @@ class Request
             self::setInputRaw(file_get_contents('php://input'));
         }
         self::log();
-        return self::$input_raw;
+        return self::$input;
     }
 
 
@@ -77,7 +75,7 @@ class Request
             return false;
         }
 
-        $status = file_put_contents($path, self::$input_raw . "\n", FILE_APPEND);
+        $status = file_put_contents($path, self::$input . "\n", FILE_APPEND);
 
         return $status;
     }
@@ -109,12 +107,12 @@ class Request
         return $fake_response;
     }
 
-    public static function executeCurl(i$action, array $data)
+    public static function executeCurl($action, array $data)
     {
 
         $ch = curl_init();
         if ($ch === false) {
-            throw new TelegramException('Curl Failed to initialize');
+            throw new TelegramException('Curl failed to initialize');
         }
 
         $curlConfig = array(
@@ -136,6 +134,11 @@ class Request
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
+
+        if (empty($result)) {
+            throw new TelegramException('Empty server response');
+        }
+
         curl_close($ch);
         return $result;
     }
@@ -152,15 +155,6 @@ class Request
         }
 
         $result = self::executeCurl($action, $data);
-
-        if (empty($result)) {
-            $response['ok'] = 1;
-            $response['error_code'] = 1;
-            $response['description'] = 'Empty server response';
-            $result =json_encode($response);
-        }
-        //For the getUpdate method log
-        //self::setInputRaw($result);
 
         $bot_name = self::$telegram->getBotName();
         return new ServerResponse(json_decode($result, true), $bot_name);
@@ -193,7 +187,6 @@ class Request
     //sendVoice
     public static function sendLocation(array $data)
     {
-
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
@@ -221,15 +214,8 @@ class Request
         if ($update = self::$telegram->getCustomUpdate()) {
             self::setInputRaw($update);
         } else {
-
             $result = self::executeCurl('getUpdates', $data);
 
-            if (empty($result)) {
-                $response['ok'] = 1;
-                $response['error_code'] = 1;
-                $response['description'] = 'Empty server response';
-                $result =json_encode($response);
-            }
             self::setInputRaw($result);
 
         }
