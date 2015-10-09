@@ -221,7 +221,7 @@ class ServerResponseTest extends TestCase
     public function testGetUpdatesEmpty() {
         $result = $this->getUpdatesEmpty();
         $this->server = new ServerResponse(json_decode($result, true), 'testbot');
-        $this->assertNull(0, $this->server->getResult());
+        $this->assertNull($this->server->getResult());
     }
 
     /**

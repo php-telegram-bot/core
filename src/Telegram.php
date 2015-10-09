@@ -276,7 +276,7 @@ class Telegram
      */
     public function setLogVerbosity($log_verbosity)
     {
-        $this->log_verbosity = $log_verbosity;;
+        $this->log_verbosity = $log_verbosity;
         return $this;
     }
 

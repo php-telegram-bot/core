@@ -128,7 +128,7 @@ class Request
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
         }
 
-        if ( self::$telegram->getLogVerbosity() >= 3) {
+        if (self::$telegram->getLogVerbosity() >= 3) {
             $curlConfig[CURLOPT_VERBOSE] = true;
             $verbose = fopen('php://temp', 'w+');
             curl_setopt($ch, CURLOPT_STDERR, $verbose);
@@ -141,19 +141,19 @@ class Request
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
 
-        //Logging curl requests 
-        if ( self::$telegram->getLogVerbosity() >= 3) {
+        //Logging curl requests
+        if (self::$telegram->getLogVerbosity() >= 3) {
             rewind($verbose);
             $verboseLog = stream_get_contents($verbose);
             self::log("Verbose curl output:\n". htmlspecialchars($verboseLog). "\n");
         }
 
-        //Logging getUpdates Updates
-        //Logging curl updates 
-        if ($action == 'getUpdates' & self::$telegram->getLogVerbosity() >= 1 | self::$telegram->getLogVerbosity() >= 3) {
+        //Logging getUpdates Update
+        //Logging curl updates
+        if ($action == 'getUpdates' & self::$telegram->getLogVerbosity() >=1 | self::$telegram->getLogVerbosity() >=3) {
             self::setInputRaw($result);
             self::log($result);
-        }        
+        }
 
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));

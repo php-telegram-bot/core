@@ -164,6 +164,9 @@ class DB
         }
 
         $user_id = $user->getId();
+        $username = $user->getUsername();
+        $first_name = $user->getFirstName();
+        $last_name = $user->getLastName();
 
         try {
             //Users table
@@ -179,9 +182,9 @@ class DB
                ');
 
             $sth1->bindParam(':id', $user_id, \PDO::PARAM_INT);
-            $sth1->bindParam(':username', $user->getUsername(), \PDO::PARAM_STR, 255);
-            $sth1->bindParam(':first_name', $user->getFirstName(), \PDO::PARAM_STR, 255);
-            $sth1->bindParam(':last_name', $user->getLastName(), \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':username', $username, \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':first_name', $first_name, \PDO::PARAM_STR, 255);
+            $sth1->bindParam(':last_name', $last_name, \PDO::PARAM_STR, 255);
             $sth1->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth1->execute();
@@ -192,6 +195,7 @@ class DB
         }
         //insert also the relationship to the chat
         if (!is_null($chat)) {
+            $chat_id = $chat->getId();
             try {
                 //user_chat table
                 $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_USERS_CHATS.'`
@@ -202,7 +206,7 @@ class DB
                     ');
 
                 $sth3->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-                $sth3->bindParam(':chat_id', $chat->getId(), \PDO::PARAM_INT);
+                $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
 
                 $status = $sth3->execute();
 
@@ -272,16 +276,14 @@ class DB
         try {
             //chats table
             $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
-                (
-                `id`, `title`, `created_at` ,`updated_at`
-                )
+                (`id`, `title`, `created_at` ,`updated_at`)
                 VALUES (:id, :title, :date, :date)
-                ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date
-                ');
+                ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date');
 
+            $chat_title = $chat->getTitle();
 
             $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
-            $sth2->bindParam(':title', $chat->getTitle(), \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':title', $chat, \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth2->execute();
@@ -302,18 +304,35 @@ class DB
                 :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created
                 )');
 
+            $update_id = $update->getUpdateId();
+            $message_id = $message->getMessageId();
+            $from_id = $from->getId();
+            $reply_to_message = $message->getReplyToMessage();
+            $text = $message->getText();
+            $audio = $message->getAudio();
+            $document = $message->getDocument();
+            $sticker = $message->getSticker();
+            $video = $message->getVideo();
+            $voice = $message->getVoice();
+            $caption = $message->getCaption();
+            $contanc = $message->getContact();
+            $location = $message->getLocation();
+            $new_chat_title = $message->getNewChatTitle();
+            $delete_chat_photo = $message->getDeleteChatPhoto();
+            $group_chat_created = $message->getGroupChatCreated();
 
-            $sth->bindParam(':update_id', $update->getUpdateId(), \PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message->getMessageId(), \PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $from->getId(), \PDO::PARAM_INT);
+
+            $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
+            $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
-            $sth->bindParam(':reply_to_message', $message->getReplyToMessage(), \PDO::PARAM_STR);
-            $sth->bindParam(':text', $message->getText(), \PDO::PARAM_STR);
-            $sth->bindParam(':audio', $message->getAudio(), \PDO::PARAM_STR);
-            $sth->bindParam(':document', $message->getDocument(), \PDO::PARAM_STR);
+            $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
+            $sth->bindParam(':text', $text, \PDO::PARAM_STR);
+            $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
+            $sth->bindParam(':document', $document, \PDO::PARAM_STR);
 //Try with to magic shoud work
             $var = [];
             if (is_array($photo)) {
@@ -327,15 +346,15 @@ class DB
             }
 
             $sth->bindParam(':photo', $photo, \PDO::PARAM_STR);
-            $sth->bindParam(':sticker', $message->getSticker(), \PDO::PARAM_STR);
-            $sth->bindParam(':video', $message->getVideo(), \PDO::PARAM_STR);
-            $sth->bindParam(':voice', $message->getVoice(), \PDO::PARAM_STR);
-            $sth->bindParam(':caption', $message->getCaption(), \PDO::PARAM_STR);
-            $sth->bindParam(':contact', $message->getContact(), \PDO::PARAM_STR);
-            $sth->bindParam(':location', $message->getLocation(), \PDO::PARAM_STR);
+            $sth->bindParam(':sticker', $sticker, \PDO::PARAM_STR);
+            $sth->bindParam(':video', $video, \PDO::PARAM_STR);
+            $sth->bindParam(':voice', $voice, \PDO::PARAM_STR);
+            $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
+            $sth->bindParam(':contact', $contanct, \PDO::PARAM_STR);
+            $sth->bindParam(':location', $location, \PDO::PARAM_STR);
             $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_STR);
             $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_title', $message->getNewChatTitle(), \PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
             //Array of Photosize
 
             $var = [];
@@ -350,8 +369,8 @@ class DB
             }
 
             $sth->bindParam(':new_chat_photo', $new_chat_photo, \PDO::PARAM_STR);
-            $sth->bindParam(':delete_chat_photo', $message->getDeleteChatPhoto(), \PDO::PARAM_STR);
-            $sth->bindParam(':group_chat_created', $message->getGroupChatCreated(), \PDO::PARAM_STR);
+            $sth->bindParam(':delete_chat_photo', $delete_chat_photo, \PDO::PARAM_STR);
+            $sth->bindParam(':group_chat_created', $group_chat_created, \PDO::PARAM_STR);
 
             $status = $sth->execute();
 
