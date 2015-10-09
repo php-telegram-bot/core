@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\User;
 
 abstract class Command
 {
@@ -125,10 +126,10 @@ abstract class Command
 
     public function tryMention(User $user)
     {
-        if (!is_null($participant->getUsername())) {
-            return '@'.$participant->getUsername();
+        if (!is_null($user->getUsername())) {
+            return '@'.$user->getUsername();
         } else {
-            return $participant->getFirstName();
+            return $user->getFirstName();
         }
     }
 }

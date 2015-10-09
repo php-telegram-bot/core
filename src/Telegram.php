@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.18.0';
+    protected $version = '0.18.1';
 
     /**
      * Telegram API key
@@ -80,6 +80,13 @@ class Telegram
      * @var string
      */
     protected $log_path;
+
+    /**
+     * Log verbosity
+     *
+     * @var string
+     */
+    protected $log_verbosity;
 
     /**
      * MySQL Integration
@@ -216,6 +223,8 @@ class Telegram
     public function setLogRequests($log_requests)
     {
         $this->log_requests = $log_requests;
+        //set default log verbosity
+        $this->log_verbosity = 1;
         return $this;
     }
 
@@ -254,6 +263,33 @@ class Telegram
         return $this->log_path;
     }
 
+
+    /**
+     * Set log Verbosity
+     *
+     * @param int $log_verbosity
+     *
+     * 1 only incoming updates from webhook and getUpdates
+     * 3 incoming updates from webhook and getUpdates and curl request info and response
+     *
+     * @return \Longman\TelegramBot\Telegram
+     */
+    public function setLogVerbosity($log_verbosity)
+    {
+        $this->log_verbosity = $log_verbosity;;
+        return $this;
+    }
+
+    /**
+     * Get log verbosity
+     *
+     *
+     * @return int
+     */
+    public function getLogVerbosity()
+    {
+        return $this->log_verbosity;
+    }
 
     /**
      * Set custom update string for debug purposes

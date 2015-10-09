@@ -60,12 +60,12 @@ class Request
         } else {
             self::setInputRaw(file_get_contents('php://input'));
         }
-        self::log();
+        self::log(self::$input);
         return self::$input;
     }
 
 
-    private static function log()
+    private static function log($string)
     {
         if (!self::$telegram->getLogRequests()) {
             return false;
@@ -75,8 +75,8 @@ class Request
             return false;
         }
 
-        $status = file_put_contents($path, self::$input . "\n", FILE_APPEND);
-
+        //$status = file_put_contents($path, self::$input . "\n", FILE_APPEND);
+        $status = file_put_contents($path, $string . "\n", FILE_APPEND);
         return $status;
     }
 
@@ -128,13 +128,36 @@ class Request
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
         }
 
+        if ( self::$telegram->getLogVerbosity() >= 3) {
+            $curlConfig[CURLOPT_VERBOSE] = true;
+            $verbose = fopen('php://temp', 'w+');
+            curl_setopt($ch, CURLOPT_STDERR, $verbose);
+            //Not so useful
+            //$info = curl_getinfo($ch);
+            //echo "Info\n";
+            //print_r($info);
+        }
+
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
+
+        //Logging curl requests 
+        if ( self::$telegram->getLogVerbosity() >= 3) {
+            rewind($verbose);
+            $verboseLog = stream_get_contents($verbose);
+            self::log("Verbose curl output:\n". htmlspecialchars($verboseLog). "\n");
+        }
+
+        //Logging getUpdates Updates
+        //Logging curl updates 
+        if ($action == 'getUpdates' & self::$telegram->getLogVerbosity() >= 1 | self::$telegram->getLogVerbosity() >= 3) {
+            self::setInputRaw($result);
+            self::log($result);
+        }        
 
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
-
         if (empty($result)) {
             throw new TelegramException('Empty server response');
         }
@@ -162,7 +185,6 @@ class Request
 
     public static function getMe()
     {
-
         $result = self::send('getMe');
         return $result;
     }
@@ -197,7 +219,6 @@ class Request
 
     public static function sendChatAction(array $data)
     {
-
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
@@ -210,21 +231,8 @@ class Request
 
     public static function getUpdates($data)
     {
-
-        if ($update = self::$telegram->getCustomUpdate()) {
-            self::setInputRaw($update);
-        } else {
-            $result = self::executeCurl('getUpdates', $data);
-
-            self::setInputRaw($result);
-
-        }
-
-        self::log();
-
-        $bot_name = self::$telegram->getBotName();
-        return new ServerResponse(json_decode($result, true), $bot_name);
-
+        $result = self::send('getUpdates', $data);
+        return $result;
     }
 
     public static function setWebhook($url)
