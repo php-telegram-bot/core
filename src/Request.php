@@ -46,7 +46,7 @@ class Request
 
     public static function setInputRaw($input)
     {
-        if (is_string($input)) {
+        if (is_string($input) | $input == false) {
             self::$input = $input;
         } else {
             throw new TelegramException("Log input is not a string");
@@ -116,6 +116,7 @@ class Request
         }
 
         $curlConfig = array(
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_URL => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true
