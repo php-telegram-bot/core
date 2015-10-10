@@ -287,10 +287,18 @@ print_r($results);
 ### Logging
 Thrown Exception are stored in TelegramException.log file.
 
-Incoming update can be logged on a text file, set this option with the methods:  
+Incoming update (json string from webhook and getUpdates) can be logged on a text file, set those options with the methods:  
 ```php
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');
+```
+
+(New!) Set verbosity to 3, to log also curl requests and responses from the bot to Telegram: 
+
+```php
+$telegram->setLogRequests(true);
+$telegram->setLogPath($BOT_NAME.'.log');
+$telegram->setLogVerbosity(3);     
 ```
 
 -----  

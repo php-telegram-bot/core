@@ -25,7 +25,7 @@ try {
     //$telegram->setCommandConfig('date', array('google_api_key'=>'your_google_api_key_here'));
     //$telegram->setLogRequests(true);
     //$telegram->setLogPath($BOT_NAME.'.log');
-
+    //$telegram->setLogVerbosity(3);
 
     // handle telegram getUpdate request
     $telegram->handleGetUpdates();
