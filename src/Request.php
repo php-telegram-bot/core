@@ -242,4 +242,37 @@ class Request
     }
 
     //getFile
+
+    /**
+     * Send Message in all the active chat
+     *
+     *
+     * @return bool
+     */
+    public static function sendToActiveChats(
+        $callback_function,
+        array $data,
+        $send_chats = true,
+        $send_users = true,
+        $date_from = null,
+        $date_to = null
+    ) {
+
+        $callback_path = __NAMESPACE__ .'\Request';
+        if (! method_exists($callback_path, $callback_function)) {
+            throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
+        }
+
+        $chats = DB::selectChats($send_chats, $send_users, $date_from, $date_to);
+
+        $results = [];
+        foreach ($chats as $row) {
+            //$result[] = $row;
+            //print_r($row);
+            $data['chat_id'] = $row['chat_id'];
+            $results[] = call_user_func_array($callback_path.'::'.$callback_function, array($data));
+        }
+
+        return $results;
+    }
 }

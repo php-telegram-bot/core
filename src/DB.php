@@ -333,7 +333,7 @@ class DB
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
             $sth->bindParam(':document', $document, \PDO::PARAM_STR);
-//Try with to magic shoud work
+
             $var = [];
             if (is_array($photo)) {
                 foreach ($photo as $elm) {
@@ -383,18 +383,15 @@ class DB
 
 
     /**
-     * Send Message in all the active chat
+     * Select Group and single Chats
      *
      * @param date string yyyy-mm-dd hh:mm:ss
      *
-     * @return bool
+     * @return array selected rows
      */
-//TODO separe send from query?
-    public static function sendToActiveChats(
-        $callback_function,
-        array $data,
-        $send_chats = true,
-        $send_users = true,
+    public static function selectChats(
+        $select_chats = true,
+        $select_users = true,
         $date_from = null,
         $date_to = null
     ) {
@@ -402,19 +399,14 @@ class DB
             return false;
         }
 
-        $callback_path = __NAMESPACE__ .'\Request';
-        if (! method_exists($callback_path, $callback_function)) {
-            throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
-        }
-
-        if (!$send_chats & !$send_users) {
+        if (!$select_chats & !$select_users) {
             return false;
         }
-
         try {
             $query = 'SELECT * ,  
                 '.TB_CHATS.'.`id` AS `chat_id`,
-                '.TB_CHATS.'.`updated_at` AS `chat_updated_at`
+                '.TB_CHATS.'.`updated_at` AS `chat_updated_at`,
+                '.TB_USERS.'.`id` AS `user_id`
                 FROM `'.TB_CHATS.'` LEFT JOIN `'.TB_USERS.'`
                 ON '.TB_CHATS.'.`id`='.TB_USERS.'.`id`';
 
@@ -422,9 +414,9 @@ class DB
             $chat_or_user = '';
             $where = [];
             $tokens = [];
-            if ($send_chats & !$send_users) {
+            if ($select_chats & !$select_users) {
                 $where[] = TB_CHATS.'.`id` < 0';
-            } elseif (!$send_chats & $send_users) {
+            } elseif (!$select_chats & $select_users) {
                 $where[] = TB_CHATS.'.`id` > 0';
             }
 
@@ -454,18 +446,11 @@ class DB
             $sth = self::$pdo->prepare($query);
             $sth->execute($tokens);
 
-            $results = [];
-            while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                //$result[] = $row;
-                //print_r($row);
-                $data['chat_id'] = $row['chat_id'];
-                $results[] = call_user_func_array($callback_path.'::'.$callback_function, array($data));
-            }
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
-
-        return $results;
+        return $result;
     }
 }

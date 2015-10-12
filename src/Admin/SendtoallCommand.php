@@ -51,7 +51,7 @@ class SendtoallCommand extends Command
         if (empty($text)) {
             $text = 'Write te message to sent: /sendall <message>';
         } else {
-            $results = DB::sendToActiveChats(
+            $results = Request::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
                 array('text'=> $text), //Param to evaluate the request
                 true, //Send to chats (group chat)

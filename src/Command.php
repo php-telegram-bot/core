@@ -12,6 +12,7 @@ namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
+use Longman\TelegramBot\Entities\Chat;
 
 abstract class Command
 {
@@ -130,6 +131,19 @@ abstract class Command
             return '@'.$user->getUsername();
         } else {
             return $user->getFirstName();
+        }
+    }
+
+    public function tryMentionChat(Chat $chat)
+    {
+        if ($chat->isGroupChat()) {
+            return $chat->getTitle();
+        } else {
+            if (!is_null($chat->getUsername())) {
+                return '@'.$chat->getUsername();
+            } else {
+                return $chat->getFirstName();
+            }
         }
     }
 }
