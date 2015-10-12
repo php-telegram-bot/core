@@ -283,7 +283,7 @@ class DB
             $chat_title = $chat->getTitle();
 
             $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
-            $sth2->bindParam(':title', $chat, \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth2->execute();
@@ -456,6 +456,7 @@ class DB
 
             $results = [];
             while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                //$result[] = $row;
                 //print_r($row);
                 $data['chat_id'] = $row['chat_id'];
                 $results[] = call_user_func_array($callback_path.'::'.$callback_function, array($data));

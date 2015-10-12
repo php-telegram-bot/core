@@ -116,7 +116,6 @@ class Request
         }
 
         $curlConfig = array(
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_URL => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true
