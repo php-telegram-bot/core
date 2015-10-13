@@ -158,7 +158,7 @@ class Request
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
-        if (empty($result)) {
+        if (empty($result) | is_null($result)) {
             throw new TelegramException('Empty server response');
         }
 

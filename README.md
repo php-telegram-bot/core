@@ -249,7 +249,10 @@ $telegram->addCommandsPath($COMMANDS_FOLDER);
 Inside *CommandsExamples/* there are some sample that show how to use types.
 
 ### Admin Commands 
-Enabling this feature, the admin bot can perform some super user command like send message to all.
+Enabling this feature, the admin bot can perform some super user command like:
+- Send message to all chats 
+- List all the chats started with the bot (new!) 
+
 You can specify one or more admin with this option:
 
 ```php
@@ -285,7 +288,7 @@ print_r($results);
 ```
 
 ### Logging
-Thrown Exception are stored in TelegramException.log file.
+Thrown Exception are stored in TelegramException.log file (in the base directory).
 
 Incoming update (json string from webhook and getUpdates) can be logged on a text file, set those options with the methods:  
 ```php
