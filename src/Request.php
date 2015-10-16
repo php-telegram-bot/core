@@ -201,12 +201,95 @@ class Request
     }
 
     //TODO forwardMessage
-    //sendPhoto
-    //sendAudio
-    //sendDocument
-    //sendSticker
-    //sendVideo
-    //sendVoice
+
+    protected static function encodeFile($file)
+    {
+        return  new \CURLFile($file);
+    }
+
+    public static function sendPhoto(array $data, $file = null)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        if (!is_null($file)) {
+            $data['photo'] = self::encodeFile($file);
+        }
+
+        $result = self::send('sendPhoto', $data);
+        return $result;
+    }
+
+    public static function sendAudio(array $data, $file = null)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        if (!is_null($file)) {
+            $data['audio'] = self::encodeFile($file);
+        }
+
+        $result = self::send('sendAudio', $data);
+        return $result;
+    }
+
+    public static function sendDocument(array $data, $file = null)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        if (!is_null($file)) {
+            $data['document'] = self::encodeFile($file);
+        }
+
+        $result = self::send('sendDocument', $data);
+        return $result;
+    }
+
+    public static function sendSticker(array $data, $file = null)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        if (!is_null($file)) {
+            $data['sticker'] = self::encodeFile($file);
+        }
+
+        $result = self::send('sendSticker', $data);
+        return $result;
+    }
+
+    public static function sendVideo(array $data, $file = null)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        if (!is_null($file)) {
+            $data['video'] = self::encodeFile($file);
+        }
+
+        $result = self::send('sendVideo', $data);
+        return $result;
+    }
+
+    public static function sendVoice(array $data, $file = null)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        if (!is_null($file)) {
+            $data['voice'] = self::encodeFile($file);
+        }
+
+        $result = self::send('sendVoice', $data);
+        return $result;
+    }
     public static function sendLocation(array $data)
     {
         if (empty($data)) {
