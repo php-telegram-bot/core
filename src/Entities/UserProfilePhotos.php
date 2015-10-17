@@ -30,11 +30,12 @@ class UserProfilePhotos extends Entity
             throw new TelegramException('photos is empty!');
         }
 
-        //TODO check
         $photos = [];
-        foreach ($this->photos as $key => $photos) {
+        foreach ($this->photos as $key => $photo) {
             if (is_array($photo)) {
-                $photos[] = [new PhotoSize($photo[0])];
+                foreach ($photo as $photo_size) {
+                    $photos[$key][] = new PhotoSize($photo_size);
+                }
             } else {
                 throw new TelegramException('photo is not an array!');
             }

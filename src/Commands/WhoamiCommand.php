@@ -31,19 +31,65 @@ class WhoamiCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
 
+        $user_id = $message->getFrom()->getId();
         $chat_id = $message->getChat()->getId();
         $message_id = $message->getMessageId();
         $text = $message->getText(true);
 
-        $data = array();
+        //send chat action
+        Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
+
+        $caption = 'Your Id: ' . $message->getFrom()->getId();
+        $caption .= "\n" . 'Name: ' . $message->getFrom()->getFirstName()
+             . ' ' . $message->getFrom()->getLastName();
+        $caption .= "\n" . 'Username: ' . $message->getFrom()->getUsername();
+
+
+        $limit = 10;
+        $offset = null;
+        $ServerResponse = Request::getUserProfilePhotos([
+            'user_id' => $user_id ,
+            'limit' => $limit,
+            'offset' => $offset
+        ]);
+
+        //Check if the request isOK
+        if($ServerResponse->isOk()){
+            $UserProfilePhoto = $ServerResponse->getResult();
+            $totalcount = $UserProfilePhoto->getTotalCount();
+        } else {
+            $totalcount = 0;
+        }
+
+
+
+        //$photos = $UserProfilePhoto->getPhotos();
+        ////I pick the latest photo with the hight definition
+        //$photo = $photos[0][2];
+        //$file_id = $photo->getFileId();
+        //$ServerResponse = Request::getFile(['file_id' => $file_id]);
+
+
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['reply_to_message_id'] = $message_id;
-        $data['text'] = 'Your Id: ' . $message->getFrom()->getId();
-        $data['text'] .= "\n" . 'Name: ' . $message->getFrom()->getFirstName()
-                                . ' ' . $message->getFrom()->getLastName();
-        $data['text'] .= "\n" . 'Username: ' . $message->getFrom()->getUsername();
 
-        $result = Request::sendMessage($data);
+        if ( $totalcount > 0){
+            $photos = $UserProfilePhoto->getPhotos();
+            //I pick the latest photo with the hight definition
+            $photo = $photos[0][2];
+            $file_id = $photo->getFileId();
+
+            $data['photo'] = $file_id;
+            $data['caption'] = $caption;
+
+
+            $result = Request::sendPhoto($data);
+        } else {
+
+            $data['text'] = $caption;
+            $result = Request::sendMessage($data);
+        }
         return $result;
     }
 }

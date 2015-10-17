@@ -16,10 +16,11 @@ class Chat extends Entity
 {
 
     protected $id;
+    protected $type;
     protected $title;
+    protected $username;
     protected $first_name;
     protected $last_name;
-    protected $username;
 
     public function __construct(array $data)
     {
@@ -28,6 +29,8 @@ class Chat extends Entity
         if (empty($this->id)) {
             throw new TelegramException('id is empty!');
         }
+
+        $this->type = isset($data['type']) ? $data['type'] : null;
 
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
@@ -55,6 +58,12 @@ class Chat extends Entity
     {
 
         return $this->id;
+    }
+
+    public function getType()
+    {
+
+        return $this->type;
     }
 
     public function getTitle()

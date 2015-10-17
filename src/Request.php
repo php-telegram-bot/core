@@ -33,6 +33,7 @@ class Request
         'getUserProfilePhotos',
         'getUpdates',
         'setWebhook',
+        'getFile'
     );
 
     public static function initialize(Telegram $telegram)
@@ -166,6 +167,11 @@ class Request
         return $result;
     }
 
+    protected static function encodeFile($file)
+    {
+        return  new \CURLFile($file);
+    }
+
     public static function send($action, array $data = null)
     {
         if (!in_array($action, self::$methods)) {
@@ -178,6 +184,9 @@ class Request
         }
 
         $result = self::executeCurl($action, $data);
+
+        echo $result;
+        print_r(json_decode($result, true));
 
         $bot_name = self::$telegram->getBotName();
         return new ServerResponse(json_decode($result, true), $bot_name);
@@ -200,11 +209,15 @@ class Request
         return $result;
     }
 
-    //TODO forwardMessage
-
-    protected static function encodeFile($file)
+    public static function forwardMessage(array $data)
     {
-        return  new \CURLFile($file);
+
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        $result = self::send('forwardMessage', $data);
+        return $result;
     }
 
     public static function sendPhoto(array $data, $file = null)
@@ -310,7 +323,18 @@ class Request
         return $result;
     }
 
-    //getUserProfilePhotos
+    public static function getUserProfilePhotos($data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+        if (!isset($data['user_id'])) {
+            throw new TelegramException('User id is empty!');
+        }
+
+        $result = self::send('getUserProfilePhotos', $data);
+        return $result;
+    }
 
     public static function getUpdates($data)
     {
@@ -318,14 +342,31 @@ class Request
         return $result;
     }
 
-    public static function setWebhook($url)
+    public static function setWebhook($url, $file = null)
     {
-        $result = self::send('setWebhook', array('url' => $url));
+        if (empty($url)) {
+            throw new TelegramException('Url is empty!');
+        }
+        $data['url'] = $url;
+
+        if (!is_null($file)) {
+            $data['certificate'] = self::encodeFile($file);
+        }
+
+        $result = self::send('setWebhook', $data);
         return $result;
     }
 
-    //getFile
 
+    public static function getFile($data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        $result = self::send('getFile', $data);
+        return $result;
+    }
     /**
      * Send Message in all the active chat
      *

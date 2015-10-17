@@ -224,6 +224,84 @@ class ServerResponseTest extends TestCase
         $this->assertNull($this->server->getResult());
     }
 
+
+    /**
+     * @test
+     */
+
+
+    public function getUserProfilePhotos()
+    {
+        return '{
+            "ok":true,
+            "result":{
+                "total_count":3,
+                "photos":[
+                    [
+                        {"file_id":"AgADBG6_vmQaVf3qOGVurBRzHqgg5uEju-8IBAAEC","file_size":7402,"width":160,"height":160},
+                        {"file_id":"AgADBG6_vmQaVf3qOGVurBRzHWMuphij6_MIBAAEC","file_size":15882,"width":320,"height":320},
+                        {"file_id":"AgADBG6_vmQaVf3qOGVurBRzHNWdpQ9jz_cIBAAEC","file_size":46680,"width":640,"height":640}
+                    ],
+                    [
+                        {"file_id":"AgADBAADr6cxG6_vmH-bksDdiYzAABO8UCGz_JLAAgI","file_size":7324,"width":160,"height":160},
+                        {"file_id":"AgADBAADr6cxG6_vmH-bksDdiYzAABAlhB5Q_K0AAgI","file_size":15816,"width":320,"height":320},
+                        {"file_id":"AgADBAADr6cxG6_vmH-bksDdiYzAABIIxOSHyayAAgI","file_size":46620,"width":640,"height":640}
+                    ],
+                    [
+                        {"file_id":"AgABxG6_vmQaL2X0CUTAABMhd1n2RLaRSj6cAAgI","file_size":2710,"width":160,"height":160},
+                        {"file_id":"AgADcxG6_vmQaL2X0EUTAABPXm1og0O7qwjKcAAgI","file_size":11660,"width":320,"height":320},
+                        {"file_id":"AgADxG6_vmQaL2X0CUTAABMOtcfUmoPrcjacAAgI","file_size":37150,"width":640,"height":640}
+                    ]
+                ]
+            }
+        }';
+    }
+
+
+    public function testGetUserProfilePhotos()
+    {
+        $result = $this->getUserProfilePhotos();
+        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+
+        $this->assertCount(3, $this->server->getResult()->getPhotos());
+        $this->assertCount(3, $this->server->getResult()->getPhotos()[0]);
+        $this->assertInstanceOf('\Longman\TelegramBot\Entities\UserProfilePhotos', $this->server->getResult());
+
+        $this->assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $this->server->getResult()->getPhotos()[0][0]);
+
+    }
+
+
+    /**
+     * @test
+     */
+
+
+    public function getFile()
+    {
+        return '{
+            "ok":true,
+            "result":{
+                "file_id":"AgADBxG6_vmQaVf3qRzHYTAABD1hNWdpQ9qz_cIBAAEC",
+                "file_size":46680,
+                "file_path":"photo\/file_1.jpg"
+            }
+        }';
+    }
+
+
+    public function testGetFile()
+    {
+        $result = $this->getFile();
+        //print_r(json_decode($result, true));
+        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+        //var_dump($this->server->getResult()->getPhotos());
+
+        $this->assertInstanceOf('\Longman\TelegramBot\Entities\File', $this->server->getResult());
+
+    }
+
+
     /**
      * @test
      */

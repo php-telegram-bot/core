@@ -28,24 +28,26 @@ class ServerResponse extends Entity
         if (isset($data['ok']) & isset($data['result'])) {
             if (is_array($data['result'])) {
                 if ($data['ok'] & !$this->isAssoc($data['result'])) {
-                    //update id
-                    $this->ok = $data['ok'];
-                    //$this->result =[];
+                    //get update 
                     foreach ($data['result'] as $update) {
                         $this->result[] = new Update($update, $bot_name);
                     }
-                    $this->error_code = null;
-                    $this->description = null;
-    
                 } elseif ($data['ok'] & $this->isAssoc($data['result'])) {
-                    //Response from sendMessage set
-                    $this->ok = $data['ok'];
-                    $this->result = new Message($data['result'], $bot_name);
-                    $this->error_code = null;
-                    $this->description = null;
+                    if (isset($data['result']['total_count'])) {
+                        //getUserProfilePhotos
+                        $this->result = new UserProfilePhotos($data['result']);
+                    } elseif (isset($data['result']['file_id'])) {
+                        //Response getFile
+                        $this->result = new File($data['result']);
+                    } else {
+                        //Response from sendMessage 
+                        $this->result = new Message($data['result'], $bot_name);
+                    }
                 }
     
-
+                $this->ok = $data['ok'];
+                $this->error_code = null;
+                $this->description = null;
 
             } else {
                 if ($data['ok'] & $data['result'] == true) {
@@ -114,5 +116,8 @@ class ServerResponse extends Entity
     public function getDescription()
     {
         return $this->description;
+    }
+    public function printError(){
+        return 'Error N: '.$this->getErrorCode().' Description: '.$this->getDescription();
     }
 }

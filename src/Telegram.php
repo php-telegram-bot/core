@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.18.1';
+    protected $version = '0.20.2';
 
     /**
      * Telegram API key
@@ -82,6 +82,23 @@ class Telegram
     protected $log_path;
 
     /**
+     * Upload Path
+     *
+     * @var string
+     */
+
+    protected $upload_path;
+
+
+    /**
+     * Dowload Path
+     *
+     * @var string
+     */
+
+    protected $download_path;
+
+    /**
      * Log verbosity
      *
      * @var string
@@ -117,6 +134,7 @@ class Telegram
     protected $message_types = array('text', 'command', 'new_chat_participant',
         'left_chat_participant', 'new_chat_title', 'delete_chat_photo', 'group_chat_created'
         );
+
     /**
      * Admins List
      *
@@ -133,11 +151,13 @@ class Telegram
 
     protected $admin_enabled = false;
 
+
     /**
      * Constructor
      *
      * @param string $api_key
      */
+
     public function __construct($api_key, $bot_name)
     {
         if (empty($api_key)) {
@@ -348,6 +368,7 @@ class Telegram
             print(date('Y-m-d H:i:s', time()).' - Processed '.$a." updates\n");
         } else {
             print(date('Y-m-d H:i:s', time())." - Fail fetch updates\n");
+            echo $ServerResponse->printError();
         }
 
         //return $results
@@ -565,6 +586,54 @@ class Telegram
         return $this;
     }
 
+
+    /**
+     * Set custom upload path
+     *
+     * @return object
+     */
+    public function setUploadPath($folder)
+    {
+        if (!is_dir($folder)) {
+            throw new TelegramException('Upload folder not exists!');
+        }
+        $this->upload_path = $folder;
+        return $this;
+    }
+
+    /**
+     * Get custom upload path
+     *
+     * @return string
+     */
+    public function getUploadPath($folder)
+    {
+        return $this->upload_path;
+    }
+
+    /**
+     * Set custom Download path
+     *
+     * @return object
+     */
+    public function setDownloadPath($folder)
+    {
+        if (!is_dir($folder)) {
+            throw new TelegramException('Download folder not exists!');
+        }
+        $this->upload_path = $folder;
+        return $this;
+    }
+
+    /**
+     * Get custom Download path
+     *
+     * @return string
+     */
+    public function getDownloadPath($folder)
+    {
+        return $this->download_path;
+    }
 
     /**
      * Set command config
