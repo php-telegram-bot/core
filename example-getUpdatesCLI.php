@@ -26,6 +26,8 @@ try {
     //$telegram->setLogRequests(true);
     //$telegram->setLogPath($BOT_NAME.'.log');
     //$telegram->setLogVerbosity(3);
+    //$telegram->setDownloadPath("../Download");
+    //$telegram->setUploadPath("../Upload");
 
     // handle telegram getUpdate request
     $telegram->handleGetUpdates();

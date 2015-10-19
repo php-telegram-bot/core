@@ -10,6 +10,8 @@ try {
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
     // set webhook
     $result = $telegram->setWebHook($link);
+    //Uncomment to use certificate
+    //$result = $telegram->setWebHook($link, $path_certificate);
     if ($result->isOk()) {
         echo $result->getDescription();
     }

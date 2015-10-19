@@ -276,13 +276,15 @@ class DB
         try {
             //chats table
             $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
-                (`id`, `title`, `created_at` ,`updated_at`)
-                VALUES (:id, :title, :date, :date)
+                (`id`, `type`, `title`, `created_at` ,`updated_at`)
+                VALUES (:id, :type, :title, :date, :date)
                 ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date');
 
             $chat_title = $chat->getTitle();
+            $type = $chat->getType();
 
             $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
+            $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
             $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 

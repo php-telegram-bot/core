@@ -73,7 +73,7 @@ class SendtoallCommand extends Command
 
                     $ServerResponse = $result->getResult();
                     $chat = $ServerResponse->getChat();
-                    if ($chat->isSingleChat()) {
+                    if ($chat->isPrivateChat()) {
                         $name = $chat->getFirstName();
                         $type = 'user';
                     } else {

@@ -22,9 +22,12 @@ API](https://telegram.org/blog/bot-revolution) allowing integrators of
 all sorts to bring automated interactions to the mobile platform. This
 Bot aims to provide a platform where one could simply write a plugin
 and have interactions in a matter of minutes.
-- The Bot supports Reply Markup and handle commands in group chat with
-multiple bot.
-- The Bot can retrive update with webhook and by getUpdate methods.
+The Bot can:
+- retrive update with webhook and by getUpdate methods.
+- supports all types and methods according to Telegram API (2015 October 8).
+- handle commads in chat with other bots.
+
+It is ready for the channels support.  
 
 
 ## Instructions
@@ -115,7 +118,7 @@ composer require longman/telegram-bot
 ### Choose how to retrieve Telegram updates
 The bot can handle updates with **webhook** or **getUpdate** method:
 
-| Method | Webhook | getUpdate |
+|      | Webhook | getUpdate |
 | ---- | :----: | :----: |
 | Description | Telegram send the update directy to your host | Yuo have to fetch Telegram updates |
 | Host with https | Required | Not required |
@@ -148,7 +151,6 @@ try {
 
 And open your *set.php* via browser.
 
-
 After, create *hook.php* (or just edit *example-hook.php*) and put:
 ```php
 <?php
@@ -168,6 +170,13 @@ try {
     // echo $e;
 }
 ```
+
+###Self Signed Certificate
+To upload the certificate add the certificate path as param in *set.php*:
+```php
+    $result = $telegram->setWebHook($url, $certificate_path);
+```
+
 ## getUpdate installation
 You need the database Mysql active.
 
@@ -201,6 +210,18 @@ then run
 ```
 ./getUpdateCLI.php
 ```
+### Types
+All types implemented according to Telegram API (2015 October 8).
+
+### Methods New!
+All methods implemented according to Telegram API (2015 October 8).
+TODO example to use methods
+
+```php
+$result = Request::sendPhoto($data,'image.jpg');
+```
+
+
 ## Utilis
 ### MySQL storage (Recomended)
 If you want insert in database messages/users/chats for further usage
@@ -218,8 +239,6 @@ You can set a custom prefix to all the tables while you are enabling Mysql:
 ```php
 $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 ```
-### Types New!
-All types implemented (except InputFile) according to Telegram API (2015 September 18).
 
 ### Commands
 The bot is able to recognise commands in chat with multiple bot(/command@mybot ).
@@ -269,6 +288,11 @@ example, google geocode/timezone api key for date command:
 $telegram->setCommandConfig('date',
 array('google_api_key'=>'your_google_api_key_here'));
 ```
+### Upload and Download directory
+You can overwrite the default Upload and download directory with:
+```php
+
+```
 ### Send message to all active chats
 To do this you have to enable the Mysql connection.
 Here's an example of use:
@@ -276,15 +300,12 @@ Here's an example of use:
 ```php
 $results = $telegram->sendToActiveChats(
         'sendMessage', //callback function to execute (see Request.php methods)
-        array('text'=>'Hey! Checkout the new feature!!'), //Param to
-evaluate the request
+        array('text'=>'Hey! Checkout the new feature!!'), //Param to evaluate the request
         true, //Send to chats (group chat)
         true, //Send to users (single chat)
         null, //'yyyy-mm-dd hh:mm:ss' date range from
         null  //'yyyy-mm-dd hh:mm:ss' date range to
     );
-
-print_r($results);
 ```
 
 ### Logging

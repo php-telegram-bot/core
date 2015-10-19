@@ -170,6 +170,9 @@ class Telegram
 
         $this->api_key = $api_key;
         $this->bot_name = $bot_name;
+        //Set default download and upload dir
+        $this->setDownloadPath(BASE_PATH . "/../Download");
+        $this->setUploadPath(BASE_PATH . "/../Upload");
 
         Request::initialize($this);
     }
@@ -368,7 +371,7 @@ class Telegram
             print(date('Y-m-d H:i:s', time()).' - Processed '.$a." updates\n");
         } else {
             print(date('Y-m-d H:i:s', time())." - Fail fetch updates\n");
-            echo $ServerResponse->printError();
+            echo $ServerResponse->printError()."\n";
         }
 
         //return $results
@@ -594,9 +597,11 @@ class Telegram
      */
     public function setUploadPath($folder)
     {
-        if (!is_dir($folder)) {
-            throw new TelegramException('Upload folder not exists!');
-        }
+        //if (!is_dir($folder)) {
+        //    if(!mkdir($folder, 0755, true)) {
+        //        throw new TelegramException('Directory '.$folder.' cant be created');
+        //    }
+        //}
         $this->upload_path = $folder;
         return $this;
     }
@@ -606,7 +611,7 @@ class Telegram
      *
      * @return string
      */
-    public function getUploadPath($folder)
+    public function getUploadPath()
     {
         return $this->upload_path;
     }
@@ -618,10 +623,12 @@ class Telegram
      */
     public function setDownloadPath($folder)
     {
-        if (!is_dir($folder)) {
-            throw new TelegramException('Download folder not exists!');
-        }
-        $this->upload_path = $folder;
+        //if (!is_dir($folder)) {
+        //    if(!mkdir($folder, 0755, true)) {
+        //        throw new TelegramException('Directory '.$folder.' cant be created');
+        //    }
+        //}
+        $this->download_path = $folder;
         return $this;
     }
 
@@ -630,7 +637,7 @@ class Telegram
      *
      * @return string
      */
-    public function getDownloadPath($folder)
+    public function getDownloadPath()
     {
         return $this->download_path;
     }
@@ -692,12 +699,13 @@ class Telegram
      *
      * @return string
      */
-    public function setWebHook($url)
+    public function setWebHook($url, $path_certificate = null)
     {
         if (empty($url)) {
             throw new TelegramException('Hook url is empty!');
         }
-        $result = Request::setWebhook($url);
+
+        $result = Request::setWebhook($url, $path_certificate);
 
         if (!$result->isOk()) {
             throw new TelegramException(

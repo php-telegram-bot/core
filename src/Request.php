@@ -12,6 +12,7 @@ namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Entities\File;
 
 class Request
 {
@@ -167,6 +168,58 @@ class Request
         return $result;
     }
 
+    public static function downloadFile(File $file)
+    {
+        $path = $file->getFilePath();
+
+        #Create the directory
+        $basepath = self::$telegram->getDownloadPath();
+        $loc_path = $basepath.'/'.$path;
+
+        $dirname = dirname($loc_path);
+        if (!is_dir($dirname)) {
+            if(!mkdir($dirname, 0755, true)) {
+                throw new TelegramException('Directory '.$dirname.' cant be created');
+            }
+        }
+        # open file to write
+        $fp = fopen ($loc_path, 'w+');
+        if ($fp === false) {
+            throw new TelegramException('File cant be created');
+        }
+
+        $ch = curl_init();
+        if ($ch === false) {
+            throw new TelegramException('Curl failed to initialize');
+        }
+
+        $curlConfig = array(
+            CURLOPT_URL => 'https://api.telegram.org/file/bot' . self::$telegram->getApiKey() . '/' . $path,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => 0,
+            CURLOPT_BINARYTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_FILE => $fp 
+        );
+
+        curl_setopt_array($ch, $curlConfig);
+        $result = curl_exec($ch);
+        if ($result === false) {
+            throw new TelegramException(curl_error($ch), curl_errno($ch));
+        }
+        # close curl
+        curl_close($ch);
+        # close local file
+        fclose($fp);
+      
+        if (filesize($loc_path) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     protected static function encodeFile($file)
     {
         return  new \CURLFile($file);
@@ -185,7 +238,7 @@ class Request
 
         $result = self::executeCurl($action, $data);
 
-        echo $result;
+        //echo $result;
         print_r(json_decode($result, true));
 
         $bot_name = self::$telegram->getBotName();

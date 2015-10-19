@@ -23,6 +23,8 @@ try {
     //$telegram->setLogPath($BOT_NAME.'.log');
     //$telegram->setLogVerbosity(4);
 
+    //$telegram->setDownloadPath("../Download");
+    //$telegram->setUploadPath("../Upload");
     // handle telegram webhook request
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {

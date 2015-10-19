@@ -66,7 +66,7 @@ class ChatsCommand extends Command
 
             $chat = new Chat($result);
 
-            if ($chat->isSingleChat()) {
+            if ($chat->isPrivateChat()) {
                 //$text .= '- U '.$chat->getFirstName()."\n";
 
                 $text .= '- U '.$this->tryMentionChat($chat)."\n";

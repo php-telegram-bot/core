@@ -16,6 +16,7 @@ namespace Longman\TelegramBot\Commands;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\File;
 
 class WhoamiCommand extends Command
 {
@@ -44,7 +45,7 @@ class WhoamiCommand extends Command
              . ' ' . $message->getFrom()->getLastName();
         $caption .= "\n" . 'Username: ' . $message->getFrom()->getUsername();
 
-
+        //Fetch user profile photo
         $limit = 10;
         $offset = null;
         $ServerResponse = Request::getUserProfilePhotos([
@@ -54,21 +55,12 @@ class WhoamiCommand extends Command
         ]);
 
         //Check if the request isOK
-        if($ServerResponse->isOk()){
+        if ($ServerResponse->isOk()) {
             $UserProfilePhoto = $ServerResponse->getResult();
             $totalcount = $UserProfilePhoto->getTotalCount();
         } else {
             $totalcount = 0;
         }
-
-
-
-        //$photos = $UserProfilePhoto->getPhotos();
-        ////I pick the latest photo with the hight definition
-        //$photo = $photos[0][2];
-        //$file_id = $photo->getFileId();
-        //$ServerResponse = Request::getFile(['file_id' => $file_id]);
-
 
         $data = [];
         $data['chat_id'] = $chat_id;
@@ -80,13 +72,22 @@ class WhoamiCommand extends Command
             $photo = $photos[0][2];
             $file_id = $photo->getFileId();
 
+
             $data['photo'] = $file_id;
             $data['caption'] = $caption;
 
-
             $result = Request::sendPhoto($data);
-        } else {
 
+            //Download the image pictures
+            //Download after send message response to speedup response
+            $file_id = $photo->getFileId();
+            $ServerResponse = Request::getFile(['file_id' => $file_id]);
+            if ($ServerResponse->isOk()) {
+                Request::downloadFile($ServerResponse->getResult());
+            }
+
+        } else {
+            //No Photo just send text
             $data['text'] = $caption;
             $result = Request::sendMessage($data);
         }
