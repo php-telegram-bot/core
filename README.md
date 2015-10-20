@@ -120,7 +120,7 @@ The bot can handle updates with **webhook** or **getUpdate** method:
 
 |      | Webhook | getUpdate |
 | ---- | :----: | :----: |
-| Description | Telegram send the update directy to your host | Yuo have to fetch Telegram updates |
+| Description | Telegram send the update directy to your host | You have to fetch Telegram updates |
 | Host with https | Required | Not required |
 | Mysql | Not required | Required  |
 
