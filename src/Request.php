@@ -178,12 +178,12 @@ class Request
 
         $dirname = dirname($loc_path);
         if (!is_dir($dirname)) {
-            if(!mkdir($dirname, 0755, true)) {
+            if (!mkdir($dirname, 0755, true)) {
                 throw new TelegramException('Directory '.$dirname.' cant be created');
             }
         }
         # open file to write
-        $fp = fopen ($loc_path, 'w+');
+        $fp = fopen($loc_path, 'w+');
         if ($fp === false) {
             throw new TelegramException('File cant be created');
         }
@@ -199,7 +199,7 @@ class Request
             CURLOPT_HEADER => 0,
             CURLOPT_BINARYTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_FILE => $fp 
+            CURLOPT_FILE => $fp
         );
 
         curl_setopt_array($ch, $curlConfig);

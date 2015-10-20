@@ -40,7 +40,7 @@ class Chat extends Entity
 
     public function isGroupChat()
     {
-        if ($this->type == 'group' ||  $this->id < 0 ) {
+        if ($this->type == 'group' ||  $this->id < 0) {
             return true;
         } else {
             return false;

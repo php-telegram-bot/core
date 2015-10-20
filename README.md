@@ -23,7 +23,7 @@ all sorts to bring automated interactions to the mobile platform. This
 Bot aims to provide a platform where one could simply write a plugin
 and have interactions in a matter of minutes.
 The Bot can:
-- retrive update with webhook and by getUpdate methods.
+- retrive update with webhook and getUpdate methods.
 - supports all types and methods according to Telegram API (2015 October 8).
 - handle commads in chat with other bots.
 
@@ -215,12 +215,49 @@ All types implemented according to Telegram API (2015 October 8).
 
 ### Methods New!
 All methods implemented according to Telegram API (2015 October 8).
-TODO example to use methods
+###Send Photo
+To send a local photo provide the file path as second param:
 
 ```php
-$result = Request::sendPhoto($data,'image.jpg');
+$data['chat_id'] = $chat_id;
+$result = Request::sendPhoto($data,$this->telegram->getUploadPath().'/'.'image.jpg');
 ```
 
+If you know the file_id of a previously uploaded file, just provide it in the fist param:  
+
+```php
+$data['chat_id'] = $chat_id;
+$data['photo'] = $file_id;
+$result = Request::sendPhoto($data);
+```
+
+*sendAudio*, *sendDocument*, *sendSticker*, *sendVideo* and *sendVoice* works in the same way.
+See *ImageCommand.php* for a full example.
+####Send Chat Action
+
+```php
+Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
+```
+####getUserProfilePhoto
+Retrieve the user photo, see the *WhoamiCommand.php* for a full example.
+
+####GetFile and dowloadFile
+Get the file path and download it, see the *WhoamiCommand.php* for a full example.
+
+#### Send message to all active chats
+To do this you have to enable the Mysql connection.
+Here's an example of use:
+
+```php
+$results = $telegram->sendToActiveChats(
+        'sendMessage', //callback function to execute (see Request.php methods)
+        array('text'=>'Hey! Checkout the new feature!!'), //Param to evaluate the request
+        true, //Send to chats (group chat)
+        true, //Send to users (single chat)
+        null, //'yyyy-mm-dd hh:mm:ss' date range from
+        null  //'yyyy-mm-dd hh:mm:ss' date range to
+    );
+```
 
 ## Utilis
 ### MySQL storage (Recomended)
@@ -291,21 +328,8 @@ array('google_api_key'=>'your_google_api_key_here'));
 ### Upload and Download directory
 You can overwrite the default Upload and download directory with:
 ```php
-
-```
-### Send message to all active chats
-To do this you have to enable the Mysql connection.
-Here's an example of use:
-
-```php
-$results = $telegram->sendToActiveChats(
-        'sendMessage', //callback function to execute (see Request.php methods)
-        array('text'=>'Hey! Checkout the new feature!!'), //Param to evaluate the request
-        true, //Send to chats (group chat)
-        true, //Send to users (single chat)
-        null, //'yyyy-mm-dd hh:mm:ss' date range from
-        null  //'yyyy-mm-dd hh:mm:ss' date range to
-    );
+$telegram->setDownloadPath("yourpath/Download");
+$telegram->setUploadPath("yourpath../Upload");    
 ```
 
 ### Logging

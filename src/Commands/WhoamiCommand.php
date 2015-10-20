@@ -66,7 +66,7 @@ class WhoamiCommand extends Command
         $data['chat_id'] = $chat_id;
         $data['reply_to_message_id'] = $message_id;
 
-        if ( $totalcount > 0){
+        if ($totalcount > 0) {
             $photos = $UserProfilePhoto->getPhotos();
             //I pick the latest photo with the hight definition
             $photo = $photos[0][2];

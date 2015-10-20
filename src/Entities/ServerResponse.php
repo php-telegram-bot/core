@@ -28,7 +28,7 @@ class ServerResponse extends Entity
         if (isset($data['ok']) & isset($data['result'])) {
             if (is_array($data['result'])) {
                 if ($data['ok'] & !$this->isAssoc($data['result'])) {
-                    //get update 
+                    //get update
                     foreach ($data['result'] as $update) {
                         $this->result[] = new Update($update, $bot_name);
                     }
@@ -40,7 +40,7 @@ class ServerResponse extends Entity
                         //Response getFile
                         $this->result = new File($data['result']);
                     } else {
-                        //Response from sendMessage 
+                        //Response from sendMessage
                         $this->result = new Message($data['result'], $bot_name);
                     }
                 }
@@ -117,7 +117,8 @@ class ServerResponse extends Entity
     {
         return $this->description;
     }
-    public function printError(){
+    public function printError()
+    {
         return 'Error N: '.$this->getErrorCode().' Description: '.$this->getDescription();
     }
 }
