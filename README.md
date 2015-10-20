@@ -25,7 +25,7 @@ and have interactions in a matter of minutes.
 The Bot can:
 - retrive update with webhook and getUpdate methods.
 - supports all types and methods according to Telegram API (2015 October 8).
-- handle commads in chat with other bots.
+- handle commands in chat with other bots.
 
 It is ready for the channels support.  
 
@@ -172,9 +172,9 @@ try {
 ```
 
 ###Self Signed Certificate
-To upload the certificate add the certificate path as param in *set.php*:
+To upload the certificate, add the certificate path as param in *set.php*:
 ```php
-    $result = $telegram->setWebHook($url, $certificate_path);
+$result = $telegram->setWebHook($url, $certificate_path);
 ```
 
 ## getUpdate installation
@@ -233,18 +233,18 @@ $result = Request::sendPhoto($data);
 
 *sendAudio*, *sendDocument*, *sendSticker*, *sendVideo* and *sendVoice* works in the same way.
 See *ImageCommand.php* for a full example.
-####Send Chat Action
+###Send Chat Action
 
 ```php
 Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 ```
-####getUserProfilePhoto
+###getUserProfilePhoto
 Retrieve the user photo, see the *WhoamiCommand.php* for a full example.
 
-####GetFile and dowloadFile
+###GetFile and dowloadFile
 Get the file path and download it, see the *WhoamiCommand.php* for a full example.
 
-#### Send message to all active chats
+### Send message to all active chats
 To do this you have to enable the Mysql connection.
 Here's an example of use:
 
@@ -278,7 +278,7 @@ $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 ```
 
 ### Commands
-The bot is able to recognise commands in chat with multiple bot(/command@mybot ).
+The bot is able to recognise commands in chat with multiple bot (/command@mybot ).
 It can execute command triggering a chat event. Here's the list:
 
 - Group chat created (**GroupchatcreatedCommand.php**)
@@ -326,7 +326,7 @@ $telegram->setCommandConfig('date',
 array('google_api_key'=>'your_google_api_key_here'));
 ```
 ### Upload and Download directory
-You can overwrite the default Upload and download directory with:
+You can overwrite the default Upload and Download directory with:
 ```php
 $telegram->setDownloadPath("yourpath/Download");
 $telegram->setUploadPath("yourpath../Upload");    
