@@ -86,5 +86,26 @@ class MessageTest extends TestCase
         $this->assertEquals('help', $this->message->getCommand());
         $this->assertEquals('/help@testbot some text', $this->message->getText());
         $this->assertEquals('some text', $this->message->getText(true));
+
+        // /commmad\n text
+        $this->message = new Message($this->generateMessage("/help\n some text"), 'testbot');
+        $this->assertEquals('/help', $this->message->getFullCommand());
+        $this->assertEquals('help', $this->message->getCommand());
+        $this->assertEquals("/help\n some text", $this->message->getText());
+        $this->assertEquals(' some text', $this->message->getText(true));
+
+        // /command@bot\nsome text
+        $this->message = new Message($this->generateMessage("/help@testbot\nsome text"), 'testbot');
+        $this->assertEquals('/help@testbot', $this->message->getFullCommand());
+        $this->assertEquals('help', $this->message->getCommand());
+        $this->assertEquals("/help@testbot\nsome text", $this->message->getText());
+        $this->assertEquals('some text', $this->message->getText(true));
+
+        // /command@bot \nsome text
+        $this->message = new Message($this->generateMessage("/help@testbot \nsome text"), 'testbot');
+        $this->assertEquals('/help@testbot', $this->message->getFullCommand());
+        $this->assertEquals('help', $this->message->getCommand());
+        $this->assertEquals("/help@testbot \nsome text", $this->message->getText());
+        $this->assertEquals("\nsome text", $this->message->getText(true));
      }
 }
