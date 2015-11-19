@@ -199,15 +199,7 @@ class Message extends Entity
     public function getFullCommand()
     {
         if (substr($this->text, 0, 1) === '/') {
-            $no_EOL =  strtok($this->text, PHP_EOL);
-            $no_space = strtok($this->text, ' ');
-
-            //try to understand which separator \n or space divide /command from text
-            if (strlen($no_space) < strlen($no_EOL)) {
-                return $no_space;
-            } else {
-                return $no_EOL;
-            }
+            return strtok($this->text, ' ');
         } else {
             return;
         }
@@ -281,8 +273,7 @@ class Message extends Entity
         if ($without_cmd) {
             $command = $this->getFullCommand();
             if (!empty($command)) {
-                //$text = substr($text, strlen($command.' '), strlen($text));
-                $text = substr($text, strlen($command) + 1, strlen($text));
+                $text = substr($text, strlen($command.' '), strlen($text));
             }
         }
 
