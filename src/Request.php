@@ -109,6 +109,27 @@ class Request
         return $fake_response;
     }
 
+    protected static function encodeData($input)
+    {
+        $output = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
+            $o = null;
+            if (true === isset($match[1])) {
+                $o = iconv('UCS-4LE', 'UTF-8', pack('V', hexdec($match[1])));
+            } elseif (true === isset($match[0])) {
+                $o = $match[0];
+            }
+        }, $input);
+        return $output;
+    }
+
+    protected static function encodeArray(&$input)
+    {
+        return array_walk_recursive(&$input, function(&$item) {
+            $item = self::encodeData($item);
+            return $item;
+        });
+    }
+
     public static function executeCurl($action, array $data)
     {
 
@@ -127,6 +148,7 @@ class Request
             if (!empty($data['text']) && substr($data['text'], 0, 1) === '@') {
                 $data['text'] = ' ' . $data['text'];
             }
+            self::encodeData($data);
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
         }
 
