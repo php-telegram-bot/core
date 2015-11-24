@@ -395,11 +395,8 @@ class Request
         return $result;
     }
 
-    public static function setWebhook($url, $file = null)
+    public static function setWebhook($url='', $file = null)
     {
-        if (empty($url)) {
-            throw new TelegramException('Url is empty!');
-        }
         $data['url'] = $url;
 
         if (!is_null($file)) {

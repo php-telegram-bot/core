@@ -717,6 +717,23 @@ class Telegram
     }
 
     /**
+     * Unset Webhook for bot
+     *
+     * @return string
+     */
+    public function unsetWebHook()
+    {
+        $result = Request::setWebhook();
+
+        if (!$result->isOk()) {
+            throw new TelegramException(
+                'Webhook was not unset! Error: '.$result->getErrorCode().' '. $result->getDescription()
+            );
+        }
+
+        return $result;
+    }
+    /**
      * Get available message types
      *
      * @return array
