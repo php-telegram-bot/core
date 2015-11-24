@@ -37,8 +37,9 @@ class MessageTest extends TestCase
     protected function generateMessage($string) {
 
         $string = addslashes($string);
-        
-        return json_decode('{"message_id":961,"from":{"id":123,"first_name":"john","username":"john"},"chat":{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"},"date":1435920612,"text":"'.$string.'"}',true);
+        $json = '{"message_id":961,"from":{"id":123,"first_name":"john","username":"john"},"chat":{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"},"date":1435920612,"text":"'.$string.'"}';
+        $json = utf8_encode($json);  
+        return json_decode($json, true);
     }
     /**
      * @test
