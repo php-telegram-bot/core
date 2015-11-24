@@ -1,7 +1,6 @@
 language: php
 
 php:
-    - 5.4
     - 5.5
     - 5.6
     - 7.0
@@ -13,11 +12,11 @@ before_install:
   - composer self-update
 
 install:
-  - travis_retry composer install --no-interaction --prefer-source
+  - travis_retry composer install --no-interaction
 
 script:
-  - phpunit
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then vendor/bin/phpcs --report=full --extensions=php -p --standard=build/phpcs .; fi"
+  - vendor/bin/phpunit
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .; fi"
 
 matrix:
   allow_failures:

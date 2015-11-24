@@ -13,13 +13,18 @@
 	<!-- Exclude 3rd party libraries and Framework code. -->
 	<exclude-pattern type="relative">vendor/*</exclude-pattern>
 
-	<!-- Include all sniffs in an external standard directory -->
+    <arg name="colors"/>
 
 	<!-- Include some additional sniffs from the Generic standard -->
-
 	<rule ref="PSR2">
 		<exclude name="PEAR.Functions.FunctionCallSignature"/>
 		<exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket"/>
 	</rule>
 
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property phpcs-only="true" name="lineLimit" value="100"/>
+            <property phpcbf-only="true" name="lineLimit" value="120"/>
+        </properties>
+    </rule>
 </ruleset>

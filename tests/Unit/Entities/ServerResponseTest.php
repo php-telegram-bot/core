@@ -15,11 +15,11 @@ use \Longman\TelegramBot\Entities\Message;
 use \Longman\TelegramBot\Request;
 
 /**
- * @package 		TelegramTest
- * @author 		Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
- * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/php-telegram-bot
+ * @package         TelegramTest
+ * @author             Avtandil Kikabidze <akalongman@gmail.com>
+ * @copyright         Avtandil Kikabidze <akalongman@gmail.com>
+ * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
+ * @link             http://www.github.com/akalongman/php-telegram-bot
  */
 class ServerResponseTest extends TestCase
 {
@@ -27,7 +27,7 @@ class ServerResponseTest extends TestCase
     * @var \Longman\TelegramBot\Telegram
     */
     private $server;
-    
+
     /**
     * setUp
     */
@@ -39,7 +39,7 @@ class ServerResponseTest extends TestCase
      * @test
      */
 
-    public function sendMessageOk() 
+    public function sendMessageOk()
     {
         return '{
             "ok":true,
@@ -55,7 +55,7 @@ class ServerResponseTest extends TestCase
 
     public function testSendMessageOk() {
 
-        $result = $this->sendMessageOk(); 
+        $result = $this->sendMessageOk();
 
         $this->server = new ServerResponse(json_decode($result, true), 'testbot');
 
@@ -82,7 +82,7 @@ class ServerResponseTest extends TestCase
      * @test
      */
 
-    public function sendMessageFail() 
+    public function sendMessageFail()
     {
         return '{
                 "ok":false,
@@ -110,7 +110,7 @@ class ServerResponseTest extends TestCase
    public function setWebHookOk()
     {
         return '{"ok":true,"result":true,"description":"Webhook was set"}';
-    }  
+    }
 
     public function testSetWebhookOk() {
 

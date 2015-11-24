@@ -1,18 +1,15 @@
 # PHP Telegram Bot
 
-[![Join the chat at
-https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
-[![Latest Stable
-Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
 
 
-A Telegram Bot based on the official [Telegram Bot
-API](https://core.telegram.org/bots/api)
+A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
 
 
 ### Introduction
@@ -27,7 +24,7 @@ The Bot can:
 - supports all types and methods according to Telegram API (2015 October 8).
 - handle commands in chat with other bots.
 
-It is ready for the channels support.  
+It is ready for the channels support.
 
 
 ## Instructions
@@ -127,7 +124,7 @@ The bot can handle updates with **webhook** or **getUpdate** method:
 ## Webhook installation
 You need server with https and composer support.
 You must set a [WebHook](https://core.telegram.org/bots/api#setwebhook).
-Create *set.php* (just edit *example-set.php*) and put into it:
+Create *set.php* (just copy and edit *examples/set.php*) and put into it:
 ```php
 <?php
 //Composer Loader
@@ -151,7 +148,7 @@ try {
 
 And open your *set.php* via browser.
 
-After, create *hook.php* (or just edit *example-hook.php*) and put:
+After, create *hook.php* (or just copy and edit *examples/hook.php*) and put:
 ```php
 <?php
 $loader = require __DIR__.'/vendor/autoload.php';
@@ -180,7 +177,7 @@ $result = $telegram->setWebHook($url, $certificate_path);
 ## getUpdate installation
 You need the database Mysql active.
 
-Create *getUpdateCLI.php* (just edit *example-getUpdateCLI.php*) and put into it:
+Create *getUpdateCLI.php* (just copy and edit *examples/getUpdateCLI.php*) and put into it:
 ```php
 #!/usr/bin/env php
 <?php
@@ -199,7 +196,7 @@ try {
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
      echo $e;
-}                
+}
 ```
 
 give to the file the permission for execution:
@@ -223,7 +220,7 @@ $data['chat_id'] = $chat_id;
 $result = Request::sendPhoto($data,$this->telegram->getUploadPath().'/'.'image.jpg');
 ```
 
-If you know the file_id of a previously uploaded file, just provide it in the fist param:  
+If you know the file_id of a previously uploaded file, just provide it in the fist param:
 
 ```php
 $data['chat_id'] = $chat_id;
@@ -302,12 +299,12 @@ $COMMANDS_FOLDER = __DIR__.'/Commands/';
 $telegram->addCommandsPath($COMMANDS_FOLDER);
 ```
 
-Inside *CommandsExamples/* there are some sample that show how to use types.
+Inside *examples/Commands/* there are some sample that show how to use types.
 
-### Admin Commands 
+### Admin Commands
 Enabling this feature, the admin bot can perform some super user command like:
-- Send message to all chats 
-- List all the chats started with the bot (new!) 
+- Send message to all chats
+- List all the chats started with the bot (new!)
 
 You can specify one or more admin with this option:
 
@@ -329,37 +326,46 @@ array('google_api_key'=>'your_google_api_key_here'));
 You can overwrite the default Upload and Download directory with:
 ```php
 $telegram->setDownloadPath("yourpath/Download");
-$telegram->setUploadPath("yourpath../Upload");    
+$telegram->setUploadPath("yourpath../Upload");
 ```
 
 ### Logging
 Thrown Exception are stored in TelegramException.log file (in the base directory).
 
-Incoming update (json string from webhook and getUpdates) can be logged on a text file, set those options with the methods:  
+Incoming update (json string from webhook and getUpdates) can be logged on a text file, set those options with the methods:
 ```php
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');
 ```
 
-(New!) Set verbosity to 3, to log also curl requests and responses from the bot to Telegram: 
+(New!) Set verbosity to 3, to log also curl requests and responses from the bot to Telegram:
 
 ```php
 $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');
-$telegram->setLogVerbosity(3);     
+$telegram->setLogVerbosity(3);
 ```
 
------  
+-----
 This code is available on
-[Github](https://github.com/akalongman/php-telegram-bot). Pull
-requests are welcome.
+[Github](https://github.com/akalongman/php-telegram-bot). Pull requests are welcome.
+
 
 ## Troubleshooting
+
 If you like living on the edge, please report any bugs you find on the
-[PHP Telegram Bot
-issues](https://github.com/akalongman/php-telegram-bot/issues) page.
+[PHP Telegram Bot issues](https://github.com/akalongman/php-telegram-bot/issues) page.
+
 ## Contributing
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information.
+
+## License
+
+Please see the [LICENSE](LICENSE.md) included in this repository for a full copy of the MIT license,
+which this project is licensed under.
+
+
 ## Credits
 
 Credit list in [CREDITS](CREDITS)
