@@ -99,7 +99,7 @@ Create *composer.json* file:
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "longman/telegram-bot": "*"
     }
 }
