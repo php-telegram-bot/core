@@ -109,7 +109,7 @@ class Request
         return $fake_response;
     }
 
-    public static function executeCurl($action, array $data)
+    public static function executeCurl($action, array $data = null)
     {
 
         $ch = curl_init();
@@ -395,7 +395,7 @@ class Request
         return $result;
     }
 
-    public static function setWebhook($url='', $file = null)
+    public static function setWebhook($url = '', $file = null)
     {
         $data['url'] = $url;
 
