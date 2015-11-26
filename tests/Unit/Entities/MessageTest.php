@@ -36,9 +36,11 @@ class MessageTest extends TestCase
 
     protected function generateMessage($string) {
 
-        $string = addslashes($string);
+
+        //$string = addslashes($string);
+        $string = str_replace("\n", "\\n", $string);
         $json = '{"message_id":961,"from":{"id":123,"first_name":"john","username":"john"},"chat":{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"},"date":1435920612,"text":"'.$string.'"}';
-        $json = utf8_encode($json);  
+        //$json = utf8_encode($json);  
         return json_decode($json, true);
     }
     /**
@@ -64,6 +66,7 @@ class MessageTest extends TestCase
 
 
         // /command@bot
+
         $this->message = new Message($this->generateMessage('/help@testbot'), 'testbot');
         $this->assertEquals('/help@testbot', $this->message->getFullCommand());
         $this->assertEquals('help', $this->message->getCommand());
@@ -85,6 +88,11 @@ class MessageTest extends TestCase
         $this->assertEquals('some text', $this->message->getText(true));
 
         // /commmad\n text
+
+//$array = $this->generateMessage("/help\n some text");
+////print_r($this->generateMessage('/help@testbot'));
+//echo 'value:';
+//print_r($array);
         $this->message = new Message($this->generateMessage("/help\n some text"), 'testbot');
         $this->assertEquals('/help', $this->message->getFullCommand());
         $this->assertEquals('help', $this->message->getCommand());
