@@ -16,6 +16,9 @@ composer.phar
 # Test Related Files #
 /phpunit.xml
 
+#Exception output
+TelegramException.log
+
 # Composer
 vendor/
 
