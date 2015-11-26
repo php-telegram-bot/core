@@ -329,9 +329,9 @@ $telegram->setDownloadPath("yourpath/Download");
 $telegram->setUploadPath("yourpath../Upload");
 ```
 ###Unset Webhook
-Edit *example-unset.php* with your credential and execute it.  
+Edit *example/unset.php* with your credential and execute it.  
 ### Logging
-Thrown Exception are stored in TelegramException.log file (in the base directory).
+Thrown Exception are stored in *TelegramException.log* file (in the base directory).
 
 Incoming update (json string from webhook and getUpdates) can be logged on a text file, set those options with the methods:
 ```php
