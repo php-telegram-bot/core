@@ -100,7 +100,12 @@ class Request
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
             $data['date'] = '1441378360';
-            $data['from'] = array( 'id' => 123456789 ,'first_name' => 'botname', 'username'=> 'namebot');
+            $data['from'] = array(
+                'id' => 123456789,
+                'first_name' =>
+                'botname',
+                'username'=> 'namebot'
+            );
             $data['chat'] = array('id'=> $data['chat_id'] );
 
             $fake_response['result'] = $data;
@@ -152,7 +157,9 @@ class Request
 
         //Logging getUpdates Update
         //Logging curl updates
-        if ($action == 'getUpdates' & self::$telegram->getLogVerbosity() >=1 | self::$telegram->getLogVerbosity() >=3) {
+        if ($action == 'getUpdates'
+            & self::$telegram->getLogVerbosity() >=1
+            | self::$telegram->getLogVerbosity() >=3) {
             self::setInputRaw($result);
             self::log($result);
         }
@@ -211,7 +218,7 @@ class Request
         curl_close($ch);
         # close local file
         fclose($fp);
-      
+
         if (filesize($loc_path) > 0) {
             return true;
         } else {

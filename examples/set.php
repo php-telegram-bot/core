@@ -1,6 +1,7 @@
 <?php
 //Composer Loader
-$loader = require __DIR__.'/vendor/autoload.php';
+$dir = realpath(__DIR__.'/..');
+$loader = require $dir.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';

@@ -17,7 +17,11 @@ class TelegramException extends \Exception
         parent::__construct($message, $code);
 
         $path = 'TelegramException.log';
-        $status = file_put_contents($path, date('Y-m-d H:i:s', time()) .' '. self::__toString() . "\n", FILE_APPEND);
+        $status = file_put_contents(
+            $path,
+            date('Y-m-d H:i:s', time()) .' '. self::__toString() . "\n",
+            FILE_APPEND
+        );
 
     }
 }

@@ -4,12 +4,18 @@
 #while true; do ./getUpdatesCLI.php; done
 
 //Composer Loader
-$loader = require __DIR__.'/vendor/autoload.php';
+$dir = realpath(__DIR__.'/..');
+$loader = require $dir.'/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 //$COMMANDS_FOLDER = __DIR__.'/Commands/';
-$credentials = array('host'=>'localhost', 'user'=>'dbuser', 'password'=>'dbpass', 'database'=>'dbname');
+$credentials = array(
+    'host'=>'localhost',
+    'user'=>'dbuser',
+    'password'=>'dbpass',
+    'database'=>'dbname'
+);
 
 try {
     // create Telegram API object

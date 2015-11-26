@@ -57,7 +57,8 @@ abstract class Command
 
     abstract public function execute();
 
-    //this methods is executed if $need_mysql is true but DB connection for some reason is not avaiable
+    // this methods is executed if $need_mysql is true
+    // but DB connection for some reason is not avaiable
     public function executeNoDB()
     {
 

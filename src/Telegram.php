@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the TelegramBot package.
  *
@@ -30,7 +29,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.21.1';
+    protected $version = '0.20.2';
 
     /**
      * Telegram API key
@@ -537,6 +536,7 @@ class Telegram
         //$str[0] = strtolower($str[0]);
         return $str;
     }
+
     /**
      * Enable Admin Account
      *
@@ -550,7 +550,7 @@ class Telegram
             if ($admin > 0) {
                 $this->admins_list[] = $admin;
             } else {
-                throw new TelegramException('Only users can be admin not chat!');
+                throw new TelegramException('Invalid value "'.$admin.'" for admin!');
             }
         }
 
@@ -564,7 +564,6 @@ class Telegram
      *
      * @return bool
      */
-
     public function isDbEnabled()
     {
         if ($this->mysql_enabled) {

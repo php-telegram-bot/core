@@ -5,11 +5,11 @@ Before you contribute code to php-telegram-bot, please make sure it conforms to 
 
     cd php-telegram-bot
     composer update
-    vendor/bin/phpcs --report=full --extensions=php -p --standard=build/phpcs .
+    vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .
 
 Which should give you no output, indicating that there are no coding standard errors. And then:
 
-    phpunit
+    vendor/bin/phpunit
 
 Which should give you no failures or errors. You can ignore any skipped tests as these are for external tools.
 
@@ -18,7 +18,7 @@ Pushing
 
 Development is based on the git flow branching model (see http://nvie.com/posts/a-successful-git-branching-model/ )
 If you fix a bug please push in hotfix branch.
-If you develop a new feature please create a new branch.  
+If you develop a new feature please create a new branch.
 
 Version
 -------
