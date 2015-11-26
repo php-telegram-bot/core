@@ -88,6 +88,11 @@ class MessageTest extends TestCase
         $this->assertEquals('some text', $this->message->getText(true));
 
         // /commmad\n text
+
+//$array = $this->generateMessage("/help\n some text");
+////print_r($this->generateMessage('/help@testbot'));
+//echo 'value:';
+//print_r($array);
         $this->message = new Message($this->generateMessage("/help\n some text"), 'testbot');
         $this->assertEquals('/help', $this->message->getFullCommand());
         $this->assertEquals('help', $this->message->getCommand());
