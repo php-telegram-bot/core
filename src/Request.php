@@ -245,9 +245,6 @@ class Request
 
         $result = self::executeCurl($action, $data);
 
-        //echo $result;
-        print_r(json_decode($result, true));
-
         $bot_name = self::$telegram->getBotName();
         return new ServerResponse(json_decode($result, true), $bot_name);
     }
