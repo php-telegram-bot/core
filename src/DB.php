@@ -31,7 +31,7 @@ class DB
      *
      * @var array
      */
-    static protected $mysql_credentials = array();
+    static protected $mysql_credentials = [];
 
     /**
      * PDO object
@@ -65,8 +65,8 @@ class DB
         try {
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
-            //Define table
 
+            //Define table
             if (!defined('TB_MESSAGES')) {
                 define('TB_MESSAGES', self::$table_prefix.'messages');
             }
@@ -122,16 +122,12 @@ class DB
             $query = 'SELECT * FROM `'.TB_MESSAGES.'`';
             $query .= ' ORDER BY '.TB_MESSAGES.'.`update_id` DESC';
 
-            $tokens = [];
             if (!is_null($limit)) {
-                //$query .=' LIMIT :limit ';
-                //$tokens[':limit'] = $limit;
-
-                $query .=' LIMIT '.$limit;
+                $query .=' LIMIT :limit ';
             }
-            //echo $query;
+
             $sth = self::$pdo->prepare($query);
-            //$sth->execute($tokens);
+            $sth->bindParam(':limit', $limit, \PDO::PARAM_STR);
             $sth->execute();
             $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -189,7 +185,6 @@ class DB
 
             $status = $sth1->execute();
 
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -217,7 +212,6 @@ class DB
     }
 
 
-
     /**
      * Insert request in db
      *
@@ -234,7 +228,6 @@ class DB
         $from = $message->getFrom();
         $chat = $message->getChat();
 
-
         $chat_id = $chat->getId();
 
         $date = self::toTimestamp($message->getDate());
@@ -246,7 +239,7 @@ class DB
         $new_chat_photo = $message->getNewChatPhoto();
         $left_chat_participant = $message->getLeftChatParticipant();
 
-        //inser user and the relation with the chat
+        //insert user and the relation with the chat
         self::insertUser($from, $date, $chat);
 
         //Insert the forwarded message user in users table
@@ -323,7 +316,6 @@ class DB
             $delete_chat_photo = $message->getDeleteChatPhoto();
             $group_chat_created = $message->getGroupChatCreated();
 
-
             $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
@@ -357,8 +349,8 @@ class DB
             $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_STR);
             $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_STR);
             $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
-            //Array of Photosize
 
+            //Array of Photosize
             $var = [];
             if (is_array($new_chat_photo)) {
                 foreach ($new_chat_photo as $elm) {
@@ -443,7 +435,6 @@ class DB
             }
 
             $query .= ' ORDER BY '.TB_CHATS.'.`updated_at` ASC';
-            //echo $query."\n";
 
             $sth = self::$pdo->prepare($query);
             $sth->execute($tokens);

@@ -32,7 +32,7 @@ class Chat extends Entity
 
         //$this->type = isset($data['type']) ? $data['type'] : null;
 
-        if ( isset($data['type']) ) {
+        if (isset($data['type'])) {
             $this->type = $data['type'];
         } else {
             if ($this->isPrivateChat()) {
