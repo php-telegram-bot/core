@@ -21,7 +21,7 @@ Bot aims to provide a platform where one could simply write a plugin
 and have interactions in a matter of minutes.
 The Bot can:
 - retrive update with webhook and getUpdate methods.
-- supports all types and methods according to Telegram API (2015 October 8).
+- supports all types and methods according to Telegram API (2015 October 28).
 - handle commands in chat with other bots.
 
 It is ready for the channels support.
@@ -303,8 +303,8 @@ Inside *examples/Commands/* there are some sample that show how to use types.
 
 ### Admin Commands
 Enabling this feature, the admin bot can perform some super user command like:
-- Send message to all chats
-- List all the chats started with the bot (new!)
+- Send message to all chats */sendtoall*
+- List all the chats started with the bot */chats*
 
 You can specify one or more admin with this option:
 
