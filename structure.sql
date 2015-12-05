@@ -41,7 +41,7 @@ CREATE TABLE `users` (
 
 CREATE TABLE `chats` (
   `id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique user or chat identifier',
-  `type` CHAR(10) DEFAULT '' COMMENT 'chat type private groupe or channel',
+  `type` CHAR(10) DEFAULT '' COMMENT 'chat type private group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update',

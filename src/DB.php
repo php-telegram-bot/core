@@ -239,6 +239,33 @@ class DB
         $new_chat_photo = $message->getNewChatPhoto();
         $left_chat_participant = $message->getLeftChatParticipant();
 
+
+
+
+
+
+        try {
+            //chats table
+            $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
+                (`id`, `type`, `title`, `created_at` ,`updated_at`)
+                VALUES (:id, :type, :title, :date, :date)
+                ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date');
+
+            $chat_title = $chat->getTitle();
+            $type = $chat->getType();
+
+            $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
+            $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
+            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
+
+            $status = $sth2->execute();
+
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+
         //insert user and the relation with the chat
         self::insertUser($from, $date, $chat);
 
@@ -266,23 +293,8 @@ class DB
             $left_chat_participant = '';
         }
 
+
         try {
-            //chats table
-            $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
-                (`id`, `type`, `title`, `created_at` ,`updated_at`)
-                VALUES (:id, :type, :title, :date, :date)
-                ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date');
-
-            $chat_title = $chat->getTitle();
-            $type = $chat->getType();
-
-            $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
-            $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
-            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
-            $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
-
-            $status = $sth2->execute();
-
             //Messages Table
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_MESSAGES.'`
                 (
