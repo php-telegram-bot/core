@@ -61,13 +61,26 @@ class Message extends Entity
 
     protected $group_chat_created;
 
-    protected $command;
+    private $command;
 
     private $type;
 
     public function __construct(array $data, $bot_name)
     {
+
+        $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
+        if (!empty($this->reply_to_message)) {
+            $this->reply_to_message = new ReplyToMessage($this->reply_to_message, $bot_name);
+        }
+
+        $this->init($data, $bot_name);
+    }
+
+    //Common init to Message and ReplyToMessage
+    protected function init(array & $data, & $bot_name)
+    {
         $this->bot_name = $bot_name;
+
         $this->type = 'text';
 
         $this->message_id = isset($data['message_id']) ? $data['message_id'] : null;
@@ -81,16 +94,16 @@ class Message extends Entity
         }
         $this->from = new User($this->from);
 
-        $this->date = isset($data['date']) ? $data['date'] : null;
-        if (empty($this->date)) {
-            throw new TelegramException('date is empty!');
-        }
-
         $this->chat = isset($data['chat']) ? $data['chat'] : null;
         if (empty($this->chat)) {
             throw new TelegramException('chat is empty!');
         }
         $this->chat = new Chat($this->chat);
+
+        $this->date = isset($data['date']) ? $data['date'] : null;
+        if (empty($this->date)) {
+            throw new TelegramException('date is empty!');
+        }
 
         $this->forward_from = isset($data['forward_from']) ? $data['forward_from'] : null;
         if (!empty($this->forward_from)) {
@@ -98,11 +111,6 @@ class Message extends Entity
         }
 
         $this->forward_date = isset($data['forward_date']) ? $data['forward_date'] : null;
-
-        $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
-        if (!empty($this->reply_to_message)) {
-            $this->reply_to_message = new Message($this->reply_to_message, $this->bot_name);
-        }
 
         $this->text = isset($data['text']) ? $data['text'] : null;
         $command = $this->getCommand();
@@ -193,6 +201,7 @@ class Message extends Entity
         if ($this->group_chat_created) {
             $this->type = 'group_chat_created';
         }
+
     }
 
     //return the entire command like /echo or /echo@bot1 if specified

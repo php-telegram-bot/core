@@ -127,7 +127,7 @@ class DB
             }
 
             $sth = self::$pdo->prepare($query);
-            $sth->bindParam(':limit', $limit, \PDO::PARAM_STR);
+            $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
             $sth->execute();
             $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -238,11 +238,6 @@ class DB
 
         $new_chat_photo = $message->getNewChatPhoto();
         $left_chat_participant = $message->getLeftChatParticipant();
-
-
-
-
-
 
         try {
             //chats table

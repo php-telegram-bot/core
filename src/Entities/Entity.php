@@ -21,26 +21,45 @@ class Entity
         return $this->bot_name;
     }
 
-
-
     public function toJSON()
     {
-        $reflection = new \ReflectionObject($this);
-        $properties = $reflection->getProperties();
-
-        $fields = array();
-
-        foreach ($properties as $property) {
-            $name = $property->getName();
-            $property->setAccessible(true);
-            $value = $property->getValue($this);
-            $fields[$name] = $value;
-        }
-
+        $fields = $this->reflect($this);
         $json = json_encode($fields);
 
         return $json;
     }
+
+
+    public function reflect($object)
+    {
+        $reflection = new \ReflectionObject($object);
+        $properties = $reflection->getProperties();
+
+        $fields = [];
+
+        foreach ($properties as $property) {
+            $name = $property->getName();
+
+            if ($name == 'bot_name') {
+                continue;
+            }
+
+            if (!$property->isPrivate()) {
+                if (is_object($object->$name)) {
+                    $fields[$name] = $this->reflect($object->$name);
+                } else {
+                    $property->setAccessible(true);
+                    $value = $property->getValue($object);
+                    if (is_null($value)) {
+                        continue;
+                    }
+                    $fields[$name] = $value;
+                }
+            }
+        }
+        return $fields;
+    }
+
 
     public function __toString()
     {
