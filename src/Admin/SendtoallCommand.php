@@ -33,7 +33,7 @@ class SendtoallCommand extends Command
         //Preparing message
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
         return Request::sendMessage($data);
@@ -49,7 +49,7 @@ class SendtoallCommand extends Command
         $text = $message->getText(true);
 
         if (empty($text)) {
-            $text = 'Write te message to sent: /sendall <message>';
+            $text = 'Write the message to sent: /sendall <message>';
         } else {
             $results = Request::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
@@ -94,9 +94,8 @@ class SendtoallCommand extends Command
             $text = "No users or chats found..";
         }
 
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
-        //$data['reply_to_message_id'] = $message_id;
         $data['text'] = $text;
 
         $result = Request::sendMessage($data);

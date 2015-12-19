@@ -60,15 +60,12 @@ class ChatsCommand extends Command
         $text = "List of bot chats:\n";
 
         foreach ($results as $result) {
-            //I want initialize a chat object
-            //id, title, first_name, last_name
+            //initialize a chat object
             $result['id'] =  $result['chat_id'];
 
             $chat = new Chat($result);
 
             if ($chat->isPrivateChat()) {
-                //$text .= '- U '.$chat->getFirstName()."\n";
-
                 $text .= '- U '.$this->tryMentionChat($chat)."\n";
                 ++$user_chats;
             } else {
@@ -87,9 +84,7 @@ class ChatsCommand extends Command
 
         $data = [];
         $data['chat_id'] = $chat_id;
-        //$data['reply_to_message_id'] = $message_id;
         $data['text'] = $text;
-        //$data['parse_mode'] = 'Markdown';
         $result = Request::sendMessage($data);
         return $result;
     }

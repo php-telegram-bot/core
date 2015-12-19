@@ -77,7 +77,6 @@ class Request
             return false;
         }
 
-        //$status = file_put_contents($path, self::$input . "\n", FILE_APPEND);
         $status = file_put_contents($path, $string . "\n", FILE_APPEND);
         return $status;
     }
@@ -125,13 +124,11 @@ class Request
         $curlConfig = array(
             CURLOPT_URL => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
             CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SAFE_UPLOAD => true
         );
 
         if (!empty($data)) {
-            if (!empty($data['text']) && substr($data['text'], 0, 1) === '@') {
-                $data['text'] = ' ' . $data['text'];
-            }
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
         }
 
@@ -139,10 +136,6 @@ class Request
             $curlConfig[CURLOPT_VERBOSE] = true;
             $verbose = fopen('php://temp', 'w+');
             curl_setopt($ch, CURLOPT_STDERR, $verbose);
-            //Not so useful
-            //$info = curl_getinfo($ch);
-            //echo "Info\n";
-            //print_r($info);
         }
 
         curl_setopt_array($ch, $curlConfig);
@@ -189,7 +182,7 @@ class Request
                 throw new TelegramException('Directory '.$dirname.' cant be created');
             }
         }
-        # open file to write
+        // open file to write
         $fp = fopen($loc_path, 'w+');
         if ($fp === false) {
             throw new TelegramException('File cant be created');
@@ -214,9 +207,9 @@ class Request
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
-        # close curl
+        // close curl
         curl_close($ch);
-        # close local file
+        // close local file
         fclose($fp);
 
         if (filesize($loc_path) > 0) {
@@ -225,7 +218,6 @@ class Request
             return false;
         }
     }
-
 
     protected static function encodeFile($file)
     {
@@ -421,12 +413,14 @@ class Request
         $result = self::send('getFile', $data);
         return $result;
     }
+
     /**
      * Send Message in all the active chat
      *
      *
      * @return bool
      */
+
     public static function sendToActiveChats(
         $callback_function,
         array $data,
@@ -445,8 +439,6 @@ class Request
 
         $results = [];
         foreach ($chats as $row) {
-            //$result[] = $row;
-            //print_r($row);
             $data['chat_id'] = $row['chat_id'];
             $results[] = call_user_func_array($callback_path.'::'.$callback_function, array($data));
         }

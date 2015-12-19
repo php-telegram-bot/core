@@ -89,10 +89,9 @@ class Message extends Entity
         }
 
         $this->from = isset($data['from']) ? $data['from'] : null;
-        if (empty($this->from)) {
-            throw new TelegramException('from is empty!');
+        if (!empty($this->from)) {
+            $this->from = new User($this->from);
         }
-        $this->from = new User($this->from);
 
         $this->chat = isset($data['chat']) ? $data['chat'] : null;
         if (empty($this->chat)) {
