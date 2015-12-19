@@ -36,7 +36,17 @@ try {
     //$telegram->setUploadPath("../Upload");
 
     // handle telegram getUpdate request
-    $telegram->handleGetUpdates();
+    $ServerResponse = $telegram->handleGetUpdates();
+
+    if ($ServerResponse->isOk()) {
+        $n_update = count($ServerResponse->getResult());
+        
+        print(date('Y-m-d H:i:s', time()).' - Processed '.$n_update." updates\n");
+    } else {
+        print(date('Y-m-d H:i:s', time())." - Fail fetch updates\n");
+        echo $ServerResponse->printError()."\n";
+    }
+
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
      echo $e;

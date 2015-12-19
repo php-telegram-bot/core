@@ -29,7 +29,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.23.0';
+    protected $version = '0.24.0';
 
     /**
      * Telegram API key
@@ -334,7 +334,7 @@ class Telegram
     /**
      * Handle getUpdates method
      *
-     * @return \Longman\TelegramBot\Telegram
+     *
      */
 
     public function handleGetUpdates($limit = null, $timeout = null)
@@ -354,19 +354,17 @@ class Telegram
             'limit' => $limit,
             'timeout' => $timeout
         ]);
+
+        
         if ($ServerResponse->isOk()) {
             $results = '';
             $n_update = count($ServerResponse->getResult());
             for ($a = 0; $a < $n_update; $a++) {
                 $result = $this->processUpdate($ServerResponse->getResult()[$a]);
             }
-            print(date('Y-m-d H:i:s', time()).' - Processed '.$a." updates\n");
-        } else {
-            print(date('Y-m-d H:i:s', time())." - Fail fetch updates\n");
-            echo $ServerResponse->printError()."\n";
         }
 
-        //return $results
+        return $ServerResponse;
     }
 
     /**
