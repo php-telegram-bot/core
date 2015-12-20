@@ -23,9 +23,7 @@ The Bot can:
 - retrive update with webhook and getUpdate methods.
 - supports all types and methods according to Telegram API (2015 October 28).
 - handle commands in chat with other bots.
-
-It is ready for the channels support.
-
+- manage Channel from the bot admin interface (**new!**)
 
 ## Instructions
 ### Create your first bot
@@ -208,11 +206,12 @@ then run
 ./getUpdateCLI.php
 ```
 ### Types
-All types implemented according to Telegram API (2015 October 8).
+All types implemented according to Telegram API (2015 October 28).
 
-### Methods New!
-All methods implemented according to Telegram API (2015 October 8).
-###Send Photo
+### Methods
+All methods implemented according to Telegram API (2015 October 28).
+
+####Send Photo
 To send a local photo provide the file path as second param:
 
 ```php
@@ -230,18 +229,18 @@ $result = Request::sendPhoto($data);
 
 *sendAudio*, *sendDocument*, *sendSticker*, *sendVideo* and *sendVoice* works in the same way.
 See *ImageCommand.php* for a full example.
-###Send Chat Action
+####Send Chat Action
 
 ```php
 Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 ```
-###getUserProfilePhoto
+####getUserProfilePhoto
 Retrieve the user photo, see the *WhoamiCommand.php* for a full example.
 
-###GetFile and dowloadFile
+####GetFile and dowloadFile
 Get the file path and download it, see the *WhoamiCommand.php* for a full example.
 
-### Send message to all active chats
+#### Send message to all active chats
 To do this you have to enable the Mysql connection.
 Here's an example of use:
 
@@ -263,8 +262,8 @@ in commands, create database and import *structure.sql* and enable
 Mysql support after object creation and BEFORE handle method:
 
 ```php
-$credentials = array('host'=>'localhost', 'user'=>'dbuser',
-'password'=>'dbpass', 'database'=>'dbname');
+$credentials = ['host'=>'localhost', 'user'=>'dbuser',
+'password'=>'dbpass', 'database'=>'dbname'];
 
 $telegram->enableMySQL($credentials);
 ```
@@ -273,6 +272,11 @@ You can set a custom prefix to all the tables while you are enabling Mysql:
 ```php
 $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 ```
+Consider to use the utf8mb4 branch if you find some special characters problems.
+
+### Channels Support 
+All methods implemented can be used to manage channels.  
+(**new!**) With admin interface you can manage your channel directly with your bot private chat.
 
 ### Commands
 The bot is able to recognise commands in chat with multiple bot (/command@mybot ).
@@ -301,11 +305,19 @@ $telegram->addCommandsPath($COMMANDS_FOLDER);
 
 Inside *examples/Commands/* there are some sample that show how to use types.
 
+#### Commands Configuration
+With this method you can set some command specified parameters, for
+example, google geocode/timezone api key for date command:
+```php
+$telegram->setCommandConfig('date',
+['google_api_key'=>'your_google_api_key_here']);
+```
+
 ### Admin Commands
 Enabling this feature, the admin bot can perform some super user command like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
-
+- Send a message to a channel */sendtochannel* (NEW! see below how to configure it)
 You can specify one or more admin with this option:
 
 ```php
@@ -315,14 +327,17 @@ Telegram user id can be retrieved with the command **/whoami**.
 Admin commands are stored in *src/Admin/* folder.
 To know all the commands avaiable type **/help**.
 
-### Commands Configuration
-With this method you can set some command specified parameters, for
-example, google geocode/timezone api key for date command:
+#### Channel Administration (NEW!)
+Follow those steps: 
+- Add your bot as channel administrator, this can be done with any telegram client.
+- Enable admin interface for your user as explained in the admin section above.
+- Enter your channel name as a param for the sendtoall command:
 ```php
-$telegram->setCommandConfig('date',
-array('google_api_key'=>'your_google_api_key_here'));
+    $telegram->setCommandConfig('sendtochannel', ['your_channel'=>'@type_here_your_channel']);
 ```
-### Upload and Download directory
+- Enjoy!
+
+### Upload and Download directory path
 You can overwrite the default Upload and Download directory with:
 ```php
 $telegram->setDownloadPath("yourpath/Download");
@@ -330,6 +345,7 @@ $telegram->setUploadPath("yourpath../Upload");
 ```
 ###Unset Webhook
 Edit *example/unset.php* with your credential and execute it.  
+
 ### Logging
 Thrown Exception are stored in *TelegramException.log* file (in the base directory).
 

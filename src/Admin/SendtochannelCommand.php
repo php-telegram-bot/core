@@ -19,7 +19,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 class SendtochannelCommand extends Command
 {
     protected $name = 'sendtochannel';
-    protected $description = 'Send a message to a channel';
+    protected $description = 'Send message to a channel';
     protected $usage = '/sendchannel <message to send>';
     protected $version = '0.1.0';
     protected $enabled = true;
@@ -35,10 +35,10 @@ class SendtochannelCommand extends Command
         $chat_id = $message->getChat()->getId();
         $message_id = $message->getMessageId();
         $text = $message->getText(true);
-        $your_channel = '@yourchannel';
         if (empty($text)) {
             $text_back = 'Write the message to sent: /sendtochannel <message>';
         } else {
+            $your_channel = $this->getConfig('your_channel');
             //Send message to channel
             $data = [];
             $data['chat_id'] = $your_channel;
