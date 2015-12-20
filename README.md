@@ -254,7 +254,7 @@ $results = $telegram->sendToActiveChats(
         null  //'yyyy-mm-dd hh:mm:ss' date range to
     );
 ```
-
+You can also broadcast message to users, from the private chat with your bot. Take a look at the admin interace below. 
 ## Utilis
 ### MySQL storage (Recomended)
 If you want insert in database messages/users/chats for further usage
@@ -309,8 +309,7 @@ Inside *examples/Commands/* there are some sample that show how to use types.
 With this method you can set some command specified parameters, for
 example, google geocode/timezone api key for date command:
 ```php
-$telegram->setCommandConfig('date',
-['google_api_key'=>'your_google_api_key_here']);
+$telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
 ```
 
 ### Admin Commands
@@ -321,14 +320,14 @@ Enabling this feature, the admin bot can perform some super user command like:
 You can specify one or more admin with this option:
 
 ```php
-$telegram->enableAdmins(array('TelegramUserID','Othersid'));
+$telegram->enableAdmins(['your_telegram_user_id','Othersid']);
 ```
 Telegram user id can be retrieved with the command **/whoami**.
 Admin commands are stored in *src/Admin/* folder.
 To know all the commands avaiable type **/help**.
 
 #### Channel Administration (NEW!)
-Follow those steps: 
+To enable this feature follow those steps: 
 - Add your bot as channel administrator, this can be done with any telegram client.
 - Enable admin interface for your user as explained in the admin section above.
 - Enter your channel name as a param for the sendtoall command:
