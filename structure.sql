@@ -23,6 +23,10 @@ CREATE TABLE `messages` (
   `new_chat_photo` TEXT DEFAULT '' COMMENT 'Array of PhotoSize objects. A group photo was change to this value',
   `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group photo was deleted',
   `group_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group has been created',
+  `supergroup_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the supergroup has been created',
+  `channel_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the channel chat has been created',
+  `migrate_from_chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Migrate from chat identifier.',
+  `migrate_to_chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Migrate to chat identifier.',
   PRIMARY KEY (`update_id`),
   KEY `message_id` (`message_id`),
   KEY `user_id` (`user_id`)
@@ -41,10 +45,11 @@ CREATE TABLE `users` (
 
 CREATE TABLE `chats` (
   `id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique user or chat identifier',
-  `type` CHAR(10) DEFAULT '' COMMENT 'chat type private group, supergroup or channel',
+  `type` CHAR(10) DEFAULT '' COMMENT 'chat type private, group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update',
+  `old_id` bigint NOT NULL DEFAULT '0' COMMENT 'Unique chat identifieri this is filled when a chat is converted to a superchat',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 

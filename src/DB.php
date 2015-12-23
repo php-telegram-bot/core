@@ -239,11 +239,16 @@ class DB
         $new_chat_photo = $message->getNewChatPhoto();
         $left_chat_participant = $message->getLeftChatParticipant();
 
+        $migrate_from_chat_id = $message->getMigrateFromChatId();
+        if (is_null($migrate_from_chat_id)) {
+            $migrate_from_chat_id = 0;
+        }
+
         try {
             //chats table
             $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
-                (`id`, `type`, `title`, `created_at` ,`updated_at`)
-                VALUES (:id, :type, :title, :date, :date)
+                (`id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`)
+                VALUES (:id, :type, :title, :date, :date, :oldid)
                 ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date');
 
             $chat_title = $chat->getTitle();
@@ -253,6 +258,7 @@ class DB
             $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
             $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
+            $sth2->bindParam(':oldid', $migrate_from_chat_id, \PDO::PARAM_INT);
 
             $status = $sth2->execute();
 
@@ -297,13 +303,17 @@ class DB
                 `forward_date`, `reply_to_message`, `text`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `new_chat_participant`, `left_chat_participant`,
-                `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`
+                `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
+                `supergroup_chat_created`,  `channel_chat_created`,
+                `migrate_from_chat_id`,  `migrate_to_chat_id` 
                 )
                 VALUES (:update_id, :message_id, :user_id, :date, :chat_id, :forward_from,
                 :forward_date, :reply_to_message, :text, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :new_chat_participant, :left_chat_participant,
-                :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created
+                :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
+                :supergroup_chat_created, :channel_chat_created,
+                :migrate_from_chat_id, :migrate_to_chat_id 
                 )');
 
             $update_id = $update->getUpdateId();
@@ -322,6 +332,9 @@ class DB
             $new_chat_title = $message->getNewChatTitle();
             $delete_chat_photo = $message->getDeleteChatPhoto();
             $group_chat_created = $message->getGroupChatCreated();
+            $supergroup_chat_created = $message->getSupergroupChatCreated();
+            $channel_chat_created = $message->getChannelChatCreated();
+            $migrate_from_chat_id = $message->getMigrateFromChatId();
 
             $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
@@ -372,7 +385,10 @@ class DB
             $sth->bindParam(':new_chat_photo', $new_chat_photo, \PDO::PARAM_STR);
             $sth->bindParam(':delete_chat_photo', $delete_chat_photo, \PDO::PARAM_STR);
             $sth->bindParam(':group_chat_created', $group_chat_created, \PDO::PARAM_STR);
-
+            $sth->bindParam(':supergroup_chat_created', $migrate_from_chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':channel_chat_created', $supergroup_chat_created, \PDO::PARAM_INT);
+            $sth->bindParam(':migrate_from_chat_id', $channel_chat_created, \PDO::PARAM_INT);
+            $sth->bindParam(':migrate_to_chat_id', $migrate_from_chat_id, \PDO::PARAM_INT);
             $status = $sth->execute();
 
         } catch (PDOException $e) {
@@ -391,7 +407,8 @@ class DB
      * @return array selected rows
      */
     public static function selectChats(
-        $select_chats = true,
+        $select_groups = true,
+        $select_super_groups = true,
         $select_users = true,
         $date_from = null,
         $date_to = null
@@ -400,7 +417,7 @@ class DB
             return false;
         }
 
-        if (!$select_chats & !$select_users) {
+        if (!$select_groups & !$select_users & !$select_super_groups) {
             return false;
         }
         try {
@@ -415,10 +432,17 @@ class DB
             $chat_or_user = '';
             $where = [];
             $tokens = [];
-            if ($select_chats & !$select_users) {
-                $where[] = TB_CHATS.'.`id` < 0';
-            } elseif (!$select_chats & $select_users) {
-                $where[] = TB_CHATS.'.`id` > 0';
+
+            if (!$select_groups || !$select_users || !$select_super_groups) {
+                if ($select_groups) {
+                    $where[] = TB_CHATS.'.`type` = "group"';
+                }
+                if ($select_super_groups) {
+                    $where[] = TB_CHATS.'.`type` = "supergroup"';
+                }
+                if ($select_users) {
+                    $where[] = TB_CHATS.'.`type` = "private"';
+                }
             }
 
             if (! is_null($date_from)) {

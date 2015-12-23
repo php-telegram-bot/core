@@ -21,7 +21,8 @@ Bot aims to provide a platform where one could simply write a plugin
 and have interactions in a matter of minutes.
 The Bot can:
 - retrive update with webhook and getUpdate methods.
-- supports all types and methods according to Telegram API (2015 October 28).
+- supports all types and methods according to Telegram API (2015 November).
+- supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface (**new!**)
 
@@ -206,10 +207,10 @@ then run
 ./getUpdateCLI.php
 ```
 ### Types
-All types implemented according to Telegram API (2015 October 28).
+All types implemented according to Telegram API (2015 November).
 
 ### Methods
-All methods implemented according to Telegram API (2015 October 28).
+All methods implemented according to Telegram API (2015 November).
 
 ####Send Photo
 To send a local photo provide the file path as second param:
@@ -282,11 +283,13 @@ All methods implemented can be used to manage channels.
 The bot is able to recognise commands in chat with multiple bot (/command@mybot ).
 It can execute command triggering a chat event. Here's the list:
 
-- Group chat created (**GroupchatcreatedCommand.php**)
 - New chat participant (**NewchatparticipantCommand.php**)
-- Delete chat photo (**DeletechatphotoCommand.php**)
-- New chat title (**NewchattitleCommand.php**)
 - Left chat participant (**LeftchatparticipantCommand.php**)
+- New chat title (**NewchattitleCommand.php**)
+- Delete chat photo (**DeletechatphotoCommand.php**)
+- Group chat created (**GroupchatcreatedCommand.php**)
+- Super group chat created (**SupergroupchatcreatedCommand.php**)
+- Channel chat created (**ChannelchatcreatedCommand.php**)
 
 **GenericCommand.php** let you handle commands that don't exist or to
 use commands as a variable:

@@ -49,7 +49,8 @@ class ChatsCommand extends Command
         $text = $message->getText(true);
 
         $results = DB::selectChats(
-            true, //Send to chats (group chat)
+            true, //Send to groups (group chat)
+            true, //Send to supergroups (single chat)
             true, //Send to users (single chat)
             null, //'yyyy-mm-dd hh:mm:ss' date range from
             null  //'yyyy-mm-dd hh:mm:ss' date range to
@@ -57,6 +58,7 @@ class ChatsCommand extends Command
 
         $user_chats = 0;
         $group_chats = 0;
+        $super_group_chats = 0;
         $text = "List of bot chats:\n";
 
         foreach ($results as $result) {
@@ -66,20 +68,24 @@ class ChatsCommand extends Command
             $chat = new Chat($result);
 
             if ($chat->isPrivateChat()) {
-                $text .= '- U '.$this->tryMentionChat($chat)."\n";
+                $text .= '- P '.$this->tryMentionChat($chat)."\n";
                 ++$user_chats;
-            } else {
+            } elseif ($chat->isGroupChat()) {
                 $text .= '- G '.$chat->getTitle()."\n";
                 ++$group_chats;
+            } elseif ($chat->isSuperGroup()) {
+                $text .= '- S '.$chat->getTitle()."\n";
+                ++$super_group_chats;
             }
 
         }
-        if (($group_chats + $user_chats) == 0) {
+        if (($group_chats + $user_chats + $super_group_chats) == 0) {
             $text = "No chats found..";
         } else {
-            $text .= "\nUser Chats: ".$user_chats;
-            $text .= "\nGroup Chats: ".$group_chats;
-            $text .= "\nTot: ".($group_chats + $user_chats);
+            $text .= "\nPrivate Chats: ".$user_chats;
+            $text .= "\nGroup: ".$group_chats;
+            $text .= "\nSuper Group: ".$super_group_chats;
+            $text .= "\nTot: ".($group_chats + $user_chats + $super_group_chats);
         }
 
         $data = [];

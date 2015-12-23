@@ -29,7 +29,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.24.0';
+    protected $version = '0.25.0';
 
     /**
      * Telegram API key
@@ -57,7 +57,7 @@ class Telegram
      *
      * @var array
      */
-    protected $commands_dir = array();
+    protected $commands_dir = [];
 
     /**
      * Update object
@@ -448,6 +448,14 @@ class Telegram
             case 'group_chat_created':
                 // trigger group_chat_created
                 return $this->executeCommand('Groupchatcreated', $update);
+                break;
+            case 'supergroup_chat_created':
+                // trigger super_group_chat_created
+                return $this->executeCommand('Supergroupchatcreated', $update);
+                break;
+            case 'channel_chat_created':
+                // trigger channel_chat_created
+                return $this->executeCommand('Channelchatcreated', $update);
                 break;
         }
     }

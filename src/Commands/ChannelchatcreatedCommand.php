@@ -14,28 +14,22 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 
-class EchoCommand extends Command
+class ChannelchatcreatedCommand extends Command
 {
-    protected $name = 'echo';
-    protected $description = 'Show text';
-    protected $usage = '/echo <text>';
+    protected $name = 'Channelchatcreated';
+    protected $description = 'Channel chat created';
+    protected $usage = '/';
     protected $version = '1.0.0';
     protected $enabled = true;
-    protected $public = true;
 
     public function execute()
     {
         $update = $this->getUpdate();
         $message = $this->getMessage();
 
-        $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
+        $channel_chat_created = $message->getChannelChatCreated();
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = $text;
+        // temporary do nothing
 
-        $result = Request::sendMessage($data);
-        return $result;
     }
 }

@@ -54,7 +54,8 @@ class SendtoallCommand extends Command
             $results = Request::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
                 array('text'=> $text), //Param to evaluate the request
-                true, //Send to chats (group chat)
+                true, //Send to groups (group chat)
+                true, //Send to super groups chats (super group chat)
                 true, //Send to users (single chat)
                 null, //'yyyy-mm-dd hh:mm:ss' date range from
                 null  //'yyyy-mm-dd hh:mm:ss' date range to

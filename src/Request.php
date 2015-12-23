@@ -424,7 +424,8 @@ class Request
     public static function sendToActiveChats(
         $callback_function,
         array $data,
-        $send_chats = true,
+        $send_groups = true,
+        $send_super_groups = true,
         $send_users = true,
         $date_from = null,
         $date_to = null
@@ -435,7 +436,7 @@ class Request
             throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
         }
 
-        $chats = DB::selectChats($send_chats, $send_users, $date_from, $date_to);
+        $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
 
         $results = [];
         foreach ($chats as $row) {

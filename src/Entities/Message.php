@@ -60,6 +60,16 @@ class Message extends Entity
     protected $delete_chat_photo;
 
     protected $group_chat_created;
+//TODO new items
+
+    protected $supergroup_chat_created;
+
+    protected $channel_chat_created;
+
+    protected $migrate_to_chat_id;
+
+    protected $migrate_from_chat_id;
+
 
     private $command;
 
@@ -177,7 +187,7 @@ class Message extends Entity
         }
 
         $this->new_chat_title = isset($data['new_chat_title']) ? $data['new_chat_title'] : null;
-        if ($this->new_chat_title) {
+        if (!is_null($this->new_chat_title)) {
             $this->type = 'new_chat_title';
         }
 
@@ -200,6 +210,19 @@ class Message extends Entity
         if ($this->group_chat_created) {
             $this->type = 'group_chat_created';
         }
+
+        $this->supergroup_chat_created = isset($data['supergroup_chat_created']) ? $data['supergroup_chat_created'] : null;
+        if ($this->supergroup_chat_created) {
+            $this->type = 'supergroup_chat_created';
+        }
+
+        $this->channel_chat_created = isset($data['channel_chat_created']) ? $data['channel_chat_created'] : null;
+        if ($this->channel_chat_created) {
+            $this->type = 'channel_chat_created';
+        }
+
+        $this->migrate_to_chat_id = isset($data['migrate_to_chat_id']) ? $data['migrate_to_chat_id'] : null;
+        $this->migrate_from_chat_id = isset($data['migrate_from_chat_id']) ? $data['migrate_from_chat_id'] : null;
 
     }
 
@@ -373,6 +396,25 @@ class Message extends Entity
         return $this->group_chat_created;
     }
 
+    public function getSupergroupChatCreated()
+    {
+        return $this->supergroup_chat_created;
+    }
+
+    public function getChannelChatCreated()
+    {
+        return $this->channel_chat_created;
+    }
+
+    public function getMigrateToChatId()
+    {
+        return $this->migrate_to_chat_id;
+    }
+
+    public function getMigrateFromChatId()
+    {
+        return $this->migrate_from_chat_id;
+    }
 
     public function botAddedInChat()
     {
