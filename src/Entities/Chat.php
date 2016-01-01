@@ -121,4 +121,18 @@ class Chat extends Entity
 
         return $this->username;
     }
+
+    public function tryMention()
+    {
+        if ($chat->isPrivateChat()) {
+            if (is_null($this->username)) {
+                if (!is_null($this->last_name)) {
+                    return $this->first_name.' '.$this->last_name;
+                }
+                return $this->first_name;
+            }
+            return '@'.$this->username;
+        }
+        return $chat->getTitle();
+    }
 }

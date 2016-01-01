@@ -68,7 +68,7 @@ class ChatsCommand extends Command
             $chat = new Chat($result);
 
             if ($chat->isPrivateChat()) {
-                $text .= '- P '.$this->tryMentionChat($chat)."\n";
+                $text .= '- P '.$chat->tryMentionChat()."\n";
                 ++$user_chats;
             } elseif ($chat->isGroupChat()) {
                 $text .= '- G '.$chat->getTitle()."\n";

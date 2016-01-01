@@ -125,26 +125,4 @@ abstract class Command
     {
         return $this->public;
     }
-
-    public function tryMention(User $user)
-    {
-        if (!is_null($user->getUsername())) {
-            return '@'.$user->getUsername();
-        } else {
-            return $user->getFirstName();
-        }
-    }
-
-    public function tryMentionChat(Chat $chat)
-    {
-        if ($chat->isGroupChat()) {
-            return $chat->getTitle();
-        } else {
-            if (!is_null($chat->getUsername())) {
-                return '@'.$chat->getUsername();
-            } else {
-                return $chat->getFirstName();
-            }
-        }
-    }
 }
