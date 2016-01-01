@@ -24,20 +24,17 @@ class Chat extends Entity
 
     public function __construct(array $data)
     {
-
         $this->id = isset($data['id']) ? $data['id'] : null;
         if (empty($this->id)) {
             throw new TelegramException('id is empty!');
         }
 
-        //$this->type = isset($data['type']) ? $data['type'] : null;
-
         if (isset($data['type'])) {
             $this->type = $data['type'];
         } else {
-            if ($this->isPrivateChat()) {
+            if ($this->id > 0) {
                 $this->type = 'private';
-            } elseif ($this->isGroupChat()) {
+            } elseif ($this->id < 0) {
                 $this->type = 'group';
             } else {
                 $this->type = null;
@@ -54,36 +51,32 @@ class Chat extends Entity
     {
         if ($this->type == 'group' ||  $this->id < 0) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function isPrivateChat()
     {
-        if ($this->type == 'private' || $this->id > 0) {
+        if ($this->type == 'private') {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function isSuperGroup()
     {
         if ($this->type == 'supergroup') {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function isChannel()
     {
         if ($this->type == 'channel') {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function getId()
