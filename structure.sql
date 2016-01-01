@@ -6,7 +6,7 @@ CREATE TABLE `messages` (
   `chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Chat identifier.',
   `forward_from` bigint NOT NULL DEFAULT '0' COMMENT 'User id. For forwarded messages, sender of the original message',
   `forward_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'For forwarded messages, date the original message was sent in Unix time',
-  `reply_to_message` LONGTEXT COMMENT 'Message object. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.',
+  `reply_to_message` bigint COMMENT 'Message is a reply to another message already stored.',
   `text` LONGTEXT COMMENT 'For text messages, the actual UTF-8 text of the message',
   `audio` TEXT DEFAULT '' COMMENT 'Audio object. Message is an audio file, information about the file',
   `document` TEXT DEFAULT '' COMMENT 'Document object. Message is a general file, information about the file',

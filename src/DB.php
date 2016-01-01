@@ -319,7 +319,7 @@ class DB
             $update_id = $update->getUpdateId();
             $message_id = $message->getMessageId();
             $from_id = $from->getId();
-            $reply_to_message = $message->getReplyToMessage();
+            $reply_to_message = $message->getReplyToMessage()->getMessageId();
             $text = $message->getText();
             $audio = $message->getAudio();
             $document = $message->getDocument();
