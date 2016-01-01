@@ -30,8 +30,12 @@ class Entity
     }
 
 
-    public function reflect($object)
+    public function reflect($object = null)
     {
+        if ($object == null) {
+            $object = $this;
+        }
+
         $reflection = new \ReflectionObject($object);
         $properties = $reflection->getProperties();
 
@@ -45,8 +49,23 @@ class Entity
             }
 
             if (!$property->isPrivate()) {
+                $array_of_obj = false;
+                if (is_array($object->$name)) {
+                    $array_of_obj = true;
+                    foreach ($object->$name as $elm) {
+                        if (!is_object($elm)) {
+                            $array_of_obj = false;
+                            break;
+                        }
+                    }
+                }
+
                 if (is_object($object->$name)) {
                     $fields[$name] = $this->reflect($object->$name);
+                } elseif ($array_of_obj) {
+                    foreach ($object->$name as $elm) {
+                        $fields[$name][] = $this->reflect($elm);
+                    }
                 } else {
                     $property->setAccessible(true);
                     $value = $property->getValue($object);
