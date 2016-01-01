@@ -60,7 +60,6 @@ class Message extends Entity
     protected $delete_chat_photo;
 
     protected $group_chat_created;
-//TODO new items
 
     protected $supergroup_chat_created;
 
@@ -91,7 +90,7 @@ class Message extends Entity
     {
         $this->bot_name = $bot_name;
 
-        $this->type = 'text';
+        $this->type = 'Message';
 
         $this->message_id = isset($data['message_id']) ? $data['message_id'] : null;
         if (empty($this->message_id)) {
@@ -130,11 +129,13 @@ class Message extends Entity
         $this->audio = isset($data['audio']) ? $data['audio'] : null;
         if (!empty($this->audio)) {
             $this->audio = new Audio($this->audio);
+            $this->type = 'Audio';
         }
 
         $this->document = isset($data['document']) ? $data['document'] : null;
         if (!empty($this->document)) {
             $this->document = new Document($this->document);
+            $this->type = 'Document';
         }
 
         $this->photo = isset($data['photo']) ? $data['photo'] : null; //array of photosize
@@ -145,21 +146,25 @@ class Message extends Entity
                 }
             }
             $this->photo = $photos;
+            $this->type = 'Photo';
         }
 
         $this->sticker = isset($data['sticker']) ? $data['sticker'] : null;
         if (!empty($this->sticker)) {
             $this->sticker = new Sticker($this->sticker);
+            $this->type = 'Sticker';
         }
 
         $this->video = isset($data['video']) ? $data['video'] : null;
         if (!empty($this->video)) {
             $this->video = new Video($this->video);
+            $this->type = 'Video';
         }
 
         $this->voice = isset($data['voice']) ? $data['voice'] : null;
         if (!empty($this->voice)) {
             $this->voice = new Voice($this->voice);
+            $this->type = 'Voice';
         }
 
         $this->caption = isset($data['caption']) ? $data['caption'] : null;//string
@@ -172,6 +177,7 @@ class Message extends Entity
         $this->location = isset($data['location']) ? $data['location'] : null;
         if (!empty($this->location)) {
             $this->location = new Location($this->location);
+            $this->type = 'Location';
         }
 
         $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;

@@ -127,10 +127,12 @@ class Telegram
      *
      * @var array
      */
-    protected $message_types = array('text', 'command', 'new_chat_participant',
-        'left_chat_participant', 'new_chat_title', 'delete_chat_photo', 'group_chat_created'
-        );
 
+    protected $message_types =['Message', 'Photo', 'Audio', 'Document', 'Sticker', 'Video',
+        'Voice', 'Location', 'command', 'new_chat_participant',
+        'left_chat_participant', 'new_chat_title', 'delete_chat_photo',
+        'group_chat_created', 'supergroup_chat_created', 'channel_chat_created',
+        ];
     /**
      * Admins List
      *
@@ -179,6 +181,8 @@ class Telegram
     public function enableMySQL(array $credential, $table_prefix = null)
     {
         $this->pdo = DB::initialize($credential, $table_prefix);
+        TrackingDB::initializeTracking();
+
         $this->mysql_enabled = true;
     }
 
@@ -190,7 +194,7 @@ class Telegram
     public function getCommandsList()
     {
 
-        $commands = array();
+        $commands = [];
         try {
             $files = new \DirectoryIterator(BASE_PATH . '/Commands');
         } catch (\Exception $e) {
@@ -421,7 +425,14 @@ class Telegram
 
         switch ($type) {
             default:
-            case 'text':
+            case 'Message':
+            case 'Photo':
+            case 'Audio':
+            case 'Document':
+            case 'Sticker':
+            case 'Video':
+            case 'Voice':
+            case 'Location':
                 return $this->executeCommand('Genericmessage', $update);
                 break;
             case 'command':
