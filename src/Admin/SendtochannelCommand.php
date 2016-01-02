@@ -57,6 +57,6 @@ class SendtochannelCommand extends Command
         $data['text'] = $text_back;
 
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }

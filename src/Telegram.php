@@ -432,42 +432,43 @@ class Telegram
             case 'Video':
             case 'Voice':
             case 'Location':
-                return $this->executeCommand('Genericmessage', $update);
+                $command = 'Genericmessage';
                 break;
             case 'command':
                 // execute command
                 $command = $message->getCommand();
-                return $this->executeCommand($command, $update);
                 break;
             case 'new_chat_participant':
                 // trigger new participant
-                return $this->executeCommand('Newchatparticipant', $update);
+                $command = 'Newchatparticipant';
                 break;
             case 'left_chat_participant':
                 // trigger left chat participant
-                return $this->executeCommand('Leftchatparticipant', $update);
+                $command = 'Leftchatparticipant';
                 break;
             case 'new_chat_title':
                 // trigger new_chat_title
-                return $this->executeCommand('Newchattitle', $update);
+                $command = 'Newchattitle';
                 break;
             case 'delete_chat_photo':
                 // trigger delete_chat_photo
-                return $this->executeCommand('Deletechatphoto', $update);
+                $command = 'Deletechatphoto';
                 break;
             case 'group_chat_created':
                 // trigger group_chat_created
-                return $this->executeCommand('Groupchatcreated', $update);
+                $command = 'Groupchatcreated';
                 break;
             case 'supergroup_chat_created':
                 // trigger super_group_chat_created
-                return $this->executeCommand('Supergroupchatcreated', $update);
+                $command = 'Supergroupchatcreated';
                 break;
             case 'channel_chat_created':
                 // trigger channel_chat_created
-                return $this->executeCommand('Channelchatcreated', $update);
+                $command = 'Channelchatcreated';
                 break;
         }
+        $result = $this->executeCommand($command, $update);
+        return $result;
     }
 
     /**

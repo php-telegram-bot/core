@@ -33,10 +33,11 @@ class ChatsCommand extends Command
         //Preparing message
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
-        return Request::sendMessage($data);
+        $result = Request::sendMessage($data);
+        return $result->isOk();
     }
 
     public function execute()
@@ -92,6 +93,6 @@ class ChatsCommand extends Command
         $data['chat_id'] = $chat_id;
         $data['text'] = $text;
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }

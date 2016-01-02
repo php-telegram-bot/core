@@ -67,12 +67,12 @@ class HelpCommand extends Command
             }
         }
 
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['reply_to_message_id'] = $message_id;
         $data['text'] = $msg;
 
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }

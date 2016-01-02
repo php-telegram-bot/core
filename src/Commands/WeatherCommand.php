@@ -57,37 +57,41 @@ class WeatherCommand extends Command
             return false;
         }
 
-        // try/catch
-        $data = $this->getWeather($location);
+        try{
+           $data = $this->getWeather($location);
 
-        $decode = json_decode($data, true);
-        if (empty($decode) || $decode['cod'] != 200) {
-            return false;
+           $decode = json_decode($data, true);
+           if (empty($decode) || $decode['cod'] != 200) {
+               return false;
+           }
+           $city = $decode['name'];
+           $country = $decode['sys']['country'];
+           $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . '°C';
+           $conditions = 'Current conditions are: ' . $decode['weather'][0]['description'];
+
+           switch (strtolower($decode['weather'][0]['main'])) {
+               case 'clear':
+                   $conditions.= ' ☀';
+                   break;
+
+               case 'clouds':
+                   $conditions.= ' ☁☁';
+                   break;
+
+               case 'rain':
+                   $conditions.= ' ☔';
+                   break;
+
+               case 'thunderstorm':
+                   $conditions.= ' ☔☔☔☔';
+                   break;
+           }
+
+           $result = $temp . "\n" . $conditions;
+        } catch (\Exception $e) {
+            $result = '';
         }
-        $city = $decode['name'];
-        $country = $decode['sys']['country'];
-        $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . '°C';
-        $conditions = 'Current conditions are: ' . $decode['weather'][0]['description'];
-
-        switch (strtolower($decode['weather'][0]['main'])) {
-            case 'clear':
-                $conditions.= ' ☀';
-                break;
-
-            case 'clouds':
-                $conditions.= ' ☁☁';
-                break;
-
-            case 'rain':
-                $conditions.= ' ☔';
-                break;
-
-            case 'thunderstorm':
-                $conditions.= ' ☔☔☔☔';
-                break;
-        }
-
-        return $temp . "\n" . $conditions;
+        return $result;
     }
 
     public function execute()
@@ -110,12 +114,12 @@ class WeatherCommand extends Command
             }
         }
 
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['reply_to_message_id'] = $message_id;
         $data['text'] = $text;
 
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }

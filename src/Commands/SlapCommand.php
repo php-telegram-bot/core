@@ -43,6 +43,6 @@ class SlapCommand extends Command
         }
 
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }

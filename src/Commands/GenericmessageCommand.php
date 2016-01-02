@@ -33,5 +33,6 @@ class GenericmessageCommand extends Command
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
         //Do nothing
+        return 1;
     }
 }

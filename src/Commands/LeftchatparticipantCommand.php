@@ -30,6 +30,6 @@ class LeftchatparticipantCommand extends Command
         $participant = $message->getLeftChatParticipant();
 
         // temporary do nothing
-
+        return 1;
     }
 }

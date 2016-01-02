@@ -41,6 +41,6 @@ class NewchatparticipantCommand extends Command
 
         $data['text'] = $text;
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }

@@ -30,6 +30,6 @@ class NewchattitleCommand extends Command
         $new_chat_title = $message->getNewChatTitle();
 
         // temporary do nothing
-
+        return 1;
     }
 }

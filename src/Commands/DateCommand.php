@@ -29,8 +29,6 @@ class DateCommand extends Command
 
     private function getCoordinates($location)
     {
-
-
         $url = $this->base_url . '/geocode/json?';
         $params = 'address=' . urlencode($location);
 
@@ -152,11 +150,12 @@ class DateCommand extends Command
             }
         }
 
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['reply_to_message_id'] = $message_id;
         $data['text'] = $text;
 
         $result = Request::sendMessage($data);
+        return $result->isOk();
     }
 }

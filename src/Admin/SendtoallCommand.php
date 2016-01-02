@@ -36,8 +36,9 @@ class SendtoallCommand extends Command
         $data = [];
         $data['chat_id'] = $chat_id;
         $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
-        return Request::sendMessage($data);
-    }
+        $result = Request::sendMessage($data);
+        return $result->isOk();
+    } 
 
     public function execute()
     {
@@ -100,6 +101,6 @@ class SendtoallCommand extends Command
         $data['text'] = $text;
 
         $result = Request::sendMessage($data);
-        return $result;
+        return $result->isOk();
     }
 }
