@@ -1,12 +1,11 @@
 CREATE TABLE `messages` (
-  `update_id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
   `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint COMMENT 'User identifier',
-  `date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Date the message was sent in timestamp format',
   `chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Chat identifier.',
+  `date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Date the message was sent in timestamp format',
   `forward_from` bigint NOT NULL DEFAULT '0' COMMENT 'User id. For forwarded messages, sender of the original message',
   `forward_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'For forwarded messages, date the original message was sent in Unix time',
-  `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message is a reply to another message already stored.',
+  `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message is a reply to another message.',
   `text` TEXT COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
   `audio` TEXT DEFAULT '' COMMENT 'Audio object. Message is an audio file, information about the file',
   `document` TEXT DEFAULT '' COMMENT 'Document object. Message is a general file, information about the file',
@@ -27,8 +26,9 @@ CREATE TABLE `messages` (
   `channel_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the channel chat has been created',
   `migrate_from_chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Migrate from chat identifier.',
   `migrate_to_chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Migrate to chat identifier.',
-  PRIMARY KEY (`update_id`),
-  KEY `message_id` (`message_id`),
+  `update_id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
+  PRIMARY KEY (`message_id`),
+  KEY `user_id` (`chat_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 

@@ -18,14 +18,14 @@ class Update extends Entity
     protected $update_id;
     protected $message;
 
-    public function __construct(array $data, $bot_name)
+    public function __construct(array $data, $bot_name, $let_update_id_empty = 0)
     {
 
         $update_id = isset($data['update_id']) ? $data['update_id'] : null;
 
         $message = isset($data['message']) ? $data['message'] : null;
 
-        if (empty($update_id)) {
+        if (empty($update_id) && !$let_update_id_empty) {
             throw new TelegramException('update_id is empty!');
         }
 

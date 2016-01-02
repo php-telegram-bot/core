@@ -48,12 +48,20 @@ class DB
     static protected $table_prefix;
 
     /**
+     * Telegram class object
+     *
+     * @var \Telegram
+     */
+    static protected $telegram;
+
+    /**
      * Initialize
      *
      * @param array credential, string table_prefix
      */
-    public static function initialize(array $credentials, $table_prefix = null)
+    public static function initialize(array $credentials, $table_prefix = null, Telegram $telegram)
     {
+        self::$telegram = $telegram;
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
         }
@@ -119,8 +127,9 @@ class DB
         }
 
         try {
-            $query = 'SELECT * FROM `'.TB_MESSAGES.'`';
-            $query .= ' ORDER BY '.TB_MESSAGES.'.`update_id` DESC';
+            $query = 'SELECT * FROM `'.TB_MESSAGES.'` ';
+            $query .= 'WHERE '.TB_MESSAGES.'.`update_id` != 0 ';
+            $query .= 'ORDER BY '.TB_MESSAGES.'.`message_id` DESC';
 
             if (!is_null($limit)) {
                 $query .=' LIMIT :limit ';
@@ -324,6 +333,14 @@ class DB
             $reply_to_message_id = null;
             if (is_object($reply_to_message)) {
                 $reply_to_message_id = $reply_to_message->getMessageId();
+                //Creating a fake update to insert this message if privacy is on
+                //text messages between users are not delivered to the bot
+                //this can be also a message sent by the bot to the user
+                $fake_update['update_id'] = 0;
+                $fake_update['message'] = $reply_to_message->reflect();
+                // please notice that, as explaied in the documentation, reply_to_message don't contain other 
+                // reply_to_message field so recursion deep is 1
+                self::insertRequest(new Update($fake_update, self::$telegram->getBotName(), 1));
             }
            
             $text = $message->getText();
@@ -349,7 +366,7 @@ class DB
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
-            $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_INT);
+            $sth->bindParam(':reply_to_message', $reply_to_message_id, \PDO::PARAM_INT);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
             $sth->bindParam(':document', $document, \PDO::PARAM_STR);
