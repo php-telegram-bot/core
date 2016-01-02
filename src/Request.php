@@ -249,11 +249,17 @@ class Request
 
     public static function sendMessage(array $data)
     {
-
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
-
+        $text = $data['text'];
+        $string_len_utf8 = mb_strlen($text, 'UTF-8');
+        if ($string_len_utf8 > 4096) {
+            $data['text'] = mb_substr($text, 0, 4096);
+            $result = self::send('sendMessage', $data);
+            $data['text'] = mb_substr($text, 4096, $string_len_utf8);
+            return self::sendMessage($data);
+        }
         $result = self::send('sendMessage', $data);
         return $result;
     }
