@@ -343,7 +343,7 @@ class DB
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
-            $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_STR);
+            $sth->bindParam(':reply_to_message', $reply_to_message, \PDO::PARAM_INT);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
             $sth->bindParam(':document', $document, \PDO::PARAM_STR);
