@@ -117,7 +117,7 @@ class Chat extends Entity
 
     public function tryMention()
     {
-        if ($chat->isPrivateChat()) {
+        if ($this->isPrivateChat()) {
             if (is_null($this->username)) {
                 if (!is_null($this->last_name)) {
                     return $this->first_name.' '.$this->last_name;
@@ -126,6 +126,6 @@ class Chat extends Entity
             }
             return '@'.$this->username;
         }
-        return $chat->getTitle();
+        return $this->getTitle();
     }
 }

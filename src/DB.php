@@ -59,7 +59,7 @@ class DB
      *
      * @param array credential, string table_prefix
      */
-    public static function initialize(array $credentials, $table_prefix = null, Telegram $telegram)
+    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null)
     {
         self::$telegram = $telegram;
         if (empty($credentials)) {
@@ -338,7 +338,7 @@ class DB
                 //this can be also a message sent by the bot to the user
                 $fake_update['update_id'] = 0;
                 $fake_update['message'] = $reply_to_message->reflect();
-                // please notice that, as explaied in the documentation, reply_to_message don't contain other 
+                // please notice that, as explaied in the documentation, reply_to_message don't contain other
                 // reply_to_message field so recursion deep is 1
                 self::insertRequest(new Update($fake_update, self::$telegram->getBotName(), 1));
             }

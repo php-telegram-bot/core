@@ -180,7 +180,7 @@ class Telegram
      */
     public function enableMySQL(array $credential, $table_prefix = null)
     {
-        $this->pdo = DB::initialize($credential, $table_prefix, $this);
+        $this->pdo = DB::initialize($credential, $this, $table_prefix);
 
         $this->mysql_enabled = true;
     }

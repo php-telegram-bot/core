@@ -30,6 +30,6 @@ class ChannelchatcreatedCommand extends Command
         $channel_chat_created = $message->getChannelChatCreated();
 
         // temporary do nothing
-        return 1
+        return 1;
     }
 }

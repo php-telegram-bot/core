@@ -38,7 +38,7 @@ class SendtoallCommand extends Command
         $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
         $result = Request::sendMessage($data);
         return $result->isOk();
-    } 
+    }
 
     public function execute()
     {
