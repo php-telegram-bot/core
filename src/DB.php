@@ -249,7 +249,7 @@ class DB
             $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
                 (`id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`)
                 VALUES (:id, :type, :title, :date, :date, :oldid)
-                ON DUPLICATE KEY UPDATE `title`=:title, `updated_at`=:date');
+                ON DUPLICATE KEY UPDATE `type`=:type, `title`=:title, `updated_at`=:date');
 
             $chat_title = $chat->getTitle();
             $type = $chat->getType();
@@ -319,7 +319,13 @@ class DB
             $update_id = $update->getUpdateId();
             $message_id = $message->getMessageId();
             $from_id = $from->getId();
-            $reply_to_message = $message->getReplyToMessage()->getMessageId();
+            
+            $reply_to_message = $message->getReplyToMessage();
+            $reply_to_message_id = null;
+            if (is_object($reply_to_message)) {
+                $reply_to_message_id = $reply_to_message->getMessageId();
+            }
+           
             $text = $message->getText();
             $audio = $message->getAudio();
             $document = $message->getDocument();
