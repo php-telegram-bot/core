@@ -151,8 +151,12 @@ class DB
      *
      * @return string
      */
-    protected static function toTimestamp($time)
+
+    protected static function getTimestamp($time = null)
     {
+        if (is_null($time)) {
+            $time = time();
+        }
         return date('Y-m-d H:i:s', $time);
     }
 
@@ -239,9 +243,9 @@ class DB
 
         $chat_id = $chat->getId();
 
-        $date = self::toTimestamp($message->getDate());
+        $date = self::getTimestamp($message->getDate());
         $forward_from = $message->getForwardFrom();
-        $forward_date = self::toTimestamp($message->getForwardDate());
+        $forward_date = self::getTimestamp($message->getForwardDate());
         $photo = $message->getPhoto();
         $new_chat_participant = $message->getNewChatParticipant();
 

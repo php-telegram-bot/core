@@ -212,6 +212,13 @@ All types implemented according to Telegram API (2015 November).
 ### Methods
 All methods implemented according to Telegram API (2015 November).
 
+####Send Message
+Message longer than 4096 characters are splitted in more message.
+
+```php
+$result = Request::sendMessage(['chat_id' => $chat_id, 'text' => 'Your utf8 text 😜 ...']);
+```
+
 ####Send Photo
 To send a local photo provide the file path as second param:
 
