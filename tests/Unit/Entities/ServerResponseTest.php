@@ -308,7 +308,7 @@ class ServerResponseTest extends TestCase
 
     public function testSetGeneralTestFakeResponse() {
         //setWebhook ok
-        $fake_response = Request::generateGeneralFakeServerSesponse();
+        $fake_response = Request::generateGeneralFakeServerResponse();
 
         $this->server =  new ServerResponse($fake_response, 'testbot');
 
@@ -319,7 +319,7 @@ class ServerResponseTest extends TestCase
 
 
         //sendMessage ok
-        $fake_response = Request::generateGeneralFakeServerSesponse(['chat_id' => 123456789, 'text' => 'hello']);
+        $fake_response = Request::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
 
         $this->server =  new ServerResponse($fake_response, 'testbot');
 
