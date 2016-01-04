@@ -17,32 +17,53 @@ class Update extends Entity
 
     protected $update_id;
     protected $message;
+    protected $inline_query;
+    protected $chosen_inline_result;
+
 
     public function __construct(array $data, $bot_name, $let_update_id_empty = 0)
     {
 
-        $update_id = isset($data['update_id']) ? $data['update_id'] : null;
+        $this->bot_name = $bot_name;
 
-        $message = isset($data['message']) ? $data['message'] : null;
+        $update_id = isset($data['update_id']) ? $data['update_id'] : null;
+        $this->update_id = $update_id;
+
+        $this->message = isset($data['message']) ? $data['message'] : null;
+        if (!empty($this->message)) {
+            $this->message = new Message($this->message, $bot_name);
+        }
 
         if (empty($update_id) && !$let_update_id_empty) {
             throw new TelegramException('update_id is empty!');
         }
 
-        $this->bot_name = $bot_name;
-        $this->update_id = $update_id;
-        $this->message = new Message($message, $bot_name);
+
+        $this->inline_query = isset($data['inline_query']) ? $data['inline_query'] : null;
+        if (!empty($this->inline_query)) {
+            $this->inline_query = new InlineQuery($this->inline_query);
+        }
+        $this->chosen_inline_result = isset($data['chosen_inline_result']) ? $data['chosen_inline_result'] : null;
+        if (!empty($this->chosen_inline_result)) {
+            $this->chosen_inline_result = new ChosenInlineResult($this->chosen_inline_result);
+        }
     }
 
     public function getUpdateId()
     {
-
         return $this->update_id;
     }
 
     public function getMessage()
     {
-
         return $this->message;
+    }
+    public function getInlineQuery()
+    {
+        return $this->inline_query;
+    }
+    public function getChosenInlineResult()
+    {
+        return $this->chosen_inline_result;
     }
 }
