@@ -81,7 +81,7 @@ class Request
         return $status;
     }
 
-    public static function generateGeneralFakeServerSesponse($data = null)
+    public static function generateGeneralFakeServerResponse($data = null)
     {
         //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
         //Maybe this is not the best possible implementation
@@ -231,7 +231,7 @@ class Request
         }
 
         if (defined('PHPUNIT_TESTSUITE')) {
-            $fake_response = self::generateGeneralFakeServerSesponse($data);
+            $fake_response = self::generateGeneralFakeServerResponse($data);
             return new ServerResponse($fake_response, self::$telegram->getBotName());
         }
 
