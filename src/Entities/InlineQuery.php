@@ -28,7 +28,7 @@ class InlineQuery extends Entity
             throw new TelegramException('id is empty!');
         }
 
-        $this-> = isset($data['from']) ? $data['from'] : null;
+        $this->from = isset($data['from']) ? $data['from'] : null;
         if (empty($this->from)) {
             throw new TelegramException('from is empty!');
         }

@@ -399,74 +399,82 @@ class Telegram
 
     public function processUpdate(update $update)
     {
-        //Load admin Commands
-        if ($this->admin_enabled) {
-            $message = $update->getMessage();
-
-            //Admin command avaiable in any chats
-            //$from = $message->getFrom();
-            //$user_id = $from->getId();
-
-            //Admin command avaiable only in single chat with the bot
-            $chat = $message->getChat();
-            $user_id = $chat->getId();
-
-            if (in_array($user_id, $this->admins_list)) {
-                $this->addCommandsPath(BASE_PATH.'/Admin');
+        $update_type = $update->getUpdateType();
+        if ($update_type == 'message') {
+            //Load admin Commands
+            if ($this->admin_enabled) {
+                $message = $update->getMessage();
+    
+                //Admin command avaiable in any chats
+                //$from = $message->getFrom();
+                //$user_id = $from->getId();
+    
+                //Admin command avaiable only in single chat with the bot
+                $chat = $message->getChat();
+                $user_id = $chat->getId();
+    
+                if (in_array($user_id, $this->admins_list)) {
+                    $this->addCommandsPath(BASE_PATH.'/Admin');
+                }
             }
+    
+            DB::insertRequest($update);
+    
+            // check type
+            $message = $update->getMessage();
+            $type = $message->getType();
+    
+            switch ($type) {
+                default:
+                case 'Message':
+                case 'Photo':
+                case 'Audio':
+                case 'Document':
+                case 'Sticker':
+                case 'Video':
+                case 'Voice':
+                case 'Location':
+                    $command = 'Genericmessage';
+                    break;
+                case 'command':
+                    // execute command
+                    $command = $message->getCommand();
+                    break;
+                case 'new_chat_participant':
+                    // trigger new participant
+                    $command = 'Newchatparticipant';
+                    break;
+                case 'left_chat_participant':
+                    // trigger left chat participant
+                    $command = 'Leftchatparticipant';
+                    break;
+                case 'new_chat_title':
+                    // trigger new_chat_title
+                    $command = 'Newchattitle';
+                    break;
+                case 'delete_chat_photo':
+                    // trigger delete_chat_photo
+                    $command = 'Deletechatphoto';
+                    break;
+                case 'group_chat_created':
+                    // trigger group_chat_created
+                    $command = 'Groupchatcreated';
+                    break;
+                case 'supergroup_chat_created':
+                    // trigger super_group_chat_created
+                    $command = 'Supergroupchatcreated';
+                    break;
+                case 'channel_chat_created':
+                    // trigger channel_chat_created
+                    $command = 'Channelchatcreated';
+                    break;
+            }
+        } elseif ($update_type == 'inline_query') {
+             $command = 'Inlinequery';
+        } elseif ($update_type == 'chosen_inline_result') {
+             $command = 'Choseninlineresult';
         }
 
-        DB::insertRequest($update);
-
-        // check type
-        $message = $update->getMessage();
-        $type = $message->getType();
-
-        switch ($type) {
-            default:
-            case 'Message':
-            case 'Photo':
-            case 'Audio':
-            case 'Document':
-            case 'Sticker':
-            case 'Video':
-            case 'Voice':
-            case 'Location':
-                $command = 'Genericmessage';
-                break;
-            case 'command':
-                // execute command
-                $command = $message->getCommand();
-                break;
-            case 'new_chat_participant':
-                // trigger new participant
-                $command = 'Newchatparticipant';
-                break;
-            case 'left_chat_participant':
-                // trigger left chat participant
-                $command = 'Leftchatparticipant';
-                break;
-            case 'new_chat_title':
-                // trigger new_chat_title
-                $command = 'Newchattitle';
-                break;
-            case 'delete_chat_photo':
-                // trigger delete_chat_photo
-                $command = 'Deletechatphoto';
-                break;
-            case 'group_chat_created':
-                // trigger group_chat_created
-                $command = 'Groupchatcreated';
-                break;
-            case 'supergroup_chat_created':
-                // trigger super_group_chat_created
-                $command = 'Supergroupchatcreated';
-                break;
-            case 'channel_chat_created':
-                // trigger channel_chat_created
-                $command = 'Channelchatcreated';
-                break;
-        }
         $result = $this->executeCommand($command, $update);
         return $result;
     }

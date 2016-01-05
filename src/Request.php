@@ -34,7 +34,8 @@ class Request
         'getUserProfilePhotos',
         'getUpdates',
         'setWebhook',
-        'getFile'
+        'getFile',
+        'answerInlineQuery'
     );
 
     public static function initialize(Telegram $telegram)
@@ -417,6 +418,17 @@ class Request
         }
 
         $result = self::send('getFile', $data);
+        return $result;
+    }
+
+    public static function answerInlineQuery($data)
+    {
+
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        $result = self::send('answerInlineQuery', $data);
         return $result;
     }
 

@@ -19,7 +19,7 @@ class Update extends Entity
     protected $message;
     protected $inline_query;
     protected $chosen_inline_result;
-
+    private $update_type;
 
     public function __construct(array $data, $bot_name, $let_update_id_empty = 0)
     {
@@ -32,6 +32,7 @@ class Update extends Entity
         $this->message = isset($data['message']) ? $data['message'] : null;
         if (!empty($this->message)) {
             $this->message = new Message($this->message, $bot_name);
+            $this->update_type = 'message';
         }
 
         if (empty($update_id) && !$let_update_id_empty) {
@@ -42,10 +43,12 @@ class Update extends Entity
         $this->inline_query = isset($data['inline_query']) ? $data['inline_query'] : null;
         if (!empty($this->inline_query)) {
             $this->inline_query = new InlineQuery($this->inline_query);
+            $this->update_type = 'inline_query';
         }
         $this->chosen_inline_result = isset($data['chosen_inline_result']) ? $data['chosen_inline_result'] : null;
         if (!empty($this->chosen_inline_result)) {
             $this->chosen_inline_result = new ChosenInlineResult($this->chosen_inline_result);
+            $this->update_type = 'chosen_inline_result';
         }
     }
 
@@ -65,5 +68,9 @@ class Update extends Entity
     public function getChosenInlineResult()
     {
         return $this->chosen_inline_result;
+    }
+    public function getUpdateType()
+    {
+        return $this->update_type;
     }
 }
