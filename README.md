@@ -24,7 +24,8 @@ The Bot can:
 - supports all types and methods according to Telegram API (2015 November).
 - supports supergroups.
 - handle commands in chat with other bots.
-- manage Channel from the bot admin interface (**new!**)
+- manage Channel from the bot admin interface 
+- Starting support for **inline bots** (under developing, checkout the InlinequeryCommand **new!**)
 
 ## Instructions
 ### Create your first bot
