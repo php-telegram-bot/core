@@ -43,7 +43,7 @@ class InlineQuery extends Entity
         return $this->id;
     }
 
-    public function geFrom()
+    public function getFrom()
     {
         return $this->from;
     }
