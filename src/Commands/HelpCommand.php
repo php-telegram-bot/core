@@ -35,7 +35,7 @@ class HelpCommand extends Command
         $commands = $this->telegram->getCommandsList();
 
         if (empty($text)) {
-            $msg = 'GeoBot v. ' . $this->telegram->getVersion() . "\n\n";
+            $msg = $this->telegram->getBotName() . ' v. ' . $this->telegram->getVersion() . "\n\n";
             $msg .= 'Commands List:' . "\n";
             foreach ($commands as $command) {
                 if (is_object($command)) {
