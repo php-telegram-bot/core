@@ -28,7 +28,7 @@ CREATE TABLE `messages` (
   `migrate_to_chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'Migrate to chat identifier.',
   `update_id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
   PRIMARY KEY (`message_id`),
-  KEY `user_id` (`chat_id`),
+  KEY `chat_id` (`chat_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
