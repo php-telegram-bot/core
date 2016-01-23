@@ -73,4 +73,14 @@ class Update extends Entity
     {
         return $this->update_type;
     }
+    public function getUpdateContent()
+    {
+        if ($this->update_type == 'message') {
+            return $this->getMessage();
+        } elseif ($this->update_type == 'inline_query') {
+            return $this->getInlineQuery();
+        } elseif ($this->update_type == 'chosen_inline_result') {
+            return $this->getChosenInlineResult();
+        }
+    }
 }
