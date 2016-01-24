@@ -218,7 +218,7 @@ Full support for inline query according to Telegram API (20 January 2016).
 All methods implemented according to Telegram API (20 January 2016).
 
 ####Send Message
-Message longer than 4096 characters are splitted in more message.
+Message longer than 4096 characters are splitted in more messages.
 
 ```php
 $result = Request::sendMessage(['chat_id' => $chat_id, 'text' => 'Your utf8 text 😜 ...']);
@@ -285,11 +285,11 @@ You can set a custom prefix to all the tables while you are enabling Mysql:
 ```php
 $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 ```
-Consider to use the utf8mb4 branch if you find some special characters problems.
+Consider to use the *utf8mb4* branch if you find some special characters problems.
 You can also store inline query and chosen inline query in the database.
 ### Channels Support 
 All methods implemented can be used to manage channels.  
-(**new!**) With admin interface you can manage your channel directly with your bot private chat.
+With admin interface you can manage your channel directly with your bot private chat.
 
 ### Commands
 The bot is able to recognise commands in chat with multiple bot (/command@mybot ).
