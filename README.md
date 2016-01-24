@@ -21,11 +21,12 @@ Bot aims to provide a platform where one could simply write a plugin
 and have interactions in a matter of minutes.
 The Bot can:
 - retrive update with webhook and getUpdate methods.
-- supports all types and methods according to Telegram API (2015 November).
+- supports all types and methods according to Telegram API (20 January 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface 
-- Starting support for **inline bots** (under developing, checkout the InlinequeryCommand **new!**)
+- Full support for **inline bots** (**new!**)
+- Messages, InlineQuery and ChosenInlineQuery are stored in the Database (**new!**)
 
 ## Instructions
 ### Create your first bot
@@ -208,10 +209,13 @@ then run
 ./getUpdateCLI.php
 ```
 ### Types
-All types implemented according to Telegram API (2015 November).
+All types implemented according to Telegram API (20 January 2016).
+
+#### Inline Query
+Full support for inline query according to Telegram API (20 January 2016).
 
 ### Methods
-All methods implemented according to Telegram API (2015 November).
+All methods implemented according to Telegram API (20 January 2016).
 
 ####Send Message
 Message longer than 4096 characters are splitted in more message.
@@ -282,7 +286,7 @@ You can set a custom prefix to all the tables while you are enabling Mysql:
 $telegram->enableMySQL($credentials, $BOT_NAME.'_');
 ```
 Consider to use the utf8mb4 branch if you find some special characters problems.
-
+You can also store inline query and chosen inline query in the database.
 ### Channels Support 
 All methods implemented can be used to manage channels.  
 (**new!**) With admin interface you can manage your channel directly with your bot private chat.
@@ -298,6 +302,9 @@ It can execute command triggering a chat event. Here's the list:
 - Group chat created (**GroupchatcreatedCommand.php**)
 - Super group chat created (**SupergroupchatcreatedCommand.php**)
 - Channel chat created (**ChannelchatcreatedCommand.php**)
+- Inline query (**InlinequeryCommand.php**)
+- Chosen inline result (**ChoseninlineresultCommand.php**)
+
 
 **GenericCommand.php** let you handle commands that don't exist or to
 use commands as a variable:
@@ -337,7 +344,7 @@ Telegram user id can be retrieved with the command **/whoami**.
 Admin commands are stored in *src/Admin/* folder.
 To know all the commands avaiable type **/help**.
 
-#### Channel Administration (NEW!)
+#### Channel Administration 
 To enable this feature follow those steps: 
 - Add your bot as channel administrator, this can be done with any telegram client.
 - Enable admin interface for your user as explained in the admin section above.
@@ -365,7 +372,7 @@ $telegram->setLogRequests(true);
 $telegram->setLogPath($BOT_NAME.'.log');
 ```
 
-(New!) Set verbosity to 3, to log also curl requests and responses from the bot to Telegram:
+Set verbosity to 3, to log also curl requests and responses from the bot to Telegram:
 
 ```php
 $telegram->setLogRequests(true);
@@ -377,6 +384,13 @@ $telegram->setLogVerbosity(3);
 This code is available on
 [Github](https://github.com/akalongman/php-telegram-bot). Pull requests are welcome.
 
+##Documentation 
+Take a look at the repo [Wiki](https://github.com/akalongman/php-telegram-bot/wiki) for further information and tutorial!
+Feel free to improve!
+
+##Project with this library
+Here's a list of projects that feats this library, feel free to add yours!
+- [Super-Dice-Roll](https://github.com/RafaelDelboni/Super-Dice-Roll) [@superdiceroll_bot](https://telegram.me/superdiceroll_bot)
 
 ## Troubleshooting
 

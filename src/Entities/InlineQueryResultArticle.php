@@ -12,14 +12,9 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class InlineQueryResultArticle extends Entity
+class InlineQueryResultArticle extends InlineQueryResult
 {
-    protected $type;
-    protected $id;
-    protected $title;
     protected $message_text;
-    protected $parse_mode;
-    protected $disable_web_page_preview;
     protected $url;
     protected $hide_url;
     protected $description;
@@ -29,26 +24,15 @@ class InlineQueryResultArticle extends Entity
 
     public function __construct(array $data)
     {
+        parent::__construct($data);
 
         $this->type = 'article';
-
-        $this->id = isset($data['id']) ? $data['id'] : null;
-        if (empty($this->id)) {
-            throw new TelegramException('id is empty!');
-        }
-
-        $this->title = isset($data['title']) ? $data['title'] : null;
-        if (empty($this->title)) {
-            throw new TelegramException('title is empty!');
-        }
 
         $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
         if (empty($this->message_text)) {
             throw new TelegramException('message_text is empty!');
         }
 
-        $this->parse_mode = isset($data['parse_mode']) ? $data['parse_mode'] : null;
-        $this->disable_web_page_preview = isset($data['disable_webpage_preview']) ? $data['disable_webpage_preview'] : null;
         $this->url = isset($data['url']) ? $data['url'] : null;
         $this->hide_url = isset($data['hide_url']) ? $data['hide_url'] : null;
         $this->description = isset($data['description']) ? $data['description'] : null;
@@ -58,33 +42,9 @@ class InlineQueryResultArticle extends Entity
 
     }
 
-    public function getType()
-    {
-        return $this->type;
-    }
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
     public function getMessageText()
     {
         return $this->message_text;
-    }
-
-    public function getParseMode()
-    {
-        return $this->parse_mode;
-    }
-
-    public function getDisableWebPagePreview()
-    {
-        return $this->disable_web_page_preview;
     }
 
     public function getUrl()

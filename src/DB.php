@@ -538,7 +538,7 @@ class DB
             $video = $message->getVideo();
             $voice = $message->getVoice();
             $caption = $message->getCaption();
-            $contanc = $message->getContact();
+            $contact = $message->getContact();
             $location = $message->getLocation();
             $new_chat_title = $message->getNewChatTitle();
             $delete_chat_photo = $message->getDeleteChatPhoto();
@@ -574,7 +574,7 @@ class DB
             $sth->bindParam(':video', $video, \PDO::PARAM_STR);
             $sth->bindParam(':voice', $voice, \PDO::PARAM_STR);
             $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
-            $sth->bindParam(':contact', $contanct, \PDO::PARAM_STR);
+            $sth->bindParam(':contact', $contact, \PDO::PARAM_STR);
             $sth->bindParam(':location', $location, \PDO::PARAM_STR);
             $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_INT);
             $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_INT);
