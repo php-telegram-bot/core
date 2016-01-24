@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS  `user` (
   `id` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User first name',
