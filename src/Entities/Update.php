@@ -21,7 +21,7 @@ class Update extends Entity
     protected $chosen_inline_result;
     private $update_type;
 
-    public function __construct(array $data, $bot_name, $let_update_id_empty = 0)
+    public function __construct(array $data, $bot_name)
     {
 
         $this->bot_name = $bot_name;
@@ -35,10 +35,9 @@ class Update extends Entity
             $this->update_type = 'message';
         }
 
-        if (empty($update_id) && !$let_update_id_empty) {
+        if (empty($update_id)) {
             throw new TelegramException('update_id is empty!');
         }
-
 
         $this->inline_query = isset($data['inline_query']) ? $data['inline_query'] : null;
         if (!empty($this->inline_query)) {

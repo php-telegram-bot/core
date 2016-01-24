@@ -37,12 +37,12 @@ class ChosenInlineResult extends Entity
         $this->offset = isset($data['offset']) ? $data['offset'] : null;
     }
 
-    public function getId()
+    public function getResultId()
     {
-        return $this->id;
+        return $this->result_id;
     }
 
-    public function geFrom()
+    public function getFrom()
     {
         return $this->from;
     }

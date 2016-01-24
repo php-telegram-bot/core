@@ -12,6 +12,8 @@
 namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -75,17 +77,27 @@ class DB
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
 
             //Define table
-            if (!defined('TB_MESSAGES')) {
-                define('TB_MESSAGES', self::$table_prefix.'messages');
+            if (!defined('TB_TELEGRAM_UPDATE')) {
+                define('TB_TELEGRAM_UPDATE', self::$table_prefix.'telegram_update');
             }
-            if (!defined('TB_USERS')) {
-                define('TB_USERS', self::$table_prefix.'users');
+            if (!defined('TB_MESSAGE')) {
+                define('TB_MESSAGE', self::$table_prefix.'message');
             }
-            if (!defined('TB_CHATS')) {
-                define('TB_CHATS', self::$table_prefix.'chats');
+            if (!defined('TB_INLINE_QUERY')) {
+                define('TB_INLINE_QUERY', self::$table_prefix.'inline_query');
             }
-            if (!defined('TB_USERS_CHATS')) {
-                define('TB_USERS_CHATS', self::$table_prefix.'users_chats');
+
+            if (!defined('TB_CHOSEN_INLINE_QUERY')) {
+                define('TB_CHOSEN_INLINE_QUERY', self::$table_prefix.'chosen_inline_query');
+            }
+            if (!defined('TB_USER')) {
+                define('TB_USER', self::$table_prefix.'user');
+            }
+            if (!defined('TB_CHAT')) {
+                define('TB_CHAT', self::$table_prefix.'chat');
+            }
+            if (!defined('TB_USER_CHAT')) {
+                define('TB_USER_CHAT', self::$table_prefix.'user_chat');
             }
 
         } catch (\PDOException $e) {
@@ -112,6 +124,40 @@ class DB
     }
 
     /**
+     * fetch update from DB
+     *
+     * @param fetch Message from the DB
+     *
+     * @return bool/ array with data
+     */
+
+    public static function selectTelegramUpdate($limit = null)
+    {
+
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $query = 'SELECT `id` FROM `'.TB_TELEGRAM_UPDATE.'` ';
+            $query .= 'ORDER BY `id` DESC';
+
+            if (!is_null($limit)) {
+                $query .=' LIMIT :limit ';
+            }
+
+            $sth_select_telegram_update = self::$pdo->prepare($query);
+            $sth_select_telegram_update->bindParam(':limit', $limit, \PDO::PARAM_INT);
+            $sth_select_telegram_update->execute();
+            $results = $sth_select_telegram_update->fetchAll(\PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+        return $results;
+    }
+
+    /**
      * fetch message from DB
      *
      * @param fetch Message from the DB
@@ -127,9 +173,9 @@ class DB
         }
 
         try {
-            $query = 'SELECT * FROM `'.TB_MESSAGES.'` ';
-            $query .= 'WHERE '.TB_MESSAGES.'.`update_id` != 0 ';
-            $query .= 'ORDER BY '.TB_MESSAGES.'.`message_id` DESC';
+            $query = 'SELECT * FROM `'.TB_MESSAGE.'` ';
+            $query .= 'WHERE '.TB_MESSAGE.'.`update_id` != 0 ';
+            $query .= 'ORDER BY '.TB_MESSAGE.'.`message_id` DESC';
 
             if (!is_null($limit)) {
                 $query .=' LIMIT :limit ';
@@ -155,9 +201,49 @@ class DB
     protected static function getTimestamp($time = null)
     {
         if (is_null($time)) {
-            $time = time();
+            return null;
         }
         return date('Y-m-d H:i:s', $time);
+    }
+
+    /**
+     * Insert telegram_update table
+     *
+     * @return bool
+     */
+
+    public static function insertTelegramUpdate($id, $message_id, $inline_query_id, $chosen_inline_query_id)
+    {
+
+        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_query_id)) {
+            throw new TelegramException("Error both query_id and  message_id are null");
+        }
+
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            //Users table
+            $sth_insert_telegram_update = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_TELEGRAM_UPDATE.'`
+                (
+                `id`, `message_id`, `inline_query_id`, `chosen_inline_query_id`
+                )
+                VALUES (
+                :id, :message_id, :inline_query_id, :chosen_inline_query_id
+                )
+               ');
+
+            $sth_insert_telegram_update->bindParam(':id', $id, \PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(':inline_query_id', $inline_query_id, \PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(':chosen_inline_query_id', $chosen_inline_query_id, \PDO::PARAM_INT);
+
+            $status = $sth_insert_telegram_update->execute();
+
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
     }
 
     /**
@@ -179,7 +265,7 @@ class DB
 
         try {
             //Users table
-            $sth1 = self::$pdo->prepare('INSERT INTO `'.TB_USERS.'`
+            $sth1 = self::$pdo->prepare('INSERT INTO `'.TB_USER.'`
                 (
                 `id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`
                 )
@@ -206,7 +292,7 @@ class DB
             $chat_id = $chat->getId();
             try {
                 //user_chat table
-                $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_USERS_CHATS.'`
+                $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_USER_CHAT.'`
                     (
                     `user_id`, `chat_id`
                     )
@@ -224,19 +310,125 @@ class DB
         }
     }
 
-
     /**
      * Insert request in db
      *
      * @return bool
      */
-    public static function insertRequest(Update $update)
+    public static function insertRequest(Update &$update)
+    {
+        $update_id = $update->getUpdateId();
+        if ($update->getUpdateType() == 'message') {
+            $message = $update->getMessage();
+            $message_id = $message->getMessageId();
+            self::insertMessageRequest($message);
+            return self::insertTelegramUpdate($update_id, $message_id, null, null);
+        } elseif ($update->getUpdateType() == 'inline_query') {
+            $inline_query = $update->getInlineQuery();
+            $inline_query_id = $inline_query->getId();
+            self::insertInlineQueryRequest($inline_query);
+            return self::insertTelegramUpdate($update_id, null, $inline_query_id, null);
+        } elseif ($update->getUpdateType() == 'chosen_inline_result') {
+            $chosen_inline_query = $update->getChosenInlineResult();
+
+            if (!self::isDbConnected()) {
+                return false;
+            }
+            try {
+                //Inline query Table
+                $mysql_query = 'INSERT INTO `'.TB_CHOSEN_INLINE_QUERY.'`
+                    (
+                    `result_id`, `user_id`, `query`, `created_at` 
+                    )
+                    VALUES (
+                    :result_id, :user_id, :query , :created_at 
+                    )';
+
+                $sth_insert_chosen_inline_query = self::$pdo->prepare($mysql_query);
+
+                $date = self::getTimestamp(time());
+                $result_id = $chosen_inline_query->getResultId();
+                $from = $chosen_inline_query->getFrom();
+                $user_id = null;
+                if (is_object($from)) {
+                    $user_id = $from->getId();
+                    self::insertUser($from, $date);
+                }
+
+                $query = $chosen_inline_query->getQuery();
+
+                $sth_insert_chosen_inline_query->bindParam(':result_id', $result_id, \PDO::PARAM_STR);
+                $sth_insert_chosen_inline_query->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+                $sth_insert_chosen_inline_query->bindParam(':query', $query, \PDO::PARAM_STR);
+                $sth_insert_chosen_inline_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
+
+                $status = $sth_insert_chosen_inline_query->execute();
+                $chosen_inline_query_local_id = self::$pdo->lastInsertId();
+
+            } catch (PDOException $e) {
+                throw new TelegramException($e->getMessage());
+            }
+
+            return self::insertTelegramUpdate($update_id, null, null, $chosen_inline_query_local_id);
+        }
+    }
+
+    /**
+     * Insert Message request in db
+     *
+     * @return bool
+     */
+    public static function insertInlineQueryRequest(InlineQuery &$inline_query)
     {
         if (!self::isDbConnected()) {
             return false;
         }
+        try {
+            //Inline query Table
+            $mysql_query = 'INSERT IGNORE INTO `'.TB_INLINE_QUERY.'`
+                (
+                `id`, `user_id`, `query`, `offset`, `created_at` 
+                )
+                VALUES (
+                :inline_query_id , :user_id, :query , :param_offset , :created_at 
+                )';
 
-        $message = $update->getMessage();
+            $sth_insert_inline_query = self::$pdo->prepare($mysql_query);
+
+            $date = self::getTimestamp(time());
+            $inline_query_id = (int) $inline_query->getId();
+            $from = $inline_query->getFrom();
+            $user_id = null;
+            if (is_object($from)) {
+                $user_id = $from->getId();
+                self::insertUser($from, $date);
+            }
+
+            $query = $inline_query->getQuery();
+            $offset = $inline_query->getOffset();
+
+            $sth_insert_inline_query->bindParam(':inline_query_id', $inline_query_id, \PDO::PARAM_INT);
+            $sth_insert_inline_query->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+            $sth_insert_inline_query->bindParam(':query', $query, \PDO::PARAM_STR);
+            $sth_insert_inline_query->bindParam(':param_offset', $offset, \PDO::PARAM_STR);
+            $sth_insert_inline_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
+
+            $status = $sth_insert_inline_query->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Insert Message request in db
+     *
+     * @return bool
+     */
+    public static function insertMessageRequest(Message &$message)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
 
         $from = $message->getFrom();
         $chat = $message->getChat();
@@ -246,6 +438,7 @@ class DB
         $date = self::getTimestamp($message->getDate());
         $forward_from = $message->getForwardFrom();
         $forward_date = self::getTimestamp($message->getForwardDate());
+
         $photo = $message->getPhoto();
         $new_chat_participant = $message->getNewChatParticipant();
 
@@ -253,13 +446,10 @@ class DB
         $left_chat_participant = $message->getLeftChatParticipant();
 
         $migrate_from_chat_id = $message->getMigrateFromChatId();
-        if (is_null($migrate_from_chat_id)) {
-            $migrate_from_chat_id = 0;
-        }
 
         try {
             //chats table
-            $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHATS.'`
+            $sth2 = self::$pdo->prepare('INSERT INTO `'.TB_CHAT.'`
                 (`id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`)
                 VALUES (:id, :type, :title, :date, :date, :oldid)
                 ON DUPLICATE KEY UPDATE `type`=:type, `title`=:title, `updated_at`=:date');
@@ -288,7 +478,7 @@ class DB
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
         } else {
-            $forward_from = '';
+            $forward_from = null;
         }
 
         //Insert the new chat user
@@ -310,9 +500,9 @@ class DB
 
         try {
             //Messages Table
-            $sth = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_MESSAGES.'`
+            $sth = self::$pdo->prepare('INSERT IGNORE INTO `'.TB_MESSAGE.'`
                 (
-                `update_id`, `message_id`, `user_id`, `date`, `chat_id`, `forward_from`,
+                `id`, `user_id`, `date`, `chat_id`, `forward_from`,
                 `forward_date`, `reply_to_message`, `text`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `new_chat_participant`, `left_chat_participant`,
@@ -320,7 +510,7 @@ class DB
                 `supergroup_chat_created`,  `channel_chat_created`,
                 `migrate_from_chat_id`,  `migrate_to_chat_id` 
                 )
-                VALUES (:update_id, :message_id, :user_id, :date, :chat_id, :forward_from,
+                VALUES (:message_id, :user_id, :date, :chat_id, :forward_from,
                 :forward_date, :reply_to_message, :text, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :new_chat_participant, :left_chat_participant,
@@ -329,7 +519,6 @@ class DB
                 :migrate_from_chat_id, :migrate_to_chat_id 
                 )');
 
-            $update_id = $update->getUpdateId();
             $message_id = $message->getMessageId();
             $from_id = $from->getId();
             
@@ -337,14 +526,9 @@ class DB
             $reply_to_message_id = null;
             if (is_object($reply_to_message)) {
                 $reply_to_message_id = $reply_to_message->getMessageId();
-                //Creating a fake update to insert this message if privacy is on
-                //text messages between users are not delivered to the bot
-                //this can be also a message sent by the bot to the user
-                $fake_update['update_id'] = 0;
-                $fake_update['message'] = $reply_to_message->reflect();
                 // please notice that, as explaied in the documentation, reply_to_message don't contain other
                 // reply_to_message field so recursion deep is 1
-                self::insertRequest(new Update($fake_update, self::$telegram->getBotName(), 1));
+                self::insertMessageRequest($reply_to_message);
             }
            
             $text = $message->getText();
@@ -363,12 +547,11 @@ class DB
             $channel_chat_created = $message->getChannelChatCreated();
             $migrate_from_chat_id = $message->getMigrateFromChatId();
 
-            $sth->bindParam(':update_id', $update_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
-            $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_STR);
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
             $sth->bindParam(':reply_to_message', $reply_to_message_id, \PDO::PARAM_INT);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
@@ -393,8 +576,8 @@ class DB
             $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
             $sth->bindParam(':contact', $contanct, \PDO::PARAM_STR);
             $sth->bindParam(':location', $location, \PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_STR);
-            $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_INT);
+            $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_INT);
             $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
 
             //Array of Photosize
@@ -449,11 +632,11 @@ class DB
         }
         try {
             $query = 'SELECT * ,  
-                '.TB_CHATS.'.`id` AS `chat_id`,
-                '.TB_CHATS.'.`updated_at` AS `chat_updated_at`,
-                '.TB_USERS.'.`id` AS `user_id`
-                FROM `'.TB_CHATS.'` LEFT JOIN `'.TB_USERS.'`
-                ON '.TB_CHATS.'.`id`='.TB_USERS.'.`id`';
+                '.TB_CHAT.'.`id` AS `chat_id`,
+                '.TB_CHAT.'.`updated_at` AS `chat_updated_at`,
+                '.TB_USER.'.`id` AS `user_id`
+                FROM `'.TB_CHAT.'` LEFT JOIN `'.TB_USER.'`
+                ON '.TB_CHAT.'.`id`='.TB_USER.'.`id`';
 
             //Building parts of query
             $chat_or_user = '';
@@ -462,23 +645,23 @@ class DB
 
             if (!$select_groups || !$select_users || !$select_super_groups) {
                 if ($select_groups) {
-                    $where[] = TB_CHATS.'.`type` = "group"';
+                    $where[] = TB_CHAT.'.`type` = "group"';
                 }
                 if ($select_super_groups) {
-                    $where[] = TB_CHATS.'.`type` = "supergroup"';
+                    $where[] = TB_CHAT.'.`type` = "supergroup"';
                 }
                 if ($select_users) {
-                    $where[] = TB_CHATS.'.`type` = "private"';
+                    $where[] = TB_CHAT.'.`type` = "private"';
                 }
             }
 
             if (! is_null($date_from)) {
-                $where[] = TB_CHATS.'.`updated_at` >= :date_from';
+                $where[] = TB_CHAT.'.`updated_at` >= :date_from';
                 $tokens[':date_from'] =  $date_from;
             }
 
             if (! is_null($date_to)) {
-                $where[] = TB_CHATS.'.`updated_at` <= :date_to';
+                $where[] = TB_CHAT.'.`updated_at` <= :date_to';
                 $tokens[':date_to'] = $date_to;
             }
 
@@ -492,7 +675,7 @@ class DB
                 }
             }
 
-            $query .= ' ORDER BY '.TB_CHATS.'.`updated_at` ASC';
+            $query .= ' ORDER BY '.TB_CHAT.'.`updated_at` ASC';
 
             $sth = self::$pdo->prepare($query);
             $sth->execute($tokens);

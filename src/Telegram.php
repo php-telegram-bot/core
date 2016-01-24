@@ -29,7 +29,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.25.0';
+    protected $version = '0.26.0';
 
     /**
      * Telegram API key
@@ -343,11 +343,11 @@ class Telegram
     public function handleGetUpdates($limit = null, $timeout = null)
     {
         //DB Query
-        $last_message = DB::selectMessages(1);
+        $last_update = DB::selectTelegramUpdate(1);
 
-        if (isset($last_message[0]['update_id'])) {
+        if (isset($last_update[0]['id'])) {
             //As explained in the telegram bot api documentation
-            $offset = $last_message[0]['update_id']+1;
+            $offset = $last_update[0]['id']+1;
         } else {
             $offset = null;
         }
@@ -418,8 +418,6 @@ class Telegram
                 }
             }
     
-            DB::insertRequest($update);
-    
             // check type
             $message = $update->getMessage();
             $type = $message->getType();
@@ -475,6 +473,7 @@ class Telegram
              $command = 'Choseninlineresult';
         }
 
+        DB::insertRequest($update);
         $result = $this->executeCommand($command, $update);
         return $result;
     }
