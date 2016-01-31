@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the TelegramBot package.
  *
@@ -8,14 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  * Written by Marco Boretto <marco.bore@gmail.com>
-*/
+ */
+
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\InlineQuery;
-use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\InlineQuery;
+use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
