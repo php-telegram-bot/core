@@ -6,13 +6,13 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\File;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 
 class Request
 {
