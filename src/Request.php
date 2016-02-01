@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the TelegramBot package.
  *
@@ -7,19 +6,38 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\File;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 
 class Request
 {
+    /**
+     * Telegram object
+     *
+     * @var Telegram
+     */
     private static $telegram;
+
+    /**
+     * Input value of the request
+     *
+     * @var string
+     */
     private static $input;
 
-    private static $methods = array(
+    /**
+     * Available methods to request
+     *
+     * @todo Possibly rename to "actions"?
+     *
+     * @var array
+     */
+    private static $methods = [
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -35,9 +53,14 @@ class Request
         'getUpdates',
         'setWebhook',
         'getFile',
-        'answerInlineQuery'
-    );
+        'answerInlineQuery',
+    ];
 
+    /**
+     * Initialize
+     *
+     * @param Telegram $telegram
+     */
     public static function initialize(Telegram $telegram)
     {
         if (is_object($telegram)) {
@@ -47,15 +70,28 @@ class Request
         }
     }
 
+    /**
+     * Set raw input data string
+     *
+     * @todo Possibly set this to private, since getInput overwrites the input anyway
+     * @todo Why the "| $input == false"?
+     *
+     * @param string $input
+     */
     public static function setInputRaw($input)
     {
         if (is_string($input) | $input == false) {
             self::$input = $input;
         } else {
-            throw new TelegramException("Log input is not a string");
+            throw new TelegramException('Input must be a string!');
         }
     }
 
+    /**
+     * Set input from update or stdin and return it
+     *
+     * @return string
+     */
     public static function getInput()
     {
         if ($update = self::$telegram->getCustomUpdate()) {
@@ -67,30 +103,43 @@ class Request
         return self::$input;
     }
 
-
+    /**
+     * Write log entry
+     *
+     * @todo Take log verbosity into account
+     *
+     * @param string $string
+     * @return mixed
+     */
     private static function log($string)
     {
         if (!self::$telegram->getLogRequests()) {
             return false;
         }
+
         $path = self::$telegram->getLogPath();
         if (!$path) {
             return false;
         }
 
-        $status = file_put_contents($path, $string . "\n", FILE_APPEND);
-        return $status;
+        return file_put_contents($path, $string . "\n", FILE_APPEND);
     }
 
-    public static function generateGeneralFakeServerResponse($data = null)
+    /**
+     * Generate general fake server response
+     *
+     * @param array $data Data to add to fake response
+     * @return array Fake response data
+     */
+    public static function generateGeneralFakeServerResponse(array $data = null)
     {
         //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
         //Maybe this is not the best possible implementation
 
-        //No value set in $data ie testing setWekhook
+        //No value set in $data ie testing setWebhook
         //Provided $data['chat_id'] ie testing sendMessage
 
-        $fake_response['ok'] = true; // :)
+        $fake_response = ['ok' => true]; // :)
 
         if (!isset($data)) {
             $fake_response['result'] = true;
@@ -100,13 +149,12 @@ class Request
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
             $data['date'] = '1441378360';
-            $data['from'] = array(
-                'id' => 123456789,
-                'first_name' =>
-                'botname',
-                'username'=> 'namebot'
-            );
-            $data['chat'] = array('id'=> $data['chat_id'] );
+            $data['from'] = [
+                'id'         => 123456789,
+                'first_name' => 'botname',
+                'username'   => 'namebot',
+            ];
+            $data['chat'] = ['id' => $data['chat_id']];
 
             $fake_response['result'] = $data;
         }
@@ -114,20 +162,26 @@ class Request
         return $fake_response;
     }
 
+    /**
+     * Execute cURL call
+     *
+     * @param string     $action Action to execute
+     * @param array|null $data   Data to attach to the execution
+     * @return mixed Result of the cURL call
+     */
     public static function executeCurl($action, array $data = null)
     {
-
         $ch = curl_init();
         if ($ch === false) {
             throw new TelegramException('Curl failed to initialize');
         }
 
-        $curlConfig = array(
-            CURLOPT_URL => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
-            CURLOPT_POST => true,
+        $curlConfig = [
+            CURLOPT_URL            => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
+            CURLOPT_POST           => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SAFE_UPLOAD => true
-        );
+            CURLOPT_SAFE_UPLOAD    => true,
+        ];
 
         if (!empty($data)) {
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
@@ -146,7 +200,7 @@ class Request
         if (self::$telegram->getLogVerbosity() >= 3) {
             rewind($verbose);
             $verboseLog = stream_get_contents($verbose);
-            self::log("Verbose curl output:\n". htmlspecialchars($verboseLog). "\n");
+            self::log('Verbose curl output:' . "\n" . htmlspecialchars($verboseLog) . "\n");
         }
 
         //Logging getUpdates Update
@@ -169,24 +223,30 @@ class Request
         return $result;
     }
 
+    /**
+     * Download file
+     *
+     * @param Entities\File $file
+     * @return boolean
+     */
     public static function downloadFile(File $file)
     {
         $path = $file->getFilePath();
 
-        #Create the directory
+        //Create the directory
         $basepath = self::$telegram->getDownloadPath();
-        $loc_path = $basepath.'/'.$path;
+        $loc_path = $basepath . '/' . $path;
 
         $dirname = dirname($loc_path);
         if (!is_dir($dirname)) {
             if (!mkdir($dirname, 0755, true)) {
-                throw new TelegramException('Directory '.$dirname.' cant be created');
+                throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
             }
         }
-        // open file to write
+        //Open file to write
         $fp = fopen($loc_path, 'w+');
         if ($fp === false) {
-            throw new TelegramException('File cant be created');
+            throw new TelegramException('File can\'t be created');
         }
 
         $ch = curl_init();
@@ -194,60 +254,85 @@ class Request
             throw new TelegramException('Curl failed to initialize');
         }
 
-        $curlConfig = array(
-            CURLOPT_URL => 'https://api.telegram.org/file/bot' . self::$telegram->getApiKey() . '/' . $path,
+        $curlConfig = [
+            CURLOPT_URL            => 'https://api.telegram.org/file/bot' . self::$telegram->getApiKey() . '/' . $path,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => 0,
+            CURLOPT_HEADER         => 0,
             CURLOPT_BINARYTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_FILE => $fp
-        );
+            CURLOPT_FILE           => $fp,
+        ];
 
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
-        // close curl
+
+        //Close curl
         curl_close($ch);
-        // close local file
+        //Close local file
         fclose($fp);
 
-        if (filesize($loc_path) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (filesize($loc_path) > 0);
     }
 
+    /**
+     * Encode file
+     *
+     * @param string $file
+     * @return CURLFile
+     */
     protected static function encodeFile($file)
     {
-        return  new \CURLFile($file);
+        return new \CURLFile($file);
     }
 
+    /**
+     * Send command
+     *
+     * @todo Fake response doesn't need json encoding?
+     * @todo Rename "methods" to "actions"
+     *
+     * @param string     $action
+     * @param array|null $data
+     * @return Entities\ServerResponse
+     */
     public static function send($action, array $data = null)
     {
         if (!in_array($action, self::$methods)) {
-            throw new TelegramException('This methods doesn\'t exist!');
+            throw new TelegramException('This method doesn\'t exist!');
         }
+
+        $bot_name = self::$telegram->getBotName();
 
         if (defined('PHPUNIT_TESTSUITE')) {
             $fake_response = self::generateGeneralFakeServerResponse($data);
-            return new ServerResponse($fake_response, self::$telegram->getBotName());
+            return new ServerResponse($fake_response, $bot_name);
         }
 
-        $result = self::executeCurl($action, $data);
-
-        $bot_name = self::$telegram->getBotName();
-        return new ServerResponse(json_decode($result, true), $bot_name);
+        $response = self::executeCurl($action, $data);
+        return new ServerResponse(json_decode($response, true), $bot_name);
     }
 
+    /**
+     * Get me
+     *
+     * @return mixed
+     */
     public static function getMe()
     {
-        $result = self::send('getMe');
-        return $result;
+        return self::send('getMe');
     }
 
+    /**
+     * Send message
+     *
+     * @todo Could do with some cleaner recursion
+     *
+     * @param array $data
+     * @return mixed
+     */
     public static function sendMessage(array $data)
     {
         if (empty($data)) {
@@ -261,21 +346,31 @@ class Request
             $data['text'] = mb_substr($text, 4096, $string_len_utf8);
             return self::sendMessage($data);
         }
-        $result = self::send('sendMessage', $data);
-        return $result;
+        return self::send('sendMessage', $data);
     }
 
+    /**
+     * Forward message
+     *
+     * @param array $data
+     * @return mixed
+     */
     public static function forwardMessage(array $data)
     {
-
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
 
-        $result = self::send('forwardMessage', $data);
-        return $result;
+        return self::send('forwardMessage', $data);
     }
 
+    /**
+     * Send photo
+     *
+     * @param array $data
+     * @param string $file
+     * @return mixed
+     */
     public static function sendPhoto(array $data, $file = null)
     {
         if (empty($data)) {
@@ -286,10 +381,16 @@ class Request
             $data['photo'] = self::encodeFile($file);
         }
 
-        $result = self::send('sendPhoto', $data);
-        return $result;
+        return self::send('sendPhoto', $data);
     }
 
+    /**
+     * Send audio
+     *
+     * @param array  $data
+     * @param string $file
+     * @return mixed
+     */
     public static function sendAudio(array $data, $file = null)
     {
         if (empty($data)) {
@@ -300,10 +401,16 @@ class Request
             $data['audio'] = self::encodeFile($file);
         }
 
-        $result = self::send('sendAudio', $data);
-        return $result;
+        return self::send('sendAudio', $data);
     }
 
+    /**
+     * Send document
+     *
+     * @param array  $data
+     * @param string $file
+     * @return mixed
+     */
     public static function sendDocument(array $data, $file = null)
     {
         if (empty($data)) {
@@ -314,10 +421,16 @@ class Request
             $data['document'] = self::encodeFile($file);
         }
 
-        $result = self::send('sendDocument', $data);
-        return $result;
+        return self::send('sendDocument', $data);
     }
 
+    /**
+     * Send sticker
+     *
+     * @param array  $data
+     * @param string $file
+     * @return mixed
+     */
     public static function sendSticker(array $data, $file = null)
     {
         if (empty($data)) {
@@ -328,10 +441,16 @@ class Request
             $data['sticker'] = self::encodeFile($file);
         }
 
-        $result = self::send('sendSticker', $data);
-        return $result;
+        return self::send('sendSticker', $data);
     }
 
+    /**
+     * Send video
+     *
+     * @param array  $data
+     * @param string $file
+     * @return mixed
+     */
     public static function sendVideo(array $data, $file = null)
     {
         if (empty($data)) {
@@ -342,10 +461,16 @@ class Request
             $data['video'] = self::encodeFile($file);
         }
 
-        $result = self::send('sendVideo', $data);
-        return $result;
+        return self::send('sendVideo', $data);
     }
 
+    /**
+     * Send voice
+     *
+     * @param array  $data
+     * @param string $file
+     * @return mixed
+     */
     public static function sendVoice(array $data, $file = null)
     {
         if (empty($data)) {
@@ -356,89 +481,129 @@ class Request
             $data['voice'] = self::encodeFile($file);
         }
 
-        $result = self::send('sendVoice', $data);
-        return $result;
+        return self::send('sendVoice', $data);
     }
+
+    /**
+     * Send location
+     *
+     * @param array $data
+     * @return mixed
+     */
     public static function sendLocation(array $data)
     {
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
 
-        $result = self::send('sendLocation', $data);
-        return $result;
+        return self::send('sendLocation', $data);
     }
 
+    /**
+     * Send chat action
+     *
+     * @param array $data
+     * @return mixed
+     */
     public static function sendChatAction(array $data)
     {
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
 
-        $result = self::send('sendChatAction', $data);
-        return $result;
+        return self::send('sendChatAction', $data);
     }
 
-    public static function getUserProfilePhotos($data)
+    /**
+     * Get user profile photos
+     *
+     * @param array $data
+     * @return mixed
+     */
+    public static function getUserProfilePhotos(array $data)
     {
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
+
         if (!isset($data['user_id'])) {
             throw new TelegramException('User id is empty!');
         }
 
-        $result = self::send('getUserProfilePhotos', $data);
-        return $result;
+        return self::send('getUserProfilePhotos', $data);
     }
 
-    public static function getUpdates($data)
+    /**
+     * Get updates
+     *
+     * @param array $data
+     * @return mixed
+     */
+    public static function getUpdates(array $data)
     {
-        $result = self::send('getUpdates', $data);
-        return $result;
+        return self::send('getUpdates', $data);
     }
 
+    /**
+     * Set webhook
+     *
+     * @param string $url
+     * @param string $file
+     * @return mixed
+     */
     public static function setWebhook($url = '', $file = null)
     {
-        $data['url'] = $url;
+        $data = ['url' => $url];
 
         if (!is_null($file)) {
             $data['certificate'] = self::encodeFile($file);
         }
 
-        $result = self::send('setWebhook', $data);
-        return $result;
-    }
-
-
-    public static function getFile($data)
-    {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        $result = self::send('getFile', $data);
-        return $result;
-    }
-
-    public static function answerInlineQuery($data)
-    {
-
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        $result = self::send('answerInlineQuery', $data);
-        return $result;
+        return self::send('setWebhook', $data);
     }
 
     /**
-     * Send Message in all the active chat
+     * Get file
      *
-     *
-     * @return bool
+     * @param array $data
+     * @return mixed
      */
+    public static function getFile(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
 
+        return self::send('getFile', $data);
+    }
+
+    /**
+     * Answer inline query
+     *
+     * @param array $data
+     * @return mixed
+     */
+    public static function answerInlineQuery(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('answerInlineQuery', $data);
+    }
+
+    /**
+     * Send message to all active chats
+     *
+     * @param string  $callback_function
+     * @param array   $data
+     * @param boolean $send_groups
+     * @param boolean $send_super_groups
+     * @param boolean $send_users
+     * @param string  $date_from
+     * @param string  $date_to
+     * @return array
+     */
     public static function sendToActiveChats(
         $callback_function,
         array $data,
@@ -448,10 +613,9 @@ class Request
         $date_from = null,
         $date_to = null
     ) {
-
-        $callback_path = __NAMESPACE__ .'\Request';
-        if (! method_exists($callback_path, $callback_function)) {
-            throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
+        $callback_path = __NAMESPACE__ . '\Request';
+        if (!method_exists($callback_path, $callback_function)) {
+            throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
         }
 
         $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
@@ -459,7 +623,7 @@ class Request
         $results = [];
         foreach ($chats as $row) {
             $data['chat_id'] = $row['chat_id'];
-            $results[] = call_user_func_array($callback_path.'::'.$callback_function, array($data));
+            $results[] = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
         }
 
         return $results;
