@@ -1,32 +1,82 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Command;
+use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 
+/**
+ * Admin "/sendtochannel" command
+ */
 class SendtochannelCommand extends Command
 {
+    /**
+     * Name
+     *
+     * @var string
+     */
     protected $name = 'sendtochannel';
+
+    /**
+     * Description
+     *
+     * @var string
+     */
     protected $description = 'Send message to a channel';
+
+    /**
+     * Usage
+     *
+     * @var string
+     */
     protected $usage = '/sendchannel <message to send>';
+
+    /**
+     * Version
+     *
+     * @var string
+     */
     protected $version = '0.1.0';
+
+    /**
+     * If this command is enabled
+     *
+     * @var boolean
+     */
     protected $enabled = true;
+
+    /**
+     * If this command is public
+     *
+     * @var boolean
+     */
     protected $public = true;
-    //need Mysql
+
+    /**
+     * If this command needs mysql
+     *
+     * @var boolean
+     */
     protected $need_mysql = false;
 
+    /**
+     * Execute command
+     *
+     * @todo Don't use empty, as a string of '0' is regarded to be empty
+     *
+     * @return boolean
+     */
     public function execute()
     {
         $update = $this->getUpdate();
@@ -35,26 +85,29 @@ class SendtochannelCommand extends Command
         $chat_id = $message->getChat()->getId();
         $message_id = $message->getMessageId();
         $text = $message->getText(true);
+
         if (empty($text)) {
-            $text_back = 'Write the message to sent: /sendtochannel <message>';
+            $text_back = 'Write the message to send: /sendtochannel <message>';
         } else {
             $your_channel = $this->getConfig('your_channel');
             //Send message to channel
-            $data = [];
-            $data['chat_id'] = $your_channel;
-            $data['text'] = $text;
+            $data = [
+                'chat_id' => $your_channel,
+                'text'    => $text,
+            ];
 
             $result = Request::sendMessage($data);
             if ($result->isOk()) {
-                $text_back = 'Message sent succesfully to: '.$your_channel;
+                $text_back = 'Message sent succesfully to: ' . $your_channel;
             } else {
-                $text_back = 'Sorry message not sent to: '.$your_channel;
+                $text_back = 'Sorry message not sent to: ' . $your_channel;
             }
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = $text_back;
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text_back,
+        ];
 
         $result = Request::sendMessage($data);
         return $result->isOk();
