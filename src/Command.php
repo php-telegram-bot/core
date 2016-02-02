@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
@@ -14,6 +14,10 @@ use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 
+/**
+ * Class Commad.
+ *
+ */
 abstract class Command
 {
     /**
@@ -176,9 +180,10 @@ abstract class Command
     /**
      * Get command config
      *
-     * @todo Returns need looking at!
+     * Look for paramenter $name if found return it, if not return null.
+     * If $name is not set return the all params setted
      *
-     * @param string $name
+     * @param string|null $name
      * @return mixed
      */
     public function getConfig($name = null)
