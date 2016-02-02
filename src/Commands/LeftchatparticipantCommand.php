@@ -14,6 +14,9 @@ use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
+/**
+ * Left chat participant command
+ */
 class LeftchatparticipantCommand extends Command
 {
     /**

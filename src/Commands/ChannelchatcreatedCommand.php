@@ -14,6 +14,9 @@ use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
+/**
+ * Channel chat created command
+ */
 class ChannelchatcreatedCommand extends Command
 {
     /**

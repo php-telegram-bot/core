@@ -16,6 +16,9 @@ use Longman\TelegramBot\Entities\InlineQueryResultArticle;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
+/**
+ * Inline query command
+ */
 class InlinequeryCommand extends Command
 {
     /**

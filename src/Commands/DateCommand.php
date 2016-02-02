@@ -15,6 +15,9 @@ use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
+/**
+ * User "/date" command
+ */
 class DateCommand extends Command
 {
     /**

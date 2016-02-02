@@ -17,6 +17,9 @@ use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
+/**
+ * User "/whoami" command
+ */
 class WhoamiCommand extends Command
 {
     /**
