@@ -1,12 +1,12 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
 namespace Longman\TelegramBot;
 
 define('BASE_PATH', dirname(__FILE__));
@@ -45,8 +45,8 @@ class Telegram
     protected $bot_name = '';
 
     /**
-     * Raw request data
-     *
+     * Raw request data (json) for webhook methods
+     * 
      * @var string
      */
     protected $input;
@@ -59,14 +59,17 @@ class Telegram
     protected $commands_dir = [];
 
     /**
-     * Update object
+     * Row custom update (json)
      *
-     * @var \Longman\TelegramBot\Entities\Update
+     * Used to inject a custom update fot testing purpose in the 
+     * request class
+     *
+     * @var string
      */
     protected $update;
 
     /**
-     * Log requests
+     * Log verbose curl output
      *
      * @var bool
      */
@@ -96,7 +99,7 @@ class Telegram
     /**
      * Log verbosity
      *
-     * @var string
+     * @var int
      */
     protected $log_verbosity;
 
@@ -236,6 +239,9 @@ class Telegram
     /**
      * Set log requests
      *
+     * 0 don't store
+     * 1 store the Curl verbose output with Telegram updates
+     *
      * @param bool $log_requests
      *
      * @return \Longman\TelegramBot\Telegram
@@ -333,7 +339,10 @@ class Telegram
     /**
      * Handle getUpdates method
      *
-     * @todo Complete DocBlock
+     * @param int|null $limit
+     * @param int|null $timeout
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function handleGetUpdates($limit = null, $timeout = null)
     {
@@ -367,7 +376,12 @@ class Telegram
     /**
      * Handle bot request from wekhook
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @todo Should return the executed command result (true,false) but we shoud check if all commands return a value.
+     * Furthermore this function is the tween of handleGetUpdates for webhook, but the first return the ServerResponse 
+     * instead the latter return if the command has failed or not (true|false). 
+     * We shoud use the same convention for both.
+     *
+     * @return bool 
      */
     public function handle()
     {
@@ -386,8 +400,9 @@ class Telegram
 
     /**
      * Process Handle bot request
+     * @param \Longman\TelegramBot\Entities\ServerResponse $update
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return bool
      */
     public function processUpdate(Update $update)
     {
@@ -473,7 +488,8 @@ class Telegram
     /**
      * Execute /command
      *
-     * @todo Complete DocBlock
+     * @param string                                         $command
+     * @param \Longman\TelegramBot\Entities\ServerResponse   $update
      *
      * @return mixed
      */
@@ -498,7 +514,10 @@ class Telegram
     /**
      * Get command class
      *
-     * @todo Complete DocBlock
+     * @param string                                              $command
+     * @param \Longman\TelegramBot\Entities\ServerResponse|null   $update
+     *
+     * @TODO check return
      *
      * @return object
      */
@@ -651,7 +670,13 @@ class Telegram
     /**
      * Set command config
      *
-     * @todo Complete DocBlock
+     * Provide further variables to a particular commands.
+     * For example you can add the channel name at the command /sendtochannel 
+     * Or you can add the api key for external service.
+     *
+     *
+     * @param string  $command
+     * @param array   $array
      *
      * @return \Longman\TelegramBot\Telegram
      */
@@ -664,11 +689,13 @@ class Telegram
     /**
      * Get command config
      *
+     * @param string  $command
+     *
      * @return object
      */
     public function getCommandConfig($command)
     {
-        return isset($this->commands_config[$command]) ? $this->commands_config[$command] : array();
+        return isset($this->commands_config[$command]) ? $this->commands_config[$command] : [];
     }
 
     /**
@@ -704,9 +731,10 @@ class Telegram
     /**
      * Set Webhook for bot
      *
-     * @todo Complete DocBlock
+     * @param string       $url
+     * @param string|null  $path_certificate
      *
-     * @return string
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function setWebHook($url, $path_certificate = null)
     {
@@ -728,7 +756,7 @@ class Telegram
     /**
      * Unset Webhook for bot
      *
-     * @return string
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function unsetWebHook()
     {
