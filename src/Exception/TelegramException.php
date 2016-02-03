@@ -16,10 +16,10 @@ namespace Longman\TelegramBot\Exception;
 class TelegramException extends \Exception
 {
     /**
-     * Exception constructor
+     * Exception constructor that writes the exception message to the logfile
      *
-     * @param string $message Error message
-     * @param integer $code   Error code
+     * @param string  $message Error message
+     * @param integer $code    Error code
      */
     public function __construct($message, $code = 0)
     {
