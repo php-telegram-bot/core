@@ -74,9 +74,10 @@ class EchoCommand extends Command
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = $text;
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text,
+        ];
 
         $result = Request::sendMessage($data);
         return $result->isOk();

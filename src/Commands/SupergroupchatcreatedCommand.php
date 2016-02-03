@@ -70,9 +70,10 @@ class SupergroupchatcreatedCommand extends Command
             $text .= 'Chat id has changed from'.$message->getMigrateFromChatId().' to '.$message->getMigrateToChatId();
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = $text;
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text,
+        ];
 
         $result = Request::sendMessage($data);
         return $result->isOk();

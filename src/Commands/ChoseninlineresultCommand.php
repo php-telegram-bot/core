@@ -74,7 +74,7 @@ class ChoseninlineresultCommand extends Command
         $inline_query = $update->getChosenInlineResult();
         $query = $inline_query->getQuery();
 
-        //information about chosen result are returned
+        //Information about chosen result is returned
         //Do nothing
 
         return 1;

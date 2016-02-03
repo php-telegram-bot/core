@@ -94,7 +94,7 @@ class DateCommand extends Command
         $acc = $data['results'][0]['geometry']['location_type'];
         $types = $data['results'][0]['types'];
 
-        return array($lat, $lng, $acc, $types);
+        return [$lat, $lng, $acc, $types];
     }
 
     private function getDate($lat, $lng)
@@ -128,7 +128,7 @@ class DateCommand extends Command
 
         $local_time = $timestamp + $data['rawOffset'] + $data['dstOffset'];
 
-        return array($local_time, $data['timeZoneId']);
+        return [$local_time, $data['timeZoneId']];
     }
 
     private function getFormattedDate($location)
@@ -154,7 +154,7 @@ class DateCommand extends Command
     private function request($url)
     {
         $ch = curl_init();
-        $curlConfig = array(CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true,);
+        $curlConfig = [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true];
 
         curl_setopt_array($ch, $curlConfig);
         $response = curl_exec($ch);
@@ -193,10 +193,11 @@ class DateCommand extends Command
             }
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['reply_to_message_id'] = $message_id;
-        $data['text'] = $text;
+        $data = [
+            'chat_id'             => $chat_id,
+            'reply_to_message_id' => $message_id,
+            'text'                => $text,
+        ];
 
         $result = Request::sendMessage($data);
         return $result->isOk();

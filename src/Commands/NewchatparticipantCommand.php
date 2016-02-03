@@ -64,11 +64,8 @@ class NewchatparticipantCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
 
-        $participant = $message->getNewChatParticipant();
-
         $chat_id = $message->getChat()->getId();
-        $data = [];
-        $data['chat_id'] = $chat_id;
+        $participant = $message->getNewChatParticipant();
 
         if (strtolower($participant->getUsername()) == strtolower($this->getTelegram()->getBotName())) {
             $text = 'Hi there!';
@@ -76,7 +73,11 @@ class NewchatparticipantCommand extends Command
             $text = 'Hi '.$participant->tryMention().' !';
         }
 
-        $data['text'] = $text;
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text,
+        ];
+
         $result = Request::sendMessage($data);
         return $result->isOk();
     }

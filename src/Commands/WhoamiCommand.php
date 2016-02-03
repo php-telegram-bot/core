@@ -79,7 +79,7 @@ class WhoamiCommand extends Command
         $message_id = $message->getMessageId();
         $text = $message->getText(true);
 
-        //send chat action
+        //Send chat action
         Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 
         $caption = 'Your Id: ' . $message->getFrom()->getId();
@@ -92,8 +92,8 @@ class WhoamiCommand extends Command
         $offset = null;
         $ServerResponse = Request::getUserProfilePhotos([
             'user_id' => $user_id ,
-            'limit' => $limit,
-            'offset' => $offset
+            'limit'   => $limit,
+            'offset'  => $offset,
         ]);
 
         //Check if the request isOK
@@ -104,9 +104,10 @@ class WhoamiCommand extends Command
             $totalcount = 0;
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['reply_to_message_id'] = $message_id;
+        $data = [
+            'chat_id'             => $chat_id,
+            'reply_to_message_id' => $message_id,
+        ];
 
         if ($totalcount > 0) {
             $photos = $UserProfilePhoto->getPhotos();

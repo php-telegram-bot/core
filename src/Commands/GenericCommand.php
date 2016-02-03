@@ -64,15 +64,17 @@ class GenericCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        //you can use $command as param
+        //You can use $command as param
         $command = $message->getCommand();
  
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
 
-        $data = array();
-        $data['chat_id'] = $chat_id;
-        $data['text'] = 'Command: '.$command.' not found.. :(';
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => 'Command: ' . $command . ' not found.. :(',
+        ];
+
         $result = Request::sendMessage($data);
         return $result->isOk();
     }

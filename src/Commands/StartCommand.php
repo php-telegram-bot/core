@@ -72,12 +72,13 @@ class StartCommand extends Command
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $data = array();
-        $data['chat_id'] = $chat_id;
+        $text = 'Hi there!' . "\n" . 'Type /help to see all commands!';
 
-        $text = "Hi there!\nType /help to see all commands!";
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text,
+        ];
 
-        $data['text'] = $text;
         $result = Request::sendMessage($data);
         return $result->isOk();
     }

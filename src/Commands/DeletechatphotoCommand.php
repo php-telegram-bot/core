@@ -66,7 +66,7 @@ class DeletechatphotoCommand extends Command
 
         $delete_chat_photo = $message->getDeleteChatPhoto();
 
-        // temporary do nothing
+        //Temporary, do nothing
         return 1;
     }
 }

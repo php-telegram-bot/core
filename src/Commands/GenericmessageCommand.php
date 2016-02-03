@@ -64,7 +64,7 @@ class GenericmessageCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        //you can use $command as param
+        //You can use $command as param
         $command = $message->getCommand();
  
         $chat_id = $message->getChat()->getId();

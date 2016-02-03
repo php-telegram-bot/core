@@ -66,16 +66,17 @@ class WeatherCommand extends Command
         $url = 'http://api.openweathermap.org/data/2.5/weather?q=' . $location . '&units=metric';
 
         $ch = curl_init();
-        $curlConfig = array(CURLOPT_URL => $url,
+        $curlConfig = [
+            CURLOPT_URL            => $url,
 
-        //CURLOPT_POST              => true,
-        CURLOPT_RETURNTRANSFER => true,
+            //CURLOPT_POST         => true,
+            CURLOPT_RETURNTRANSFER => true,
 
-        //CURLOPT_HTTPHEADER        => array('Content-Type: text/plain'),
-        //CURLOPT_POSTFIELDS            => $data
-        //CURLOPT_VERBOSE               => true,
-        //CURLOPT_HEADER                => true,
-        );
+            //CURLOPT_HTTPHEADER   => ['Content-Type: text/plain'],
+            //CURLOPT_POSTFIELDS   => $data
+            //CURLOPT_VERBOSE      => true,
+            //CURLOPT_HEADER       => true,
+        ];
 
         curl_setopt_array($ch, $curlConfig);
         $response = curl_exec($ch);
@@ -157,10 +158,11 @@ class WeatherCommand extends Command
             }
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['reply_to_message_id'] = $message_id;
-        $data['text'] = $text;
+        $data = [
+            'chat_id'             => $chat_id,
+            'reply_to_message_id' => $message_id,
+            'text'                => $text,
+        ];
 
         $result = Request::sendMessage($data);
         return $result->isOk();

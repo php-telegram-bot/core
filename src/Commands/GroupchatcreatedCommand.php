@@ -66,7 +66,7 @@ class GroupchatcreatedCommand extends Command
 
         $group_chat_created = $message->getGroupChatCreated();
 
-        // temporary do nothing
+        //Temporary, do nothing
         return 1;
     }
 }
