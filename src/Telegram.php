@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Longman\TelegramBot;
 
 define('BASE_PATH', dirname(__FILE__));
@@ -46,7 +47,7 @@ class Telegram
 
     /**
      * Raw request data (json) for webhook methods
-     * 
+     *
      * @var string
      */
     protected $input;
@@ -61,8 +62,7 @@ class Telegram
     /**
      * Row custom update (json)
      *
-     * Used to inject a custom update fot testing purpose in the 
-     * request class
+     * Used to inject a custom update for testing purposes in the Request class
      *
      * @var string
      */
@@ -376,12 +376,12 @@ class Telegram
     /**
      * Handle bot request from wekhook
      *
-     * @todo Should return the executed command result (true,false) but we shoud check if all commands return a value.
-     * Furthermore this function is the tween of handleGetUpdates for webhook, but the first return the ServerResponse 
-     * instead the latter return if the command has failed or not (true|false). 
+     * @todo Should return the executed command result (true|false) but we shoud check if all commands return a value.
+     * Furthermore this function is the twin of handleGetUpdates for webhook, but the first returns the ServerResponse
+     * instead the latter return if the command has failed or not (true|false).
      * We shoud use the same convention for both.
      *
-     * @return bool 
+     * @return bool
      */
     public function handle()
     {
@@ -514,10 +514,10 @@ class Telegram
     /**
      * Get command class
      *
+     * @todo check return
+     *
      * @param string                                              $command
      * @param \Longman\TelegramBot\Entities\ServerResponse|null   $update
-     *
-     * @TODO check return
      *
      * @return object
      */
@@ -671,7 +671,7 @@ class Telegram
      * Set command config
      *
      * Provide further variables to a particular commands.
-     * For example you can add the channel name at the command /sendtochannel 
+     * For example you can add the channel name at the command /sendtochannel
      * Or you can add the api key for external service.
      *
      *
