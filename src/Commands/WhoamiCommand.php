@@ -82,10 +82,10 @@ class WhoamiCommand extends Command
         //Send chat action
         Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 
-        $caption = 'Your Id: ' . $message->getFrom()->getId();
-        $caption .= "\n" . 'Name: ' . $message->getFrom()->getFirstName()
-             . ' ' . $message->getFrom()->getLastName();
-        $caption .= "\n" . 'Username: ' . $message->getFrom()->getUsername();
+        $caption = 'Your Id: ' . $message->getFrom()->getId() . "\n";
+        $caption .= 'Name: ' . $message->getFrom()->getFirstName()
+             . ' ' . $message->getFrom()->getLastName() . "\n";
+        $caption .= 'Username: ' . $message->getFrom()->getUsername();
 
         //Fetch user profile photo
         $limit = 10;
@@ -115,7 +115,6 @@ class WhoamiCommand extends Command
             $photo = $photos[0][2];
             $file_id = $photo->getFileId();
 
-
             $data['photo'] = $file_id;
             $data['caption'] = $caption;
 
@@ -134,6 +133,7 @@ class WhoamiCommand extends Command
             $data['text'] = $caption;
             $result = Request::sendMessage($data);
         }
+
         return $result->isOk();
     }
 }

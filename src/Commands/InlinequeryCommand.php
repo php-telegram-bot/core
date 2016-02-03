@@ -90,7 +90,6 @@ class InlinequeryCommand extends Command
         $data['results'] = $array_json;
 
         $result = Request::answerInlineQuery($data);
-
         return $result->isOk();
     }
 }

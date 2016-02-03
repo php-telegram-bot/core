@@ -62,9 +62,26 @@ class DateCommand extends Command
      */
     protected $public = true;
 
+    /**
+     * Base URL for Google Maps API
+     *
+     * @var string
+     */
     private $base_url = 'https://maps.googleapis.com/maps/api';
+
+    /**
+     * Date format
+     *
+     * @var string
+     */
     private $date_format = 'd-m-Y H:i:s';
 
+    /**
+     * Get coordinates
+     *
+     * @param string $location
+     * @return array|boolean
+     */
     private function getCoordinates($location)
     {
         $url = $this->base_url . '/geocode/json?';
@@ -97,6 +114,13 @@ class DateCommand extends Command
         return [$lat, $lng, $acc, $types];
     }
 
+    /**
+     * Get date
+     *
+     * @param string $lat
+     * @param string $lng
+     * @return array|boolean
+     */
     private function getDate($lat, $lng)
     {
         $url = $this->base_url . '/timezone/json?';
@@ -131,11 +155,18 @@ class DateCommand extends Command
         return [$local_time, $data['timeZoneId']];
     }
 
+    /**
+     * Get formatted date
+     *
+     * @param string $location
+     * @return string
+     */
     private function getFormattedDate($location)
     {
         if (empty($location)) {
             return 'The time in nowhere is never';
         }
+
         list($lat, $lng, $acc, $types) = $this->getCoordinates($location);
 
         if (empty($lat) || empty($lng)) {
@@ -146,11 +177,15 @@ class DateCommand extends Command
 
         $date_utc = new \DateTime(gmdate('Y-m-d H:i:s', $local_time), new \DateTimeZone($timezone_id));
 
-        $return = 'The local time in ' . $timezone_id . ' is: ' . $date_utc->format($this->date_format) . '';
-
-        return $return;
+        return 'The local time in ' . $timezone_id . ' is: ' . $date_utc->format($this->date_format);
     }
 
+    /**
+     * Perform a simple cURL request
+     *
+     * @param string $url
+     * @return object
+     */
     private function request($url)
     {
         $ch = curl_init();

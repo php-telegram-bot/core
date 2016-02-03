@@ -57,6 +57,8 @@ class GenericCommand extends Command
     /**
      * Execute command
      *
+     * @todo This can't be right, as it always returns "Command: xyz not found.. :("
+     *
      * @return boolean
      */
     public function execute()
@@ -64,9 +66,10 @@ class GenericCommand extends Command
         $update = $this->getUpdate();
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
+
         //You can use $command as param
         $command = $message->getCommand();
- 
+
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
 

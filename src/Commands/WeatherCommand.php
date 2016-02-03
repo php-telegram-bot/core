@@ -61,6 +61,12 @@ class WeatherCommand extends Command
      */
     protected $public = true;
 
+    /**
+     * Get weather using cURL request
+     *
+     * @param string $location
+     * @return object
+     */
     private function getWeather($location)
     {
         $url = 'http://api.openweathermap.org/data/2.5/weather?q=' . $location . '&units=metric';
@@ -90,6 +96,12 @@ class WeatherCommand extends Command
         return $response;
     }
 
+    /**
+     * Get weather string
+     *
+     * @param string $location
+     * @return bool|string
+     */
     private function getWeatherString($location)
     {
         if (empty($location)) {
@@ -103,6 +115,7 @@ class WeatherCommand extends Command
             if (empty($decode) || $decode['cod'] != 200) {
                 return false;
             }
+
             $city = $decode['name'];
             $country = $decode['sys']['country'];
             $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . '°C';
@@ -130,6 +143,7 @@ class WeatherCommand extends Command
         } catch (\Exception $e) {
             $result = '';
         }
+
         return $result;
     }
 

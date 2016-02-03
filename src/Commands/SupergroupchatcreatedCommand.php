@@ -57,6 +57,8 @@ class SupergroupchatcreatedCommand extends Command
     /**
      * Execute command
      *
+     * @todo $chat_id isn't defined!
+     *
      * @return boolean
      */
     public function execute()
@@ -66,8 +68,8 @@ class SupergroupchatcreatedCommand extends Command
         $text = '';
 
         if ($message->getSuperGroupChatCreated()) {
-            $text = "Your group has become a Supergroup!\n";
-            $text .= 'Chat id has changed from'.$message->getMigrateFromChatId().' to '.$message->getMigrateToChatId();
+            $text = 'Your group has become a Supergroup!' . "\n";
+            $text .= 'Chat id has changed from ' . $message->getMigrateFromChatId() . ' to ' . $message->getMigrateToChatId();
         }
 
         $data = [

@@ -66,9 +66,8 @@ class SlapCommand extends Command
         $chat_id = $message->getChat()->getId();
         $message_id = $message->getMessageId();
         $text = $message->getText(true);
-        
-        $sender='@'.$message->getFrom()->getUsername();
 
+        $sender = '@' . $message->getFrom()->getUsername();
 
         //username validation
         $test = preg_match('/@[\w_]{5,}/', $text);
@@ -82,6 +81,7 @@ class SlapCommand extends Command
             'chat_id' => $chat_id,
             'text'    => $text,
         ];
+
         $result = Request::sendMessage($data);
         return $result->isOk();
     }
