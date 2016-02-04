@@ -80,6 +80,7 @@ class DateCommand extends Command
      * Get coordinates
      *
      * @param string $location
+     *
      * @return array|boolean
      */
     private function getCoordinates($location)
@@ -119,6 +120,7 @@ class DateCommand extends Command
      *
      * @param string $lat
      * @param string $lng
+     *
      * @return array|boolean
      */
     private function getDate($lat, $lng)
@@ -159,6 +161,7 @@ class DateCommand extends Command
      * Get formatted date
      *
      * @param string $location
+     *
      * @return string
      */
     private function getFormattedDate($location)
@@ -184,6 +187,7 @@ class DateCommand extends Command
      * Perform a simple cURL request
      *
      * @param string $url
+     *
      * @return object
      */
     private function request($url)

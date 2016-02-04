@@ -65,6 +65,7 @@ class WeatherCommand extends Command
      * Get weather using cURL request
      *
      * @param string $location
+     *
      * @return object
      */
     private function getWeather($location)
@@ -100,6 +101,7 @@ class WeatherCommand extends Command
      * Get weather string
      *
      * @param string $location
+     *
      * @return bool|string
      */
     private function getWeatherString($location)
