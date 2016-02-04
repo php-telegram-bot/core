@@ -1,45 +1,99 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 
+/**
+ * Admin "/chats" command
+ */
 class ChatsCommand extends Command
 {
+    /**
+     * Name
+     *
+     * @var string
+     */
     protected $name = 'chats';
-    protected $description = 'List all chats stored by the bot';
-    protected $usage = '/chats ';
-    protected $version = '1.0.0';
-    protected $enabled = true;
-    protected $public = true;
-    //need Mysql
-    protected $need_mysql = true;
 
+    /**
+     * Description
+     *
+     * @var string
+     */
+    protected $description = 'List all chats stored by the bot';
+
+    /**
+     * Usage
+     *
+     * @var string
+     */
+    protected $usage = '/chats';
+
+    /**
+     * Version
+     *
+     * @var string
+     */
+    protected $version = '1.0.0';
+
+    /**
+     * If this command is enabled
+     *
+     * @var boolean
+     */
+    protected $enabled = true;
+
+    /**
+     * If this command is public
+     *
+     * @var boolean
+     */
+    protected $public = true;
+
+    /**
+     * If this command needs mysql
+     *
+     * @var boolean
+     */
+    protected $need_mysql = false;
+
+    /**
+     * Execution if MySQL is required but not available
+     *
+     * @return boolean
+     */
     public function executeNoDB()
     {
-        //Database not setted or without connection
         //Preparing message
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] =  'Sorry no database connection, unable to execute '.$this->name.' command.';
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
+        ];
         $result = Request::sendMessage($data);
         return $result->isOk();
     }
 
+    /**
+     * Execute command
+     *
+     * @return boolean
+     */
     public function execute()
     {
         $update = $this->getUpdate();
@@ -60,38 +114,38 @@ class ChatsCommand extends Command
         $user_chats = 0;
         $group_chats = 0;
         $super_group_chats = 0;
-        $text = "List of bot chats:\n";
+        $text = 'List of bot chats:' . "\n";
 
         foreach ($results as $result) {
-            //initialize a chat object
+            //Initialize a chat object
             $result['id'] =  $result['chat_id'];
-
             $chat = new Chat($result);
 
             if ($chat->isPrivateChat()) {
-                $text .= '- P '.$chat->tryMention()."\n";
+                $text .= '- P ' . $chat->tryMention() . "\n";
                 ++$user_chats;
             } elseif ($chat->isGroupChat()) {
-                $text .= '- G '.$chat->getTitle()."\n";
+                $text .= '- G ' . $chat->getTitle() . "\n";
                 ++$group_chats;
             } elseif ($chat->isSuperGroup()) {
-                $text .= '- S '.$chat->getTitle()."\n";
+                $text .= '- S ' . $chat->getTitle() . "\n";
                 ++$super_group_chats;
             }
-
         }
-        if (($group_chats + $user_chats + $super_group_chats) == 0) {
-            $text = "No chats found..";
+
+        if (($user_chats + $group_chats + $super_group_chats) == 0) {
+            $text = 'No chats found..';
         } else {
-            $text .= "\nPrivate Chats: ".$user_chats;
-            $text .= "\nGroup: ".$group_chats;
-            $text .= "\nSuper Group: ".$super_group_chats;
-            $text .= "\nTot: ".($group_chats + $user_chats + $super_group_chats);
+            $text .= "\n" . 'Private Chats: ' . $user_chats;
+            $text .= "\n" . 'Group: ' . $group_chats;
+            $text .= "\n" . 'Super Group: ' . $super_group_chats;
+            $text .= "\n" . 'Total: ' . ($user_chats + $group_chats + $super_group_chats);
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = $text;
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text,
+        ];
         $result = Request::sendMessage($data);
         return $result->isOk();
     }
