@@ -28,6 +28,18 @@ Further code convention adopted
 -------------------------------
 
 - Each method and class is documented with a docblock
+Example for a function or methods:  
+```
+/**
+ * Get formatted date
+ *
+ * @param string $location
+ *
+ * @return string
+ */
+```
+
+
 - Each file is provided with the following header: 
 ```
 /*

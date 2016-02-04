@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
@@ -26,6 +26,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @link            http://www.github.com/akalongman/php-telegram-bot
  */
 
+/**
+ * Class DB.
+ */
 class DB
 {
     /**
@@ -62,6 +65,7 @@ class DB
      * @param array    $credentials  Database connection details
      * @param Telegram $telegram     Telegram object to connect with this object
      * @param string   $table_prefix Table prefix
+     *
      * @return PDO PDO database object
      */
     public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null)
@@ -129,6 +133,7 @@ class DB
      * Fetch update(s) from DB
      *
      * @param int $limit Limit the number of updates to fetch
+     *
      * @return array|bool Fetched data or false if not connected
      */
     public static function selectTelegramUpdate($limit = null)
@@ -161,6 +166,7 @@ class DB
      * Fetch message(s) from DB
      *
      * @param int $limit Limit the number of messages to fetch
+     *
      * @return array|bool Fetched data or false if not connected
      */
     public static function selectMessages($limit = null)
@@ -195,6 +201,7 @@ class DB
      * Convert from unix timestamp to timestamp
      *
      * @param int $time Unix timestamp
+     *
      * @return null|string Timestamp if a time has been passed, else null
      */
     protected static function getTimestamp($time = null)
@@ -214,6 +221,7 @@ class DB
      * @param int $message_id
      * @param int $inline_query_id
      * @param int $chosen_inline_query_id
+     *
      * @return bool|null
      */
     public static function insertTelegramUpdate($id, $message_id, $inline_query_id, $chosen_inline_query_id)
@@ -257,6 +265,7 @@ class DB
      * @param  Entities\User $user
      * @param  string        $date
      * @param  Entities\Chat $chat
+     *
      * @return bool|null
      */
     public static function insertUser(User $user, $date, Chat $chat = null)
@@ -322,6 +331,7 @@ class DB
      * Insert request into database
      *
      * @param Entities\Update &$update
+     *
      * @return bool
      */
     public static function insertRequest(Update &$update)
@@ -388,6 +398,7 @@ class DB
      * @todo No return value at the end. Just return true?
      *
      * @param Entities\InlineQuery &$inline_query
+     *
      * @return bool
      */
     public static function insertInlineQueryRequest(InlineQuery &$inline_query)
@@ -436,6 +447,7 @@ class DB
      * Insert Message request in db
      *
      * @param Entities\Message &$message
+     *
      * @return bool If the insert was successful
      */
     public static function insertMessageRequest(Message &$message)
@@ -632,6 +644,7 @@ class DB
      * @param bool   $select_users
      * @param string $date_from
      * @param string $date_to
+     *
      * @return array|bool Selected chats or false if invalid arguments
      */
     public static function selectChats(
