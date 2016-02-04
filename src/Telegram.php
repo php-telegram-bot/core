@@ -46,7 +46,7 @@ class Telegram
 
     /**
      * Raw request data (json) for webhook methods
-     * 
+     *
      * @var string
      */
     protected $input;
@@ -61,7 +61,7 @@ class Telegram
     /**
      * Row custom update (json)
      *
-     * Used to inject a custom update fot testing purpose in the 
+     * Used to inject a custom update fot testing purpose in the
      * request class
      *
      * @var string
@@ -377,11 +377,11 @@ class Telegram
      * Handle bot request from wekhook
      *
      * @todo Should return the executed command result (true,false) but we shoud check if all commands return a value.
-     * Furthermore this function is the tween of handleGetUpdates for webhook, but the first return the ServerResponse 
-     * instead the latter return if the command has failed or not (true|false). 
+     * Furthermore this function is the tween of handleGetUpdates for webhook, but the first return the ServerResponse
+     * instead the latter return if the command has failed or not (true|false).
      * We shoud use the same convention for both.
      *
-     * @return bool 
+     * @return bool
      */
     public function handle()
     {
@@ -671,7 +671,7 @@ class Telegram
      * Set command config
      *
      * Provide further variables to a particular commands.
-     * For example you can add the channel name at the command /sendtochannel 
+     * For example you can add the channel name at the command /sendtochannel
      * Or you can add the api key for external service.
      *
      *
