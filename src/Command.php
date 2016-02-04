@@ -15,8 +15,7 @@ use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 
 /**
- * Class Commad.
- *
+ * Class Command
  */
 abstract class Command
 {
@@ -180,8 +179,8 @@ abstract class Command
     /**
      * Get command config
      *
-     * Look for paramenter $name if found return it, if not return null.
-     * If $name is not set return the all params setted
+     * Look for parameter $name if found return it, if not return null.
+     * If $name is not set return the all set params
      *
      * @param string|null $name
      * @return mixed

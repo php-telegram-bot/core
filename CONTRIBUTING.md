@@ -22,12 +22,14 @@ If you develop a new feature please create a new branch.
 
 Version
 -------
+
 Version number: 0.#version.#hotfix
 
 Further code convention adopted
 -------------------------------
 
 - Each method and class is documented with a docblock
+
 Example for a function or methods:  
 ```
 /**
@@ -39,10 +41,9 @@ Example for a function or methods:
  */
 ```
 
-
-- Each file is provided with the following header: 
+- Each file is provided with the following header:
 ```
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
@@ -53,10 +54,9 @@ Example for a function or methods:
 ```
 - No empty line after class declaration
 - No empty line after `<?php`
-- Last element of array must end with coma
-- One empty line after the dockblock header
-- Array and use statement must be written in alphabetical order
+- Last element of a multi-line array must be followed by a comma
+- One empty line after the docblock header
+- Array elements and `use` statements should be written in a logical order, preferrably alphabetically
 - Use [] instead of array()
-- Use '' for string
+- Use single quotes (`'`) for string
 - Leave space in front and behind the concatenation operator `.`
-
