@@ -19,40 +19,15 @@ use Longman\TelegramBot\Request;
  */
 class GenericCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'Generic';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Handles generic commands or is executed by default when a command is not found';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
     protected $enabled = true;
+    /**#@-*/
 
     /**
      * Execute command

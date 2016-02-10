@@ -19,40 +19,15 @@ use Longman\TelegramBot\Request;
  */
 class SlapCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'slap';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Slap someone with their username';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/slap <@user>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
     protected $enabled = true;
+    /**#@-*/
 
     /**
      * Execute command

@@ -20,47 +20,16 @@ use Longman\TelegramBot\Request;
  */
 class DateCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'date';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Show date/time by location';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/date <location>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.2.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
     protected $enabled = true;
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
+    /**#@-*/
 
     /**
      * Base URL for Google Maps API

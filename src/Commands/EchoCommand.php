@@ -19,47 +19,16 @@ use Longman\TelegramBot\Request;
  */
 class EchoCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'echo';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Show text';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/echo <text>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
     protected $enabled = true;
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
+    /**#@-*/
 
     /**
      * Execute command
