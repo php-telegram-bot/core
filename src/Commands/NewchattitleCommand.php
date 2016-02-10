@@ -34,25 +34,11 @@ class NewchattitleCommand extends Command
     protected $description = 'New chat Title';
 
     /**
-     * Usage
-     *
-     * @var string
-     */
-    protected $usage = '/';
-
-    /**
      * Version
      *
      * @var string
      */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
 
     /**
      * Execute command
@@ -61,12 +47,10 @@ class NewchattitleCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$new_chat_title = $message->getNewChatTitle();
 
-        $new_chat_title = $message->getNewChatTitle();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

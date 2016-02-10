@@ -51,13 +51,6 @@ class WhoamiCommand extends Command
     protected $version = '1.0.0';
 
     /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
      * If this command is public
      *
      * @var boolean
@@ -71,7 +64,6 @@ class WhoamiCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $user_id = $message->getFrom()->getId();
@@ -82,7 +74,7 @@ class WhoamiCommand extends Command
         //Send chat action
         Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 
-        $caption = 'Your Id: ' . $message->getFrom()->getId() . "\n";
+        $caption = 'Your Id: ' . $user_id . "\n";
         $caption .= 'Name: ' . $message->getFrom()->getFirstName()
              . ' ' . $message->getFrom()->getLastName() . "\n";
         $caption .= 'Username: ' . $message->getFrom()->getUsername();

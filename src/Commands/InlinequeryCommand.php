@@ -36,32 +36,11 @@ class InlinequeryCommand extends Command
     protected $description = 'Reply to inline query';
 
     /**
-     * Usage
-     *
-     * @var string
-     */
-    protected $usage = '';
-
-    /**
      * Version
      *
      * @var string
      */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
-    protected $public = false;
 
     /**
      * Execute command
@@ -86,10 +65,8 @@ class InlinequeryCommand extends Command
         foreach ($articles as $article) {
             $array_article[] = new InlineQueryResultArticle($article);
         }
-        $array_json = '['.implode(',', $array_article).']';
-        $data['results'] = $array_json;
+        $data['results'] = '[' . implode(',', $array_article) . ']';
 
-        $result = Request::answerInlineQuery($data);
-        return $result->isOk();
+        return Request::answerInlineQuery($data)->isOk();
     }
 }

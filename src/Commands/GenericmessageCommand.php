@@ -34,25 +34,11 @@ class GenericmessageCommand extends Command
     protected $description = 'Handle generic message';
 
     /**
-     * Usage
-     *
-     * @var string
-     */
-    protected $usage = '/';
-
-    /**
      * Version
      *
      * @var string
      */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
 
     /**
      * Execute command
@@ -61,17 +47,7 @@ class GenericmessageCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-
-        //You can use $command as param
-        $command = $message->getCommand();
-
-        $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
-
-        //Do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

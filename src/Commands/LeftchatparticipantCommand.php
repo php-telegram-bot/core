@@ -34,25 +34,11 @@ class LeftchatparticipantCommand extends Command
     protected $description = 'Left Chat Participant';
 
     /**
-     * Usage
-     *
-     * @var string
-     */
-    protected $usage = '/';
-
-    /**
      * Version
      *
      * @var string
      */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
 
     /**
      * Execute command
@@ -61,12 +47,10 @@ class LeftchatparticipantCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$participant = $message->getLeftChatParticipant();
 
-        $participant = $message->getLeftChatParticipant();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

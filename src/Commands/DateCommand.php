@@ -49,13 +49,6 @@ class DateCommand extends Command
     protected $version = '1.2.0';
 
     /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
      * If this command is public
      *
      * @var boolean
@@ -214,7 +207,6 @@ class DateCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -238,7 +230,6 @@ class DateCommand extends Command
             'text'                => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

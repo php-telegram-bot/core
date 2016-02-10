@@ -48,27 +48,12 @@ class StartCommand extends Command
     protected $version = '1.0.0';
 
     /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
-    protected $public = false;
-
-    /**
      * Execute command
      *
      * @return boolean
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -79,7 +64,6 @@ class StartCommand extends Command
             'text'    => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }
