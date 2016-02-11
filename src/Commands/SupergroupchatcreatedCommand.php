@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -34,13 +33,6 @@ class SupergroupchatcreatedCommand extends Command
     protected $description = 'Super group chat created';
 
     /**
-     * Usage
-     *
-     * @var string
-     */
-    protected $usage = '/';
-
-    /**
      * Version
      *
      * @var string
@@ -48,23 +40,15 @@ class SupergroupchatcreatedCommand extends Command
     protected $version = '1.0.0';
 
     /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
      * Execute command
-     *
-     * @todo $chat_id isn't defined!
      *
      * @return boolean
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
+
+        $chat_id = $message->getChat()->getId();
         $text = '';
 
         if ($message->getSuperGroupChatCreated()) {
@@ -77,7 +61,6 @@ class SupergroupchatcreatedCommand extends Command
             'text'    => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

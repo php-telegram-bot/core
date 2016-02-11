@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -46,13 +45,6 @@ class WeatherCommand extends Command
      * @var string
      */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
 
     /**
      * If this command is public
@@ -125,19 +117,19 @@ class WeatherCommand extends Command
 
             switch (strtolower($decode['weather'][0]['main'])) {
                 case 'clear':
-                    $conditions.= ' ☀';
+                    $conditions .= ' ☀';
                     break;
 
                 case 'clouds':
-                    $conditions.= ' ☁☁';
+                    $conditions .= ' ☁☁';
                     break;
 
                 case 'rain':
-                    $conditions.= ' ☔';
+                    $conditions .= ' ☔';
                     break;
 
                 case 'thunderstorm':
-                    $conditions.= ' ☔☔☔☔';
+                    $conditions .= ' ☔☔☔☔';
                     break;
             }
 
@@ -156,7 +148,6 @@ class WeatherCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -180,7 +171,6 @@ class WeatherCommand extends Command
             'text'                => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

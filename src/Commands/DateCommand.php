@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
@@ -47,13 +46,6 @@ class DateCommand extends Command
      * @var string
      */
     protected $version = '1.2.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
 
     /**
      * If this command is public
@@ -135,7 +127,7 @@ class DateCommand extends Command
 
         $google_api_key = $this->getConfig('google_api_key');
         if (!empty($google_api_key)) {
-            $params.= '&key=' . $google_api_key;
+            $params .= '&key=' . $google_api_key;
         }
 
         $data = $this->request($url . $params);
@@ -214,7 +206,6 @@ class DateCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -238,7 +229,6 @@ class DateCommand extends Command
             'text'                => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

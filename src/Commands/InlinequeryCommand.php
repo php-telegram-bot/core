@@ -11,9 +11,7 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\InlineQueryResultArticle;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -36,32 +34,11 @@ class InlinequeryCommand extends Command
     protected $description = 'Reply to inline query';
 
     /**
-     * Usage
-     *
-     * @var string
-     */
-    protected $usage = '';
-
-    /**
      * Version
      *
      * @var string
      */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
-    protected $public = false;
 
     /**
      * Execute command
@@ -77,19 +54,17 @@ class InlinequeryCommand extends Command
         $data = ['inline_query_id' => $inline_query->getId()];
 
         $articles = [
-            ['id' => '001' , 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query ],
-            ['id' => '002' , 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query ],
-            ['id' => '003' , 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query ],
+            ['id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
+            ['id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
+            ['id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
         ];
 
         $array_article = [];
         foreach ($articles as $article) {
             $array_article[] = new InlineQueryResultArticle($article);
         }
-        $array_json = '['.implode(',', $array_article).']';
-        $data['results'] = $array_json;
+        $data['results'] = '[' . implode(',', $array_article) . ']';
 
-        $result = Request::answerInlineQuery($data);
-        return $result->isOk();
+        return Request::answerInlineQuery($data)->isOk();
     }
 }

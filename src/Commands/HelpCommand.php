@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -48,13 +47,6 @@ class HelpCommand extends Command
     protected $version = '1.0.0';
 
     /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
      * If this command is public
      *
      * @var boolean
@@ -68,7 +60,6 @@ class HelpCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -116,7 +107,6 @@ class HelpCommand extends Command
             'text'                => $msg,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }
