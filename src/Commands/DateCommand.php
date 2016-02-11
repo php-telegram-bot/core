@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 

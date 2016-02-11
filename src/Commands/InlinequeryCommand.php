@@ -11,9 +11,7 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\InlineQueryResultArticle;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
