@@ -93,7 +93,7 @@ above, but start it with `@`)
     Current status is: ENABLED
     ```
 
-12. Type `Disable` to let your bot receive all messages sent to a
+12. Type (or select) `Disable` to let your bot receive all messages sent to a
 group. This step is up to you actually.
 
 13. @botfather replies with `Success! The new status is: DISABLED. /help`
@@ -141,7 +141,7 @@ The bot can handle updates with **webhook** or **getUpdate** method:
 In order to set a [Webhook](https://core.telegram.org/bots/api#setwebhook) you need a server with https and composer support.
 (For a [self signed certificate](#self-signed-certificate) you need to add some extra code)
 
-Create *set.php* (just copy and edit *examples/set.php*) and put into it:
+Create *set.php* (or just copy and edit *examples/set.php*) and put into it:
 ```php
 <?php
 // Load composer
@@ -194,6 +194,10 @@ To upload the certificate, add the certificate path as a parameter in *set.php*:
 $result = $telegram->setWebHook($hook_url, $certificate_path);
 ```
 
+### Unset Webhook
+
+Edit *example/unset.php* with your bot credentials and execute it.
+
 ## getUpdate installation
 
 The MySQL database must be active!
@@ -237,7 +241,9 @@ then run
 ./getUpdateCLI.php
 ```
 
-## Types
+## Support
+
+### Types
 
 All types are implemented according to Telegram API (20 January 2016).
 
@@ -266,7 +272,7 @@ $data = ['chat_id' => $chat_id];
 $result = Request::sendPhoto($data, $telegram->getUploadPath() . '/image.jpg');
 ```
 
-If you know the file_id of a previously uploaded file, just include it in the data array:
+If you know the `file_id` of a previously uploaded file, just include it in the data array:
 
 ```php
 $data = [
@@ -277,7 +283,7 @@ $result = Request::sendPhoto($data);
 ```
 
 *sendAudio*, *sendDocument*, *sendSticker*, *sendVideo* and *sendVoice* all work in the same way.
-See *ImageCommand.php* for a full example.
+See *examples/Commands/ImageCommand.php* for a full example.
 
 #### Send Chat Action
 
@@ -287,11 +293,11 @@ Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 
 #### getUserProfilePhoto
 
-Retrieve the user photo, see *WhoamiCommand.php* for a full example.
+Retrieve the user photo, see *src/Commands/WhoamiCommand.php* for a full example.
 
 #### getFile and dowloadFile
 
-Get the file path and download it, see *WhoamiCommand.php* for a full example.
+Get the file path and download it, see *src/Commands/WhoamiCommand.php* for a full example.
 
 #### Send message to all active chats
 
@@ -306,11 +312,11 @@ $results = Request::sendToActiveChats(
         true, // Send to chats (super group chat)
         true, // Send to users (single chat)
         null, // 'yyyy-mm-dd hh:mm:ss' date range from
-        null  // 'yyyy-mm-dd hh:mm:ss' date range to
+        null, // 'yyyy-mm-dd hh:mm:ss' date range to
     );
 ```
 
-You can also broadcast a message to users, from the private chat with your bot. Take a look at the admin interface below.
+You can also broadcast a message to users, from the private chat with your bot. Take a look at the [admin commands](#admin-commands) below.
 
 ## Utils
 
@@ -342,7 +348,7 @@ You can also store inline query and chosen inline query in the database.
 ### Channels Support
 
 All methods implemented can be used to manage channels.
-With admin interface you can manage your channel directly with your bot private chat.
+With [admin commands](#admin-commands) you can manage your channel directly with your bot private chat.
 
 ### Commands
 
@@ -361,7 +367,9 @@ It can execute command triggering a chat event. Here's the list:
 
 **GenericCommand.php** lets you handle commands that don't exist or to
 use commands as a variable:
+
 Favourite colour? **/black, /red**
+
 Favourite number? **/1, /134**
 
 **GenericmessageCommand.php** lets you handle any type of message.
@@ -386,7 +394,7 @@ $telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_he
 
 ### Admin Commands
 
-Enabling this feature, the admin bot can perform some super user command like:
+Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
 - Send a message to a channel */sendtochannel* (NEW! see below how to configure it)
@@ -401,12 +409,12 @@ To get a list of all available commands, type **/help**.
 
 #### Channel Administration
 
-To enable this feature follow those steps:
+To enable this feature follow these steps:
 - Add your bot as channel administrator, this can be done with any telegram client.
 - Enable admin interface for your user as explained in the admin section above.
-- Enter your channel name as a param for the sendtoall command:
+- Enter your channel name as a parameter for the */sendtochannel* command:
 ```php
-    $telegram->setCommandConfig('sendtochannel', ['your_channel'=>'@type_here_your_channel']);
+$telegram->setCommandConfig('sendtochannel', ['your_channel' => '@type_here_your_channel']);
 ```
 - Enjoy!
 
@@ -417,10 +425,6 @@ You can override the default Upload and Download directory with:
 $telegram->setDownloadPath('yourpath/Download');
 $telegram->setUploadPath('yourpath/Upload');
 ```
-
-### Unset Webhook
-
-Edit *example/unset.php* with your bot credentials and execute it.
 
 ### Logging
 
