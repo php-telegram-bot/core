@@ -11,9 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 /**
@@ -28,7 +25,6 @@ class SendtoallCommand extends Command
     protected $description = 'Send the message to all the user\'s bot';
     protected $usage = '/sendall <message to send>';
     protected $version = '1.2.0';
-    protected $enabled = true;
     protected $public = true;
     protected $need_mysql = true;
     /**#@-*/
@@ -43,12 +39,13 @@ class SendtoallCommand extends Command
         //Preparing message
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
+
         $data = [
             'chat_id' => $chat_id,
             'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
         ];
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+
+        return Request::sendMessage($data)->isOk();
     }
 
     /**
@@ -60,12 +57,9 @@ class SendtoallCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
-        $text = $message->getText(true);
 
         if (empty($text)) {
             $text = 'Write the message to send: /sendall <message>';
@@ -110,7 +104,7 @@ class SendtoallCommand extends Command
             }
             $text .= 'Delivered: ' . ($tot - $fail) . '/' . $tot . "\n";
         }
-        if ($tot == 0) {
+        if ($tot === 0) {
             $text = 'No users or chats found..';
         }
 
@@ -119,7 +113,6 @@ class SendtoallCommand extends Command
             'text'    => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Request;
 
 /**
  * New chat title command
@@ -24,9 +22,7 @@ class NewchattitleCommand extends Command
      */
     protected $name = 'Newchattitle';
     protected $description = 'New chat Title';
-    protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
     /**#@-*/
 
     /**
@@ -36,12 +32,10 @@ class NewchattitleCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$new_chat_title = $message->getNewChatTitle();
 
-        $new_chat_title = $message->getNewChatTitle();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

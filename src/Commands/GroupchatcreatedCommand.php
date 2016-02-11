@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Request;
 
 /**
  * Group chat created command
@@ -24,9 +22,7 @@ class GroupchatcreatedCommand extends Command
      */
     protected $name = 'Groupchatcreated';
     protected $description = 'Group chat created';
-    protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
     /**#@-*/
 
     /**
@@ -36,12 +32,10 @@ class GroupchatcreatedCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$group_chat_created = $message->getGroupChatCreated();
 
-        $group_chat_created = $message->getGroupChatCreated();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

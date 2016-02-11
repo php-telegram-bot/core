@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Request;
 
 /**
  * Delete chat photo command
@@ -24,9 +22,7 @@ class DeletechatphotoCommand extends Command
      */
     protected $name = 'Deletechatphoto';
     protected $description = 'Delete chat photo';
-    protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
     /**#@-*/
 
     /**
@@ -36,12 +32,10 @@ class DeletechatphotoCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$delete_chat_photo = $message->getDeleteChatPhoto();
 
-        $delete_chat_photo = $message->getDeleteChatPhoto();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

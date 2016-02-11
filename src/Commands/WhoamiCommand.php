@@ -14,7 +14,6 @@ namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Entities\File;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -29,7 +28,6 @@ class WhoamiCommand extends Command
     protected $description = 'Show your id, name and username';
     protected $usage = '/whoami';
     protected $version = '1.0.0';
-    protected $enabled = true;
     protected $public = true;
     /**#@-*/
 
@@ -40,7 +38,6 @@ class WhoamiCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $user_id = $message->getFrom()->getId();
@@ -51,9 +48,9 @@ class WhoamiCommand extends Command
         //Send chat action
         Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
 
-        $caption = 'Your Id: ' . $message->getFrom()->getId() . "\n";
+        $caption = 'Your Id: ' . $user_id . "\n";
         $caption .= 'Name: ' . $message->getFrom()->getFirstName()
-             . ' ' . $message->getFrom()->getLastName() . "\n";
+        . ' ' . $message->getFrom()->getLastName() . "\n";
         $caption .= 'Username: ' . $message->getFrom()->getUsername();
 
         //Fetch user profile photo

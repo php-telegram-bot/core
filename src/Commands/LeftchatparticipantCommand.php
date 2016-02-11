@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Request;
 
 /**
  * Left chat participant command
@@ -24,9 +22,7 @@ class LeftchatparticipantCommand extends Command
      */
     protected $name = 'leftchatparticipant';
     protected $description = 'Left Chat Participant';
-    protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
     /**#@-*/
 
     /**
@@ -36,12 +32,10 @@ class LeftchatparticipantCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$participant = $message->getLeftChatParticipant();
 
-        $participant = $message->getLeftChatParticipant();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }

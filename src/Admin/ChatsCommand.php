@@ -13,8 +13,6 @@ namespace Longman\TelegramBot\Commands;
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 /**
@@ -29,7 +27,6 @@ class ChatsCommand extends Command
     protected $description = 'List all chats stored by the bot';
     protected $usage = '/chats';
     protected $version = '1.0.0';
-    protected $enabled = true;
     protected $public = true;
     protected $need_mysql = false;
     /**#@-*/
@@ -44,12 +41,13 @@ class ChatsCommand extends Command
         //Preparing message
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
+
         $data = [
             'chat_id' => $chat_id,
             'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
         ];
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+
+        return Request::sendMessage($data)->isOk();
     }
 
     /**
@@ -59,12 +57,9 @@ class ChatsCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
-        $text = $message->getText(true);
 
         $results = DB::selectChats(
             true, //Send to groups (group chat)
@@ -96,7 +91,7 @@ class ChatsCommand extends Command
             }
         }
 
-        if (($user_chats + $group_chats + $super_group_chats) == 0) {
+        if (($user_chats + $group_chats + $super_group_chats) === 0) {
             $text = 'No chats found..';
         } else {
             $text .= "\n" . 'Private Chats: ' . $user_chats;
@@ -109,7 +104,7 @@ class ChatsCommand extends Command
             'chat_id' => $chat_id,
             'text'    => $text,
         ];
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+
+        return Request::sendMessage($data)->isOk();
     }
 }

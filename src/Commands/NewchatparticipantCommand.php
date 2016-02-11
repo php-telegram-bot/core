@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -24,9 +23,7 @@ class NewchatparticipantCommand extends Command
      */
     protected $name = 'Newchatparticipant';
     protected $description = 'New Chat Participant';
-    protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
     /**#@-*/
 
     /**
@@ -36,16 +33,15 @@ class NewchatparticipantCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
         $participant = $message->getNewChatParticipant();
 
-        if (strtolower($participant->getUsername()) == strtolower($this->getTelegram()->getBotName())) {
+        if (strtolower($participant->getUsername()) === strtolower($this->getTelegram()->getBotName())) {
             $text = 'Hi there!';
         } else {
-            $text = 'Hi ' . $participant->tryMention() . ' !';
+            $text = 'Hi ' . $participant->tryMention() . '!';
         }
 
         $data = [
@@ -53,7 +49,6 @@ class NewchatparticipantCommand extends Command
             'text'    => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

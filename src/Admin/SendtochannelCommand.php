@@ -11,9 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 /**
@@ -28,7 +25,6 @@ class SendtochannelCommand extends Command
     protected $description = 'Send message to a channel';
     protected $usage = '/sendchannel <message to send>';
     protected $version = '0.1.0';
-    protected $enabled = true;
     protected $public = true;
     protected $need_mysql = false;
     /**#@-*/
@@ -42,11 +38,9 @@ class SendtochannelCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
         $text = $message->getText(true);
 
         if (empty($text)) {
@@ -72,7 +66,6 @@ class SendtochannelCommand extends Command
             'text'    => $text_back,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

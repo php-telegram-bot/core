@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
 /**
@@ -26,8 +25,6 @@ class StartCommand extends Command
     protected $description = 'Start command';
     protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
-    protected $public = false;
     /**#@-*/
 
     /**
@@ -37,7 +34,6 @@ class StartCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -48,7 +44,6 @@ class StartCommand extends Command
             'text'    => $text,
         ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }

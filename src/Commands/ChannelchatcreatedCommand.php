@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Request;
 
 /**
  * Channel chat created command
@@ -24,9 +22,7 @@ class ChannelchatcreatedCommand extends Command
      */
     protected $name = 'Channelchatcreated';
     protected $description = 'Channel chat created';
-    protected $usage = '/';
     protected $version = '1.0.0';
-    protected $enabled = true;
     /**#@-*/
 
     /**
@@ -36,12 +32,10 @@ class ChannelchatcreatedCommand extends Command
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$channel_chat_created = $message->getChannelChatCreated();
 
-        $channel_chat_created = $message->getChannelChatCreated();
-
-        //Temporary, do nothing
-        return 1;
+        //System command, do nothing
+        return true;
     }
 }
