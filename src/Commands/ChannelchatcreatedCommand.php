@@ -48,7 +48,7 @@ class ChannelchatcreatedCommand extends Command
         //$message = $this->getMessage();
         //$channel_chat_created = $message->getChannelChatCreated();
 
-         //System command, do nothing
+        //System command, do nothing
         return true;
     }
 }

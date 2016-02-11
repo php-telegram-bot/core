@@ -127,7 +127,7 @@ class DateCommand extends Command
 
         $google_api_key = $this->getConfig('google_api_key');
         if (!empty($google_api_key)) {
-            $params.= '&key=' . $google_api_key;
+            $params .= '&key=' . $google_api_key;
         }
 
         $data = $this->request($url . $params);

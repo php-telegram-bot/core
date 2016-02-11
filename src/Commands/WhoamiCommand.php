@@ -75,7 +75,7 @@ class WhoamiCommand extends Command
 
         $caption = 'Your Id: ' . $user_id . "\n";
         $caption .= 'Name: ' . $message->getFrom()->getFirstName()
-             . ' ' . $message->getFrom()->getLastName() . "\n";
+        . ' ' . $message->getFrom()->getLastName() . "\n";
         $caption .= 'Username: ' . $message->getFrom()->getUsername();
 
         //Fetch user profile photo

@@ -117,19 +117,19 @@ class WeatherCommand extends Command
 
             switch (strtolower($decode['weather'][0]['main'])) {
                 case 'clear':
-                    $conditions.= ' ☀';
+                    $conditions .= ' ☀';
                     break;
 
                 case 'clouds':
-                    $conditions.= ' ☁☁';
+                    $conditions .= ' ☁☁';
                     break;
 
                 case 'rain':
-                    $conditions.= ' ☔';
+                    $conditions .= ' ☔';
                     break;
 
                 case 'thunderstorm':
-                    $conditions.= ' ☔☔☔☔';
+                    $conditions .= ' ☔☔☔☔';
                     break;
             }
 
