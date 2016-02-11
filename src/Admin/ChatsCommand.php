@@ -22,54 +22,17 @@ use Longman\TelegramBot\Request;
  */
 class ChatsCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'chats';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'List all chats stored by the bot';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/chats';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is enabled
-     *
-     * @var boolean
-     */
     protected $enabled = true;
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
-
-    /**
-     * If this command needs mysql
-     *
-     * @var boolean
-     */
     protected $need_mysql = false;
+    /**#@-*/
 
     /**
      * Execution if MySQL is required but not available
