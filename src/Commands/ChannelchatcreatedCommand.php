@@ -17,26 +17,13 @@ use Longman\TelegramBot\Command;
  */
 class ChannelchatcreatedCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'Channelchatcreated';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Channel chat created';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command

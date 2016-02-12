@@ -19,26 +19,13 @@ use Longman\TelegramBot\Request;
  */
 class InlinequeryCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'inlinequery';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Reply to inline query';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command

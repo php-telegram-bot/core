@@ -21,40 +21,15 @@ use Longman\TelegramBot\Request;
  */
 class WhoamiCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'whoami';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Show your id, name and username';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/whoami';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
+    /**#@-*/
 
     /**
      * Execute command

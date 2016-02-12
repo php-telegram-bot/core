@@ -18,40 +18,15 @@ use Longman\TelegramBot\Request;
  */
 class WeatherCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'weather';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Show weather by location';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/weather <location>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
+    /**#@-*/
 
     /**
      * Get weather using cURL request

@@ -18,47 +18,16 @@ use Longman\TelegramBot\Request;
  */
 class SendtochannelCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'sendtochannel';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Send message to a channel';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/sendchannel <message to send>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '0.1.0';
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
-
-    /**
-     * If this command needs mysql
-     *
-     * @var boolean
-     */
     protected $need_mysql = false;
+    /**#@-*/
 
     /**
      * Execute command

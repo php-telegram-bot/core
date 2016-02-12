@@ -18,40 +18,15 @@ use Longman\TelegramBot\Request;
  */
 class HelpCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'help';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Show bot commands help';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/help or /help <command>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
+    /**#@-*/
 
     /**
      * Execute command

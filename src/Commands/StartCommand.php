@@ -18,33 +18,14 @@ use Longman\TelegramBot\Request;
  */
 class StartCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'start';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Start command';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command

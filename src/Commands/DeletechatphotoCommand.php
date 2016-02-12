@@ -17,26 +17,13 @@ use Longman\TelegramBot\Command;
  */
 class DeletechatphotoCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'Deletechatphoto';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Delete chat photo';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command

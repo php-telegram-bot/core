@@ -17,26 +17,13 @@ use Longman\TelegramBot\Command;
  */
 class GenericmessageCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'Genericmessage';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Handle generic message';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command

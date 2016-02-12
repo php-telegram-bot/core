@@ -17,26 +17,13 @@ use Longman\TelegramBot\Command;
  */
 class ChoseninlineresultCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'choseninlineresult';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Chosen result query';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command

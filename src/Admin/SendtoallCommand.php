@@ -18,47 +18,16 @@ use Longman\TelegramBot\Request;
  */
 class SendtoallCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'sendtoall';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Send the message to all the user\'s bot';
-
-    /**
-     * Usage
-     *
-     * @var string
-     */
     protected $usage = '/sendall <message to send>';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.2.0';
-
-    /**
-     * If this command is public
-     *
-     * @var boolean
-     */
     protected $public = true;
-
-    /**
-     * If this command needs mysql
-     *
-     * @var boolean
-     */
     protected $need_mysql = true;
+    /**#@-*/
 
     /**
      * Execution if MySQL is required but not available

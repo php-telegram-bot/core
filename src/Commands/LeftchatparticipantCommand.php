@@ -17,26 +17,13 @@ use Longman\TelegramBot\Command;
  */
 class LeftchatparticipantCommand extends Command
 {
-    /**
-     * Name
-     *
-     * @var string
+    /**#@+
+     * {@inheritdoc}
      */
     protected $name = 'leftchatparticipant';
-
-    /**
-     * Description
-     *
-     * @var string
-     */
     protected $description = 'Left Chat Participant';
-
-    /**
-     * Version
-     *
-     * @var string
-     */
     protected $version = '1.0.0';
+    /**#@-*/
 
     /**
      * Execute command
