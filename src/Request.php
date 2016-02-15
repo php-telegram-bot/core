@@ -87,7 +87,7 @@ class Request
         //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
         //Maybe this is not the best possible implementation
 
-        //No value set in $data ie testing setWekhook
+        //No value set in $data ie testing setWebhook
         //Provided $data['chat_id'] ie testing sendMessage
 
         $fake_response['ok'] = true; // :)
