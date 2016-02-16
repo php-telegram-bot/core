@@ -1,31 +1,40 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Request;
 
+/**
+ * User "/help" command
+ */
 class HelpCommand extends Command
 {
+    /**#@+
+     * {@inheritdoc}
+     */
     protected $name = 'help';
     protected $description = 'Show bot commands help';
     protected $usage = '/help or /help <command>';
-    protected $version = '1.0.0';
-    protected $enabled = true;
+    protected $version = '1.0.1';
     protected $public = true;
+    /**#@-*/
 
+    /**
+     * Execute command
+     *
+     * @return boolean
+     */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -67,12 +76,12 @@ class HelpCommand extends Command
             }
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['reply_to_message_id'] = $message_id;
-        $data['text'] = $msg;
+        $data = [
+            'chat_id'             => $chat_id,
+            'reply_to_message_id' => $message_id,
+            'text'                => $msg,
+        ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }
