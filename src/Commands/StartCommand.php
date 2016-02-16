@@ -24,7 +24,7 @@ class StartCommand extends Command
     protected $name = 'start';
     protected $description = 'Start command';
     protected $usage = '/';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

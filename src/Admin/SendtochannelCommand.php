@@ -24,7 +24,7 @@ class SendtochannelCommand extends Command
     protected $name = 'sendtochannel';
     protected $description = 'Send message to a channel';
     protected $usage = '/sendchannel <message to send>';
-    protected $version = '0.1.0';
+    protected $version = '0.1.1';
     protected $public = true;
     protected $need_mysql = false;
     /**#@-*/

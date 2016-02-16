@@ -24,7 +24,7 @@ class SendtoallCommand extends Command
     protected $name = 'sendtoall';
     protected $description = 'Send the message to all the user\'s bot';
     protected $usage = '/sendall <message to send>';
-    protected $version = '1.2.0';
+    protected $version = '1.2.1';
     protected $public = true;
     protected $need_mysql = true;
     /**#@-*/

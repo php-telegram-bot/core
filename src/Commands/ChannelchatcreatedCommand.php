@@ -22,7 +22,7 @@ class ChannelchatcreatedCommand extends Command
      */
     protected $name = 'Channelchatcreated';
     protected $description = 'Channel chat created';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

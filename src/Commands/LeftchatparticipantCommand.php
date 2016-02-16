@@ -22,7 +22,7 @@ class LeftchatparticipantCommand extends Command
      */
     protected $name = 'leftchatparticipant';
     protected $description = 'Left Chat Participant';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

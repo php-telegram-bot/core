@@ -23,7 +23,7 @@ class SupergroupchatcreatedCommand extends Command
      */
     protected $name = 'Supergroupchatcreated';
     protected $description = 'Super group chat created';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

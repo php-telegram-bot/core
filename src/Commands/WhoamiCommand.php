@@ -27,7 +27,7 @@ class WhoamiCommand extends Command
     protected $name = 'whoami';
     protected $description = 'Show your id, name and username';
     protected $usage = '/whoami';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     protected $public = true;
     /**#@-*/
 

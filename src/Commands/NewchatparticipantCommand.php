@@ -23,7 +23,7 @@ class NewchatparticipantCommand extends Command
      */
     protected $name = 'Newchatparticipant';
     protected $description = 'New Chat Participant';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

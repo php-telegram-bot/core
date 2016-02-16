@@ -25,7 +25,7 @@ class DateCommand extends Command
     protected $name = 'date';
     protected $description = 'Show date/time by location';
     protected $usage = '/date <location>';
-    protected $version = '1.2.0';
+    protected $version = '1.2.1';
     protected $public = true;
     /**#@-*/
 

@@ -22,7 +22,7 @@ class ChoseninlineresultCommand extends Command
      */
     protected $name = 'choseninlineresult';
     protected $description = 'Chosen result query';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

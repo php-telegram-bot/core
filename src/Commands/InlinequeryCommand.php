@@ -24,7 +24,7 @@ class InlinequeryCommand extends Command
      */
     protected $name = 'inlinequery';
     protected $description = 'Reply to inline query';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

@@ -24,7 +24,7 @@ class HelpCommand extends Command
     protected $name = 'help';
     protected $description = 'Show bot commands help';
     protected $usage = '/help or /help <command>';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     protected $public = true;
     /**#@-*/
 

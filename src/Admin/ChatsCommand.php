@@ -26,7 +26,7 @@ class ChatsCommand extends Command
     protected $name = 'chats';
     protected $description = 'List all chats stored by the bot';
     protected $usage = '/chats';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     protected $public = true;
     protected $need_mysql = false;
     /**#@-*/

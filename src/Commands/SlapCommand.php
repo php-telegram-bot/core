@@ -24,7 +24,7 @@ class SlapCommand extends Command
     protected $name = 'slap';
     protected $description = 'Slap someone with their username';
     protected $usage = '/slap <@user>';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

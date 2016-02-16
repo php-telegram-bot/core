@@ -23,7 +23,7 @@ class GenericCommand extends Command
      */
     protected $name = 'Generic';
     protected $description = 'Handles generic commands or is executed by default when a command is not found';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

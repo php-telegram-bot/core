@@ -22,7 +22,7 @@ class DeletechatphotoCommand extends Command
      */
     protected $name = 'Deletechatphoto';
     protected $description = 'Delete chat photo';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**

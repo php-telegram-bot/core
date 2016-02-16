@@ -24,7 +24,7 @@ class WeatherCommand extends Command
     protected $name = 'weather';
     protected $description = 'Show weather by location';
     protected $usage = '/weather <location>';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     protected $public = true;
     /**#@-*/
 
@@ -42,14 +42,7 @@ class WeatherCommand extends Command
         $ch = curl_init();
         $curlConfig = [
             CURLOPT_URL            => $url,
-
-            //CURLOPT_POST         => true,
             CURLOPT_RETURNTRANSFER => true,
-
-            //CURLOPT_HTTPHEADER   => ['Content-Type: text/plain'],
-            //CURLOPT_POSTFIELDS   => $data
-            //CURLOPT_VERBOSE      => true,
-            //CURLOPT_HEADER       => true,
         ];
 
         curl_setopt_array($ch, $curlConfig);
