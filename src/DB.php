@@ -509,21 +509,16 @@ class DB
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
         }
-
-        //Insert the new chat user
-        $new_chat_participant = '';
-        if (is_object($new_chat_participant)) {
+        
+        if ($new_chat_participant) {
+            //Insert the new chat user
             self::insertUser($new_chat_participant, $date, $chat);
             $new_chat_participant = $new_chat_participant->getId();
-        }
-
-        //Insert the left chat user
-        $left_chat_participant = '';
-        if (is_object($left_chat_participant)) {
+        } elseif ($left_chat_participant) {
+            //Insert the left chat user
             self::insertUser($left_chat_participant, $date, $chat);
             $left_chat_participant = $left_chat_participant->getId();
         }
-
 
         try {
             //message Table
@@ -604,8 +599,8 @@ class DB
             $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
             $sth->bindParam(':contact', $contact, \PDO::PARAM_STR);
             $sth->bindParam(':location', $location, \PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_participant', $new_chat_paticipant, \PDO::PARAM_INT);
-            $sth->bindParam(':left_chat_participant', $left_chat_paticipant, \PDO::PARAM_INT);
+            $sth->bindParam(':new_chat_participant', $new_chat_participant, \PDO::PARAM_INT);
+            $sth->bindParam(':left_chat_participant', $left_chat_participant, \PDO::PARAM_INT);
             $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
 
             //Array of Photosize
