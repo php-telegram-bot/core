@@ -344,7 +344,13 @@ $telegram->enableMySQL($mysql_credentials, $BOT_NAME . '_');
 
 Consider to use the *utf8mb4* branch if you find some special characters problems.
 You can also store inline query and chosen inline query in the database.
+#### External Database connection
+Is possible to provide to the library an external mysql connection. Here's how to configure it:
 
+```php
+$telegram->enableExternalMySQL($external_pdo_connection)
+//$telegram->enableExternalMySQL($external_pdo_connection, $table_prefix)
+```
 ### Channels Support
 
 All methods implemented can be used to manage channels.
