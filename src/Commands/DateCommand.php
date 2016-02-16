@@ -1,32 +1,55 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 
+/**
+ * User "/date" command
+ */
 class DateCommand extends Command
 {
+    /**#@+
+     * {@inheritdoc}
+     */
     protected $name = 'date';
     protected $description = 'Show date/time by location';
     protected $usage = '/date <location>';
-    protected $version = '1.2.0';
-    protected $enabled = true;
+    protected $version = '1.2.1';
     protected $public = true;
+    /**#@-*/
 
+    /**
+     * Base URL for Google Maps API
+     *
+     * @var string
+     */
     private $base_url = 'https://maps.googleapis.com/maps/api';
+
+    /**
+     * Date format
+     *
+     * @var string
+     */
     private $date_format = 'd-m-Y H:i:s';
 
+    /**
+     * Get coordinates
+     *
+     * @param string $location
+     *
+     * @return array|boolean
+     */
     private function getCoordinates($location)
     {
         $url = $this->base_url . '/geocode/json?';
@@ -56,9 +79,17 @@ class DateCommand extends Command
         $acc = $data['results'][0]['geometry']['location_type'];
         $types = $data['results'][0]['types'];
 
-        return array($lat, $lng, $acc, $types);
+        return [$lat, $lng, $acc, $types];
     }
 
+    /**
+     * Get date
+     *
+     * @param string $lat
+     * @param string $lng
+     *
+     * @return array|boolean
+     */
     private function getDate($lat, $lng)
     {
         $url = $this->base_url . '/timezone/json?';
@@ -71,7 +102,7 @@ class DateCommand extends Command
 
         $google_api_key = $this->getConfig('google_api_key');
         if (!empty($google_api_key)) {
-            $params.= '&key=' . $google_api_key;
+            $params .= '&key=' . $google_api_key;
         }
 
         $data = $this->request($url . $params);
@@ -90,14 +121,22 @@ class DateCommand extends Command
 
         $local_time = $timestamp + $data['rawOffset'] + $data['dstOffset'];
 
-        return array($local_time, $data['timeZoneId']);
+        return [$local_time, $data['timeZoneId']];
     }
 
+    /**
+     * Get formatted date
+     *
+     * @param string $location
+     *
+     * @return string
+     */
     private function getFormattedDate($location)
     {
         if (empty($location)) {
             return 'The time in nowhere is never';
         }
+
         list($lat, $lng, $acc, $types) = $this->getCoordinates($location);
 
         if (empty($lat) || empty($lng)) {
@@ -108,15 +147,20 @@ class DateCommand extends Command
 
         $date_utc = new \DateTime(gmdate('Y-m-d H:i:s', $local_time), new \DateTimeZone($timezone_id));
 
-        $return = 'The local time in ' . $timezone_id . ' is: ' . $date_utc->format($this->date_format) . '';
-
-        return $return;
+        return 'The local time in ' . $timezone_id . ' is: ' . $date_utc->format($this->date_format);
     }
 
+    /**
+     * Perform a simple cURL request
+     *
+     * @param string $url
+     *
+     * @return object
+     */
     private function request($url)
     {
         $ch = curl_init();
-        $curlConfig = array(CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true,);
+        $curlConfig = [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true];
 
         curl_setopt_array($ch, $curlConfig);
         $response = curl_exec($ch);
@@ -130,9 +174,13 @@ class DateCommand extends Command
         return $response;
     }
 
+    /**
+     * Execute command
+     *
+     * @return boolean
+     */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
@@ -150,12 +198,12 @@ class DateCommand extends Command
             }
         }
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['reply_to_message_id'] = $message_id;
-        $data['text'] = $text;
+        $data = [
+            'chat_id'             => $chat_id,
+            'reply_to_message_id' => $message_id,
+            'text'                => $text,
+        ];
 
-        $result = Request::sendMessage($data);
-        return $result->isOk();
+        return Request::sendMessage($data)->isOk();
     }
 }
