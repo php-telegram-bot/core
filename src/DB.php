@@ -511,10 +511,10 @@ class DB
         }
         
         if ($new_chat_participant) {
-            //Insert the new chat user  
+            //Insert the new chat user
             self::insertUser($new_chat_participant, $date, $chat);
             $new_chat_participant = $new_chat_participant->getId();
-        } elseif($left_chat_participant) {
+        } elseif ($left_chat_participant) {
             //Insert the left chat user
             self::insertUser($left_chat_participant, $date, $chat);
             $left_chat_participant = $left_chat_participant->getId();
