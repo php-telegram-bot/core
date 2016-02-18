@@ -8,22 +8,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands\UserCommands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * Start command
  */
-class StartCommand extends UserCommand
+class StartCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
     protected $name = 'start';
     protected $description = 'Start command';
-    protected $usage = '/';
+    protected $usage = '/start';
     protected $version = '1.0.1';
     /**#@-*/
 

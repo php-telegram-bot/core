@@ -10,20 +10,22 @@
 
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Telegram;
-
 /**
  * Abstract System Command Class
  */
 abstract class SystemCommand extends Command
 {
     /**
-     * Constructor
+     * A system command just executes
      *
-     * @param Telegram $telegram
+     * Although system commands should just work and return 'true',
+     * each system command can override this method to add custom functionality.
+     *
+     * @return bool
      */
-    public function __construct(Telegram $telegram)
+    public function execute()
     {
-        parent::__construct($telegram);
+        //System command, do nothing
+        return true;
     }
 }
