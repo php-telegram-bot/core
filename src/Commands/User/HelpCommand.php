@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * User "/help" command
  */
-class HelpCommand extends Command
+class HelpCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -25,7 +25,6 @@ class HelpCommand extends Command
     protected $description = 'Show bot commands help';
     protected $usage = '/help or /help <command>';
     protected $version = '1.0.1';
-    protected $public = true;
     /**#@-*/
 
     /**
@@ -36,8 +35,8 @@ class HelpCommand extends Command
     public function execute()
     {
         $message = $this->getMessage();
-
         $chat_id = $message->getChat()->getId();
+
         $message_id = $message->getMessageId();
         $text = $message->getText(true);
 
@@ -51,9 +50,6 @@ class HelpCommand extends Command
                     if (!$command->isEnabled()) {
                         continue;
                     }
-                    if (!$command->isPublic()) {
-                        continue;
-                    }
 
                     $msg .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
                 }
@@ -64,7 +60,7 @@ class HelpCommand extends Command
             $text = str_replace('/', '', $text);
             if (isset($commands[$text])) {
                 $command = $commands[$text];
-                if (!$command->isEnabled() || !$command->isPublic()) {
+                if (!$command->isEnabled()) {
                     $msg = 'Command ' . $text . ' not found';
                 } else {
                     $msg = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";

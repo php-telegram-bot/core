@@ -8,8 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace Longman\TelegramBot\Commands;
 
+use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
@@ -83,13 +84,6 @@ abstract class Command
     protected $enabled = true;
 
     /**
-     * If this command is public
-     *
-     * @var boolean
-     */
-    protected $public = false;
-
-    /**
      * If this command needs mysql
      *
      * @var boolean
@@ -120,10 +114,12 @@ abstract class Command
      * @param Entities\Update $update
      * @return Command
      */
-    public function setUpdate(Update $update)
+    public function setUpdate(Update $update = null)
     {
-        $this->update = $update;
-        $this->message = $this->update->getMessage();
+        if (!empty($update)) {
+            $this->update = $update;
+            $this->message = $this->update->getMessage();
+        }
         return $this;
     }
 
@@ -134,9 +130,7 @@ abstract class Command
      */
     public function preExecute()
     {
-        if (!$this->need_mysql |
-            $this->need_mysql & $this->telegram->isDbEnabled() & DB::isDbConnected()
-        ) {
+        if (!$this->need_mysql || ($this->telegram->isDbEnabled() && DB::isDbConnected())) {
             return $this->execute();
         }
         return $this->executeNoDB();
@@ -148,13 +142,24 @@ abstract class Command
     abstract public function execute();
 
     /**
-     * This methods is executed if $need_mysql is true
-     * but DB connection for some reason is not avaiable
+     * Execution if MySQL is required but not available
+     *
+     * @return boolean
      */
     public function executeNoDB()
     {
+        //Preparing message
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
 
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
+        ];
+
+        return Request::sendMessage($data)->isOk();
     }
+
 
     /**
      * Get update object
@@ -266,15 +271,5 @@ abstract class Command
     public function isEnabled()
     {
         return $this->enabled;
-    }
-
-    /**
-     * Check if command is public
-     *
-     * @return boolean
-     */
-    public function isPublic()
-    {
-        return $this->public;
     }
 }

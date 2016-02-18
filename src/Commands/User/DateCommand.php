@@ -8,16 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 /**
  * User "/date" command
  */
-class DateCommand extends Command
+class DateCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}

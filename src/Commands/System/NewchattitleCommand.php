@@ -8,20 +8,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Channel chat created command
+ * New chat title command
  */
-class ChannelchatcreatedCommand extends Command
+class NewchattitleCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Channelchatcreated';
-    protected $description = 'Channel chat created';
+    protected $name = 'Newchattitle';
+    protected $description = 'New chat Title';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -33,7 +33,7 @@ class ChannelchatcreatedCommand extends Command
     public function execute()
     {
         //$message = $this->getMessage();
-        //$channel_chat_created = $message->getChannelChatCreated();
+        //$new_chat_title = $message->getNewChatTitle();
 
         //System command, do nothing
         return true;

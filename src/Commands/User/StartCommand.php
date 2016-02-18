@@ -8,24 +8,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * User "/echo" command
+ * Start command
  */
-class EchoCommand extends Command
+class StartCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'echo';
-    protected $description = 'Show text';
-    protected $usage = '/echo <text>';
+    protected $name = 'start';
+    protected $description = 'Start command';
+    protected $usage = '/';
     protected $version = '1.0.1';
-    protected $public = true;
     /**#@-*/
 
     /**
@@ -36,8 +35,9 @@ class EchoCommand extends Command
     public function execute()
     {
         $message = $this->getMessage();
+
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
+        $text = 'Hi there!' . "\n" . 'Type /help to see all commands!';
 
         $data = [
             'chat_id' => $chat_id,

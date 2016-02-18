@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\AdminCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Request;
@@ -18,7 +18,7 @@ use Longman\TelegramBot\Request;
 /**
  * Admin "/chats" command
  */
-class ChatsCommand extends Command
+class ChatsCommand extends AdminCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -27,28 +27,8 @@ class ChatsCommand extends Command
     protected $description = 'List all chats stored by the bot';
     protected $usage = '/chats';
     protected $version = '1.0.1';
-    protected $public = true;
     protected $need_mysql = false;
     /**#@-*/
-
-    /**
-     * Execution if MySQL is required but not available
-     *
-     * @return boolean
-     */
-    public function executeNoDB()
-    {
-        //Preparing message
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
-        ];
-
-        return Request::sendMessage($data)->isOk();
-    }
 
     /**
      * Execute command

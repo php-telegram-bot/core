@@ -8,20 +8,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Chosen inline result command
+ * Group chat created command
  */
-class ChoseninlineresultCommand extends Command
+class GroupchatcreatedCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'choseninlineresult';
-    protected $description = 'Chosen result query';
+    protected $name = 'Groupchatcreated';
+    protected $description = 'Group chat created';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -32,10 +32,8 @@ class ChoseninlineresultCommand extends Command
      */
     public function execute()
     {
-        //Information about chosen result is returned
-        //$update = $this->getUpdate();
-        //$inline_query = $update->getChosenInlineResult();
-        //$query = $inline_query->getQuery();
+        //$message = $this->getMessage();
+        //$group_chat_created = $message->getGroupChatCreated();
 
         //System command, do nothing
         return true;

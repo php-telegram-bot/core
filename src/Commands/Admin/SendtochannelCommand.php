@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\AdminCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * Admin "/sendtochannel" command
  */
-class SendtochannelCommand extends Command
+class SendtochannelCommand extends AdminCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -25,7 +25,6 @@ class SendtochannelCommand extends Command
     protected $description = 'Send message to a channel';
     protected $usage = '/sendchannel <message to send>';
     protected $version = '0.1.1';
-    protected $public = true;
     protected $need_mysql = false;
     /**#@-*/
 

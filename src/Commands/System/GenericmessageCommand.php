@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Generic message command
  */
-class GenericmessageCommand extends Command
+class GenericmessageCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}

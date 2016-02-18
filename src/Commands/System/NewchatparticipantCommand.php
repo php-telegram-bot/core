@@ -8,22 +8,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * New chat participant command
  */
-class StartCommand extends Command
+class NewchatparticipantCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'start';
-    protected $description = 'Start command';
-    protected $usage = '/';
+    protected $name = 'Newchatparticipant';
+    protected $description = 'New Chat Participant';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -37,7 +36,13 @@ class StartCommand extends Command
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text = 'Hi there!' . "\n" . 'Type /help to see all commands!';
+        $participant = $message->getNewChatParticipant();
+
+        if (strtolower($participant->getUsername()) === strtolower($this->getTelegram()->getBotName())) {
+            $text = 'Hi there!';
+        } else {
+            $text = 'Hi ' . $participant->tryMention() . '!';
+        }
 
         $data = [
             'chat_id' => $chat_id,

@@ -10,16 +10,16 @@
  * Written by Marco Boretto <marco.bore@gmail.com>
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Request;
 
 /**
  * User "/whoami" command
  */
-class WhoamiCommand extends Command
+class WhoamiCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}

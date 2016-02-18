@@ -8,28 +8,26 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * Generic command
+ * Super group chat created command
  */
-class GenericCommand extends Command
+class SupergroupchatcreatedCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Generic';
-    protected $description = 'Handles generic commands or is executed by default when a command is not found';
+    protected $name = 'Supergroupchatcreated';
+    protected $description = 'Super group chat created';
     protected $version = '1.0.1';
     /**#@-*/
 
     /**
      * Execute command
-     *
-     * @todo This can't be right, as it always returns "Command: xyz not found.. :("
      *
      * @return boolean
      */
@@ -37,13 +35,17 @@ class GenericCommand extends Command
     {
         $message = $this->getMessage();
 
-        //You can use $command as param
-        $command = $message->getCommand();
         $chat_id = $message->getChat()->getId();
+        $text = '';
+
+        if ($message->getSuperGroupChatCreated()) {
+            $text = 'Your group has become a Supergroup!' . "\n";
+            $text .= 'Chat id has changed from ' . $message->getMigrateFromChatId() . ' to ' . $message->getMigrateToChatId();
+        }
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => 'Command: ' . $command . ' not found.. :(',
+            'text'    => $text,
         ];
 
         return Request::sendMessage($data)->isOk();

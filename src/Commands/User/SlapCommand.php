@@ -8,21 +8,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * New chat participant command
+ * User "/slap" command
  */
-class NewchatparticipantCommand extends Command
+class SlapCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Newchatparticipant';
-    protected $description = 'New Chat Participant';
+    protected $name = 'slap';
+    protected $description = 'Slap someone with their username';
+    protected $usage = '/slap <@user>';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -36,12 +37,17 @@ class NewchatparticipantCommand extends Command
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $participant = $message->getNewChatParticipant();
+        $message_id = $message->getMessageId();
+        $text = $message->getText(true);
 
-        if (strtolower($participant->getUsername()) === strtolower($this->getTelegram()->getBotName())) {
-            $text = 'Hi there!';
+        $sender = '@' . $message->getFrom()->getUsername();
+
+        //username validation
+        $test = preg_match('/@[\w_]{5,}/', $text);
+        if ($test === 0) {
+            $text = $sender . ' sorry no one to slap around..';
         } else {
-            $text = 'Hi ' . $participant->tryMention() . '!';
+            $text = $sender . ' slaps ' . $text . ' around a bit with a large trout';
         }
 
         $data = [

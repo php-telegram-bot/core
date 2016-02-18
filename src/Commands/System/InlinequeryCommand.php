@@ -8,16 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\InlineQueryResultArticle;
 use Longman\TelegramBot\Request;
 
 /**
  * Inline query command
  */
-class InlinequeryCommand extends Command
+class InlinequeryCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}

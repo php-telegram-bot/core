@@ -8,45 +8,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\AdminCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * Admin "/sendtoall" command
  */
-class SendtoallCommand extends Command
+class SendtoallCommand extends AdminCommand
 {
     /**#@+
      * {@inheritdoc}
      */
     protected $name = 'sendtoall';
     protected $description = 'Send the message to all the user\'s bot';
-    protected $usage = '/sendall <message to send>';
+    protected $usage = '/sendtoall <message to send>';
     protected $version = '1.2.1';
-    protected $public = true;
     protected $need_mysql = true;
     /**#@-*/
-
-    /**
-     * Execution if MySQL is required but not available
-     *
-     * @return boolean
-     */
-    public function executeNoDB()
-    {
-        //Preparing message
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
-        ];
-
-        return Request::sendMessage($data)->isOk();
-    }
 
     /**
      * Execute command
@@ -60,9 +40,10 @@ class SendtoallCommand extends Command
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
+        $text = $message->getText(true);
 
         if (empty($text)) {
-            $text = 'Write the message to send: /sendall <message>';
+            $text = 'Write the message to send: /sendtoall <message>';
         } else {
             $results = Request::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
@@ -103,9 +84,10 @@ class SendtoallCommand extends Command
                 $text .= $tot . ') ' . $status . ' ' . $type . ' ' . $name . "\n";
             }
             $text .= 'Delivered: ' . ($tot - $fail) . '/' . $tot . "\n";
-        }
-        if ($tot === 0) {
-            $text = 'No users or chats found..';
+
+            if ($tot === 0) {
+                $text = 'No users or chats found..';
+            }
         }
 
         $data = [

@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * User "/weather" command
  */
-class WeatherCommand extends Command
+class WeatherCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}

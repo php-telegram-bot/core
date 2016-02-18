@@ -8,20 +8,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Group chat created command
+ * Delete chat photo command
  */
-class GroupchatcreatedCommand extends Command
+class DeletechatphotoCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Groupchatcreated';
-    protected $description = 'Group chat created';
+    protected $name = 'Deletechatphoto';
+    protected $description = 'Delete chat photo';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -33,7 +33,7 @@ class GroupchatcreatedCommand extends Command
     public function execute()
     {
         //$message = $this->getMessage();
-        //$group_chat_created = $message->getGroupChatCreated();
+        //$delete_chat_photo = $message->getDeleteChatPhoto();
 
         //System command, do nothing
         return true;
