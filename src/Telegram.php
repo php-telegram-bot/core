@@ -10,7 +10,8 @@
 
 namespace Longman\TelegramBot;
 
-define('BASE_PATH', dirname(__FILE__));
+define('BASE_PATH', __DIR__);
+define('BASE_COMMANDS_PATH', BASE_PATH . '/Commands');
 
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -144,13 +145,6 @@ class Telegram
     protected $admins_list = [];
 
     /**
-     * Admin
-     *
-     * @var boolean
-     */
-    protected $admin_enabled = false;
-
-    /**
      * Constructor
      *
      * @param string $api_key
@@ -168,9 +162,13 @@ class Telegram
 
         $this->api_key = $api_key;
         $this->bot_name = $bot_name;
+
         //Set default download and upload dir
         $this->setDownloadPath(BASE_PATH . '/../Download');
         $this->setUploadPath(BASE_PATH . '/../Upload');
+
+        //Add default system commands path
+        $this->addCommandsPath(BASE_COMMANDS_PATH . '/System');
 
         Request::initialize($this);
     }
@@ -196,44 +194,89 @@ class Telegram
     {
         $commands = [];
 
-        try {
-            $files = new \DirectoryIterator(BASE_PATH . '/Commands');
-        } catch (\Exception $e) {
-            throw new TelegramException('Can not open path: ' . BASE_PATH . '/Commands');
-        }
+        foreach ($this->commands_dir as $dir) {
+            try {
+                //Get all "*Command.php" files (except the "Abstract*" one)
+                $files = new \RegexIterator(
+                    new \RecursiveIteratorIterator(
+                        new \RecursiveDirectoryIterator($dir)
+                    ),
+                    //'/^(?!Abstract).+Command.php$/'
+                    '/^.+Command.php$/'
+                );
 
-        foreach ($files as $fileInfo) {
-            if ($fileInfo->isDot()) {
-                continue;
-            }
-            $name = $fileInfo->getFilename();
+                foreach ($files as $file) {
+                    //Remove "Command.php" from filename
+                    $command = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
+                    $command_name = strtolower($command);
 
-            if (substr($name, -11, 11) === 'Command.php') {
-                $name = strtolower(str_replace('Command.php', '', $name));
-                $commands[$name] = $this->getCommandClass($name);
-            }
-        }
-
-        if (!empty($this->commands_dir)) {
-            foreach ($this->commands_dir as $dir) {
-                if (!is_dir($dir)) {
-                    continue;
-                }
-
-                foreach (new \DirectoryIterator($dir) as $fileInfo) {
-                    if ($fileInfo->isDot()) {
+                    if (array_key_exists($command_name, $commands)) {
                         continue;
                     }
-                    $name = $fileInfo->getFilename();
-                    if (substr($name, -11, 11) === 'Command.php') {
-                        $name = strtolower(str_replace('Command.php', '', $name));
-                        $commands[$name] = $this->getCommandClass($name);
+
+                    require_once $file->getPathname();
+
+                    $command_obj = $this->getCommandObject($command);
+                    if ($command_obj && (
+                            $command_obj instanceof Commands\AdminCommand ||
+                            $command_obj instanceof Commands\UserCommand
+                        )
+                    ) {
+                        $commands[$command_name] = $command_obj;
                     }
                 }
+
+                /*foreach (new \DirectoryIterator($dir) as $file) {
+                    if ($file->isDot()) {
+                        continue;
+                    }
+
+                    $filename = $file->getFilename();
+                    if (substr($filename, -11) === 'Command.php') {
+                        $command = $this->sanitizeCommand(substr($filename, 0, -11));
+
+                        require_once $file->getPathname();
+
+                        $command_obj = $this->getCommandObject($command);
+
+                        if (!$command_obj) {
+                            continue;
+                        }
+
+                        if (!empty($update)) {
+                            $command_obj->setUpdate($update);
+                        }
+
+                        $commands[strtolower($command)] = $command_obj;
+                    }
+                }
+                */
+            } catch (\Exception $e) {
+                throw new TelegramException('Error getting commands from path: ' . $dir);
             }
         }
 
         return $commands;
+    }
+
+    /**
+     * Get an object instance of the passed command
+     *
+     * @param string $command
+     * @param Entities\Update $update
+     *
+     * @return bool|Entities\Command
+     */
+    public function getCommandObject($command, Update $update = null)
+    {
+        foreach (['System', 'Admin', 'User'] as $auth) {
+            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . ucfirst($command) . 'Command';
+            if (class_exists($command_namespace)) {
+                return (new $command_namespace($this))->setUpdate($update);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -244,7 +287,7 @@ class Telegram
      *
      * @param bool $log_requests
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setLogRequests($log_requests)
     {
@@ -393,9 +436,13 @@ class Telegram
         if (empty($post)) {
             throw new TelegramException('Invalid JSON!');
         }
-
         $update = new Update($post, $this->bot_name);
         return $this->processUpdate($update);
+    }
+
+    private function getCommandFromType($type)
+    {
+        return ucfirst(str_replace('_', '', $type));
     }
 
     /**
@@ -407,82 +454,44 @@ class Telegram
     public function processUpdate(Update $update)
     {
         $update_type = $update->getUpdateType();
-        if ($update_type == 'message') {
-            //Load admin Commands
-            if ($this->admin_enabled) {
-                $message = $update->getMessage();
 
-                //Admin command avaiable in any chats
-                //$from = $message->getFrom();
-                //$user_id = $from->getId();
+        //If all else fails, it's a generic message.
+        $command = 'genericmessage';
 
-                //Admin command avaiable only in single chat with the bot
-                $chat = $message->getChat();
-                $user_id = $chat->getId();
-
-                if (in_array($user_id, $this->admins_list)) {
-                    $this->addCommandsPath(BASE_PATH . '/Admin');
-                }
-            }
-
-            // check type
+        if (in_array($update_type, ['inline_query', 'chosen_inline_result'])) {
+            $command = $this->getCommandFromType($update_type);
+        } elseif ($update_type === 'message') {
             $message = $update->getMessage();
-            $type = $message->getType();
 
-            switch ($type) {
-                default:
-                case 'Message':
-                case 'Photo':
-                case 'Audio':
-                case 'Document':
-                case 'Sticker':
-                case 'Video':
-                case 'Voice':
-                case 'Location':
-                    $command = 'Genericmessage';
-                    break;
-                case 'command':
-                    // execute command
-                    $command = $message->getCommand();
-                    break;
-                case 'new_chat_participant':
-                    // trigger new participant
-                    $command = 'Newchatparticipant';
-                    break;
-                case 'left_chat_participant':
-                    // trigger left chat participant
-                    $command = 'Leftchatparticipant';
-                    break;
-                case 'new_chat_title':
-                    // trigger new_chat_title
-                    $command = 'Newchattitle';
-                    break;
-                case 'delete_chat_photo':
-                    // trigger delete_chat_photo
-                    $command = 'Deletechatphoto';
-                    break;
-                case 'group_chat_created':
-                    // trigger group_chat_created
-                    $command = 'Groupchatcreated';
-                    break;
-                case 'supergroup_chat_created':
-                    // trigger super_group_chat_created
-                    $command = 'Supergroupchatcreated';
-                    break;
-                case 'channel_chat_created':
-                    // trigger channel_chat_created
-                    $command = 'Channelchatcreated';
-                    break;
+            //Load admin commands
+            if ($this->isAdmin($message->getFrom()->getId())) {
+                $this->addCommandsPath(BASE_COMMANDS_PATH . '/Admin', false);
             }
-        } elseif ($update_type == 'inline_query') {
-             $command = 'Inlinequery';
-        } elseif ($update_type == 'chosen_inline_result') {
-             $command = 'Choseninlineresult';
+
+            $this->addCommandsPath(BASE_COMMANDS_PATH . '/User', false);
+
+            $type = $message->getType();
+            if ($type === 'command') {
+                $command = $message->getCommand();
+            } elseif (in_array($type, [
+                'channel_chat_created',
+                'delete_chat_photo',
+                'group_chat_created',
+                'left_chat_participant',
+                'new_chat_participant',
+                'new_chat_title',
+                'supergroup_chat_created',
+            ])) {
+                $command = $this->getCommandFromType($type);
+            }
         }
 
+        //Make sure we have an up-to-date command list
+        $this->getCommandsList();
+
         DB::insertRequest($update);
-        $result = $this->executeCommand($command, $update);
-        return $result;
+
+        return $this->executeCommand($command, $update);
     }
 
     /**
@@ -495,78 +504,28 @@ class Telegram
      */
     public function executeCommand($command, Update $update)
     {
-        $class = $this->getCommandClass($command, $update);
+        $command_obj = $this->getCommandObject($command, $update);
 
-        if (!$class) {
+        if (!$command_obj) {
             //handle a generic command or non existing one
             return $this->executeCommand('Generic', $update);
         }
 
-        if (!$class->isEnabled()) {
+        if (!$command_obj->isEnabled()) {
             return false;
         }
 
         //execute() methods will be execute after preexecute() methods
         //this for prevent to execute db query without connection
-        return $class->preExecute();
-    }
-
-    /**
-     * Get command class
-     *
-     * @todo check return
-     *
-     * @param string                                              $command
-     * @param \Longman\TelegramBot\Entities\ServerResponse|null   $update
-     *
-     * @return object
-     */
-    public function getCommandClass($command, Update $update = null)
-    {
-        $this->commands_dir = array_unique($this->commands_dir);
-        $this->commands_dir = array_reverse($this->commands_dir);
-
-        $command = $this->sanitizeCommand($command);
-        $class_name = ucfirst($command) . 'Command';
-        $class_name_space = __NAMESPACE__ . '\\Commands\\' . $class_name;
-
-        foreach ($this->commands_dir as $dir) {
-            if (is_file($dir . '/' . $class_name . '.php')) {
-                require_once($dir . '/' . $class_name . '.php');
-                if (!class_exists($class_name_space)) {
-                    continue;
-                }
-                $class = new $class_name_space($this);
-
-                if (!empty($update)) {
-                    $class->setUpdate($update);
-                }
-
-                return $class;
-            }
-        }
-
-        if (class_exists($class_name_space)) {
-            $class = new $class_name_space($this);
-            if (!empty($update)) {
-                $class->setUpdate($update);
-            }
-
-            if (is_object($class)) {
-                return $class;
-            }
-        }
-
-        return false;
+        return $command_obj->preExecute();
     }
 
     /**
      * @todo Complete DocBlock
      */
-    protected function sanitizeCommand($string, $capitalizeFirstCharacter = false)
+    protected function sanitizeCommand($command)
     {
-        $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
-        return $str;
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $command)));
     }
 
     /**
@@ -586,9 +545,29 @@ class Telegram
             }
         }
 
-        $this->admin_enabled = true;
-
         return $this;
+    }
+
+    /**
+     * Get list of admins
+     *
+     * @return array
+     */
+    public function getAdminList()
+    {
+        return $this->admins_list;
+    }
+
+    /**
+     * Check if the passed user is an admin
+     *
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function isAdmin($user_id)
+    {
+        return in_array($user_id, $this->admins_list);
     }
 
     /**
@@ -612,12 +591,18 @@ class Telegram
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function addCommandsPath($folder)
+    public function addCommandsPath($folder, $before = true)
     {
         if (!is_dir($folder)) {
-            throw new TelegramException('Commands folder not exists!');
+            throw new TelegramException('Commands folder does not exist!');
         }
-        $this->commands_dir[] = $folder;
+        if (!in_array($folder, $this->commands_dir)) {
+            if ($before) {
+                array_unshift($this->commands_dir, $folder);
+            } else {
+                array_push($this->commands_dir, $folder);
+            }
+        }
         return $this;
     }
 
@@ -779,15 +764,5 @@ class Telegram
     public function getMessageTypes()
     {
         return $this->message_types;
-    }
-
-    /**
-     * Get list of admins
-     *
-     * @return array
-     */
-    public function getAdminList()
-    {
-        return $this->admins_list;
     }
 }
