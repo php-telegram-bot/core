@@ -136,3 +136,25 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
+CREATE TABLE IF NOT EXISTS `track` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Row unique id',
+  `user_id` bigint NULL DEFAULT NULL COMMENT 'User id',
+  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Telegram chat_id can be a the user id or the chat id ',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 track is active 0 track has been deactivated',
+  `track_command` varchar(160) DEFAULT '' COMMENT 'Default Command to execute',
+  `track_name` varchar(160) NOT NULL DEFAULT '' COMMENT 'Name of the track can be the command name or a generic name for tracking between multiple commands',
+  `data` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+
+  PRIMARY KEY (`id`), 
+  KEY `user_id` (`user_id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `is_active` (`is_active`),
+  KEY `track_name` (`track_name`), 
+
+  FOREIGN KEY (`user_id`)
+  REFERENCES `user` (`id`),
+  FOREIGN KEY (`chat_id`)
+  REFERENCES `chat` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
