@@ -168,7 +168,7 @@ class Telegram
         $this->setUploadPath(BASE_PATH . '/../Upload');
 
         //Add default system commands path
-        $this->addCommandsPath(BASE_COMMANDS_PATH . '/System');
+        $this->addCommandsPath(BASE_COMMANDS_PATH . '/SystemCommands');
 
         Request::initialize($this);
     }
@@ -465,10 +465,10 @@ class Telegram
 
             //Load admin commands
             if ($this->isAdmin($message->getFrom()->getId())) {
-                $this->addCommandsPath(BASE_COMMANDS_PATH . '/Admin', false);
+                $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
             }
 
-            $this->addCommandsPath(BASE_COMMANDS_PATH . '/User', false);
+            $this->addCommandsPath(BASE_COMMANDS_PATH . '/UserCommands', false);
 
             $type = $message->getType();
             if ($type === 'command') {
