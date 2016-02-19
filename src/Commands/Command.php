@@ -185,21 +185,21 @@ abstract class Command
     /**
      * Get command config
      *
-     * Look for parameter $name if found return it, if not return null.
-     * If $name is not set return the all set params
+     * Look for config $name if found return it, if not return null.
+     * If $name is not set return all set config.
      *
      * @param string|null $name
      * @return mixed
      */
     public function getConfig($name = null)
     {
+        if ($name === null) {
+            return $this->config;
+        }
         if (isset($this->config[$name])) {
             return $this->config[$name];
-        } else {
-            return null;
         }
-
-        return $this->config;
+        return null;
     }
 
     /**
