@@ -182,6 +182,7 @@ class Telegram
     public function enableMySQL(array $credential, $table_prefix = null)
     {
         $this->pdo = DB::initialize($credential, $this, $table_prefix);
+        TrackingDB::initializeTracking();
         $this->mysql_enabled = true;
     }
 

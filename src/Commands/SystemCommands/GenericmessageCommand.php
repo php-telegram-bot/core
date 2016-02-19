@@ -10,6 +10,7 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
+use Longman\TelegramBot\Tracking;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
@@ -23,7 +24,19 @@ class GenericmessageCommand extends SystemCommand
     protected $name = 'Genericmessage';
     protected $description = 'Handle generic message';
     protected $version = '1.0.1';
+    protected $need_mysql = true;
     /**#@-*/
+
+    /**
+     * Execution if MySQL is required but not available
+     *
+     * @return boolean
+     */
+    public function executeNoDB()
+    {
+        //Do nothing
+        return true;
+    }
 
     /**
      * Execute command
@@ -32,7 +45,15 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        //System command, do nothing
+        //System command, fetch command to execute if track exist
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+        $user_id = $message->getFrom()->getId();
+        //Fetch Track if exist
+        $command = (new Tracking($user_id, $chat_id))->getTrackCommand();
+        if (! is_null($command)) {
+            return $this->telegram->executeCommand($command, $this->update);
+        }
         return true;
     }
 }

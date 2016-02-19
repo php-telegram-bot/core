@@ -161,7 +161,6 @@ abstract class Command
         return Request::sendMessage($data)->isOk();
     }
 
-
     /**
      * Get update object
      *
