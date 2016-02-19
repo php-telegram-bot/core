@@ -16,7 +16,7 @@ use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 
 /**
- * Class Command
+ * Abstract Command Class
  */
 abstract class Command
 {
