@@ -54,11 +54,11 @@ class Telegram
     protected $input;
 
     /**
-     * Custom commands folder
+     * Custom commands paths
      *
      * @var array
      */
-    protected $commands_dir = [];
+    protected $commands_paths = [];
 
     /**
      * Row custom update (json)
@@ -163,7 +163,7 @@ class Telegram
         $this->api_key = $api_key;
         $this->bot_name = $bot_name;
 
-        //Set default download and upload dir
+        //Set default download and upload path
         $this->setDownloadPath(BASE_PATH . '/../Download');
         $this->setUploadPath(BASE_PATH . '/../Upload');
 
@@ -194,12 +194,12 @@ class Telegram
     {
         $commands = [];
 
-        foreach ($this->commands_dir as $dir) {
+        foreach ($this->commands_paths as $path) {
             try {
                 //Get all "*Command.php" files
                 $files = new \RegexIterator(
                     new \RecursiveIteratorIterator(
-                        new \RecursiveDirectoryIterator($dir)
+                        new \RecursiveDirectoryIterator($path)
                     ),
                     '/^.+Command.php$/'
                 );
@@ -251,7 +251,7 @@ class Telegram
                 }
                 */
             } catch (\Exception $e) {
-                throw new TelegramException('Error getting commands from path: ' . $dir);
+                throw new TelegramException('Error getting commands from path: ' . $path);
             }
         }
 
@@ -507,8 +507,8 @@ class Telegram
     /**
      * Execute /command
      *
-     * @param string                                         $command
-     * @param \Longman\TelegramBot\Entities\ServerResponse   $update
+     * @param string                               $command
+     * @param \Longman\TelegramBot\Entities\Update $update
      *
      * @return mixed
      */
@@ -597,20 +597,21 @@ class Telegram
     /**
      * Add custom commands path
      *
-     * @param string $folder Custom commands path
+     * @param string $path   Custom commands path
+     * @param bool   $before If the path should be prepended or appended to the list
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function addCommandsPath($folder, $before = true)
+    public function addCommandsPath($path, $before = true)
     {
-        if (!is_dir($folder)) {
-            throw new TelegramException('Commands folder "' . $folder . '" does not exist!');
+        if (!is_dir($path)) {
+            throw new TelegramException('Commands path "' . $path . '" does not exist!');
         }
-        if (!in_array($folder, $this->commands_dir)) {
+        if (!in_array($path, $this->commands_paths)) {
             if ($before) {
-                array_unshift($this->commands_dir, $folder);
+                array_unshift($this->commands_paths, $path);
             } else {
-                array_push($this->commands_dir, $folder);
+                array_push($this->commands_paths, $path);
             }
         }
         return $this;
@@ -619,13 +620,13 @@ class Telegram
     /**
      * Set custom upload path
      *
-     * @param string $folder Custom upload path
+     * @param string $path Custom upload path
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function setUploadPath($folder)
+    public function setUploadPath($path)
     {
-        $this->upload_path = $folder;
+        $this->upload_path = $path;
         return $this;
     }
 
@@ -642,13 +643,13 @@ class Telegram
     /**
      * Set custom download path
      *
-     * @param string $folder Custom download path
+     * @param string $path Custom download path
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function setDownloadPath($folder)
+    public function setDownloadPath($path)
     {
-        $this->download_path = $folder;
+        $this->download_path = $path;
         return $this;
     }
 
@@ -669,24 +670,23 @@ class Telegram
      * For example you can add the channel name at the command /sendtochannel
      * Or you can add the api key for external service.
      *
-     *
-     * @param string  $command
-     * @param array   $array
+     * @param string $command
+     * @param array  $config
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function setCommandConfig($command, array $array)
+    public function setCommandConfig($command, array $config)
     {
-        $this->commands_config[$command] = $array;
+        $this->commands_config[$command] = $config;
         return $this;
     }
 
     /**
      * Get command config
      *
-     * @param string  $command
+     * @param string $command
      *
-     * @return object
+     * @return array
      */
     public function getCommandConfig($command)
     {
