@@ -10,20 +10,10 @@
 
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Telegram;
-
 /**
  * Abstract Admin Command Class
  */
 abstract class AdminCommand extends Command
 {
-    /**
-     * Constructor
-     *
-     * @param Telegram $telegram
-     */
-    public function __construct(Telegram $telegram)
-    {
-        parent::__construct($telegram);
-    }
+
 }
