@@ -196,12 +196,11 @@ class Telegram
 
         foreach ($this->commands_dir as $dir) {
             try {
-                //Get all "*Command.php" files (except the "Abstract*" one)
+                //Get all "*Command.php" files
                 $files = new \RegexIterator(
                     new \RecursiveIteratorIterator(
                         new \RecursiveDirectoryIterator($dir)
                     ),
-                    //'/^(?!Abstract).+Command.php$/'
                     '/^.+Command.php$/'
                 );
 
@@ -424,11 +423,15 @@ class Telegram
      * instead the latter return if the command has failed or not (true|false).
      * We shoud use the same convention for both.
      *
+     * @param string $custom_json Allow custom JSON string to be passed for testing
+     *
      * @return bool
      */
-    public function handle()
+    public function handle($custom_json = null)
     {
-        $this->input = Request::getInput();
+        //If a custom JSON string is passed, that gets priority
+        $this->input = $custom_json ?: Request::getInput();
+
         if (empty($this->input)) {
             throw new TelegramException('Input is empty!');
         }
@@ -440,6 +443,13 @@ class Telegram
         return $this->processUpdate($update);
     }
 
+    /**
+     * Get the command name from the command type
+     *
+     * @param string $type
+     *
+     * @return string
+     */
     private function getCommandFromType($type)
     {
         return ucfirst(str_replace('_', '', $type));
@@ -594,7 +604,7 @@ class Telegram
     public function addCommandsPath($folder, $before = true)
     {
         if (!is_dir($folder)) {
-            throw new TelegramException('Commands folder does not exist!');
+            throw new TelegramException('Commands folder "' . $folder . '" does not exist!');
         }
         if (!in_array($folder, $this->commands_dir)) {
             if ($before) {
