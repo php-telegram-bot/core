@@ -38,44 +38,38 @@ class HelpCommand extends UserCommand
         $chat_id = $message->getChat()->getId();
 
         $message_id = $message->getMessageId();
-        $text = $message->getText(true);
+        $command = trim($message->getText(true));
 
-        $commands = $this->telegram->getCommandsList();
+        //Only get enabled Admin and User commands
+        $commands = array_filter($this->telegram->getCommandsList(), function ($command) {
+            return (!$command->isSystemCommand() && $command->isEnabled());
+        });
 
-        if (empty($text)) {
-            $msg = $this->telegram->getBotName() . ' v. ' . $this->telegram->getVersion() . "\n\n";
-            $msg .= 'Commands List:' . "\n";
+        //If no command parameter is passed, show the list
+        if ($command === '') {
+            $text = $this->telegram->getBotName() . ' v. ' . $this->telegram->getVersion() . "\n\n";
+            $text .= 'Commands List:' . "\n";
             foreach ($commands as $command) {
-                if (is_object($command)) {
-                    if (!$command->isEnabled()) {
-                        continue;
-                    }
-
-                    $msg .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
-                }
+                $text .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
             }
 
-            $msg .= "\n" . 'For exact command help type: /help <command>';
+            $text .= "\n" . 'For exact command help type: /help <command>';
         } else {
-            $text = str_replace('/', '', $text);
-            if (isset($commands[$text])) {
-                $command = $commands[$text];
-                if (!$command->isEnabled()) {
-                    $msg = 'Command ' . $text . ' not found';
-                } else {
-                    $msg = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
-                    $msg .= 'Description: ' . $command->getDescription() . "\n";
-                    $msg .= 'Usage: ' . $command->getUsage();
-                }
+            $command = str_replace('/', '', $command);
+            if (isset($commands[$command])) {
+                $command = $commands[$command];
+                $text = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
+                $text .= 'Description: ' . $command->getDescription() . "\n";
+                $text .= 'Usage: ' . $command->getUsage();
             } else {
-                $msg = 'Command ' . $text . ' not found';
+                $text = 'No help available: Command /' . $command . ' not found';
             }
         }
 
         $data = [
             'chat_id'             => $chat_id,
             'reply_to_message_id' => $message_id,
-            'text'                => $msg,
+            'text'                => $text,
         ];
 
         return Request::sendMessage($data)->isOk();
