@@ -94,11 +94,13 @@ abstract class Command
     /**
      * Constructor
      *
-     * @param Telegram $telegram
+     * @param Telegram        $telegram
+     * @param Entities\Update $update
      */
-    public function __construct(Telegram $telegram)
+    public function __construct(Telegram $telegram, Update $update = null)
     {
         $this->telegram = $telegram;
+        $this->setUpdate($update);
         $this->config = $telegram->getCommandConfig($this->name);
     }
 

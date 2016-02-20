@@ -230,7 +230,7 @@ class Telegram
         foreach ($which as $auth) {
             $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . ucfirst($command) . 'Command';
             if (class_exists($command_namespace)) {
-                return (new $command_namespace($this))->setUpdate($this->update);
+                return new $command_namespace($this, $this->update);
             }
         }
 
