@@ -164,11 +164,14 @@ class Telegram
      *
      * @param array $credential
      * @param string $table_prefix
+     *
+     * @return Telegram
      */
     public function enableMySQL(array $credential, $table_prefix = null)
     {
         $this->pdo = DB::initialize($credential, $this, $table_prefix);
         $this->mysql_enabled = true;
+        return $this;
     }
 
     /**
