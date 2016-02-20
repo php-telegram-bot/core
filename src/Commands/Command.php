@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Update;
@@ -126,10 +127,10 @@ abstract class Command
      */
     public function preExecute()
     {
-        if (!$this->need_mysql || ($this->telegram->isDbEnabled() && DB::isDbConnected())) {
-            return $this->execute();
+        if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
+            return $this->executeNoDB();
         }
-        return $this->executeNoDB();
+        return $this->execute();
     }
 
     /**
