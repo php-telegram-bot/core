@@ -178,7 +178,7 @@ abstract class Command
     /**
      * Get command config
      *
-     * Look for config $name if found return it, if not return empty array.
+     * Look for config $name if found return it, if not return null.
      * If $name is not set return all set config.
      *
      * @param string|null $name
@@ -193,7 +193,7 @@ abstract class Command
         if (isset($this->config[$name])) {
             return $this->config[$name];
         }
-        return [];
+        return null;
     }
 
     /**

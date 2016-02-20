@@ -191,6 +191,6 @@ class CommandTest extends TestCase
         $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig(null));
         $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig());
         $this->assertEquals('config_value', $this->command_stub_with_config->getConfig('config_key'));
-        $this->assertEquals([], $this->command_stub_with_config->getConfig('not_config_key'));
+        $this->assertEquals(null, $this->command_stub_with_config->getConfig('not_config_key'));
     }
 }
