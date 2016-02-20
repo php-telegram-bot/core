@@ -66,6 +66,8 @@ class CommandTest extends TestCase
                 $this->getMockForAbstractClass($this->command_namespace, $param);
             } catch (\Exception $e) {
                 $this->assertContains($error_message, $e->getMessage());
+            } catch (\Throwable $e) { //For PHP7
+                $this->assertContains($error_message, $e->getMessage());
             }
         }
     }
