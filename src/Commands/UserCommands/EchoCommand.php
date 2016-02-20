@@ -36,7 +36,11 @@ class EchoCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
+        $text = trim($message->getText(true));
+
+        if ($text === '') {
+            $text = 'Command usage: ' . $this->getUsage();
+        }
 
         $data = [
             'chat_id' => $chat_id,
