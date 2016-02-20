@@ -100,7 +100,7 @@ class Telegram
      *
      * @var int
      */
-    protected $log_verbosity;
+    protected $log_verbosity = 1;
 
     /**
      * MySQL integration
@@ -260,8 +260,6 @@ class Telegram
     public function setLogRequests($log_requests)
     {
         $this->log_requests = $log_requests;
-        //Set default log verbosity
-        $this->log_verbosity = 1;
         return $this;
     }
 
@@ -485,6 +483,11 @@ class Telegram
         $command_obj = $this->getCommandObject($command);
 
         if (!$command_obj || !$command_obj->isEnabled()) {
+            //Failsafe in case the Generic command can't be found
+            if ($command === 'Generic') {
+                throw new TelegramException('Generic command missing!');
+            }
+
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('Generic');
         } else {
