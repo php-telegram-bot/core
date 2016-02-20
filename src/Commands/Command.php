@@ -43,13 +43,6 @@ abstract class Command
     protected $message;
 
     /**
-     * Command
-     *
-     * @var string
-     */
-    protected $command;
-
-    /**
      * Name
      *
      * @var string
@@ -61,7 +54,7 @@ abstract class Command
      *
      * @var string
      */
-    protected $description = 'Command help';
+    protected $description = 'Command description';
 
     /**
      * Usage
@@ -96,7 +89,7 @@ abstract class Command
      *
      * @var array
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * Constructor
@@ -185,10 +178,11 @@ abstract class Command
     /**
      * Get command config
      *
-     * Look for config $name if found return it, if not return null.
+     * Look for config $name if found return it, if not return empty array.
      * If $name is not set return all set config.
      *
      * @param string|null $name
+     *
      * @return mixed
      */
     public function getConfig($name = null)
@@ -199,7 +193,7 @@ abstract class Command
         if (isset($this->config[$name])) {
             return $this->config[$name];
         }
-        return null;
+        return [];
     }
 
     /**
@@ -210,18 +204,6 @@ abstract class Command
     public function getTelegram()
     {
         return $this->telegram;
-    }
-
-    /**
-     * Set command
-     *
-     * @param string $command
-     * @return Command
-     */
-    public function setCommand($command)
-    {
-        $this->command = $command;
-        return $this;
     }
 
     /**

@@ -121,7 +121,7 @@ class Telegram
      *
      * @var array
      */
-    protected $commands_config;
+    protected $commands_config = [];
 
     /**
      * Admins list
