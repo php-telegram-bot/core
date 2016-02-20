@@ -126,18 +126,6 @@ class Telegram
     protected $commands_config;
 
     /**
-     * Message types
-     *
-     * @var array
-     */
-    protected $message_types = [
-        'Message', 'Photo', 'Audio', 'Document', 'Sticker', 'Video',
-        'Voice', 'Location', 'command', 'new_chat_participant',
-        'left_chat_participant', 'new_chat_title', 'delete_chat_photo',
-        'group_chat_created', 'supergroup_chat_created', 'channel_chat_created',
-    ];
-
-    /**
      * Admins list
      *
      * @var array
@@ -764,15 +752,5 @@ class Telegram
         }
 
         return $result;
-    }
-
-    /**
-     * Get available message types
-     *
-     * @return array
-     */
-    public function getMessageTypes()
-    {
-        return $this->message_types;
     }
 }
