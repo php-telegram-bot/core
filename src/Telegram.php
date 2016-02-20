@@ -131,6 +131,13 @@ class Telegram
     protected $admins_list = [];
 
     /**
+     * ServerResponse of the last Command execution
+     *
+     * @var Entities\ServerResponse
+     */
+    protected $last_command_response;
+
+    /**
      * Constructor
      *
      * @param string $api_key
@@ -341,6 +348,16 @@ class Telegram
     }
 
     /**
+     * Get the ServerResponse of the last Command execution
+     *
+     * @return Entities\ServerResponse
+     */
+    public function getLastCommandResponse()
+    {
+        return $this->last_command_response;
+    }
+
+    /**
      * Handle getUpdates method
      *
      * @param int|null $limit
@@ -353,37 +370,27 @@ class Telegram
         //DB Query
         $last_update = DB::selectTelegramUpdate(1);
 
-        if (isset($last_update[0]['id'])) {
-            //As explained in the telegram bot api documentation
-            $offset = $last_update[0]['id']+1;
-        } else {
-            $offset = null;
-        }
+        //As explained in the telegram bot api documentation
+        $offset = (isset($last_update[0]['id'])) ? $last_update[0]['id'] + 1 : null;
 
-        $ServerResponse = Request::getUpdates([
-            'offset' => $offset ,
-            'limit' => $limit,
-            'timeout' => $timeout
+        $response = Request::getUpdates([
+            'offset'  => $offset,
+            'limit'   => $limit,
+            'timeout' => $timeout,
         ]);
 
-        if ($ServerResponse->isOk()) {
-            $results = '';
-            $n_update = count($ServerResponse->getResult());
-            for ($a = 0; $a < $n_update; $a++) {
-                $result = $this->processUpdate($ServerResponse->getResult()[$a]);
+        if ($response->isOk()) {
+            //Process all updates
+            foreach ((array)$response->getResult() as $result) {
+                $this->processUpdate($result);
             }
         }
 
-        return $ServerResponse;
+        return $response;
     }
 
     /**
      * Handle bot request from webhook
-     *
-     * @todo Should return the executed command result (true|false) but we shoud check if all commands return a value.
-     * Furthermore this function is the twin of handleGetUpdates for webhook, but the first returns the ServerResponse
-     * instead the latter return if the command has failed or not (true|false).
-     * We shoud use the same convention for both.
      *
      * @return bool
      */
@@ -399,8 +406,7 @@ class Telegram
             throw new TelegramException('Invalid JSON!');
         }
 
-        $this->update = new Update($post, $this->bot_name);
-        return $this->processUpdate();
+        return $this->processUpdate(new Update($post, $this->bot_name))->isOk();
     }
 
     /**
@@ -416,24 +422,27 @@ class Telegram
     }
 
     /**
-     * Process Handle bot request
+     * Process bot Update request
      *
-     * @return bool
+     * @param Entities\Update $update
+     *
+     * @return Entities\ServerResponse
      */
-    public function processUpdate()
+    public function processUpdate(Update $update)
     {
-        $update_type = $this->update->getUpdateType();
+        $this->update = $update;
 
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
 
+        $update_type = $this->update->getUpdateType();
         if (in_array($update_type, ['inline_query', 'chosen_inline_result'])) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();
 
             //Load admin commands
-            if ($this->isAdmin($message->getFrom()->getId())) {
+            if ($this->isAdmin()) {
                 $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
             }
 
@@ -476,13 +485,15 @@ class Telegram
         $command_obj = $this->getCommandObject($command);
 
         if (!$command_obj || !$command_obj->isEnabled()) {
-            //handle a generic command or non existing one
-            return $this->executeCommand('Generic');
+            //Handle a generic command or non existing one
+            $this->last_command_response = $this->executeCommand('Generic');
+        } else {
+            //execute() method is executed after preExecute()
+            //This is to prevent executing a DB query without a valid connection
+            $this->last_command_response = $command_obj->preExecute();
         }
 
-        //execute() methods will be execute after preexecute() methods
-        //this for prevent to execute db query without connection
-        return $command_obj->preExecute();
+        return $this->last_command_response;
     }
 
     /**
