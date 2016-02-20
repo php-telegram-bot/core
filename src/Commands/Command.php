@@ -122,7 +122,7 @@ abstract class Command
     /**
      * Pre-execute command
      *
-     * @return mixed
+     * @return Entities\ServerResponse
      */
     public function preExecute()
     {
@@ -134,13 +134,15 @@ abstract class Command
 
     /**
      * Execute command
+     *
+     * @return Entities\ServerResponse
      */
     abstract public function execute();
 
     /**
      * Execution if MySQL is required but not available
      *
-     * @return boolean
+     * @return Entities\ServerResponse
      */
     public function executeNoDB()
     {
@@ -153,7 +155,7 @@ abstract class Command
             'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 
 

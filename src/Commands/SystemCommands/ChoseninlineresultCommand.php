@@ -26,18 +26,13 @@ class ChoseninlineresultCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //Information about chosen result is returned
         //$update = $this->getUpdate();
         //$inline_query = $update->getChosenInlineResult();
         //$query = $inline_query->getQuery();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

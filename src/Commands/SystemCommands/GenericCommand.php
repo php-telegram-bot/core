@@ -27,9 +27,7 @@ class GenericCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -44,6 +42,6 @@ class GenericCommand extends SystemCommand
             'text'    => 'Command /' . $command . ' not found.. :(',
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

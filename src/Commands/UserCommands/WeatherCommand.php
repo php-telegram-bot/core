@@ -110,9 +110,7 @@ class WeatherCommand extends UserCommand
     }
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -139,6 +137,6 @@ class WeatherCommand extends UserCommand
             'text'                => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

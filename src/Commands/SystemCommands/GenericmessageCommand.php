@@ -26,13 +26,10 @@ class GenericmessageCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
-        //System command, do nothing
-        return true;
-    }
+
+    }*/
 }

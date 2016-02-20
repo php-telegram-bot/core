@@ -28,9 +28,7 @@ class InlinequeryCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -52,6 +50,6 @@ class InlinequeryCommand extends SystemCommand
         }
         $data['results'] = '[' . implode(',', $array_article) . ']';
 
-        return Request::answerInlineQuery($data)->isOk();
+        return Request::answerInlineQuery($data);
     }
 }

@@ -175,9 +175,7 @@ class DateCommand extends UserCommand
     }
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -204,6 +202,6 @@ class DateCommand extends UserCommand
             'text'                => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

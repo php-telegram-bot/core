@@ -32,9 +32,7 @@ class WhoamiCommand extends UserCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {

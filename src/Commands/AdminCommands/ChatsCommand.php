@@ -31,9 +31,7 @@ class ChatsCommand extends AdminCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -85,6 +83,6 @@ class ChatsCommand extends AdminCommand
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

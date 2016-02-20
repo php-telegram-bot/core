@@ -52,8 +52,7 @@ class SendtochannelCommand extends AdminCommand
                 'text'    => $text,
             ];
 
-            $result = Request::sendMessage($data);
-            if ($result->isOk()) {
+            if (Request::sendMessage($data)->isOk()) {
                 $text_back = 'Message sent succesfully to: ' . $your_channel;
             } else {
                 $text_back = 'Sorry message not sent to: ' . $your_channel;
@@ -65,6 +64,6 @@ class SendtochannelCommand extends AdminCommand
             'text'    => $text_back,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

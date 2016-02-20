@@ -28,9 +28,7 @@ class SlapCommand extends UserCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -55,6 +53,6 @@ class SlapCommand extends UserCommand
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }
