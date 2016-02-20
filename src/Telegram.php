@@ -61,11 +61,9 @@ class Telegram
     protected $commands_paths = [];
 
     /**
-     * Row custom update (json)
+     * Current Update object
      *
-     * Used to inject a custom update for testing purposes in the Request class
-     *
-     * @var string
+     * @var Entities\Update
      */
     protected $update;
 
@@ -204,40 +202,10 @@ class Telegram
                     require_once $file->getPathname();
 
                     $command_obj = $this->getCommandObject($command);
-                    if ($command_obj && (
-                            $command_obj instanceof Commands\AdminCommand ||
-                            $command_obj instanceof Commands\UserCommand
-                        )
-                    ) {
+                    if ($command_obj instanceof Commands\Command) {
                         $commands[$command_name] = $command_obj;
                     }
                 }
-
-                /*foreach (new \DirectoryIterator($dir) as $file) {
-                    if ($file->isDot()) {
-                        continue;
-                    }
-
-                    $filename = $file->getFilename();
-                    if (substr($filename, -11) === 'Command.php') {
-                        $command = $this->sanitizeCommand(substr($filename, 0, -11));
-
-                        require_once $file->getPathname();
-
-                        $command_obj = $this->getCommandObject($command);
-
-                        if (!$command_obj) {
-                            continue;
-                        }
-
-                        if (!empty($update)) {
-                            $command_obj->setUpdate($update);
-                        }
-
-                        $commands[strtolower($command)] = $command_obj;
-                    }
-                }
-                */
             } catch (\Exception $e) {
                 throw new TelegramException('Error getting commands from path: ' . $path);
             }
@@ -250,20 +218,23 @@ class Telegram
      * Get an object instance of the passed command
      *
      * @param string $command
-     * @param Entities\Update $update
      *
-     * @return bool|Entities\Command
+     * @return Entities\Command|null
      */
-    public function getCommandObject($command, Update $update = null)
+    public function getCommandObject($command)
     {
-        foreach (['System', 'Admin', 'User'] as $auth) {
+        $which = ['System'];
+        ($this->isAdmin()) && $which[] = 'Admin';
+        $which[] = 'User';
+
+        foreach ($which as $auth) {
             $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . ucfirst($command) . 'Command';
             if (class_exists($command_namespace)) {
-                return (new $command_namespace($this))->setUpdate($update);
+                return (new $command_namespace($this))->setUpdate($this->update);
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -344,26 +315,26 @@ class Telegram
     }
 
     /**
-     * Set custom update string for debug purposes
+     * Set custom input string for debug purposes
      *
-     * @param string $update (json format)
+     * @param string $input (json format)
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function setCustomUpdate($update)
+    public function setCustomInput($input)
     {
-        $this->update = $update;
+        $this->input = $input;
         return $this;
     }
 
     /**
-     * Get custom update string for debug purposes
+     * Get custom input string for debug purposes
      *
-     * @return string $update in json
+     * @return string
      */
-    public function getCustomUpdate()
+    public function getCustomInput()
     {
-        return $this->update;
+        return $this->input;
     }
 
     /**
@@ -404,21 +375,18 @@ class Telegram
     }
 
     /**
-     * Handle bot request from wekhook
+     * Handle bot request from webhook
      *
      * @todo Should return the executed command result (true|false) but we shoud check if all commands return a value.
      * Furthermore this function is the twin of handleGetUpdates for webhook, but the first returns the ServerResponse
      * instead the latter return if the command has failed or not (true|false).
      * We shoud use the same convention for both.
      *
-     * @param string $custom_json Allow custom JSON string to be passed for testing
-     *
      * @return bool
      */
-    public function handle($custom_json = null)
+    public function handle()
     {
-        //If a custom JSON string is passed, that gets priority
-        $this->input = $custom_json ?: Request::getInput();
+        $this->input = Request::getInput();
 
         if (empty($this->input)) {
             throw new TelegramException('Input is empty!');
@@ -427,8 +395,9 @@ class Telegram
         if (empty($post)) {
             throw new TelegramException('Invalid JSON!');
         }
-        $update = new Update($post, $this->bot_name);
-        return $this->processUpdate($update);
+
+        $this->update = new Update($post, $this->bot_name);
+        return $this->processUpdate();
     }
 
     /**
@@ -445,13 +414,12 @@ class Telegram
 
     /**
      * Process Handle bot request
-     * @param \Longman\TelegramBot\Entities\ServerResponse $update
      *
      * @return bool
      */
-    public function processUpdate(Update $update)
+    public function processUpdate()
     {
-        $update_type = $update->getUpdateType();
+        $update_type = $this->update->getUpdateType();
 
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
@@ -459,7 +427,7 @@ class Telegram
         if (in_array($update_type, ['inline_query', 'chosen_inline_result'])) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
-            $message = $update->getMessage();
+            $message = $this->update->getMessage();
 
             //Load admin commands
             if ($this->isAdmin($message->getFrom()->getId())) {
@@ -485,32 +453,28 @@ class Telegram
         }
 
         //Make sure we have an up-to-date command list
+        //This is necessary to "require" all the necessary command files!
         $this->getCommandsList();
 
-        DB::insertRequest($update);
+        DB::insertRequest($this->update);
 
-        return $this->executeCommand($command, $update);
+        return $this->executeCommand($command);
     }
 
     /**
      * Execute /command
      *
-     * @param string                               $command
-     * @param \Longman\TelegramBot\Entities\Update $update
+     * @param string $command
      *
      * @return mixed
      */
-    public function executeCommand($command, Update $update)
+    public function executeCommand($command)
     {
-        $command_obj = $this->getCommandObject($command, $update);
+        $command_obj = $this->getCommandObject($command);
 
-        if (!$command_obj) {
+        if (!$command_obj || !$command_obj->isEnabled()) {
             //handle a generic command or non existing one
-            return $this->executeCommand('Generic', $update);
-        }
-
-        if (!$command_obj->isEnabled()) {
-            return false;
+            return $this->executeCommand('Generic');
         }
 
         //execute() methods will be execute after preexecute() methods
@@ -559,13 +523,21 @@ class Telegram
     /**
      * Check if the passed user is an admin
      *
-     * @param int $user_id
+     * If no user id is passed, the current update is checked for a valid message sender.
+     *
+     * @param int|null $user_id
      *
      * @return bool
      */
-    public function isAdmin($user_id)
+    public function isAdmin($user_id = null)
     {
-        return in_array($user_id, $this->admins_list);
+        if ($user_id === null && $this->update !== null) {
+            if (($message = $this->update->getMessage()) && ($from = $message->getFrom())) {
+                $user_id = $from->getId();
+            }
+        }
+
+        return ($user_id === null) ? false : in_array($user_id, $this->admins_list);
     }
 
     /**
