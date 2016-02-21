@@ -23,7 +23,7 @@ class SendtochannelCommand extends AdminCommand
      */
     protected $name = 'sendtochannel';
     protected $description = 'Send message to a channel';
-    protected $usage = '/sendchannel <message to send>';
+    protected $usage = '/sendtochannel <message to send>';
     protected $version = '0.1.1';
     protected $need_mysql = false;
     /**#@-*/
