@@ -11,7 +11,7 @@
 namespace Tests\Unit\Commands;
 
 use Tests\Unit\TestCase;
-use Tests\Helpers;
+use Tests\TestHelpers;
 use Longman\TelegramBot\Telegram;
 
 /**
@@ -44,7 +44,7 @@ class CommandTest extends TestCase
              ->disableOriginalConstructor()
              ->getMockForAbstractClass();
         //Set a name for the object property so that the constructor can set the config correctly
-        Helpers::setObjectProperty($this->command_stub_with_config, 'name', 'command_name');
+        TestHelpers::setObjectProperty($this->command_stub_with_config, 'name', 'command_name');
         $this->command_stub_with_config->__construct($this->telegram_with_config);
     }
 
@@ -165,7 +165,7 @@ class CommandTest extends TestCase
         $this->assertEquals(null, $stub->getUpdate());
         $this->assertEquals(null, $stub->getMessage());
 
-        $update = Helpers::getFakeUpdateObject();
+        $update = TestHelpers::getFakeUpdateObject();
         $message = $update->getMessage();
         $stub->setUpdate($update);
         $this->assertAttributeEquals($update, 'update', $stub);

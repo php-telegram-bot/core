@@ -19,7 +19,7 @@ use Longman\TelegramBot\Entities\Update;
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
  * @link            http://www.github.com/akalongman/php-telegram-bot
  */
-class Helpers
+class TestHelpers
 {
     /**
      * Set the value of a private/protected property of an object
@@ -39,11 +39,13 @@ class Helpers
     /**
      * Return a simple fake Update object
      *
+     * @param array $data Pass custom data array if needed
+     *
      * @return Entities\Update
      */
-    public static function getFakeUpdateObject()
+    public static function getFakeUpdateObject($data = null)
     {
-        $data = [
+        $data = $data ?: [
             'update_id' => 1,
             'message'   => [
                 'message_id' => 1,
@@ -54,5 +56,38 @@ class Helpers
             ]
         ];
         return new Update($data, 'botname');
+    }
+
+    /**
+     * Return a fake command object for the passed command text
+     *
+     * @param string $command_text
+     *
+     * @return Entities\Update
+     */
+    public static function getFakeUpdateCommandObject($command_text)
+    {
+        $data = [
+            'update_id' => 1,
+            'message' => [
+                'message_id' => 1,
+                'from' => [
+                    'id' => 1,
+                    'first_name' => 'first',
+                    'last_name' => 'last',
+                    'username' => 'user',
+                ],
+                'chat' => [
+                    'id' => 1,
+                    'first_name' => 'first',
+                    'last_name' => 'last',
+                    'username' => 'name',
+                    'type' => 'private',
+                ],
+                'date' => 1,
+                'text' => $command_text,
+            ],
+        ];
+        return self::getFakeUpdateObject($data);
     }
 }
