@@ -98,6 +98,6 @@ class WhoamiCommand extends UserCommand
             $result = Request::sendMessage($data);
         }
 
-        return $result->isOk();
+        return $result;
     }
 }
