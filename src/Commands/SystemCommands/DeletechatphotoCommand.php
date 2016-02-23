@@ -26,16 +26,11 @@ class DeletechatphotoCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //$message = $this->getMessage();
         //$delete_chat_photo = $message->getDeleteChatPhoto();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

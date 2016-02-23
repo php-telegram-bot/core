@@ -28,9 +28,7 @@ class StartCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -44,6 +42,6 @@ class StartCommand extends SystemCommand
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

@@ -26,16 +26,11 @@ class NewchattitleCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //$message = $this->getMessage();
         //$new_chat_title = $message->getNewChatTitle();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

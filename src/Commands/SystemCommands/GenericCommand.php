@@ -27,11 +27,7 @@ class GenericCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @todo This can't be right, as it always returns "Command: xyz not found.. :("
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -43,9 +39,9 @@ class GenericCommand extends SystemCommand
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => 'Command: ' . $command . ' not found.. :(',
+            'text'    => 'Command /' . $command . ' not found.. :(',
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

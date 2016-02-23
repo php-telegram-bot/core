@@ -10,6 +10,8 @@
 
 namespace Longman\TelegramBot\Commands;
 
+use Longman\TelegramBot\Entities\ServerResponse;
+
 /**
  * Abstract System Command Class
  */
@@ -18,14 +20,14 @@ abstract class SystemCommand extends Command
     /**
      * A system command just executes
      *
-     * Although system commands should just work and return 'true',
+     * Although system commands should just work and return a successful ServerResponse,
      * each system command can override this method to add custom functionality.
      *
-     * @return bool
+     * @return Entities\ServerResponse
      */
     public function execute()
     {
-        //System command, do nothing
-        return true;
+        //System command, return successful ServerResponse
+        return new ServerResponse(['ok' => true, 'result' => true], null);
     }
 }

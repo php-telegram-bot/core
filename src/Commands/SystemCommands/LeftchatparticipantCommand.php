@@ -26,16 +26,11 @@ class LeftchatparticipantCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //$message = $this->getMessage();
         //$participant = $message->getLeftChatParticipant();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

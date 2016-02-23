@@ -27,9 +27,7 @@ class SupergroupchatcreatedCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -48,6 +46,6 @@ class SupergroupchatcreatedCommand extends SystemCommand
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

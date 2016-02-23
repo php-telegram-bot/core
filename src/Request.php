@@ -88,14 +88,14 @@ class Request
     }
 
     /**
-     * Set input from update or stdin and return it
+     * Set input from custom input or stdin and return it
      *
      * @return string
      */
     public static function getInput()
     {
-        if ($update = self::$telegram->getCustomUpdate()) {
-            self::setInputRaw($update);
+        if ($input = self::$telegram->getCustomInput()) {
+            self::setInputRaw($input);
         } else {
             self::setInputRaw(file_get_contents('php://input'));
         }

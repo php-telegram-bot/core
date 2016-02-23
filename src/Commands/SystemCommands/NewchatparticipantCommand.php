@@ -27,9 +27,7 @@ class NewchatparticipantCommand extends SystemCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -49,6 +47,6 @@ class NewchatparticipantCommand extends SystemCommand
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

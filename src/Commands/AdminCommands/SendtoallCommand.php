@@ -95,6 +95,6 @@ class SendtoallCommand extends AdminCommand
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }
