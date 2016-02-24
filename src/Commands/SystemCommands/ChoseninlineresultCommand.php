@@ -8,36 +8,31 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Chosen inline result command
  */
-class ChoseninlineresultCommand extends Command
+class ChoseninlineresultCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'choseninlineresult';
+    protected $name        = 'choseninlineresult';
     protected $description = 'Chosen result query';
-    protected $version = '1.0.1';
+    protected $version     = '1.0.1';
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //Information about chosen result is returned
         //$update = $this->getUpdate();
         //$inline_query = $update->getChosenInlineResult();
         //$query = $inline_query->getQuery();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

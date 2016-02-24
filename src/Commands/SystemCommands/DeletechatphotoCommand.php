@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Delete chat photo command
  */
-class DeletechatphotoCommand extends Command
+class DeletechatphotoCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -26,16 +26,11 @@ class DeletechatphotoCommand extends Command
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //$message = $this->getMessage();
         //$delete_chat_photo = $message->getDeleteChatPhoto();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

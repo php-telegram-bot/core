@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Group chat created command
  */
-class GroupchatcreatedCommand extends Command
+class GroupchatcreatedCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -26,16 +26,11 @@ class GroupchatcreatedCommand extends Command
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
         //$message = $this->getMessage();
         //$group_chat_created = $message->getGroupChatCreated();
-
-        //System command, do nothing
-        return true;
-    }
+    }*/
 }

@@ -8,14 +8,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace Longman\TelegramBot\Commands;
 
+use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 
 /**
- * Class Command
+ * Abstract Command Class
  */
 abstract class Command
 {
@@ -41,13 +44,6 @@ abstract class Command
     protected $message;
 
     /**
-     * Command
-     *
-     * @var string
-     */
-    protected $command;
-
-    /**
      * Name
      *
      * @var string
@@ -59,7 +55,7 @@ abstract class Command
      *
      * @var string
      */
-    protected $description = 'Command help';
+    protected $description = 'Command description';
 
     /**
      * Usage
@@ -83,13 +79,6 @@ abstract class Command
     protected $enabled = true;
 
     /**
-     * If this command is public
-     *
-     * @var boolean
-     */
-    protected $public = false;
-
-    /**
      * If this command needs mysql
      *
      * @var boolean
@@ -101,16 +90,18 @@ abstract class Command
      *
      * @var array
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * Constructor
      *
-     * @param Telegram $telegram
+     * @param Telegram        $telegram
+     * @param Entities\Update $update
      */
-    public function __construct(Telegram $telegram)
+    public function __construct(Telegram $telegram, Update $update = null)
     {
         $this->telegram = $telegram;
+        $this->setUpdate($update);
         $this->config = $telegram->getCommandConfig($this->name);
     }
 
@@ -120,41 +111,54 @@ abstract class Command
      * @param Entities\Update $update
      * @return Command
      */
-    public function setUpdate(Update $update)
+    public function setUpdate(Update $update = null)
     {
-        $this->update = $update;
-        $this->message = $this->update->getMessage();
+        if (!empty($update)) {
+            $this->update = $update;
+            $this->message = $this->update->getMessage();
+        }
         return $this;
     }
 
     /**
      * Pre-execute command
      *
-     * @return mixed
+     * @return Entities\ServerResponse
      */
     public function preExecute()
     {
-        if (!$this->need_mysql |
-            $this->need_mysql & $this->telegram->isDbEnabled() & DB::isDbConnected()
-        ) {
-            return $this->execute();
+        if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
+            return $this->executeNoDB();
         }
-        return $this->executeNoDB();
+        return $this->execute();
     }
 
     /**
      * Execute command
+     *
+     * @return Entities\ServerResponse
      */
     abstract public function execute();
 
     /**
-     * This methods is executed if $need_mysql is true
-     * but DB connection for some reason is not avaiable
+     * Execution if MySQL is required but not available
+     *
+     * @return Entities\ServerResponse
      */
     public function executeNoDB()
     {
+        //Preparing message
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
 
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
+        ];
+
+        return Request::sendMessage($data);
     }
+
 
     /**
      * Get update object
@@ -179,21 +183,22 @@ abstract class Command
     /**
      * Get command config
      *
-     * Look for parameter $name if found return it, if not return null.
-     * If $name is not set return the all set params
+     * Look for config $name if found return it, if not return null.
+     * If $name is not set return all set config.
      *
      * @param string|null $name
+     *
      * @return mixed
      */
     public function getConfig($name = null)
     {
+        if ($name === null) {
+            return $this->config;
+        }
         if (isset($this->config[$name])) {
             return $this->config[$name];
-        } else {
-            return null;
         }
-
-        return $this->config;
+        return null;
     }
 
     /**
@@ -204,18 +209,6 @@ abstract class Command
     public function getTelegram()
     {
         return $this->telegram;
-    }
-
-    /**
-     * Set command
-     *
-     * @param string $command
-     * @return Command
-     */
-    public function setCommand($command)
-    {
-        $this->command = $command;
-        return $this;
     }
 
     /**
@@ -269,12 +262,32 @@ abstract class Command
     }
 
     /**
-     * Check if command is public
+     * If this is a SystemCommand
      *
-     * @return boolean
+     * @return bool
      */
-    public function isPublic()
+    public function isSystemCommand()
     {
-        return $this->public;
+        return ($this instanceof SystemCommand);
+    }
+
+    /**
+     * If this is an AdminCommand
+     *
+     * @return bool
+     */
+    public function isAdminCommand()
+    {
+        return ($this instanceof AdminCommand);
+    }
+
+    /**
+     * If this is a UserCommand
+     *
+     * @return bool
+     */
+    public function isUserCommand()
+    {
+        return ($this instanceof UserCommand);
     }
 }

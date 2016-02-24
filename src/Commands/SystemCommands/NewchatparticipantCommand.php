@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * New chat participant command
  */
-class NewchatparticipantCommand extends Command
+class NewchatparticipantCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -27,9 +27,7 @@ class NewchatparticipantCommand extends Command
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -49,6 +47,6 @@ class NewchatparticipantCommand extends Command
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

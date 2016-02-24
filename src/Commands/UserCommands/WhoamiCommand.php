@@ -10,16 +10,16 @@
  * Written by Marco Boretto <marco.bore@gmail.com>
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Request;
 
 /**
  * User "/whoami" command
  */
-class WhoamiCommand extends Command
+class WhoamiCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -32,9 +32,7 @@ class WhoamiCommand extends Command
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -100,6 +98,6 @@ class WhoamiCommand extends Command
             $result = Request::sendMessage($data);
         }
 
-        return $result->isOk();
+        return $result;
     }
 }

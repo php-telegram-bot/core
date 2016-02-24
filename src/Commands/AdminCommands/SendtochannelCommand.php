@@ -8,24 +8,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\AdminCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * Admin "/sendtochannel" command
  */
-class SendtochannelCommand extends Command
+class SendtochannelCommand extends AdminCommand
 {
     /**#@+
      * {@inheritdoc}
      */
     protected $name = 'sendtochannel';
     protected $description = 'Send message to a channel';
-    protected $usage = '/sendchannel <message to send>';
+    protected $usage = '/sendtochannel <message to send>';
     protected $version = '0.1.1';
-    protected $public = true;
     protected $need_mysql = false;
     /**#@-*/
 
@@ -53,8 +52,7 @@ class SendtochannelCommand extends Command
                 'text'    => $text,
             ];
 
-            $result = Request::sendMessage($data);
-            if ($result->isOk()) {
+            if (Request::sendMessage($data)->isOk()) {
                 $text_back = 'Message sent succesfully to: ' . $your_channel;
             } else {
                 $text_back = 'Sorry message not sent to: ' . $your_channel;
@@ -66,6 +64,6 @@ class SendtochannelCommand extends Command
             'text'    => $text_back,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

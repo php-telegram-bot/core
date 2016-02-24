@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Generic message command
  */
-class GenericmessageCommand extends Command
+class GenericmessageCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -26,13 +26,10 @@ class GenericmessageCommand extends Command
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
-        //System command, do nothing
-        return true;
-    }
+
+    }*/
 }
