@@ -32,9 +32,7 @@ class SurveyCommand extends UserCommand
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -80,6 +78,7 @@ class SurveyCommand extends UserCommand
                     $path->updateTrack($session);
     
                     $data['text'] = 'Type your name:';
+                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -182,6 +181,6 @@ class SurveyCommand extends UserCommand
                 $result = Request::sendPhoto($data);
                 break;
         }
-        return $result->isOk();
+        return $result;
     }
 }
