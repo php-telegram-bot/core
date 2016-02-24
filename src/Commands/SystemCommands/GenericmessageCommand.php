@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Tracking;
+use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
@@ -50,7 +50,7 @@ class GenericmessageCommand extends SystemCommand
         $chat_id = $message->getChat()->getId();
         $user_id = $message->getFrom()->getId();
         //Fetch Track if exist
-        $command = (new Tracking($user_id, $chat_id))->getTrackCommand();
+        $command = (new Conversation($user_id, $chat_id))->getConversationCommand();
         if (! is_null($command)) {
             return $this->telegram->executeCommand($command, $this->update);
         }

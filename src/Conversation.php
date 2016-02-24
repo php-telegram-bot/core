@@ -12,16 +12,16 @@ namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Command;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\TrackingDB;
+use Longman\TelegramBot\ConversationDB;
 use Longman\TelegramBot\Entities\Update;
 
 /**
- * Class Tracking
+ * Class Conversation
  */
-class Tracking
+class Conversation
 {
     /**
-     * Track has been fetched true false
+     * Conversation has been fetched true false
      *
      * @var bool
      */
@@ -32,10 +32,10 @@ class Tracking
      *
      * @var array
      */
-    protected $track = null;
+    protected $conversation = null;
 
     /**
-     * Data stored inside the track
+     * Data stored inside the Conversation
      *
      * @var array
      */
@@ -57,21 +57,21 @@ class Tracking
 
     /**
      * Group name let you share the session among commands
-     * Call this as the same name of the command if you don't need to share the tracking
+     * Call this as the same name of the command if you don't need to share the conversation
      *
      * @var strint
      */
     protected $group_name;
 
     /**
-     * Command to be execute if the track is active
+     * Command to be execute if the conversation is active
      *
      * @var string
      */
     protected $command;
 
     /**
-     * Tracking contructor initialize a new track
+     * Conversation contructor initialize a new conversation
      *
      * @param int    $user_id
      * @param int    $chat_id
@@ -91,55 +91,55 @@ class Tracking
     }
 
     /**
-     * Check if the track already exist
+     * Check if the conversation already exist
      *
      * @return bool
      */
-    protected function trackExist()
+    protected function conversationExist()
     {
-        //Track info already fetched
+        //Conversation info already fetched
         if ($this->is_fetched) {
             return true;
         }
 
-        $track = TrackingDB::selectTrack($this->user_id, $this->chat_id, 1);
+        $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
         $this->is_fetched = true;
 
-        if (isset($track[0])) {
+        if (isset($conversation[0])) {
             //Pick only the first element
-            $this->track = $track[0];
+            $this->conversation = $conversation[0];
 
             if (is_null($this->group_name)) {
-                //Track name and command has not been specified. command has to be retrieved
+                //Conversation name and command has not been specified. command has to be retrieved
                 return true;
             }
 
             //a track with the same name was already opened store the data
-            if ($this->track['track_name'] == $this->group_name) {
-                $this->data = json_decode($this->track['data'], true);
+            if ($this->conversation['conversation_name'] == $this->group_name) {
+                $this->data = json_decode($this->conversation['data'], true);
                 return true;
             }
 
-            //a track with a differet name has been opened unsetting the DB one and reacreatea a new one
-            TrackingDB::updateTrack(['is_active' => 0], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
+            //a  with a differet name has been opened unsetting the DB one and reacreatea a new one
+            ConversationDB::updateConversation(['is_active' => 0], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
             return false;
         }
 
-        $this->track = null;
+        $this->conversation = null;
         return false;
     }
 
     /**
-     * Check if the tracke already exist
+     * Check if the Conversation already exist
      *
-     * Check if a track has already been created in the database. If the track is not found, a new track is created. startTrack fetch the data stored in the database
+     * Check if a conversation has already been created in the database. If the conversation is not found, a new conversation is created. start fetch the data stored in the database
      *
      * @return bool
      */
-    public function startTrack()
+    public function start()
     {
-        if (!$this->trackExist()) {
-            $status = TrackingDB::insertTrack($this->command, $this->group_name, $this->user_id, $this->chat_id);
+        if (!$this->conversationExist()) {
+            $status = ConversationDB::insertConversation($this->command, $this->group_name, $this->user_id, $this->chat_id);
             $this->is_fetched = true;
         }
         return true;
@@ -150,49 +150,49 @@ class Tracking
      *
      * @param array $data
      */
-    public function updateTrack($data)
+    public function update($data)
     {
-        //track must exist!
-        if ($this->trackExist()) {
+        //conversation must exist!
+        if ($this->conversationExist()) {
             $fields['data'] = json_encode($data);
 
-            TrackingDB::updateTrack($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
+            ConversationDB::updateConversation($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
             //TODO verify query success before convert the private var
             $this->data = $data;
         }
     }
 
     /**
-     * Delete the track from the database
+     * Delete the conversation from the database
      *
-     * Currently the Track is not deleted but just unsetted
+     * Currently the Convevrsation is not deleted but just unsetted
      *
      * @TODO should return something
      *
      * @param array $data
      */
-    public function stopTrack()
+    public function stop()
     {
-        if ($this->trackExist()) {
-            TrackingDB::updateTrack(['is_active' => 0], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
+        if ($this->conversationExist()) {
+            ConversationDB::updateConversation(['is_active' => 0], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
         }
     }
 
     /**
-     * Retrieve the command to execute from the track
+     * Retrieve the command to execute from the conversation
      *
      * @param string
      */
-    public function getTrackCommand()
+    public function getConversationCommand()
     {
-        if ($this->trackExist()) {
-            return $this->track['track_command'];
+        if ($this->conversationExist()) {
+            return $this->conversation['conversation_command'];
         }
         return null;
     }
 
     /**
-     * Retrive the data store in the track
+     * Retrive the data store in the conversation
      *
      * @param array $data
      */

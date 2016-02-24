@@ -10,7 +10,7 @@
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Tracking;
+use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ForceReply;
 use Longman\TelegramBot\Entities\ReplyKeyboardHide;
@@ -57,11 +57,11 @@ class SurveyCommand extends UserCommand
         $data['chat_id'] = $chat_id;
 
         //tracking
-        $path = new Tracking($user_id, $chat_id, $this->getName());
-        $path->startTrack();
+        $conversation = new Conversation($user_id, $chat_id, $this->getName());
+        $conversation->start();
 
         //cache data from the tracking session if any
-        $session = $path->GetData();
+        $session = $conversation->GetData();
         if (!isset($session['state'])) {
             $state = '0';
         } else {
@@ -75,7 +75,7 @@ class SurveyCommand extends UserCommand
             case 0:
                 if (empty($text)) {
                     $session['state'] = '0';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
     
                     $data['text'] = 'Type your name:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -88,7 +88,7 @@ class SurveyCommand extends UserCommand
             case 1:
                 if (empty($text)) {
                     $session['state'] = 1;
-                    $path->updateTrack($session);
+                    $conversation->update($session);
     
                     $data['text'] = 'Type your surname:';
                     $result = Request::sendMessage($data);
@@ -102,7 +102,7 @@ class SurveyCommand extends UserCommand
             case 2:
                 if (empty($text) || !is_numeric($text)) {
                     $session['state'] = '2';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
                     $data['text'] = 'Type your age:';
                     if (!empty($text) && !is_numeric($text)) {
                         $data['text'] = 'Type your age, must be a number';
@@ -117,7 +117,7 @@ class SurveyCommand extends UserCommand
             case 3:
                 if (empty($text) || !($text == 'M' || $text == 'F')) {
                     $session['state'] = '3';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
 
                     $keyboard = [['M','F']];
                     $reply_keyboard_markup = new ReplyKeyboardMarkup(
@@ -143,7 +143,7 @@ class SurveyCommand extends UserCommand
             case 4:
                 if (is_null($message->getLocation())) {
                     $session['state'] = '4';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
 
                     $data['text'] = 'Insert your home location (need location object):';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -158,7 +158,7 @@ class SurveyCommand extends UserCommand
             case 5:
                 if (is_null($message->getPhoto())) {
                     $session['state'] = '5';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
 
                     $data['text'] = 'Insert your picture:';
                     $result = Request::sendMessage($data);
@@ -168,7 +168,7 @@ class SurveyCommand extends UserCommand
 
                 // no break
             case 6:
-                $path->stopTrack();
+                $conversation->stop();
                 $out_text = '/Survey result:' . "\n";
                 unset($session['state']);
                 foreach ($session as $k => $v) {

@@ -13,22 +13,22 @@ namespace Longman\TelegramBot;
 use Longman\TelegramBot\DB;
 
 /**
- * Class TrackingDB
+ * Class ConversationDB
  */
-class TrackingDB extends DB
+class ConversationDB extends DB
 {
     /**
-     * Initilize tracking table
+     * Initilize conversation table
      */
-    public static function initializeTracking()
+    public static function initializeConversation()
     {
-        if (!defined('TB_TRACK')) {
-            define('TB_TRACK', self::$table_prefix . 'track');
+        if (!defined('TB_CONVERSATION')) {
+            define('TB_CONVERSATION', self::$table_prefix . 'conversation');
         }
     }
  
     /**
-     * Tracking contructor initialize a new track
+     * Conversation contructor initialize a new conversation
      *
      * @param int  $user_id
      * @param int  $chat_id
@@ -36,14 +36,14 @@ class TrackingDB extends DB
      *
      * @return array
      */
-    public static function selectTrack($user_id, $chat_id, $limit = null)
+    public static function selectConversation($user_id, $chat_id, $limit = null)
     {
         if (!self::isDbConnected()) {
             return false;
         }
  
         try {
-            $query = 'SELECT * FROM `' . TB_TRACK . '` ';
+            $query = 'SELECT * FROM `' . TB_CONVERSATION . '` ';
             $query .= 'WHERE `is_active` = 1 ';
             $query .= 'AND `chat_id` = :chat_id ';
             $query .= 'AND `user_id` = :user_id ';
@@ -68,28 +68,28 @@ class TrackingDB extends DB
     }
 
     /**
-     * Insert the track in the database
+     * Insert the conversation in the database
      *
-     * @param string $track_command
-     * @param string $track_name
+     * @param string $conversation_command
+     * @param string $conversation_name
      * @param int    $user_id
      * @param int    $chat_id
      *
      * @return bool
      */
-    public static function insertTrack($track_command, $track_group_name, $user_id, $chat_id)
+    public static function insertConversation($conversation_command, $conversation_group_name, $user_id, $chat_id)
     {
         if (!self::isDbConnected()) {
             return false;
         }
 
         try {
-            $sth = self::$pdo->prepare('INSERT INTO `' . TB_TRACK . '`
+            $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
                 (
-                `is_active`, `track_command`, `track_name`, `user_id`, `chat_id`, `data`, `created_at`, `updated_at`
+                `is_active`, `conversation_command`, `conversation_name`, `user_id`, `chat_id`, `data`, `created_at`, `updated_at`
                 )
                 VALUES (
-                :is_active, :track_command, :track_name, :user_id, :chat_id, :data, :date, :date
+                :is_active, :conversation_command, :conversation_name, :user_id, :chat_id, :data, :date, :date
                 )
                ');
 
@@ -98,8 +98,8 @@ class TrackingDB extends DB
             $created_at = self::getTimestamp();
 
             $sth->bindParam(':is_active', $active);
-            $sth->bindParam(':track_command', $track_command);
-            $sth->bindParam(':track_name', $track_group_name);
+            $sth->bindParam(':conversation_command', $conversation_command);
+            $sth->bindParam(':conversation_name', $conversation_group_name);
             $sth->bindParam(':user_id', $user_id);
             $sth->bindParam(':chat_id', $chat_id);
             $sth->bindParam(':data', $data);
@@ -113,20 +113,20 @@ class TrackingDB extends DB
     }
 
     /**
-     * Update a specific track
+     * Update a specific conversation
      *
      * @param array $fields_values
      * @param array $where_fields_values
      *
      * @return bool
      */
-    public static function updateTrack(array $fields_values, array $where_fields_values)
+    public static function updateConversation(array $fields_values, array $where_fields_values)
     {
-        return self::update(TB_TRACK, $fields_values, $where_fields_values);
+        return self::update(TB_CONVERSATION, $fields_values, $where_fields_values);
     }
 
     /**
-     * Insert the track in the database
+     * Insert the conversation in the database
      *
      * @param string   $table
      * @param array    $fields_values

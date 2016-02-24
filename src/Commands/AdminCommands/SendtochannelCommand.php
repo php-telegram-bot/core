@@ -10,7 +10,7 @@
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Tracking;
+use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ReplyKeyboardHide;
 use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
@@ -50,9 +50,9 @@ class SendtochannelCommand extends AdminCommand
         $data['chat_id'] = $chat_id;
 
         //tracking
-        $path = new Tracking($user_id, $chat_id, $this->getName());
-        $path->startTrack();
-        $session = $path->GetData();
+        $conversation = new Conversation($user_id, $chat_id, $this->getName());
+        $conversation->start();
+        $session = $conversation->getData();
 
         if (!isset($session['state'])) {
             $state = '0';
@@ -68,7 +68,7 @@ class SendtochannelCommand extends AdminCommand
             case 0:
                 if ($type != 'Message' || !in_array(trim($text), $channels)) {
                     $session['state'] = '0';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
     
                     $keyboard = [];
                     foreach ($channels as $channel) {
@@ -97,7 +97,7 @@ class SendtochannelCommand extends AdminCommand
             case 1:
                 if ($session['last_message_id'] == $message->getMessageId()) {
                     $session['state'] = 1;
-                    $path->updateTrack($session);
+                    $conversation->update($session);
     
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $data['text'] = 'Insert the content you want to share: text, photo, audio...';
@@ -112,7 +112,7 @@ class SendtochannelCommand extends AdminCommand
             case 2:
                 if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
                     $session['state'] = 2;
-                    $path->updateTrack($session);
+                    $conversation->update($session);
 
                     if ($session['message_type'] == 'Video' || $session['message_type'] == 'Photo') {
                         $keyboard = [['Yes', 'No']];
@@ -143,7 +143,7 @@ class SendtochannelCommand extends AdminCommand
             case 3:
                 if (($session['last_message_id'] == $message->getMessageId() || $type != 'Message' ) && $session['set_caption']) {
                     $session['state'] = 3;
-                    $path->updateTrack($session);
+                    $conversation->update($session);
 
                     $data['text'] = 'Insert caption:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -156,7 +156,7 @@ class SendtochannelCommand extends AdminCommand
             case 4:
                 if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
                     $session['state'] = '4';
-                    $path->updateTrack($session);
+                    $conversation->update($session);
 
                     $data['text'] = 'Message will look like this:';
                     $result = Request::sendMessage($data);
@@ -194,7 +194,7 @@ class SendtochannelCommand extends AdminCommand
                 $session['last_message_id'] = $message->getMessageId();
                 // no break
             case 5:
-                $path->stopTrack();
+                $conversation->stop();
 
                 $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
 
@@ -225,9 +225,20 @@ class SendtochannelCommand extends AdminCommand
     }
 
     /**
+     * SendBack
      *
-     * @todo Complete dock block
+     * Received a message, the bot can send a copy of it to another chat/channel.
+     * You don't have to care about the type of thei message, the function detect it and use the proper
+     * REQUEST:: function to send it.
+     * $data include all the var that you need to send the message to the propor chat
+     *
      * @todo This method will be moved at an higher level maybe in AdminCommans or Command
+     * @todo Looking for a more significative name
+     *
+     * @param Longman\TelegramBot\Entities\Message $message
+     * @param array $data
+     *
+     * @return Longman\TelegramBot\Entities\ServerResponse
      */
     public function sendBack(Message $message, array $data)
     {
