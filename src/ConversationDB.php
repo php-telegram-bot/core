@@ -26,31 +26,31 @@ class ConversationDB extends DB
             define('TB_CONVERSATION', self::$table_prefix . 'conversation');
         }
     }
- 
+
     /**
-     * Conversation contructor initialize a new conversation
+     * Select a conversation from the DB
      *
      * @param int  $user_id
      * @param int  $chat_id
      * @param bool $limit
      *
-     * @return array
+     * @return array|bool
      */
     public static function selectConversation($user_id, $chat_id, $limit = null)
     {
         if (!self::isDbConnected()) {
             return false;
         }
- 
+
         try {
             $query = 'SELECT * FROM `' . TB_CONVERSATION . '` ';
             $query .= 'WHERE `status` = :status ';
             $query .= 'AND `chat_id` = :chat_id ';
             $query .= 'AND `user_id` = :user_id ';
- 
+
             $tokens = [':chat_id' => $chat_id, ':user_id' => $user_id];
             if (!is_null($limit)) {
-                $query .=' LIMIT :limit';
+                $query .= ' LIMIT :limit';
             }
             $sth = self::$pdo->prepare($query);
 
@@ -73,7 +73,7 @@ class ConversationDB extends DB
      * Insert the conversation in the database
      *
      * @param string $conversation_command
-     * @param string $conversation_name
+     * @param string $conversation_group_name
      * @param int    $user_id
      * @param int    $chat_id
      *
@@ -127,13 +127,13 @@ class ConversationDB extends DB
     }
 
     /**
-     * Insert the conversation in the database
+     * Update the conversation in the database
      *
-     * @param string   $table
-     * @param array    $fields_values
-     * @param array    $where_fields_values
+     * @param string $table
+     * @param array  $fields_values
+     * @param array  $where_fields_values
      *
-     * @todo this function is generic should be moved in DB.php
+     * @todo This function is generic should be moved in DB.php
      *
      * @return bool
      */
@@ -156,8 +156,8 @@ class ConversationDB extends DB
             }
             ++$a;
             ++$tokens_counter;
-            $update .= '`'.$field.'` = :'.$tokens_counter;
-            $tokens[':'.$tokens_counter] = $value;
+            $update .= '`' . $field . '` = :' . $tokens_counter;
+            $tokens[':' . $tokens_counter] = $value;
         }
 
         //Where
@@ -165,17 +165,17 @@ class ConversationDB extends DB
         $where  = '';
         foreach ($where_fields_values as $field => $value) {
             if ($a) {
-                $where  .= ' AND ';
+                $where .= ' AND ';
             } else {
                 ++$a;
-                $where  .= 'WHERE ';
+                $where .= 'WHERE ';
             }
             ++$tokens_counter;
-            $where  .= '`'.$field .'`= :'.$tokens_counter ;
-            $tokens[':'.$tokens_counter] = $value;
+            $where .= '`' . $field .'`= :' . $tokens_counter ;
+            $tokens[':' . $tokens_counter] = $value;
         }
 
-        $query = 'UPDATE `'.$table.'` SET '.$update.' '.$where;
+        $query = 'UPDATE `' . $table . '` SET ' . $update . ' ' . $where;
         try {
             $sth = self::$pdo->prepare($query);
             $status = $sth->execute($tokens);
