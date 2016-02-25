@@ -44,7 +44,7 @@ class ConversationDB extends DB
  
         try {
             $query = 'SELECT * FROM `' . TB_CONVERSATION . '` ';
-            $query .= 'WHERE `is_active` = 1 ';
+            $query .= 'WHERE `status` = :status ';
             $query .= 'AND `chat_id` = :chat_id ';
             $query .= 'AND `user_id` = :user_id ';
  
@@ -54,6 +54,8 @@ class ConversationDB extends DB
             }
             $sth = self::$pdo->prepare($query);
 
+            $active = 'active';
+            $sth->bindParam(':status', $active, \PDO::PARAM_STR);
             $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
@@ -86,18 +88,17 @@ class ConversationDB extends DB
         try {
             $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
                 (
-                `is_active`, `conversation_command`, `conversation_name`, `user_id`, `chat_id`, `data`, `created_at`, `updated_at`
+                `status`, `conversation_command`, `conversation_name`, `user_id`, `chat_id`, `data`, `created_at`, `updated_at`
                 )
                 VALUES (
-                :is_active, :conversation_command, :conversation_name, :user_id, :chat_id, :data, :date, :date
+                :status, :conversation_command, :conversation_name, :user_id, :chat_id, :data, :date, :date
                 )
                ');
-
-            $active = 1;
+            $active = 'active';
             $data = json_encode('');
             $created_at = self::getTimestamp();
 
-            $sth->bindParam(':is_active', $active);
+            $sth->bindParam(':status', $active);
             $sth->bindParam(':conversation_command', $conversation_command);
             $sth->bindParam(':conversation_name', $conversation_group_name);
             $sth->bindParam(':user_id', $user_id);
@@ -147,14 +148,16 @@ class ConversationDB extends DB
         //Values
         $update = '';
         $tokens = [];
+        $tokens_counter = 0;
         $a = 0;
         foreach ($fields_values as $field => $value) {
             if ($a) {
                 $update .= ', ';
             }
             ++$a;
-            $update .= '`'.$field.'` = :'.$a;
-            $tokens[':'.$a] = $value;
+            ++$tokens_counter;
+            $update .= '`'.$field.'` = :'.$tokens_counter;
+            $tokens[':'.$tokens_counter] = $value;
         }
 
         //Where
@@ -167,7 +170,9 @@ class ConversationDB extends DB
                 ++$a;
                 $where  .= 'WHERE ';
             }
-            $where  .= '`'.$field .'`='.$value ;
+            ++$tokens_counter;
+            $where  .= '`'.$field .'`= :'.$tokens_counter ;
+            $tokens[':'.$tokens_counter] = $value;
         }
 
         $query = 'UPDATE `'.$table.'` SET '.$update.' '.$where;

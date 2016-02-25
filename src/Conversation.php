@@ -101,7 +101,7 @@ class Conversation
         if ($this->is_fetched) {
             return true;
         }
-
+        //select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
         $this->is_fetched = true;
 
@@ -114,14 +114,14 @@ class Conversation
                 return true;
             }
 
-            //a track with the same name was already opened store the data
+            //a track with the same name was already opened, store the data inside the class
             if ($this->conversation['conversation_name'] == $this->group_name) {
                 $this->data = json_decode($this->conversation['data'], true);
                 return true;
             }
 
-            //a  with a differet name has been opened unsetting the DB one and reacreatea a new one
-            ConversationDB::updateConversation(['is_active' => 0], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
+            //a conversation  with a differet name has been opened unsetting the DB one and reacreatea a new one
+            ConversationDB::updateConversation(['status' => 'cancelled'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
             return false;
         }
 
@@ -156,7 +156,7 @@ class Conversation
         if ($this->conversationExist()) {
             $fields['data'] = json_encode($data);
 
-            ConversationDB::updateConversation($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
+            ConversationDB::updateConversation($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
             //TODO verify query success before convert the private var
             $this->data = $data;
         }
@@ -174,7 +174,7 @@ class Conversation
     public function stop()
     {
         if ($this->conversationExist()) {
-            ConversationDB::updateConversation(['is_active' => 0], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id]);
+            ConversationDB::updateConversation(['status' => 'stopped'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
         }
     }
 
