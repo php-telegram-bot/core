@@ -41,7 +41,6 @@ class SendtochannelCommand extends AdminCommand
         $type = $message->getType();
         // 'Cast' the command type into message this protect the machine state
         // if the commmad is recolled when the conversation is already started
-        $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
         $type = ($type == 'command') ? 'Message' : $type;
         $text = trim($message->getText(true));
 
@@ -169,8 +168,8 @@ class SendtochannelCommand extends AdminCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $session['caption'] = $text;
                 $session['last_message_id'] = $message->getMessageId();
+                $session['caption'] = $text;
                 // no break
             case 4:
                 if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
@@ -200,7 +199,6 @@ class SendtochannelCommand extends AdminCommand
                             ]
                         );
                         $data['reply_markup'] = $reply_keyboard_markup;
-
                         $result = Request::sendMessage($data);
                     }
                     break;
@@ -214,32 +212,69 @@ class SendtochannelCommand extends AdminCommand
                 // no break
             case 5:
                 $conversation->stop();
-
                 $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
 
                 if ($session['post_message']) {
-                    $data1 = [];
-                    $data1['chat_id'] = $session['channel'];
-                    if ($session['set_caption']) {
-                        $data1['caption'] = $session['caption'];
-                    }
-                    $result = $this->sendBack(new Message($session['message'], 'thisbot'), $data1);
-
-                    $text_back = 'Message not sent to: ' .  $session['channel'] . "\n" . '- The channel exist?' . "\n" . '- Is the bot admin of the channel?';
-                    if ($result->isOk()) {
-                        $text_back = 'Message sent succesfully to: ' . $session['channel'];
-                    }
-                    $data['text'] = $text_back;
+                    $data['text'] = $this->publish(new Message($session['message'], 'anystring'), $session['channel'], $session['caption']);
                     $result = Request::sendMessage($data);
                     break;
                 }
     
                 $data['text'] = 'Abort by user, message not sent..';
-                $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                 $result = Request::sendMessage($data);
                 break;
         }
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function executeNoDB()
+    {
+        $message = $this->getMessage();
+        $text = trim($message->getText(true));
+        $chat_id = $message->getChat()->getId();
+
+        $data = [];
+        $data['chat_id'] = $chat_id;
+
+        if (empty($text)) {
+            $data['text'] = 'Usage: /sendtochannel <text>';
+        } else {
+            $channels = (array) $this->getConfig('your_channel');
+            $first_channel = $channels[0];
+            $data['text'] = $this->publish(new Message($message->reflect(), 'anystring'), $first_channel);
+        }
+        return Request::sendMessage($data);
+    }
+
+    /**
+     * Publish
+     *
+     * Publish a message in a channel and retun succecs or fail message
+     * @param Longman\TelegramBot\Entities\Message $message
+     * @param int                                  $channel
+     * @param string|null                          $caption
+     *
+     * @return string
+     */
+    protected function publish(Message $message, $channel, $caption = null)
+    {
+        $data = [
+            'chat_id' => $channel,
+            'caption' => $caption,
+        ];
+
+        if ($this->sendBack($message, $data)->isOk()) {
+            $response = 'Message sent succesfully to: ' . $channel;
+        } else {
+            $response =
+                    'Message not sent to: ' .  $channel . "\n" .
+                    '- The channel exist?' . "\n" .
+                    '- Is the bot admin of the channel?';
+        }
+        return $response;
     }
 
     /**
@@ -258,11 +293,12 @@ class SendtochannelCommand extends AdminCommand
      *
      * @return Longman\TelegramBot\Entities\ServerResponse
      */
-    public function sendBack(Message $message, array $data)
+    protected function sendBack(Message $message, array $data)
     {
         $type = $message->getType();
+        $type = ($type == 'command') ? 'Message' : $type;
         if ($type == 'Message') {
-            $data['text'] = $message->getText();
+            $data['text'] = $message->getText(true);
         } elseif ($type == 'Audio') {
             $data['audio'] = $message->getAudio()->getFileId();
             $data['duration'] = $message->getAudio()->getDuration();
