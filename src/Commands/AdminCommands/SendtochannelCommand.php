@@ -26,7 +26,7 @@ class SendtochannelCommand extends AdminCommand
     protected $name = 'sendtochannel';
     protected $description = 'Send message to a channel';
     protected $usage = '/sendtochannel <message to send>';
-    protected $version = '0.1.2';
+    protected $version = '0.1.3';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -39,35 +39,51 @@ class SendtochannelCommand extends AdminCommand
         $chat_id = $message->getChat()->getId();
         $user_id = $message->getFrom()->getId();
         $type = $message->getType();
-        //'Cast' the command type into message this protect the machine state
-        //if the commmad is recolled when the conversation is already started
-        if ($type == 'command') { 
-            $type = "Message";
-        }
+        // 'Cast' the command type into message this protect the machine state
+        // if the commmad is recolled when the conversation is already started
+        $this->reply_to_message = isset($data['reply_to_message']) ? $data['reply_to_message'] : null;
+        $type = ($type == 'command') ? 'Message' : $type;
         $text = trim($message->getText(true));
 
         $data = [];
         $data['chat_id'] = $chat_id;
 
-        //tracking
+        // Conversation
         $conversation = new Conversation($user_id, $chat_id, $this->getName());
         $conversation->start();
         $session = $conversation->getData();
 
+        $channels = (array) $this->getConfig('your_channel');
         if (!isset($session['state'])) {
-            $state = '0';
+            $state = (count($channels) == 0) ? -1 : 0;
             $session['last_message_id'] = $message->getMessageId();
         } else {
             $state = $session['state'];
         }
-
-        $channels = (array) $this->getConfig('your_channel');
-        //echo count($channels) . "\n";
-
         switch ($state) {
+            case -1:
+                // getConfig has not been configured asking for channel to administer
+                if ($type != 'Message' || empty($text)) {
+
+                    $session['state'] = '-1';
+                    $conversation->update($session);
+
+                    $data['text'] = 'Insert the channel name: (@yourchannel)';
+                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $result = Request::sendMessage($data);
+
+                    break;
+                }
+                $session['channel'] = $text;
+                $session['last_message_id'] = $message->getMessageId();
+                // Jump to state 1
+                goto insert;
+
+                // no break
             default:
             case 0:
-                if ($type != 'Message' || !in_array(trim($text), $channels)) {
+                // getConfig has been configured choose channel
+                if ($type != 'Message' || !in_array($text, $channels)) {
                     $session['state'] = '0';
                     $conversation->update($session);
     
@@ -85,7 +101,7 @@ class SendtochannelCommand extends AdminCommand
                     );
                     $data['reply_markup'] = $reply_keyboard_markup;
                     $data['text'] = 'Select a channel';
-                    if ($type != 'Message' || !in_array(trim($text), $channels)) {
+                    if ($type != 'Message' || !in_array($text, $channels)) {
                         $data['text'] = 'Select a channel from the keyboard:';
                     }
                     $result = Request::sendMessage($data);
@@ -96,6 +112,7 @@ class SendtochannelCommand extends AdminCommand
 
                 // no break
             case 1:
+                insert:
                 if ($session['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
                     $session['state'] = 1;
                     $conversation->update($session);
@@ -115,6 +132,7 @@ class SendtochannelCommand extends AdminCommand
                     $session['state'] = 2;
                     $conversation->update($session);
 
+                    // Execute this just with object that allow caption
                     if ($session['message_type'] == 'Video' || $session['message_type'] == 'Photo') {
                         $keyboard = [['Yes', 'No']];
                         $reply_keyboard_markup = new ReplyKeyboardMarkup(
@@ -207,7 +225,7 @@ class SendtochannelCommand extends AdminCommand
                     }
                     $result = $this->sendBack(new Message($session['message'], 'thisbot'), $data1);
 
-                    $text_back = 'Message not sent to: ' .  $session['channel'] . "\n" . '- The channel exist?' . "\n" . '- Is the bot admin of the channel?';             
+                    $text_back = 'Message not sent to: ' .  $session['channel'] . "\n" . '- The channel exist?' . "\n" . '- Is the bot admin of the channel?';
                     if ($result->isOk()) {
                         $text_back = 'Message sent succesfully to: ' . $session['channel'];
                     }
@@ -221,7 +239,6 @@ class SendtochannelCommand extends AdminCommand
                 $result = Request::sendMessage($data);
                 break;
         }
-
         return $result;
     }
 
@@ -271,7 +288,6 @@ class SendtochannelCommand extends AdminCommand
             throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
         }
 
-        $result = call_user_func_array($callback_path.'::'.$callback_function, array($data));
-        return $result;
+        return  call_user_func_array($callback_path.'::'.$callback_function, array($data));
     }
 }
