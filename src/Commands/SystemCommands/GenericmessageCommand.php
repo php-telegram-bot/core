@@ -11,8 +11,8 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\ServerResponse;
 
 /**
  * Generic message command
@@ -36,7 +36,7 @@ class GenericmessageCommand extends SystemCommand
     public function executeNoDB()
     {
         //Do nothing
-        return new ServerResponse(['ok' => true, 'result' => true], null);
+        return Request::emptyResponse();
     }
 
     /**
@@ -55,6 +55,6 @@ class GenericmessageCommand extends SystemCommand
         if (! is_null($command)) {
             return $this->telegram->executeCommand($command, $this->update);
         }
-        return new ServerResponse(['ok' => true, 'result' => true], null);
+        return Request::emptyResponse();
     }
 }
