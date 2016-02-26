@@ -109,6 +109,7 @@ class Request
      * @todo Take log verbosity into account
      *
      * @param string $string
+     *
      * @return mixed
      */
     private static function log($string)
@@ -129,6 +130,7 @@ class Request
      * Generate general fake server response
      *
      * @param array $data Data to add to fake response
+     *
      * @return array Fake response data
      */
     public static function generateGeneralFakeServerResponse(array $data = null)
@@ -167,6 +169,7 @@ class Request
      *
      * @param string     $action Action to execute
      * @param array|null $data   Data to attach to the execution
+     *
      * @return mixed Result of the cURL call
      */
     public static function executeCurl($action, array $data = null)
@@ -178,7 +181,6 @@ class Request
 
         $curlConfig = [
             CURLOPT_URL            => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
-            CURLOPT_POST           => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SAFE_UPLOAD    => true,
         ];
@@ -227,6 +229,7 @@ class Request
      * Download file
      *
      * @param Entities\File $file
+     *
      * @return boolean
      */
     public static function downloadFile(File $file)
@@ -281,6 +284,7 @@ class Request
      * Encode file
      *
      * @param string $file
+     *
      * @return CURLFile
      */
     protected static function encodeFile($file)
@@ -296,6 +300,7 @@ class Request
      *
      * @param string     $action
      * @param array|null $data
+     *
      * @return Entities\ServerResponse
      */
     public static function send($action, array $data = null)
@@ -331,6 +336,7 @@ class Request
      * @todo Could do with some cleaner recursion
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function sendMessage(array $data)
@@ -353,6 +359,7 @@ class Request
      * Forward message
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function forwardMessage(array $data)
@@ -369,6 +376,7 @@ class Request
      *
      * @param array $data
      * @param string $file
+     *
      * @return mixed
      */
     public static function sendPhoto(array $data, $file = null)
@@ -389,6 +397,7 @@ class Request
      *
      * @param array  $data
      * @param string $file
+     *
      * @return mixed
      */
     public static function sendAudio(array $data, $file = null)
@@ -409,6 +418,7 @@ class Request
      *
      * @param array  $data
      * @param string $file
+     *
      * @return mixed
      */
     public static function sendDocument(array $data, $file = null)
@@ -429,6 +439,7 @@ class Request
      *
      * @param array  $data
      * @param string $file
+     *
      * @return mixed
      */
     public static function sendSticker(array $data, $file = null)
@@ -449,6 +460,7 @@ class Request
      *
      * @param array  $data
      * @param string $file
+     *
      * @return mixed
      */
     public static function sendVideo(array $data, $file = null)
@@ -469,6 +481,7 @@ class Request
      *
      * @param array  $data
      * @param string $file
+     *
      * @return mixed
      */
     public static function sendVoice(array $data, $file = null)
@@ -488,6 +501,7 @@ class Request
      * Send location
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function sendLocation(array $data)
@@ -503,6 +517,7 @@ class Request
      * Send chat action
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function sendChatAction(array $data)
@@ -518,6 +533,7 @@ class Request
      * Get user profile photos
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function getUserProfilePhotos(array $data)
@@ -537,6 +553,7 @@ class Request
      * Get updates
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function getUpdates(array $data)
@@ -549,6 +566,7 @@ class Request
      *
      * @param string $url
      * @param string $file
+     *
      * @return mixed
      */
     public static function setWebhook($url = '', $file = null)
@@ -566,6 +584,7 @@ class Request
      * Get file
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function getFile(array $data)
@@ -581,6 +600,7 @@ class Request
      * Answer inline query
      *
      * @param array $data
+     *
      * @return mixed
      */
     public static function answerInlineQuery(array $data)
@@ -593,6 +613,19 @@ class Request
     }
 
     /**
+     * Return an empty Server Response
+     *
+     * No request to telegram are sent, this function is used in commands that
+     * don't need to fire a message after execution
+     *
+     * @return Entities\ServerResponse
+     */
+    public static function emptyResponse()
+    {
+        return new ServerResponse(['ok' => true, 'result' => true], null);
+    }
+
+    /**
      * Send message to all active chats
      *
      * @param string  $callback_function
@@ -602,6 +635,7 @@ class Request
      * @param boolean $send_users
      * @param string  $date_from
      * @param string  $date_to
+     *
      * @return array
      */
     public static function sendToActiveChats(
