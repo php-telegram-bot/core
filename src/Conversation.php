@@ -49,7 +49,7 @@ class Conversation
     protected $user_id;
 
     /**
-     * Telegram chat_id
+     * Telegram chat id
      *
      * @var int
      */
@@ -59,23 +59,23 @@ class Conversation
      * Group name let you share the session among commands
      * Call this as the same name of the command if you don't need to share the conversation
      *
-     * @var strint
+     * @var string
      */
     protected $group_name;
 
     /**
-     * Command to be execute if the conversation is active
+     * Command to be executed if the conversation is active
      *
      * @var string
      */
     protected $command;
 
     /**
-     * Conversation contructor initialize a new conversation
+     * Conversation contructor to initialize a new conversation
      *
      * @param int    $user_id
      * @param int    $chat_id
-     * @param string $name
+     * @param string $group_name
      * @param string $command
      */
     public function __construct($user_id, $chat_id, $group_name = null, $command = null)
@@ -91,7 +91,7 @@ class Conversation
     }
 
     /**
-     * Check if the conversation already exist
+     * Check if the conversation already exists
      *
      * @return bool
      */
@@ -101,7 +101,7 @@ class Conversation
         if ($this->is_fetched) {
             return true;
         }
-        //select an active conversation
+        //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
         $this->is_fetched = true;
 
@@ -114,13 +114,13 @@ class Conversation
                 return true;
             }
 
-            //a track with the same name was already opened, store the data inside the class
+            //A conversation with the same name was already opened, store the data inside the class
             if ($this->conversation['conversation_name'] == $this->group_name) {
                 $this->data = json_decode($this->conversation['data'], true);
                 return true;
             }
 
-            //a conversation  with a differet name has been opened unsetting the DB one and reacreatea a new one
+            //A conversation with a different name has been opened, unset the DB one and recreate a new one
             ConversationDB::updateConversation(['status' => 'cancelled'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
             return false;
         }
@@ -130,9 +130,7 @@ class Conversation
     }
 
     /**
-     * Check if the Conversation already exist
-     *
-     * Check if a conversation has already been created in the database. If the conversation is not found, a new conversation is created. start fetch the data stored in the database
+     * Check if a conversation has already been created in the database. If the conversation is not found, a new conversation is created. Start fetches the data stored in the database.
      *
      * @return bool
      */
@@ -148,11 +146,13 @@ class Conversation
     /**
      * Store the array/variable in the database with json_encode() function
      *
+     * @todo Verify the query before assigning the $data member variable
+     *
      * @param array $data
      */
     public function update($data)
     {
-        //conversation must exist!
+        //Conversation must exist!
         if ($this->conversationExist()) {
             $fields['data'] = json_encode($data);
 
@@ -165,11 +165,9 @@ class Conversation
     /**
      * Delete the conversation from the database
      *
-     * Currently the Convevrsation is not deleted but just unsetted
+     * Currently the Conversation is not deleted but just set to 'stopped'
      *
-     * @TODO should return something
-     *
-     * @param array $data
+     * @todo should return something
      */
     public function stop()
     {
@@ -181,7 +179,7 @@ class Conversation
     /**
      * Retrieve the command to execute from the conversation
      *
-     * @param string
+     * @return string|null
      */
     public function getConversationCommand()
     {
@@ -192,9 +190,9 @@ class Conversation
     }
 
     /**
-     * Retrive the data store in the conversation
+     * Retrieve the data stored in the conversation
      *
-     * @param array $data
+     * @return array
      */
     public function getData()
     {
