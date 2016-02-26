@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
@@ -7,14 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ReplyKeyboardHide;
 use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
-use Longman\TelegramBot\Commands\AdminCommand;
 
 class SendtochannelCommand extends AdminCommand
 {
@@ -33,17 +34,11 @@ class SendtochannelCommand extends AdminCommand
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
-
-        $chat = $message->getChat();
-        $user = $message->getFrom();
         $type = $message->getType();
-
-        $chat_id = $chat->getId();
         $text = trim($message->getText(true));
-        $user_id = $user->getId();
-
+        $chat_id = $message->getChat()->getId();
+        $user_id = $message->getFrom()->getId();
         $text = $message->getText(true);
 
         $data = [];
@@ -228,11 +223,11 @@ class SendtochannelCommand extends AdminCommand
      * SendBack
      *
      * Received a message, the bot can send a copy of it to another chat/channel.
-     * You don't have to care about the type of thei message, the function detect it and use the proper
+     * You don't have to care about the type of the message, the function detect it and use the proper
      * REQUEST:: function to send it.
-     * $data include all the var that you need to send the message to the propor chat
+     * $data include all the var that you need to send the message to the proper chat
      *
-     * @todo This method will be moved at an higher level maybe in AdminCommans or Command
+     * @todo This method will be moved at an higher level maybe in AdminCommand or Command
      * @todo Looking for a more significative name
      *
      * @param Longman\TelegramBot\Entities\Message $message

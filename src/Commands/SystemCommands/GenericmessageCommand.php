@@ -35,7 +35,7 @@ class GenericmessageCommand extends SystemCommand
     public function executeNoDB()
     {
         //Do nothing
-        return true;
+        return new ServerResponse(['ok' => true, 'result' => true], null);
     }
 
     /**
@@ -45,15 +45,15 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        //System command, fetch command to execute if track exist
+        //System command, fetch command to execute if conversation exist
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
         $user_id = $message->getFrom()->getId();
-        //Fetch Track if exist
+        //Fetch Conversation if exist
         $command = (new Conversation($user_id, $chat_id))->getConversationCommand();
         if (! is_null($command)) {
             return $this->telegram->executeCommand($command, $this->update);
         }
-        return true;
+        return new ServerResponse(['ok' => true, 'result' => true], null);
     }
 }

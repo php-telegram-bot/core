@@ -95,7 +95,8 @@ class ConversationDB extends DB
                 )
                ');
             $active = 'active';
-            $data = json_encode('');
+            //$data = json_encode('');
+            $data = '""';
             $created_at = self::getTimestamp();
 
             $sth->bindParam(':status', $active);

@@ -95,7 +95,7 @@ class Conversation
      *
      * @return bool
      */
-    protected function conversationExist()
+    protected function exist()
     {
         //Conversation info already fetched
         if ($this->is_fetched) {
@@ -136,7 +136,7 @@ class Conversation
      */
     public function start()
     {
-        if (!$this->conversationExist()) {
+        if (!$this->exist()) {
             $status = ConversationDB::insertConversation($this->command, $this->group_name, $this->user_id, $this->chat_id);
             $this->is_fetched = true;
         }
@@ -153,7 +153,7 @@ class Conversation
     public function update($data)
     {
         //Conversation must exist!
-        if ($this->conversationExist()) {
+        if ($this->exist()) {
             $fields['data'] = json_encode($data);
 
             ConversationDB::updateConversation($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
@@ -171,7 +171,7 @@ class Conversation
      */
     public function stop()
     {
-        if ($this->conversationExist()) {
+        if ($this->exist()) {
             ConversationDB::updateConversation(['status' => 'stopped'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
         }
     }
@@ -183,7 +183,7 @@ class Conversation
      */
     public function getConversationCommand()
     {
-        if ($this->conversationExist()) {
+        if ($this->exist()) {
             return $this->conversation['conversation_command'];
         }
         return null;
