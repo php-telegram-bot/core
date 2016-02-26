@@ -16,6 +16,7 @@ use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ReplyKeyboardHide;
 use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
+use Longman\TelegramBot\Exception\TelegramException;
 
 class SendtochannelCommand extends AdminCommand
 {
@@ -35,11 +36,15 @@ class SendtochannelCommand extends AdminCommand
     public function execute()
     {
         $message = $this->getMessage();
-        $type = $message->getType();
-        $text = trim($message->getText(true));
         $chat_id = $message->getChat()->getId();
         $user_id = $message->getFrom()->getId();
-        $text = $message->getText(true);
+        $type = $message->getType();
+        //'Cast' the command type into message this protect the machine state
+        //if the commmad is recolled when the conversation is already started
+        if ($type == 'command') { 
+            $type = "Message";
+        }
+        $text = trim($message->getText(true));
 
         $data = [];
         $data['chat_id'] = $chat_id;
@@ -57,6 +62,7 @@ class SendtochannelCommand extends AdminCommand
         }
 
         $channels = (array) $this->getConfig('your_channel');
+        //echo count($channels) . "\n";
 
         switch ($state) {
             default:
@@ -90,7 +96,7 @@ class SendtochannelCommand extends AdminCommand
 
                 // no break
             case 1:
-                if ($session['last_message_id'] == $message->getMessageId()) {
+                if ($session['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
                     $session['state'] = 1;
                     $conversation->update($session);
     
@@ -99,9 +105,9 @@ class SendtochannelCommand extends AdminCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
+                $session['last_message_id'] = $message->getMessageId();
                 $session['message'] = $message->reflect();
                 $session['message_type'] = $type;
-                $session['last_message_id'] = $message->getMessageId();
 
                 // no break
             case 2:
@@ -201,9 +207,9 @@ class SendtochannelCommand extends AdminCommand
                     }
                     $result = $this->sendBack(new Message($session['message'], 'thisbot'), $data1);
 
-                    $text_back = 'Sorry message not sent to: '.$session['channel'];
+                    $text_back = 'Message not sent to: ' .  $session['channel'] . "\n" . '- The channel exist?' . "\n" . '- Is the bot admin of the channel?';             
                     if ($result->isOk()) {
-                        $text_back = 'Message sent succesfully to: '.$session['channel'];
+                        $text_back = 'Message sent succesfully to: ' . $session['channel'];
                     }
                     $data['text'] = $text_back;
                     $result = Request::sendMessage($data);
