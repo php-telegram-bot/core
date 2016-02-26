@@ -121,7 +121,7 @@ class Conversation
             }
 
             //A conversation with a different name has been opened, unset the DB one and recreate a new one
-            ConversationDB::updateConversation(['status' => 'cancelled'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
+            $this->cancel();
             return false;
         }
 
@@ -144,6 +144,32 @@ class Conversation
     }
 
     /**
+     * Delete the conversation from the database
+     *
+     * Currently the Conversation is not deleted but just set to 'stopped'
+     *
+     * @todo should return something
+     */
+    public function stop()
+    {
+        if ($this->exist()) {
+            ConversationDB::updateConversation(['status' => 'stopped'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
+        }
+    }
+
+    /**
+     * Set to Cancelled the conversation in the database
+     *
+     * @todo should return something
+     */
+    public function cancel()
+    {
+        if ($this->exist()) {
+            ConversationDB::updateConversation(['status' => 'cancelled'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
+        }
+    }
+
+    /**
      * Store the array/variable in the database with json_encode() function
      *
      * @todo Verify the query before assigning the $data member variable
@@ -159,20 +185,6 @@ class Conversation
             ConversationDB::updateConversation($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
             //TODO verify query success before convert the private var
             $this->data = $data;
-        }
-    }
-
-    /**
-     * Delete the conversation from the database
-     *
-     * Currently the Conversation is not deleted but just set to 'stopped'
-     *
-     * @todo should return something
-     */
-    public function stop()
-    {
-        if ($this->exist()) {
-            ConversationDB::updateConversation(['status' => 'stopped'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
         }
     }
 
