@@ -15,6 +15,9 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ReplyKeyboardHide;
 
+/**
+ * User "/cancel" command
+ */
 class CancelCommand extends UserCommand
 {
     /**#@+
@@ -26,20 +29,9 @@ class CancelCommand extends UserCommand
     protected $version = '0.1.0';
     /**#@-*/
 
-    public function executeNoDB()
-    {
-        //Database not setted or without connection
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-
-        $data = [
-            'reply_markup' => new ReplyKeyboardHide(['selective' => true]),
-            'chat_id' => $chat_id,
-            'text' => 'Keyboard hidden!',
-        ];
-        return Request::sendMessage($data);
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function execute()
     {
         $message = $this->getMessage();
@@ -55,5 +47,22 @@ class CancelCommand extends UserCommand
             'text' => 'Conversation canceled!',
         ];
         return  Request::sendMessage($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function executeNoDB()
+    {
+        //Database not setted or without connection
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+
+        $data = [
+            'reply_markup' => new ReplyKeyboardHide(['selective' => true]),
+            'chat_id' => $chat_id,
+            'text' => 'Keyboard hidden!',
+        ];
+        return Request::sendMessage($data);
     }
 }
