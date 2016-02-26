@@ -61,7 +61,7 @@ class SendtochannelCommand extends AdminCommand
             $state = $session['state'];
         }
 
-        $channels = $this->getConfig('your_channel');
+        $channels = (array) $this->getConfig('your_channel');
 
         switch ($state) {
             default:
