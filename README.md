@@ -427,8 +427,11 @@ $telegram->setUploadPath('yourpath/Upload');
 ```
 
 ### Logging
+Thrown Exceptions are not stored by default. You can Enable this feature adding this line in your 'webhook.php' or 'getUpdates.php'
 
-Thrown Exceptions are stored in *TelegramException.log* file (in the base directory).
+```php
+    Longman\TelegramBot\Logger::initialize('your_path/TelegramException.log');
+```
 
 Incoming update (json string from webhook and getUpdates) can be logged in a text file. Set those options with the methods:
 ```php
