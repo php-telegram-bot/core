@@ -60,8 +60,6 @@ class CancelCommand extends UserCommand
      */
     public function executeNoDB()
     {
-        //Output the default message when there is no DB connection
-        parent::executeNoDB();
         return $this->hideKeyboard();
     }
 
