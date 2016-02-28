@@ -72,14 +72,13 @@ class ConversationDB extends DB
     /**
      * Insert the conversation in the database
      *
-     * @param string $conversation_command
-     * @param string $conversation_group_name
      * @param int    $user_id
      * @param int    $chat_id
+     * @param string $command
      *
      * @return bool
      */
-    public static function insertConversation($conversation_command, $conversation_group_name, $user_id, $chat_id)
+    public static function insertConversation($user_id, $chat_id, $command)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -88,10 +87,10 @@ class ConversationDB extends DB
         try {
             $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
                 (
-                `status`, `conversation_command`, `conversation_name`, `user_id`, `chat_id`, `data`, `created_at`, `updated_at`
+                `status`, `user_id`, `chat_id`, `command`, `data`, `created_at`, `updated_at`
                 )
                 VALUES (
-                :status, :conversation_command, :conversation_name, :user_id, :chat_id, :data, :date, :date
+                :status, :user_id, :chat_id, :command, :data, :date, :date
                 )
                ');
             $active = 'active';
@@ -100,8 +99,7 @@ class ConversationDB extends DB
             $created_at = self::getTimestamp();
 
             $sth->bindParam(':status', $active);
-            $sth->bindParam(':conversation_command', $conversation_command);
-            $sth->bindParam(':conversation_name', $conversation_group_name);
+            $sth->bindParam(':command', $command);
             $sth->bindParam(':user_id', $user_id);
             $sth->bindParam(':chat_id', $chat_id);
             $sth->bindParam(':data', $data);
