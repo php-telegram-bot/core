@@ -26,7 +26,7 @@ class SendtochannelCommand extends AdminCommand
     protected $name = 'sendtochannel';
     protected $description = 'Send message to a channel';
     protected $usage = '/sendtochannel <message to send>';
-    protected $version = '0.1.3';
+    protected $version = '0.1.4';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -49,7 +49,7 @@ class SendtochannelCommand extends AdminCommand
 
         // Conversation
         $conversation = new Conversation($user_id, $chat_id, $this->getName());
-        $conversation->start();
+
         $session = $conversation->getData();
 
         $channels = (array) $this->getConfig('your_channel');

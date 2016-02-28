@@ -30,7 +30,7 @@ class CancelCommand extends UserCommand
     protected $name = 'cancel';
     protected $description = 'Cancel the currently active conversation';
     protected $usage = '/cancel';
-    protected $version = '0.1.0';
+    protected $version = '0.1.1';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -47,7 +47,7 @@ class CancelCommand extends UserCommand
             $this->getMessage()->getChat()->getId()
         );
 
-        if ($conversation_command = $conversation->getConversationCommand()) {
+        if ($conversation_command = $conversation->getCommand()) {
             $conversation->cancel();
             $text = 'Conversation "' . $conversation_command . '" cancelled!';
         }
