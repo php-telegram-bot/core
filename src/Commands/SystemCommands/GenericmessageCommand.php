@@ -24,7 +24,7 @@ class GenericmessageCommand extends SystemCommand
      */
     protected $name = 'Genericmessage';
     protected $description = 'Handle generic message';
-    protected $version = '1.0.1';
+    protected $version = '1.0.2';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -46,15 +46,16 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        //System command, fetch command to execute if conversation exist
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-        $user_id = $message->getFrom()->getId();
-        //Fetch Conversation if exist
-        $command = (new Conversation($user_id, $chat_id))->getConversationCommand();
-        if (! is_null($command)) {
+        //If a conversation is busy, execute the conversation command after handling the message
+        $conversation = new Conversation(
+            $this->getMessage()->getChat()->getId(),
+            $this->getMessage()->getFrom()->getId()
+        );
+        //Fetch conversation command if it exists and execute it
+        if ($conversation->exists() && ($command = $conversation->getCommand())) {
             return $this->telegram->executeCommand($command, $this->update);
         }
+
         return Request::emptyResponse();
     }
 }
