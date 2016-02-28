@@ -14,6 +14,9 @@ before_install:
 install:
   - travis_retry composer install --no-interaction
 
+before_script:
+  - mysql -e 'create database telegrambot; use telegrambot; source structure.sql;'
+
 script:
   - vendor/bin/phpunit
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .; fi"
