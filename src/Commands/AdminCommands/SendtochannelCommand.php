@@ -31,6 +31,13 @@ class SendtochannelCommand extends AdminCommand
     /**#@-*/
 
     /**
+     * Conversation Object
+     *
+     * @var Longman\TelegramBot\Conversation
+     */
+    protected $conversation;
+
+    /**
      * {@inheritdoc}
      */
     public function execute()
@@ -48,9 +55,9 @@ class SendtochannelCommand extends AdminCommand
         $data['chat_id'] = $chat_id;
 
         // Conversation
-        $conversation = new Conversation($user_id, $chat_id, $this->getName());
+        $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
-        $session = $conversation->getData();
+        $session = $this->conversation->getData();
 
         $channels = (array) $this->getConfig('your_channel');
         if (!isset($session['state'])) {
@@ -63,9 +70,8 @@ class SendtochannelCommand extends AdminCommand
             case -1:
                 // getConfig has not been configured asking for channel to administer
                 if ($type != 'Message' || empty($text)) {
-
-                    $session['state'] = '-1';
-                    $conversation->update($session);
+                    $session['state'] = -1;
+                    $this->conversation->update($session);
 
                     $data['text'] = 'Insert the channel name: (@yourchannel)';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -83,9 +89,9 @@ class SendtochannelCommand extends AdminCommand
             case 0:
                 // getConfig has been configured choose channel
                 if ($type != 'Message' || !in_array($text, $channels)) {
-                    $session['state'] = '0';
-                    $conversation->update($session);
-    
+                    $session['state'] = 0;
+                    $this->conversation->update($session);
+
                     $keyboard = [];
                     foreach ($channels as $channel) {
                         $keyboard[] = [$channel];
@@ -114,8 +120,8 @@ class SendtochannelCommand extends AdminCommand
                 insert:
                 if ($session['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
                     $session['state'] = 1;
-                    $conversation->update($session);
-    
+                    $this->conversation->update($session);
+
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $data['text'] = 'Insert the content you want to share: text, photo, audio...';
                     $result = Request::sendMessage($data);
@@ -129,7 +135,7 @@ class SendtochannelCommand extends AdminCommand
             case 2:
                 if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
                     $session['state'] = 2;
-                    $conversation->update($session);
+                    $this->conversation->update($session);
 
                     // Execute this just with object that allow caption
                     if ($session['message_type'] == 'Video' || $session['message_type'] == 'Photo') {
@@ -161,7 +167,7 @@ class SendtochannelCommand extends AdminCommand
             case 3:
                 if (($session['last_message_id'] == $message->getMessageId() || $type != 'Message' ) && $session['set_caption']) {
                     $session['state'] = 3;
-                    $conversation->update($session);
+                    $this->conversation->update($session);
 
                     $data['text'] = 'Insert caption:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -173,8 +179,8 @@ class SendtochannelCommand extends AdminCommand
                 // no break
             case 4:
                 if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
-                    $session['state'] = '4';
-                    $conversation->update($session);
+                    $session['state'] = 4;
+                    $this->conversation->update($session);
 
                     $data['text'] = 'Message will look like this:';
                     $result = Request::sendMessage($data);
@@ -211,7 +217,7 @@ class SendtochannelCommand extends AdminCommand
                 $session['last_message_id'] = $message->getMessageId();
                 // no break
             case 5:
-                $conversation->stop();
+                $this->conversation->stop();
                 $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
 
                 if ($session['post_message']) {
@@ -219,7 +225,7 @@ class SendtochannelCommand extends AdminCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-    
+
                 $data['text'] = 'Abort by user, message not sent..';
                 $result = Request::sendMessage($data);
                 break;
