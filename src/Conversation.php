@@ -10,23 +10,14 @@
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\ConversationDB;
-use Longman\TelegramBot\Entities\Update;
-
 /**
  * Class Conversation
+ *
+ * Only one conversation can be active at any one time.
+ * A conversation is directly linked to a user, chat and the command that is managing the conversation.
  */
 class Conversation
 {
-    /**
-     * Conversation has been fetched true false
-     *
-     * @var bool
-     */
-    protected $is_fetched = false;
-
     /**
      * All information fetched from the database
      *
@@ -35,7 +26,7 @@ class Conversation
     protected $conversation = null;
 
     /**
-     * Data stored inside the Conversation
+     * Data stored inside the conversation
      *
      * @var array
      */
@@ -56,14 +47,6 @@ class Conversation
     protected $chat_id;
 
     /**
-     * Group name let you share the session among commands
-     * Call this as the same name of the command if you don't need to share the conversation
-     *
-     * @var string
-     */
-    protected $group_name;
-
-    /**
      * Command to be executed if the conversation is active
      *
      * @var string
@@ -75,19 +58,47 @@ class Conversation
      *
      * @param int    $user_id
      * @param int    $chat_id
-     * @param string $group_name
      * @param string $command
      */
-    public function __construct($user_id, $chat_id, $group_name = null, $command = null)
+    public function __construct($user_id, $chat_id, $command = null)
     {
-        if (is_null($command)) {
-            $command = $group_name;
-        }
-
         $this->user_id = $user_id;
         $this->chat_id = $chat_id;
         $this->command = $command;
-        $this->group_name = $group_name;
+
+        //Try to load an existing conversation if possible
+        $this->load();
+    }
+
+    /**
+     * Load the conversation from the database
+     *
+     * @return bool
+     */
+    protected function load()
+    {
+        $this->conversation = null;
+        $this->data = null;
+
+        //Select an active conversation
+        $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
+        if (isset($conversation[0])) {
+            //Pick only the first element
+            $this->conversation = $conversation[0];
+
+            //Load the command from the conversation if it hasn't been passed
+            $this->command = $this->command ?: $this->conversation['command'];
+
+            if ($this->command !== $this->conversation['command']) {
+                $this->cancel();
+                return false;
+            }
+
+            //Load the conversation data
+            $this->data = json_decode($this->conversation['data'], true);
+        }
+
+        return $this->exists();
     }
 
     /**
@@ -95,97 +106,105 @@ class Conversation
      *
      * @return bool
      */
-    protected function exist()
+    public function exists()
     {
-        //Conversation info already fetched
-        if ($this->is_fetched) {
-            return true;
-        }
-        //Select an active conversation
-        $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
-        $this->is_fetched = true;
+        return ($this->conversation !== null);
+    }
 
-        if (isset($conversation[0])) {
-            //Pick only the first element
-            $this->conversation = $conversation[0];
-
-            if (is_null($this->group_name)) {
-                //Conversation name and command has not been specified. command has to be retrieved
-                return true;
+    /**
+     * Start a new conversation if the current command doesn't have one yet
+     *
+     * @return bool
+     */
+    protected function start()
+    {
+        if (!$this->exists() && $this->command) {
+            if (ConversationDB::insertConversation(
+                $this->user_id,
+                $this->chat_id,
+                $this->command
+            )) {
+                return $this->load();
             }
-
-            //A conversation with the same name was already opened, store the data inside the class
-            if ($this->conversation['conversation_name'] == $this->group_name) {
-                $this->data = json_decode($this->conversation['data'], true);
-                return true;
-            }
-
-            //A conversation with a different name has been opened, unset the DB one and recreate a new one
-            $this->cancel();
-            return false;
         }
 
-        $this->conversation = null;
         return false;
     }
 
     /**
-     * Check if a conversation has already been created in the database. If the conversation is not found, a new conversation is created. Start fetches the data stored in the database.
-     *
-     * @return bool
-     */
-    public function start()
-    {
-        if (!$this->exist()) {
-            $status = ConversationDB::insertConversation($this->command, $this->group_name, $this->user_id, $this->chat_id);
-            $this->is_fetched = true;
-        }
-        return true;
-    }
-
-    /**
-     * Delete the conversation from the database
+     * Delete the current conversation
      *
      * Currently the Conversation is not deleted but just set to 'stopped'
      *
-     * @todo should return something
+     * @return bool
      */
     public function stop()
     {
-        if ($this->exist()) {
-            ConversationDB::updateConversation(['status' => 'stopped'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
-        }
+        return $this->updateStatus('stopped');
     }
 
     /**
-     * Set to Cancelled the conversation in the database
+     * Cancel the current conversation
      *
-     * @todo should return something
+     * @return bool
      */
     public function cancel()
     {
-        if ($this->exist()) {
-            ConversationDB::updateConversation(['status' => 'cancelled'], ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
+        return $this->updateStatus('cancelled');
+    }
+
+    /**
+     * Update the status of the current conversation
+     *
+     * @param string $status
+     *
+     * @return bool
+     */
+    protected function updateStatus($status)
+    {
+        if ($this->exists()) {
+            $fields = ['status' => $status];
+            $where  = [
+                'status'  => 'active',
+                'user_id' => $this->user_id,
+                'chat_id' => $this->chat_id,
+            ];
+            if (ConversationDB::updateConversation($fields, $where)) {
+                //Reload the data
+                $this->load();
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**
      * Store the array/variable in the database with json_encode() function
      *
-     * @todo Verify the query before assigning the $data member variable
-     *
      * @param array $data
+     *
+     * @return bool
      */
     public function update($data)
     {
-        //Conversation must exist!
-        if ($this->exist()) {
-            $fields['data'] = json_encode($data);
-
-            ConversationDB::updateConversation($fields, ['chat_id' => $this->chat_id, 'user_id' => $this->user_id, 'status' => 'active']);
-            //TODO verify query success before convert the private var
-            $this->data = $data;
+        if ($this->exists()) {
+            $fields = ['data' => json_encode($data)];
+            $where  = [
+                'status'  => 'active',
+                'user_id' => $this->user_id,
+                'chat_id' => $this->chat_id,
+            ];
+            if (ConversationDB::updateConversation($fields, $where)) {
+                //Reload the data
+                $this->load();
+                return true;
+            }
+        } elseif ($this->start()) {
+            return $this->update($data);
         }
+
+        return false;
     }
 
     /**
@@ -193,18 +212,15 @@ class Conversation
      *
      * @return string|null
      */
-    public function getConversationCommand()
+    public function getCommand()
     {
-        if ($this->exist()) {
-            return $this->conversation['conversation_command'];
-        }
-        return null;
+        return $this->command;
     }
 
     /**
      * Retrieve the data stored in the conversation
      *
-     * @return array
+     * @return array|null
      */
     public function getData()
     {
