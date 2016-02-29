@@ -27,7 +27,7 @@ class SurveyCommand extends UserCommand
     protected $name = 'survey';
     protected $description = 'Survery for bot users';
     protected $usage = '/survey';
-    protected $version = '0.1.0';
+    protected $version = '0.1.1';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -58,10 +58,9 @@ class SurveyCommand extends UserCommand
 
         //tracking
         $conversation = new Conversation($user_id, $chat_id, $this->getName());
-        $conversation->start();
 
         //cache data from the tracking session if any
-        $session = $conversation->GetData();
+        $session = $conversation->getData();
         if (!isset($session['state'])) {
             $state = '0';
         } else {

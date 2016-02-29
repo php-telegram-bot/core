@@ -26,7 +26,7 @@ class SendtochannelCommand extends AdminCommand
     protected $name = 'sendtochannel';
     protected $description = 'Send message to a channel';
     protected $usage = '/sendtochannel <message to send>';
-    protected $version = '0.1.3';
+    protected $version = '0.1.4';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -56,7 +56,7 @@ class SendtochannelCommand extends AdminCommand
 
         // Conversation
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
-        $this->conversation->start();
+
         $session = $this->conversation->getData();
 
         $channels = (array) $this->getConfig('your_channel');
@@ -70,7 +70,6 @@ class SendtochannelCommand extends AdminCommand
             case -1:
                 // getConfig has not been configured asking for channel to administer
                 if ($type != 'Message' || empty($text)) {
-
                     $session['state'] = -1;
                     $this->conversation->update($session);
 
@@ -92,7 +91,7 @@ class SendtochannelCommand extends AdminCommand
                 if ($type != 'Message' || !in_array($text, $channels)) {
                     $session['state'] = 0;
                     $this->conversation->update($session);
-    
+
                     $keyboard = [];
                     foreach ($channels as $channel) {
                         $keyboard[] = [$channel];
@@ -122,7 +121,7 @@ class SendtochannelCommand extends AdminCommand
                 if ($session['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
                     $session['state'] = 1;
                     $this->conversation->update($session);
-    
+
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $data['text'] = 'Insert the content you want to share: text, photo, audio...';
                     $result = Request::sendMessage($data);
@@ -226,7 +225,7 @@ class SendtochannelCommand extends AdminCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-    
+
                 $data['text'] = 'Abort by user, message not sent..';
                 $result = Request::sendMessage($data);
                 break;
