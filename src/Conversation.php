@@ -26,11 +26,18 @@ class Conversation
     protected $conversation = null;
 
     /**
-     * Data stored inside the conversation
+     * Notes stored inside the conversation
      *
      * @var array
      */
-    protected $data = null;
+    protected $protected_notes = null;
+
+    /**
+     * Notes to be stored
+     *
+     * @var array
+     */
+    public $notes = null;
 
     /**
      * Telegram user id
@@ -78,7 +85,8 @@ class Conversation
     protected function load()
     {
         $this->conversation = null;
-        $this->data = null;
+        $this->protected_notes = null;
+        $this->notes = null;
 
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
@@ -95,7 +103,8 @@ class Conversation
             }
 
             //Load the conversation data
-            $this->data = json_decode($this->conversation['data'], true);
+            $this->protected_notes = json_decode($this->conversation['data'], true);
+            $this->notes = $this->protected_notes;
         }
 
         return $this->exists();
@@ -186,10 +195,10 @@ class Conversation
      *
      * @return bool
      */
-    public function update($data)
+    public function update()
     {
         if ($this->exists()) {
-            $fields = ['data' => json_encode($data)];
+            $fields = ['data' => json_encode($this->notes)];
             $where  = [
                 'status'  => 'active',
                 'user_id' => $this->user_id,
@@ -201,7 +210,7 @@ class Conversation
                 return true;
             }
         } elseif ($this->start()) {
-            return $this->update($data);
+            return $this->update();
         }
 
         return false;
@@ -224,6 +233,6 @@ class Conversation
      */
     public function getData()
     {
-        return $this->data;
+        return $this->notes;
     }
 }
