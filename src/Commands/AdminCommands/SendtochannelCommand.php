@@ -57,21 +57,19 @@ class SendtochannelCommand extends AdminCommand
         // Conversation
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
-        $session = $this->conversation->getData();
-
         $channels = (array) $this->getConfig('your_channel');
-        if (!isset($session['state'])) {
+        if (!isset($this->conversation->notes['state'])) {
             $state = (count($channels) == 0) ? -1 : 0;
-            $session['last_message_id'] = $message->getMessageId();
+            $this->conversation->notes['last_message_id'] = $message->getMessageId();
         } else {
-            $state = $session['state'];
+            $state = $this->conversation->notes['state'];
         }
         switch ($state) {
             case -1:
                 // getConfig has not been configured asking for channel to administer
                 if ($type != 'Message' || empty($text)) {
-                    $session['state'] = -1;
-                    $this->conversation->update($session);
+                    $this->conversation->notes['state'] = -1;
+                    //$this->conversation->update();
 
                     $data['text'] = 'Insert the channel name: (@yourchannel)';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -79,8 +77,8 @@ class SendtochannelCommand extends AdminCommand
 
                     break;
                 }
-                $session['channel'] = $text;
-                $session['last_message_id'] = $message->getMessageId();
+                $this->conversation->notes['channel'] = $text;
+                $this->conversation->notes['last_message_id'] = $message->getMessageId();
                 // Jump to state 1
                 goto insert;
 
@@ -89,8 +87,8 @@ class SendtochannelCommand extends AdminCommand
             case 0:
                 // getConfig has been configured choose channel
                 if ($type != 'Message' || !in_array($text, $channels)) {
-                    $session['state'] = 0;
-                    $this->conversation->update($session);
+                    $this->conversation->notes['state'] = 0;
+                    //$this->conversation->update();
 
                     $keyboard = [];
                     foreach ($channels as $channel) {
@@ -112,33 +110,33 @@ class SendtochannelCommand extends AdminCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $session['channel'] = $text;
-                $session['last_message_id'] = $message->getMessageId();
+                $this->conversation->notes['channel'] = $text;
+                $this->conversation->notes['last_message_id'] = $message->getMessageId();
 
                 // no break
             case 1:
                 insert:
-                if ($session['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
-                    $session['state'] = 1;
-                    $this->conversation->update($session);
+                if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
+                    $this->conversation->notes['state'] = 1;
+                    //$this->conversation->update();
 
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $data['text'] = 'Insert the content you want to share: text, photo, audio...';
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $session['last_message_id'] = $message->getMessageId();
-                $session['message'] = $message->reflect();
-                $session['message_type'] = $type;
+                $this->conversation->notes['last_message_id'] = $message->getMessageId();
+                $this->conversation->notes['message'] = $message->reflect();
+                $this->conversation->notes['message_type'] = $type;
 
                 // no break
             case 2:
-                if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
-                    $session['state'] = 2;
-                    $this->conversation->update($session);
+                if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
+                    $this->conversation->notes['state'] = 2;
+                    //$this->conversation->update();
 
                     // Execute this just with object that allow caption
-                    if ($session['message_type'] == 'Video' || $session['message_type'] == 'Photo') {
+                    if ($this->conversation->notes['message_type'] == 'Video' || $this->conversation->notes['message_type'] == 'Photo') {
                         $keyboard = [['Yes', 'No']];
                         $reply_keyboard_markup = new ReplyKeyboardMarkup(
                             [
@@ -151,48 +149,48 @@ class SendtochannelCommand extends AdminCommand
                         $data['reply_markup'] = $reply_keyboard_markup;
 
                         $data['text'] = 'Would you insert caption?';
-                        if ($session['last_message_id'] != $message->getMessageId() && !($text == 'Yes' || $text == 'No')) {
+                        if ($this->conversation->notes['last_message_id'] != $message->getMessageId() && !($text == 'Yes' || $text == 'No')) {
                             $data['text'] = 'Would you insert a caption?' . "\n" . 'Type Yes or No';
                         }
                         $result = Request::sendMessage($data);
                         break;
                     }
                 }
-                $session['set_caption'] = false;
+                $this->conversation->notes['set_caption'] = false;
                 if ($text == 'Yes') {
-                    $session['set_caption'] = true;
+                    $this->conversation->notes['set_caption'] = true;
                 }
-                $session['last_message_id'] = $message->getMessageId();
+                $this->conversation->notes['last_message_id'] = $message->getMessageId();
                 // no break
             case 3:
-                if (($session['last_message_id'] == $message->getMessageId() || $type != 'Message' ) && $session['set_caption']) {
-                    $session['state'] = 3;
-                    $this->conversation->update($session);
+                if (($this->conversation->notes['last_message_id'] == $message->getMessageId() || $type != 'Message' ) && $this->conversation->notes['set_caption']) {
+                    $this->conversation->notes['state'] = 3;
+                    //$this->conversation->update();
 
                     $data['text'] = 'Insert caption:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $session['last_message_id'] = $message->getMessageId();
-                $session['caption'] = $text;
+                $this->conversation->notes['last_message_id'] = $message->getMessageId();
+                $this->conversation->notes['caption'] = $text;
                 // no break
             case 4:
-                if ($session['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
-                    $session['state'] = 4;
-                    $this->conversation->update($session);
+                if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
+                    $this->conversation->notes['state'] = 4;
+                    //$this->conversation->update();
 
                     $data['text'] = 'Message will look like this:';
                     $result = Request::sendMessage($data);
 
-                    if ($session['message_type'] != 'command') {
-                        if ($session['set_caption']) {
-                            $data['caption'] = $session['caption'];
+                    if ($this->conversation->notes['message_type'] != 'command') {
+                        if ($this->conversation->notes['set_caption']) {
+                            $data['caption'] = $this->conversation->notes['caption'];
                         }
-                        $result = $this->sendBack(new Message($session['message'], 'thisbot'), $data);
+                        $result = $this->sendBack(new Message($this->conversation->notes['message'], 'thisbot'), $data);
 
                         $data['text'] = 'Would you post it?';
-                        if ($session['last_message_id'] != $message->getMessageId() && !($text == 'Yes' || $text == 'No')) {
+                        if ($this->conversation->notes['last_message_id'] != $message->getMessageId() && !($text == 'Yes' || $text == 'No')) {
                             $data['text'] = 'Would you post it?' . "\n" . 'Press Yes or No';
                         }
                         $keyboard = [['Yes', 'No']];
@@ -210,18 +208,18 @@ class SendtochannelCommand extends AdminCommand
                     break;
                 }
 
-                $session['post_message'] = false;
+                $this->conversation->notes['post_message'] = false;
                 if ($text == 'Yes') {
-                    $session['post_message'] = true;
+                    $this->conversation->notes['post_message'] = true;
                 }
-                $session['last_message_id'] = $message->getMessageId();
+                $this->conversation->notes['last_message_id'] = $message->getMessageId();
                 // no break
             case 5:
                 $this->conversation->stop();
                 $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
 
-                if ($session['post_message']) {
-                    $data['text'] = $this->publish(new Message($session['message'], 'anystring'), $session['channel'], $session['caption']);
+                if ($this->conversation->notes['post_message']) {
+                    $data['text'] = $this->publish(new Message($this->conversation->notes['message'], 'anystring'), $this->conversation->notes['channel'], $this->conversation->notes['caption']);
                     $result = Request::sendMessage($data);
                     break;
                 }

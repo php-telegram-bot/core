@@ -26,11 +26,18 @@ class Conversation
     protected $conversation = null;
 
     /**
-     * Data stored inside the conversation
+     * Notes stored inside the conversation
      *
      * @var array
      */
-    protected $data = null;
+    protected $protected_notes = null;
+
+    /**
+     * Notes to be stored
+     *
+     * @var array
+     */
+    public $notes = null;
 
     /**
      * Telegram user id
@@ -54,6 +61,13 @@ class Conversation
     protected $command;
 
     /**
+     * Command has been provided
+     *
+     * @var string
+     */
+    protected $command_is_provided;
+
+    /**
      * Conversation contructor to initialize a new conversation
      *
      * @param int    $user_id
@@ -66,8 +80,24 @@ class Conversation
         $this->chat_id = $chat_id;
         $this->command = $command;
 
+        $this->command_is_provided = (is_null($command)) ? false : true;
+
         //Try to load an existing conversation if possible
-        $this->load();
+        if (!$this->load() && !is_null($command)) {
+            //A new conversation start
+            $this->start();
+        }
+    }
+
+    /**
+     * Conversation destructor update the conversation if not stopped
+     */
+    public function __destruct()
+    {
+        //Perform the update when the object go out of the stage and notes has changed after load()
+        if ($this->command_is_provided && $this->notes !== $this->protected_notes) {
+            $this->update();
+        }
     }
 
     /**
@@ -78,7 +108,8 @@ class Conversation
     protected function load()
     {
         $this->conversation = null;
-        $this->data = null;
+        $this->protected_notes = null;
+        $this->notes = null;
 
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
@@ -91,11 +122,13 @@ class Conversation
 
             if ($this->command !== $this->conversation['command']) {
                 $this->cancel();
+                $this->conversation = null;
                 return false;
             }
 
-            //Load the conversation data
-            $this->data = json_decode($this->conversation['data'], true);
+            //Load the conversation notes
+            $this->protected_notes = json_decode($this->conversation['notes'], true);
+            $this->notes = $this->protected_notes;
         }
 
         return $this->exists();
@@ -165,13 +198,12 @@ class Conversation
         if ($this->exists()) {
             $fields = ['status' => $status];
             $where  = [
+                'id'  => $this->conversation['id'],
                 'status'  => 'active',
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
             ];
             if (ConversationDB::updateConversation($fields, $where)) {
-                //Reload the data
-                $this->load();
                 return true;
             }
         }
@@ -182,26 +214,17 @@ class Conversation
     /**
      * Store the array/variable in the database with json_encode() function
      *
-     * @param array $data
-     *
      * @return bool
      */
-    public function update($data)
+    public function update()
     {
         if ($this->exists()) {
-            $fields = ['data' => json_encode($data)];
-            $where  = [
-                'status'  => 'active',
-                'user_id' => $this->user_id,
-                'chat_id' => $this->chat_id,
-            ];
+            $fields = ['notes' => json_encode($this->notes)];
+            //I can update a conversation whatever the state is
+            $where = ['id'  => $this->conversation['id']];
             if (ConversationDB::updateConversation($fields, $where)) {
-                //Reload the data
-                $this->load();
                 return true;
             }
-        } elseif ($this->start()) {
-            return $this->update($data);
         }
 
         return false;
@@ -215,15 +238,5 @@ class Conversation
     public function getCommand()
     {
         return $this->command;
-    }
-
-    /**
-     * Retrieve the data stored in the conversation
-     *
-     * @return array|null
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 }
