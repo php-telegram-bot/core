@@ -102,8 +102,8 @@ class Conversation
                 return false;
             }
 
-            //Load the conversation data
-            $this->protected_notes = json_decode($this->conversation['data'], true);
+            //Load the conversation notes 
+            $this->protected_notes = json_decode($this->conversation['notes'], true);
             $this->notes = $this->protected_notes;
         }
 
@@ -179,7 +179,7 @@ class Conversation
                 'chat_id' => $this->chat_id,
             ];
             if (ConversationDB::updateConversation($fields, $where)) {
-                //Reload the data
+                //Reload the notes
                 $this->load();
                 return true;
             }
@@ -191,21 +191,19 @@ class Conversation
     /**
      * Store the array/variable in the database with json_encode() function
      *
-     * @param array $data
-     *
      * @return bool
      */
     public function update()
     {
         if ($this->exists()) {
-            $fields = ['data' => json_encode($this->notes)];
+            $fields = ['notes' => json_encode($this->notes)];
             $where  = [
                 'status'  => 'active',
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
             ];
             if (ConversationDB::updateConversation($fields, $where)) {
-                //Reload the data
+                //Reload the notes
                 $this->load();
                 return true;
             }
@@ -227,7 +225,7 @@ class Conversation
     }
 
     /**
-     * Retrieve the data stored in the conversation
+     * Retrieve the notes stored in the conversation
      *
      * @return array|null
      */

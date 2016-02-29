@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Telegram chat_id can be a the user id or the chat id ',
   `status` ENUM('active', 'cancelled', 'stopped') NOT NULL DEFAULT 'active' COMMENT 'active conversation is active, cancelled conversation has been truncated before end, stopped conversation has end',
   `command` varchar(160) DEFAULT '' COMMENT 'Default Command to execute',
-  `data` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
+  `notes` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
 

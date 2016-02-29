@@ -87,22 +87,22 @@ class ConversationDB extends DB
         try {
             $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
                 (
-                `status`, `user_id`, `chat_id`, `command`, `data`, `created_at`, `updated_at`
+                `status`, `user_id`, `chat_id`, `command`, `notes`, `created_at`, `updated_at`
                 )
                 VALUES (
-                :status, :user_id, :chat_id, :command, :data, :date, :date
+                :status, :user_id, :chat_id, :command, :notes, :date, :date
                 )
                ');
             $active = 'active';
-            //$data = json_encode('');
-            $data = '""';
+            //$notes = json_encode('');
+            $notes = '""';
             $created_at = self::getTimestamp();
 
             $sth->bindParam(':status', $active);
             $sth->bindParam(':command', $command);
             $sth->bindParam(':user_id', $user_id);
             $sth->bindParam(':chat_id', $chat_id);
-            $sth->bindParam(':data', $data);
+            $sth->bindParam(':notes', $notes);
             $sth->bindParam(':date', $created_at);
 
             $status = $sth->execute();
