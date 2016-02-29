@@ -61,6 +61,13 @@ class Conversation
     protected $command;
 
     /**
+     * Command has been provided
+     *
+     * @var string
+     */
+    protected $command_is_provided;
+
+    /**
      * Conversation contructor to initialize a new conversation
      *
      * @param int    $user_id
@@ -73,8 +80,24 @@ class Conversation
         $this->chat_id = $chat_id;
         $this->command = $command;
 
+        $this->command_is_provided = (is_null($command)) ? false : true;
+
         //Try to load an existing conversation if possible
-        $this->load();
+        if (!$this->load() && !is_null($command)) {
+            //A new conversation start
+            $this->start();
+        }
+    }
+
+    /**
+     * Conversation destructor update the conversation if not stopped
+     */
+    public function __destruct()
+    {
+        //Perform the update when the object go out of the stage and notes has changed after load()
+        if ($this->command_is_provided && $this->notes !== $this->protected_notes) {
+            $this->update();
+        }
     }
 
     /**
@@ -99,10 +122,11 @@ class Conversation
 
             if ($this->command !== $this->conversation['command']) {
                 $this->cancel();
+                $this->conversation = null;
                 return false;
             }
 
-            //Load the conversation notes 
+            //Load the conversation notes
             $this->protected_notes = json_decode($this->conversation['notes'], true);
             $this->notes = $this->protected_notes;
         }
@@ -174,13 +198,12 @@ class Conversation
         if ($this->exists()) {
             $fields = ['status' => $status];
             $where  = [
+                'id'  => $this->conversation['id'],
                 'status'  => 'active',
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
             ];
             if (ConversationDB::updateConversation($fields, $where)) {
-                //Reload the notes
-                $this->load();
                 return true;
             }
         }
@@ -197,18 +220,11 @@ class Conversation
     {
         if ($this->exists()) {
             $fields = ['notes' => json_encode($this->notes)];
-            $where  = [
-                'status'  => 'active',
-                'user_id' => $this->user_id,
-                'chat_id' => $this->chat_id,
-            ];
+            //I can update a conversation whatever the state is
+            $where = ['id'  => $this->conversation['id']];
             if (ConversationDB::updateConversation($fields, $where)) {
-                //Reload the notes
-                $this->load();
                 return true;
             }
-        } elseif ($this->start()) {
-            return $this->update();
         }
 
         return false;
@@ -222,15 +238,5 @@ class Conversation
     public function getCommand()
     {
         return $this->command;
-    }
-
-    /**
-     * Retrieve the notes stored in the conversation
-     *
-     * @return array|null
-     */
-    public function getData()
-    {
-        return $this->notes;
     }
 }

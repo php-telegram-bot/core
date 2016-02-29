@@ -32,11 +32,17 @@ class SurveyCommand extends UserCommand
     /**#@-*/
 
     /**
+     * Conversation Object
+     *
+     * @var Longman\TelegramBot\Conversation
+     */
+    protected $conversation;
+
+    /**
      * {@inheritdoc}
      */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
 
         $chat = $message->getChat();
@@ -56,14 +62,14 @@ class SurveyCommand extends UserCommand
         }
         $data['chat_id'] = $chat_id;
 
-        //tracking
-        $conversation = new Conversation($user_id, $chat_id, $this->getName());
+        //Conversation start
+        $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
         //cache data from the tracking session if any
-        if (!isset($conversation->notes['state'])) {
+        if (!isset($this->conversation->notes['state'])) {
             $state = '0';
         } else {
-            $state = $conversation->notes['state'];
+            $state = $this->conversation->notes['state'];
         }
 
         //state machine
@@ -72,35 +78,33 @@ class SurveyCommand extends UserCommand
         switch ($state) {
             case 0:
                 if (empty($text)) {
-                    $conversation->notes['state'] = 0;
-                    $conversation->update();
+                    $this->conversation->notes['state'] = 0;
     
                     $data['text'] = 'Type your name:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $conversation->notes['name'] = $text;
+                $this->conversation->notes['name'] = $text;
                 $text = '';
                 // no break
             case 1:
                 if (empty($text)) {
-                    $conversation->notes['state'] = 1;
-                    $conversation->update();
+                    $this->conversation->notes['state'] = 1;
     
                     $data['text'] = 'Type your surname:';
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $conversation->notes['surname'] = $text;
+                $this->conversation->notes['surname'] = $text;
                 ++$state;
                 $text = '';
 
                 // no break
             case 2:
                 if (empty($text) || !is_numeric($text)) {
-                    $conversation->notes['state'] = 2;
-                    $conversation->update();
+                    $this->conversation->notes['state'] = 2;
+
                     $data['text'] = 'Type your age:';
                     if (!empty($text) && !is_numeric($text)) {
                         $data['text'] = 'Type your age, must be a number';
@@ -108,14 +112,13 @@ class SurveyCommand extends UserCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $conversation->notes['age'] = $text;
+                $this->conversation->notes['age'] = $text;
                 $text = '';
 
                 // no break
             case 3:
                 if (empty($text) || !($text == 'M' || $text == 'F')) {
-                    $conversation->notes['state'] = 3;
-                    $conversation->update();
+                    $this->conversation->notes['state'] = 3;
 
                     $keyboard = [['M','F']];
                     $reply_keyboard_markup = new ReplyKeyboardMarkup(
@@ -134,14 +137,13 @@ class SurveyCommand extends UserCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $conversation->notes['gender'] = $text;
+                $this->conversation->notes['gender'] = $text;
                 $text = '';
            
                 // no break
             case 4:
                 if (is_null($message->getLocation())) {
-                    $conversation->notes['state'] = 4;
-                    $conversation->update();
+                    $this->conversation->notes['state'] = 4;
 
                     $data['text'] = 'Insert your home location (need location object):';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -149,33 +151,32 @@ class SurveyCommand extends UserCommand
                     break;
                 }
 
-                $conversation->notes['longitude'] = $message->getLocation()->getLongitude();
-                $conversation->notes['latitude'] = $message->getLocation()->getLatitude();
+                $this->conversation->notes['longitude'] = $message->getLocation()->getLongitude();
+                $this->conversation->notes['latitude'] = $message->getLocation()->getLatitude();
 
                 // no break
             case 5:
                 if (is_null($message->getPhoto())) {
-                    $conversation->notes['state'] = 5;
-                    $conversation->update();
+                    $this->conversation->notes['state'] = 5;
 
                     $data['text'] = 'Insert your picture:';
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $conversation->notes['photo_id'] = $message->getPhoto()[0]->getFileId();
+                $this->conversation->notes['photo_id'] = $message->getPhoto()[0]->getFileId();
 
                 // no break
             case 6:
                 $out_text = '/Survey result:' . "\n";
-                unset($conversation->notes['state']);
-                foreach ($conversation->notes as $k => $v) {
+                unset($this->conversation->notes['state']);
+                foreach ($this->conversation->notes as $k => $v) {
                     $out_text .= "\n" . ucfirst($k).': ' . $v;
                 }
 
-                $data['photo'] = $conversation->notes['photo_id'];
+                $data['photo'] = $this->conversation->notes['photo_id'];
                 $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                 $data['caption'] = $out_text;
-                $conversation->stop();
+                $this->conversation->stop();
                 $result = Request::sendPhoto($data);
                 break;
         }
