@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS  `user` (
-  `id` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier',
+  `id` bigint COMMENT 'Unique user identifier',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User first name',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User last name',
   `username` CHAR(255) DEFAULT NULL COMMENT 'User username',
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS  `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `chat` (
-  `id` bigint NULL DEFAULT NULL COMMENT 'Unique user or chat identifier',
+  `id` bigint COMMENT 'Unique user or chat identifier',
   `type` ENUM('private', 'group', 'supergroup', 'channel') NOT NULL COMMENT 'chat type private, group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS  `chat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `user_chat` (
-  `user_id` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier',
-  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique user or chat identifier',
+  `user_id` bigint COMMENT 'Unique user identifier',
+  `chat_id` bigint COMMENT 'Unique user or chat identifier',
   PRIMARY KEY (`user_id`, `chat_id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS  `user_chat` (
 
 
 CREATE TABLE IF NOT EXISTS `inline_query` (
-  `id` bigint UNSIGNED NULL COMMENT 'Unique identifier for this query.',
+  `id` bigint UNSIGNED COMMENT 'Unique identifier for this query.',
   `user_id` bigint NULL COMMENT 'Sender',
   `query` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Text of the query',
   `offset` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Offset of the result',
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `inline_query` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
-  `id` bigint UNSIGNED NULL AUTO_INCREMENT COMMENT 'Unique identifier for chosen query.',
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for chosen query.',
   `result_id` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Id of the chosen result',
   `user_id` bigint NULL COMMENT 'Sender',
   `query` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Text of the query',
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `message` (
-  `id` bigint UNSIGNED NULL COMMENT 'Unique message identifier',
+  `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'User identifier',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS  `message` (
 
 
 CREATE TABLE IF NOT EXISTS `telegram_update` (
-  `id` bigint UNSIGNED NULL COMMENT 'The update\'s unique identifier.',
+  `id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
   `message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
   `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The query unique identifier.',
   `chosen_inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
