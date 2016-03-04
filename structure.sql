@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Row unique id',
+  `id` bigint(20) unsigned AUTO_INCREMENT COMMENT 'Row unique id',
   `user_id` bigint NULL DEFAULT NULL COMMENT 'User id',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Telegram chat_id can be a the user id or the chat id ',
   `status` ENUM('active', 'cancelled', 'stopped') NOT NULL DEFAULT 'active' COMMENT 'active conversation is active, cancelled conversation has been truncated before end, stopped conversation has end',
