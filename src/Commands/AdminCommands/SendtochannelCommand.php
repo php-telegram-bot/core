@@ -254,12 +254,11 @@ class SendtochannelCommand extends AdminCommand
     }
 
     /**
-     * Publish
+     * Publish a message to a channel and return success or failure message
      *
-     * Publish a message in a channel and retun succecs or fail message
-     * @param Longman\TelegramBot\Entities\Message $message
-     * @param int                                  $channel
-     * @param string|null                          $caption
+     * @param Entities\Message $message
+     * @param int              $channel
+     * @param string|null      $caption
      *
      * @return string
      */
@@ -271,12 +270,12 @@ class SendtochannelCommand extends AdminCommand
         ];
 
         if ($this->sendBack($message, $data)->isOk()) {
-            $response = 'Message sent succesfully to: ' . $channel;
+            $response = 'Message sent successfully to: ' . $channel;
         } else {
             $response =
                     'Message not sent to: ' .  $channel . "\n" .
-                    '- The channel exist?' . "\n" .
-                    '- Is the bot admin of the channel?';
+                    '- Does the channel exist?' . "\n" .
+                    '- Is the bot an admin of the channel?';
         }
         return $response;
     }
@@ -292,10 +291,10 @@ class SendtochannelCommand extends AdminCommand
      * @todo This method will be moved at an higher level maybe in AdminCommand or Command
      * @todo Looking for a more significative name
      *
-     * @param Longman\TelegramBot\Entities\Message $message
-     * @param array $data
+     * @param Entities\Message $message
+     * @param array            $data
      *
-     * @return Longman\TelegramBot\Entities\ServerResponse
+     * @return Entities\ServerResponse
      */
     protected function sendBack(Message $message, array $data)
     {
@@ -322,12 +321,12 @@ class SendtochannelCommand extends AdminCommand
             $data['latitude'] = $message->getLocation()->getLatitude();
             $data['longitude'] = $message->getLocation()->getLongitude();
         }
-        $callback_path = 'Longman\TelegramBot' .'\Request';
-        $callback_function = 'send'.$type;
+        $callback_path = 'Longman\TelegramBot\Request';
+        $callback_function = 'send' . $type;
         if (! method_exists($callback_path, $callback_function)) {
-            throw new TelegramException('Methods: '.$callback_function.' not found in class Request.');
+            throw new TelegramException('Methods: ' . $callback_function . ' not found in class Request.');
         }
 
-        return  call_user_func_array($callback_path.'::'.$callback_function, array($data));
+        return call_user_func_array($callback_path . '::' . $callback_function, [$data]);
     }
 }

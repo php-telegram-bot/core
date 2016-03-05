@@ -90,11 +90,11 @@ class Conversation
     }
 
     /**
-     * Conversation destructor update the conversation if not stopped
+     * Conversation destructor updates the conversation
      */
     public function __destruct()
     {
-        //Perform the update when the object go out of the stage and notes has changed after load()
+        //Perform the update when the object goes out of the stage and notes have changed after load()
         if ($this->command_is_provided && $this->notes !== $this->protected_notes) {
             $this->update();
         }
