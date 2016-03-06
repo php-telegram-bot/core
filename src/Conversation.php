@@ -80,10 +80,10 @@ class Conversation
         $this->chat_id = $chat_id;
         $this->command = $command;
 
-        $this->command_is_provided = (is_null($command)) ? false : true;
+        $this->command_is_provided = ($command !== null);
 
         //Try to load an existing conversation if possible
-        if (!$this->load() && !is_null($command)) {
+        if (!$this->load() && $this->command_is_provided) {
             //A new conversation start
             $this->start();
         }
