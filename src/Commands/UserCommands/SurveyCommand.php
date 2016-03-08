@@ -79,6 +79,7 @@ class SurveyCommand extends UserCommand
             case 0:
                 if (empty($text)) {
                     $this->conversation->notes['state'] = 0;
+                    $this->conversation->update();
     
                     $data['text'] = 'Type your name:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -91,6 +92,7 @@ class SurveyCommand extends UserCommand
             case 1:
                 if (empty($text)) {
                     $this->conversation->notes['state'] = 1;
+                    $this->conversation->update();
     
                     $data['text'] = 'Type your surname:';
                     $result = Request::sendMessage($data);
@@ -104,6 +106,7 @@ class SurveyCommand extends UserCommand
             case 2:
                 if (empty($text) || !is_numeric($text)) {
                     $this->conversation->notes['state'] = 2;
+                    $this->conversation->update();
 
                     $data['text'] = 'Type your age:';
                     if (!empty($text) && !is_numeric($text)) {
@@ -119,6 +122,7 @@ class SurveyCommand extends UserCommand
             case 3:
                 if (empty($text) || !($text == 'M' || $text == 'F')) {
                     $this->conversation->notes['state'] = 3;
+                    $this->conversation->update();
 
                     $keyboard = [['M','F']];
                     $reply_keyboard_markup = new ReplyKeyboardMarkup(
@@ -144,6 +148,7 @@ class SurveyCommand extends UserCommand
             case 4:
                 if (is_null($message->getLocation())) {
                     $this->conversation->notes['state'] = 4;
+                    $this->conversation->update();
 
                     $data['text'] = 'Insert your home location (need location object):';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -158,6 +163,7 @@ class SurveyCommand extends UserCommand
             case 5:
                 if (is_null($message->getPhoto())) {
                     $this->conversation->notes['state'] = 5;
+                    $this->conversation->update();
 
                     $data['text'] = 'Insert your picture:';
                     $result = Request::sendMessage($data);
