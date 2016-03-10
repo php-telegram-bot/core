@@ -61,13 +61,6 @@ class Conversation
     protected $command;
 
     /**
-     * Command has been provided
-     *
-     * @var string
-     */
-    protected $command_is_provided;
-
-    /**
      * Conversation contructor to initialize a new conversation
      *
      * @param int    $user_id
@@ -80,10 +73,8 @@ class Conversation
         $this->chat_id = $chat_id;
         $this->command = $command;
 
-        $this->command_is_provided = ($command !== null);
-
         //Try to load an existing conversation if possible
-        if (!$this->load() && $this->command_is_provided) {
+        if (!$this->load() && $command !== null) {
             //A new conversation start
             $this->start();
         }
