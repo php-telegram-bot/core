@@ -81,15 +81,26 @@ class Conversation
     }
 
     /**
+     * Clear all conversation variables.
+     *
+     * @return bool Always return true, to allow this method in an if statement.
+     */
+    protected function clear()
+    {
+        $this->conversation = null;
+        $this->protected_notes = null;
+        $this->notes = null;
+
+        return true;
+    }
+
+    /**
      * Load the conversation from the database
      *
      * @return bool
      */
     protected function load()
     {
-        $this->conversation = null;
-        $this->protected_notes = null;
-        $this->notes = null;
 
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
@@ -102,7 +113,6 @@ class Conversation
 
             if ($this->command !== $this->conversation['command']) {
                 $this->cancel();
-                $this->conversation = null;
                 return false;
             }
 
@@ -153,7 +163,7 @@ class Conversation
      */
     public function stop()
     {
-        return $this->updateStatus('stopped');
+        return ($this->updateStatus('stopped') && $this->clear());
     }
 
     /**
@@ -163,7 +173,7 @@ class Conversation
      */
     public function cancel()
     {
-        return $this->updateStatus('cancelled');
+        return ($this->updateStatus('cancelled') && $this->clear());
     }
 
     /**
