@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * Class ConversationDB
@@ -63,7 +64,7 @@ class ConversationDB extends DB
 
             $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             throw new TelegramException($e->getMessage());
         }
         return $results;
@@ -106,7 +107,7 @@ class ConversationDB extends DB
             $sth->bindParam(':date', $created_at);
 
             $status = $sth->execute();
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             throw new TelegramException($e->getMessage());
         }
         return $status;
@@ -178,7 +179,7 @@ class ConversationDB extends DB
         try {
             $sth = self::$pdo->prepare($query);
             $status = $sth->execute($tokens);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             throw new TelegramException($e->getMessage());
         }
         return $status;
