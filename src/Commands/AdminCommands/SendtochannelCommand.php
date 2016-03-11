@@ -215,18 +215,20 @@ class SendtochannelCommand extends AdminCommand
                 $this->conversation->notes['last_message_id'] = $message->getMessageId();
                 // no break
             case 5:
-                $this->conversation->stop();
                 $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
 
                 if ($this->conversation->notes['post_message']) {
-                    $data['text'] = $this->publish(new Message($this->conversation->notes['message'], 'anystring'), $this->conversation->notes['channel'], $this->conversation->notes['caption']);
-                    $result = Request::sendMessage($data);
-                    break;
+                    $data['text'] = $this->publish(
+                        new Message($this->conversation->notes['message'], 'anystring'),
+                        $this->conversation->notes['channel'],
+                        $this->conversation->notes['caption']
+                    );
+                } else {
+                    $data['text'] = 'Abort by user, message not sent..';
                 }
 
-                $data['text'] = 'Abort by user, message not sent..';
+                $this->conversation->stop();
                 $result = Request::sendMessage($data);
-                break;
         }
         return $result;
     }
