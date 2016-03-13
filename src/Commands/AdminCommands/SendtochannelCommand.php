@@ -69,7 +69,7 @@ class SendtochannelCommand extends AdminCommand
                 // getConfig has not been configured asking for channel to administer
                 if ($type != 'Message' || empty($text)) {
                     $this->conversation->notes['state'] = -1;
-                    //$this->conversation->update();
+                    $this->conversation->update();
 
                     $data['text'] = 'Insert the channel name: (@yourchannel)';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -88,7 +88,7 @@ class SendtochannelCommand extends AdminCommand
                 // getConfig has been configured choose channel
                 if ($type != 'Message' || !in_array($text, $channels)) {
                     $this->conversation->notes['state'] = 0;
-                    //$this->conversation->update();
+                    $this->conversation->update();
 
                     $keyboard = [];
                     foreach ($channels as $channel) {
@@ -118,7 +118,7 @@ class SendtochannelCommand extends AdminCommand
                 insert:
                 if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
                     $this->conversation->notes['state'] = 1;
-                    //$this->conversation->update();
+                    $this->conversation->update();
 
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $data['text'] = 'Insert the content you want to share: text, photo, audio...';
@@ -133,7 +133,7 @@ class SendtochannelCommand extends AdminCommand
             case 2:
                 if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
                     $this->conversation->notes['state'] = 2;
-                    //$this->conversation->update();
+                    $this->conversation->update();
 
                     // Execute this just with object that allow caption
                     if ($this->conversation->notes['message_type'] == 'Video' || $this->conversation->notes['message_type'] == 'Photo') {
@@ -165,7 +165,7 @@ class SendtochannelCommand extends AdminCommand
             case 3:
                 if (($this->conversation->notes['last_message_id'] == $message->getMessageId() || $type != 'Message' ) && $this->conversation->notes['set_caption']) {
                     $this->conversation->notes['state'] = 3;
-                    //$this->conversation->update();
+                    $this->conversation->update();
 
                     $data['text'] = 'Insert caption:';
                     $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
@@ -178,7 +178,7 @@ class SendtochannelCommand extends AdminCommand
             case 4:
                 if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
                     $this->conversation->notes['state'] = 4;
-                    //$this->conversation->update();
+                    $this->conversation->update();
 
                     $data['text'] = 'Message will look like this:';
                     $result = Request::sendMessage($data);
