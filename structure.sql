@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `inline_query` (
 
    FOREIGN KEY (`user_id`)
    REFERENCES `user` (`id`)
- 
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
 
    FOREIGN KEY (`user_id`)
    REFERENCES `user` (`id`)
- 
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `message` (
@@ -135,4 +135,23 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   REFERENCES `chosen_inline_query` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+CREATE TABLE IF NOT EXISTS `conversation` (
+  `id` bigint(20) unsigned AUTO_INCREMENT COMMENT 'Row unique id',
+  `user_id` bigint NULL DEFAULT NULL COMMENT 'User id',
+  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Telegram chat_id can be a the user id or the chat id ',
+  `status` ENUM('active', 'cancelled', 'stopped') NOT NULL DEFAULT 'active' COMMENT 'active conversation is active, cancelled conversation has been truncated before end, stopped conversation has end',
+  `command` varchar(160) DEFAULT '' COMMENT 'Default Command to execute',
+  `notes` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
 
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `status` (`status`),
+
+  FOREIGN KEY (`user_id`)
+  REFERENCES `user` (`id`),
+  FOREIGN KEY (`chat_id`)
+  REFERENCES `chat` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
