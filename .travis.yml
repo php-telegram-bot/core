@@ -1,3 +1,5 @@
+sudo: false
+
 language: php
 
 php:
@@ -6,7 +8,17 @@ php:
     - 7.0
     - hhvm
 
-sudo: false
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
+
+notifications:
+    on_success: never
+    on_failure: always
+
+git:
+  depth: 1
 
 before_install:
   - composer self-update
@@ -14,17 +26,9 @@ before_install:
 install:
   - travis_retry composer install --no-interaction
 
+before_script:
+  - mysql -e 'create database telegrambot; use telegrambot; source structure.sql;'
+
 script:
   - vendor/bin/phpunit
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .; fi"
-
-matrix:
-  allow_failures:
-    - php: hhvm
-    - php: 7.0
-  fast_finish: true
-
-
-notifications:
-    on_success: never
-    on_failure: always
+  - vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .
