@@ -186,16 +186,16 @@ class TestHelpers
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->prepare('
                 DELETE FROM `conversation`;
-                DELETE FROM `message`;
-                DELETE FROM `user_chat`;
-                DELETE FROM `user`;
-                DELETE FROM `chat`;
+                DELETE FROM `telegram_update`;
                 DELETE FROM `chosen_inline_query`;
                 DELETE FROM `inline_query`;
-                DELETE FROM `telegram_update`;
+                DELETE FROM `message`;
+                DELETE FROM `user_chat`;
+                DELETE FROM `chat`;
+                DELETE FROM `user`;
             ')->execute();
         } catch (\Exception $e) {
-            //Ignore...
+            throw new TelegramException($e->getMessage());
         }
     }
 }
