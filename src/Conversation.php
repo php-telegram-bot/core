@@ -61,13 +61,6 @@ class Conversation
     protected $command;
 
     /**
-     * Command has been provided
-     *
-     * @var string
-     */
-    protected $command_is_provided;
-
-    /**
      * Conversation contructor to initialize a new conversation
      *
      * @param int    $user_id
@@ -80,13 +73,25 @@ class Conversation
         $this->chat_id = $chat_id;
         $this->command = $command;
 
-        $this->command_is_provided = ($command !== null);
-
         //Try to load an existing conversation if possible
-        if (!$this->load() && $this->command_is_provided) {
+        if (!$this->load() && $command !== null) {
             //A new conversation start
             $this->start();
         }
+    }
+
+    /**
+     * Clear all conversation variables.
+     *
+     * @return bool Always return true, to allow this method in an if statement.
+     */
+    protected function clear()
+    {
+        $this->conversation = null;
+        $this->protected_notes = null;
+        $this->notes = null;
+
+        return true;
     }
 
     /**
@@ -96,9 +101,6 @@ class Conversation
      */
     protected function load()
     {
-        $this->conversation = null;
-        $this->protected_notes = null;
-        $this->notes = null;
 
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
@@ -111,7 +113,6 @@ class Conversation
 
             if ($this->command !== $this->conversation['command']) {
                 $this->cancel();
-                $this->conversation = null;
                 return false;
             }
 
@@ -162,7 +163,7 @@ class Conversation
      */
     public function stop()
     {
-        return $this->updateStatus('stopped');
+        return ($this->updateStatus('stopped') && $this->clear());
     }
 
     /**
@@ -172,7 +173,7 @@ class Conversation
      */
     public function cancel()
     {
-        return $this->updateStatus('cancelled');
+        return ($this->updateStatus('cancelled') && $this->clear());
     }
 
     /**
