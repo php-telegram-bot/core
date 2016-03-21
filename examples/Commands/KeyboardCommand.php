@@ -1,50 +1,48 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * written by Marco Boretto <marco.bore@gmail.com>
-*/
-namespace Longman\TelegramBot\Commands;
+ */
 
+namespace Longman\TelegramBot\Commands\UserCommands;
+
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Command;
-use Longman\TelegramBot\Entities\Update;
-
 use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
-use Longman\TelegramBot\Entities\ReplyKeyboardHide;
-use Longman\TelegramBot\Entities\ForceReply;
 
-class KeyboardCommand extends Command
+/**
+ * User "/keyboard" command
+ */
+class KeyboardCommand extends UserCommand
 {
+    /**#@+
+     * {@inheritdoc}
+     */
     protected $name = 'keyboard';
     protected $description = 'Show a custom keybord with reply markup';
     protected $usage = '/keyboard';
     protected $version = '0.0.5';
-    protected $enabled = true;
+    /**#@-*/
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute()
     {
-        $update = $this->getUpdate();
         $message = $this->getMessage();
-        $message_id = $message->getMessageId();
-
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
 
-        $data = array();
+        $data = [];
         $data['chat_id'] = $chat_id;
         $data['text'] = 'Press a Button:';
-        #$data['reply_to_message_id'] = $message_id;
 
-
-
-        #Keyboard examples
-        $keyboards = array();
+        //Keyboard examples
+        $keyboards = [];
 
         //0
         $keyboard[] = ['7','8','9'];
@@ -64,7 +62,6 @@ class KeyboardCommand extends Command
         $keyboards[] = $keyboard;
         unset($keyboard);
 
-
         //2
         $keyboard[] = ['A'];
         $keyboard[] = ['B'];
@@ -72,8 +69,6 @@ class KeyboardCommand extends Command
 
         $keyboards[] = $keyboard;
         unset($keyboard);
-
-
 
         //3
         $keyboard[] = ['A'];
@@ -83,8 +78,7 @@ class KeyboardCommand extends Command
         $keyboards[] = $keyboard;
         unset($keyboard);
 
-
-        $reply_keyboard_markup = new ReplyKeyboardMarkup(
+        $data['reply_markup'] = new ReplyKeyboardMarkup(
             [
                 'keyboard' => $keyboards[1] ,
                 'resize_keyboard' => true,
@@ -92,10 +86,7 @@ class KeyboardCommand extends Command
                 'selective' => false
             ]
         );
-        #echo $json;
-        $data['reply_markup'] = $reply_keyboard_markup;
 
-        $result = Request::sendMessage($data);
-        return $result;
+        return Request::sendMessage($data);
     }
 }
