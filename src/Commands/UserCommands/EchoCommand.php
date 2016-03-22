@@ -8,39 +8,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * Super group chat created command
+ * User "/echo" command
  */
-class SupergroupchatcreatedCommand extends Command
+class EchoCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Supergroupchatcreated';
-    protected $description = 'Super group chat created';
+    protected $name = 'echo';
+    protected $description = 'Show text';
+    protected $usage = '/echo <text>';
     protected $version = '1.0.1';
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
         $message = $this->getMessage();
-
         $chat_id = $message->getChat()->getId();
-        $text = '';
+        $text = trim($message->getText(true));
 
-        if ($message->getSuperGroupChatCreated()) {
-            $text = 'Your group has become a Supergroup!' . "\n";
-            $text .= 'Chat id has changed from ' . $message->getMigrateFromChatId() . ' to ' . $message->getMigrateToChatId();
+        if ($text === '') {
+            $text = 'Command usage: ' . $this->getUsage();
         }
 
         $data = [
@@ -48,6 +45,6 @@ class SupergroupchatcreatedCommand extends Command
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

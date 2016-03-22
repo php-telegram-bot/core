@@ -8,42 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * User "/echo" command
+ * Generic command
  */
-class EchoCommand extends Command
+class GenericCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'echo';
-    protected $description = 'Show text';
-    protected $usage = '/echo <text>';
+    protected $name = 'Generic';
+    protected $description = 'Handles generic commands or is executed by default when a command is not found';
     protected $version = '1.0.1';
-    protected $public = true;
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
         $message = $this->getMessage();
+
+        //You can use $command as param
+        $command = $message->getCommand();
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => $text,
+            'text'    => 'Command /' . $command . ' not found.. :(',
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * User "/weather" command
  */
-class WeatherCommand extends Command
+class WeatherCommand extends UserCommand
 {
     /**#@+
      * {@inheritdoc}
@@ -110,9 +110,7 @@ class WeatherCommand extends Command
     }
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -139,6 +137,6 @@ class WeatherCommand extends Command
             'text'                => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }

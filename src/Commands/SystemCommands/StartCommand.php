@@ -8,29 +8,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Command;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
  * Start command
  */
-class StartCommand extends Command
+class StartCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
     protected $name = 'start';
     protected $description = 'Start command';
-    protected $usage = '/';
+    protected $usage = '/start';
     protected $version = '1.0.1';
     /**#@-*/
 
     /**
-     * Execute command
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -44,6 +42,6 @@ class StartCommand extends Command
             'text'    => $text,
         ];
 
-        return Request::sendMessage($data)->isOk();
+        return Request::sendMessage($data);
     }
 }
