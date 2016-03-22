@@ -28,7 +28,8 @@ The Bot can:
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface.
 - full support for **inline bots**. (**new!**)
-- Messages, InlineQuery and ChosenInlineQuery are stored in the Database. (**new!**)
+- Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
+- Conversation feature (**new!**)
 
 -----
 This code is available on
@@ -348,7 +349,7 @@ You can also store inline query and chosen inline query in the database.
 ### Channels Support
 
 All methods implemented can be used to manage channels.
-With [admin commands](#admin-commands) you can manage your channel directly with your bot private chat.
+With [admin commands](#admin-commands) you can manage your channels directly with your bot private chat.
 
 ### Commands
 
@@ -397,7 +398,7 @@ $telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_he
 Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
-- Send a message to a channel */sendtochannel* (NEW! see below how to configure it)
+- Post any content to your channels */sendtochannel* (NEW! see below how to configure it)
 You can specify one or more admins with this option:
 
 ```php
@@ -414,7 +415,11 @@ To enable this feature follow these steps:
 - Enable admin interface for your user as explained in the admin section above.
 - Enter your channel name as a parameter for the */sendtochannel* command:
 ```php
-$telegram->setCommandConfig('sendtochannel', ['your_channel' => '@type_here_your_channel']);
+$telegram->setCommandConfig('sendtochannel', ['your_channel' => ['@type_here_your_channel']]);
+```
+- If you want to manage more channels:  
+```php
+$telegram->setCommandConfig('sendtochannel', ['your_channel'=>['@type_here_your_channel', '@type_here_another_channel', '@and_so_on']]);
 ```
 - Enjoy!
 
