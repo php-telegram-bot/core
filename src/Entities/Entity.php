@@ -21,7 +21,7 @@ class Entity
         return $this->bot_name;
     }
 
-    public function toJSON()
+    public function toJson()
     {
         $fields = $this->reflect($this);
         $json = json_encode($fields);
@@ -82,6 +82,6 @@ class Entity
 
     public function __toString()
     {
-        return $this->toJSON();
+        return $this->toJson();
     }
 }

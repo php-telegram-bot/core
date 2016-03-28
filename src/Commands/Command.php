@@ -128,7 +128,7 @@ abstract class Command
     public function preExecute()
     {
         if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
-            return $this->executeNoDB();
+            return $this->executeNoDb();
         }
         return $this->execute();
     }
@@ -145,7 +145,7 @@ abstract class Command
      *
      * @return Entities\ServerResponse
      */
-    public function executeNoDB()
+    public function executeNoDb()
     {
         //Preparing message
         $message = $this->getMessage();
