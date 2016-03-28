@@ -75,7 +75,7 @@ class Video extends Entity
     {
          return $this->thumb;
     }
-    public function getTimeType()
+    public function getMimeType()
     {
          return $this->mime_type;
     }
