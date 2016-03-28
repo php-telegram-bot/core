@@ -99,7 +99,7 @@ class ServerResponse extends Entity
     //must be an array
     protected function isAssoc(array $array)
     {
-        return (bool)count(array_filter(array_keys($array), 'is_string'));
+        return (bool) count(array_filter(array_keys($array), 'is_string'));
     }
     public function isOk()
     {
