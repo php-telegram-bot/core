@@ -205,6 +205,7 @@ class Message extends Entity
                 }
             }
             $this->new_chat_photo = $photos;
+            $this->type = 'new_chat_photo';
         }
 
         $this->delete_chat_photo = isset($data['delete_chat_photo']) ? $data['delete_chat_photo'] : null;

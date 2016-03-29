@@ -457,6 +457,7 @@ class Telegram
                 'left_chat_participant',
                 'new_chat_participant',
                 'new_chat_title',
+                'new_chat_photo',
                 'supergroup_chat_created',
             ])) {
                 $command = $this->getCommandFromType($type);
