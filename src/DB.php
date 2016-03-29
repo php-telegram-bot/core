@@ -74,45 +74,79 @@ class DB
             throw new TelegramException('MySQL credentials not provided!');
         }
 
-        self::$telegram = $telegram;
-        self::$mysql_credentials = $credentials;
-        self::$table_prefix = $table_prefix;
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
         try {
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
-
-            //Define table
-            if (!defined('TB_TELEGRAM_UPDATE')) {
-                define('TB_TELEGRAM_UPDATE', self::$table_prefix.'telegram_update');
-            }
-            if (!defined('TB_MESSAGE')) {
-                define('TB_MESSAGE', self::$table_prefix.'message');
-            }
-            if (!defined('TB_INLINE_QUERY')) {
-                define('TB_INLINE_QUERY', self::$table_prefix.'inline_query');
-            }
-
-            if (!defined('TB_CHOSEN_INLINE_QUERY')) {
-                define('TB_CHOSEN_INLINE_QUERY', self::$table_prefix.'chosen_inline_query');
-            }
-            if (!defined('TB_USER')) {
-                define('TB_USER', self::$table_prefix.'user');
-            }
-            if (!defined('TB_CHAT')) {
-                define('TB_CHAT', self::$table_prefix.'chat');
-            }
-            if (!defined('TB_USER_CHAT')) {
-                define('TB_USER_CHAT', self::$table_prefix.'user_chat');
-            }
-
         } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
 
         self::$pdo = $pdo;
+        self::$telegram = $telegram;
+        self::$mysql_credentials = $credentials;
+        self::$table_prefix = $table_prefix;
+
+        self::defineTable();
+
         return self::$pdo;
+    }
+
+    /**
+     * External Initialize
+     *
+     * Let you use the class with an external already existing Pdo Mysql connection.
+     *
+     * @param PDO      $external_pdo_connection PDO database object
+     * @param Telegram $telegram                Telegram object to connect with this object
+     * @param string   $table_prefix            Table prefix
+     *
+     * @return PDO PDO database object
+     */
+    public static function externalInitialize($external_pdo_connection, Telegram $telegram, $table_prefix = null)
+    {
+        if (empty($external_pdo_connection)) {
+            throw new TelegramException('MySQL external connection not provided!');
+        }
+
+        self::$pdo = $pdo;
+        self::$telegram = $telegram;
+        self::$mysql_credentials = null;
+        self::$table_prefix = $table_prefix;
+
+        self::defineTable();
+
+        return self::$pdo;
+    }
+
+    /**
+     * Define all the table with the proper prefix
+     */
+    protected static function defineTable()
+    {
+        if (!defined('TB_TELEGRAM_UPDATE')) {
+            define('TB_TELEGRAM_UPDATE', self::$table_prefix.'telegram_update');
+        }
+        if (!defined('TB_MESSAGE')) {
+            define('TB_MESSAGE', self::$table_prefix.'message');
+        }
+        if (!defined('TB_INLINE_QUERY')) {
+            define('TB_INLINE_QUERY', self::$table_prefix.'inline_query');
+        }
+
+        if (!defined('TB_CHOSEN_INLINE_QUERY')) {
+            define('TB_CHOSEN_INLINE_QUERY', self::$table_prefix.'chosen_inline_query');
+        }
+        if (!defined('TB_USER')) {
+            define('TB_USER', self::$table_prefix.'user');
+        }
+        if (!defined('TB_CHAT')) {
+            define('TB_CHAT', self::$table_prefix.'chat');
+        }
+        if (!defined('TB_USER_CHAT')) {
+            define('TB_USER_CHAT', self::$table_prefix.'user_chat');
+        }
     }
 
     /**

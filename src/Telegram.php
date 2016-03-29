@@ -167,9 +167,9 @@ class Telegram
     }
 
     /**
-     * Initialize
+     * Initialize Database connection
      *
-     * @param array $credential
+     * @param array  $credential
      * @param string $table_prefix
      *
      * @return Telegram
@@ -180,6 +180,18 @@ class Telegram
         ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
         return $this;
+    }
+
+    /**
+     * Initialize Database external connection
+     *
+     * @param PDO    $external_pdo_connection PDO database object
+     * @param string $table_prefix
+     */
+    public function enableExternalMySQL($external_pdo_connection, $table_prefix = null)
+    {
+        $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
+        $this->mysql_enabled = true;
     }
 
     /**
