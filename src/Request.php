@@ -208,9 +208,8 @@ class Request
 
         //Logging getUpdates Update
         //Logging curl updates
-        if ($action == 'getUpdates'
-            & self::$telegram->getLogVerbosity() >=1
-            | self::$telegram->getLogVerbosity() >=3) {
+        if ($action == 'getUpdates' & self::$telegram->getLogVerbosity() >= 1 | self::$telegram->getLogVerbosity() >= 3
+        ) {
             self::setInputRaw($result);
             self::log($result);
         }

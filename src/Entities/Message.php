@@ -237,7 +237,7 @@ class Message extends Entity
     public function getFullCommand()
     {
         if (substr($this->text, 0, 1) === '/') {
-            $no_EOL =  strtok($this->text, PHP_EOL);
+            $no_EOL = strtok($this->text, PHP_EOL);
             $no_space = strtok($this->text, ' ');
 
             //try to understand which separator \n or space divide /command from text

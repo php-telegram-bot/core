@@ -54,7 +54,7 @@ class ChatsCommand extends AdminCommand
 
         foreach ($results as $result) {
             //Initialize a chat object
-            $result['id'] =  $result['chat_id'];
+            $result['id'] = $result['chat_id'];
             $chat = new Chat($result);
 
             if ($chat->isPrivateChat()) {

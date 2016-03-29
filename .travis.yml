@@ -30,5 +30,5 @@ before_script:
   - mysql -e 'create database telegrambot; use telegrambot; source structure.sql;'
 
 script:
-  - vendor/bin/phpunit
-  - vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .
+  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/ --report-width=150

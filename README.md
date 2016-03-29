@@ -11,6 +11,49 @@
 
 A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Instructions](#instructions)
+    - [Create your first bot](#create-your-first-bot)
+    - [Require this package with Composer](#require-this-package-with-composer)
+    - [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
+    - [Webhook installation](#webhook-installation)
+    - [Self Signed Certificate](#self-signed-certificate)
+    - [Unset Webhook](#unset-webhook)
+    - [getUpdate installation](#getupdate-installation)
+- [Support](#support)
+    - [Types](#types)
+    - [Inline Query](#inline-query)
+    - [Methods](#methods)
+    - [Send Message](#send-message)
+    - [Send Photo](#send-photo)
+    - [Send Chat Action](#send-chat-action)
+    - [getUserProfilePhoto](#getuserprofilephoto)
+    - [getFile and dowloadFile](#getfile-and-dowloadfile)
+    - [Send message to all active chats](#send-message-to-all-active-chats)
+- [Utils](#utils)
+    - [MySQL storage (Recommended)](#mysql-storage-recommended)
+    - [Channels Support](#channels-support)
+- [Commands](#commands)
+    - [Predefined Commands](#predefined-commands)
+    - [Custom Commands](#custom-commands)
+    - [Commands Configuration](#commands-configuration)
+- [Admin Commands](#admin-commands)
+    - [Set Admins](#set-admins)
+    - [Channel Administration](#channel-administration)
+- [Upload and Download directory path](#upload-and-download-directory-path)
+- [Logging](#logging)
+- [Documentation](#documentation)
+- [Projects with this library](#projects-with-this-library)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+- [Credits](#credits)
+
+
+
+
+
 
 ## Introduction
 
@@ -199,7 +242,7 @@ $result = $telegram->setWebHook($hook_url, $certificate_path);
 
 Edit *example/unset.php* with your bot credentials and execute it.
 
-## getUpdate installation
+### getUpdate installation
 
 The MySQL database must be active!
 
@@ -353,6 +396,8 @@ With [admin commands](#admin-commands) you can manage your channels directly wit
 
 ### Commands
 
+#### Predefined Commands
+
 The bot is able to recognise commands in a chat with multiple bots (/command@mybot).
 It can execute command triggering a chat event. Here's the list:
 
@@ -374,6 +419,8 @@ Favourite colour? **/black, /red**
 Favourite number? **/1, /134**
 
 **GenericmessageCommand.php** lets you handle any type of message.
+
+#### Custom Commands
 
 Maybe you would like to develop your own commands. A good practice is
 to store them outside *vendor/*. This can be done using:
@@ -399,6 +446,9 @@ Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
 - Post any content to your channels */sendtochannel* (NEW! see below how to configure it)
+
+#### Set Admins
+
 You can specify one or more admins with this option:
 
 ```php
@@ -417,7 +467,7 @@ To enable this feature follow these steps:
 ```php
 $telegram->setCommandConfig('sendtochannel', ['your_channel' => ['@type_here_your_channel']]);
 ```
-- If you want to manage more channels:  
+- If you want to manage more channels:
 ```php
 $telegram->setCommandConfig('sendtochannel', ['your_channel'=>['@type_here_your_channel', '@type_here_another_channel', '@and_so_on']]);
 ```
@@ -431,7 +481,7 @@ $telegram->setDownloadPath('yourpath/Download');
 $telegram->setUploadPath('yourpath/Upload');
 ```
 
-### Logging
+## Logging
 
 Thrown Exceptions are stored in *TelegramException.log* file (in the base directory).
 
@@ -451,7 +501,7 @@ $telegram->setLogVerbosity(3);
 
 ## Documentation
 
-Take a look at the repo [Wiki](https://github.com/akalongman/php-telegram-bot/wiki) for further information and tutorial!
+Take a look at the repo [Wiki](https://github.com/akalongman/php-telegram-bot/wiki) for further information and tutorials!
 Feel free to improve!
 
 ## Projects with this library

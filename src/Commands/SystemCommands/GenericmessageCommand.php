@@ -33,7 +33,7 @@ class GenericmessageCommand extends SystemCommand
      *
      * @return boolean
      */
-    public function executeNoDB()
+    public function executeNoDb()
     {
         //Do nothing
         return Request::emptyResponse();

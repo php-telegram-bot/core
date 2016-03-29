@@ -174,7 +174,7 @@ class Telegram
      *
      * @return Telegram
      */
-    public function enableMySQL(array $credential, $table_prefix = null)
+    public function enableMySql(array $credential, $table_prefix = null)
     {
         $this->pdo = DB::initialize($credential, $this, $table_prefix);
         ConversationDB::initializeConversation();
@@ -380,7 +380,7 @@ class Telegram
 
         if ($response->isOk()) {
             //Process all updates
-            foreach ((array)$response->getResult() as $result) {
+            foreach ((array) $response->getResult() as $result) {
                 $this->processUpdate($result);
             }
         }

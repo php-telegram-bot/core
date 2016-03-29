@@ -58,7 +58,7 @@ class CancelCommand extends UserCommand
     /**
      * {@inheritdoc}
      */
-    public function executeNoDB()
+    public function executeNoDb()
     {
         return $this->hideKeyboard();
     }

@@ -147,7 +147,7 @@ class DB
             $query .= 'ORDER BY `id` DESC';
 
             if (!is_null($limit)) {
-                $query .=' LIMIT :limit ';
+                $query .= ' LIMIT :limit ';
             }
 
             $sth_select_telegram_update = self::$pdo->prepare($query);
@@ -182,7 +182,7 @@ class DB
             $query .= 'ORDER BY ' . TB_MESSAGE . '.`message_id` DESC';
 
             if (!is_null($limit)) {
-                $query .=' LIMIT :limit ';
+                $query .= ' LIMIT :limit ';
             }
 
             $sth = self::$pdo->prepare($query);
@@ -684,7 +684,7 @@ class DB
 
             if (! is_null($date_from)) {
                 $where[] = TB_CHAT . '.`updated_at` >= :date_from';
-                $tokens[':date_from'] =  $date_from;
+                $tokens[':date_from'] = $date_from;
             }
 
             if (! is_null($date_to)) {
@@ -692,7 +692,7 @@ class DB
                 $tokens[':date_to'] = $date_to;
             }
 
-            $a=0;
+            $a = 0;
             foreach ($where as $part) {
                 if ($a) {
                     $query .= ' AND ' . $part;

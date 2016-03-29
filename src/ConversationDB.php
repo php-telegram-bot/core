@@ -171,7 +171,7 @@ class ConversationDB extends DB
                 $where .= 'WHERE ';
             }
             ++$tokens_counter;
-            $where .= '`' . $field .'`= :' . $tokens_counter ;
+            $where .= '`' . $field .'`= :' . $tokens_counter;
             $tokens[':' . $tokens_counter] = $value;
         }
 

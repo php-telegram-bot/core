@@ -5,11 +5,11 @@ Before you contribute code to php-telegram-bot, please make sure it conforms to 
 
     cd php-telegram-bot
     composer update
-    vendor/bin/phpcs --report=full --extensions=php -np --standard=build/phpcs .
+    ./vendor/bin/phpcs --standard=phpcs.xml -sp --encoding=utf-8 src/ --report-width=150
 
 Which should give you no output, indicating that there are no coding standard errors. And then:
 
-    vendor/bin/phpunit
+    ./vendor/bin/phpunit
 
 Which should give you no failures or errors. You can ignore any skipped tests as these are for external tools.
 
@@ -30,7 +30,7 @@ Further code convention adopted
 
 - Each method and class is documented with a docblock
 
-Example for a function or methods:  
+Example for a function or methods:
 ```
 /**
  * Get formatted date
@@ -52,11 +52,3 @@ Example for a function or methods:
  * file that was distributed with this source code.
  */
 ```
-- No empty line after class declaration
-- No empty line after `<?php`
-- Last element of a multi-line array must be followed by a comma
-- One empty line after the docblock header
-- Array elements and `use` statements should be written in a logical order, preferrably alphabetically
-- Use [] instead of array()
-- Use single quotes (`'`) for string
-- Leave space in front and behind the concatenation operator `.`

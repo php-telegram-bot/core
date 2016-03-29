@@ -236,7 +236,7 @@ class SendtochannelCommand extends AdminCommand
     /**
      * {@inheritdoc}
      */
-    public function executeNoDB()
+    public function executeNoDb()
     {
         $message = $this->getMessage();
         $text = trim($message->getText(true));
@@ -274,8 +274,7 @@ class SendtochannelCommand extends AdminCommand
         if ($this->sendBack($message, $data)->isOk()) {
             $response = 'Message sent successfully to: ' . $channel;
         } else {
-            $response =
-                    'Message not sent to: ' .  $channel . "\n" .
+            $response = 'Message not sent to: ' .  $channel . "\n" .
                     '- Does the channel exist?' . "\n" .
                     '- Is the bot an admin of the channel?';
         }
