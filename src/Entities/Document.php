@@ -44,7 +44,7 @@ class Document extends Entity
         return $this->file_id;
     }
 
-    public function getthumb()
+    public function getThumb()
     {
           return $this->thumb;
     }
