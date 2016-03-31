@@ -392,7 +392,7 @@ You can also store inline query and chosen inline query in the database.
 Is possible to provide to the library an external mysql connection. Here's how to configure it:
 
 ```php
-$telegram->enableExternalMySQL($external_pdo_connection)
+$telegram->enableExternalMysql($external_pdo_connection)
 //$telegram->enableExternalMySQL($external_pdo_connection, $table_prefix)
 ```
 ### Channels Support

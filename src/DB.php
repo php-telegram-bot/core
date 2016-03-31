@@ -110,7 +110,7 @@ class DB
             throw new TelegramException('MySQL external connection not provided!');
         }
 
-        self::$pdo = $pdo;
+        self::$pdo = $external_pdo_connection;
         self::$telegram = $telegram;
         self::$mysql_credentials = null;
         self::$table_prefix = $table_prefix;
