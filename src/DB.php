@@ -472,6 +472,7 @@ class DB
         $left_chat_participant = $message->getLeftChatParticipant();
 
         $migrate_from_chat_id = $message->getMigrateFromChatId();
+        $migrate_to_chat_id = $message->getMigrateToChatId();
 
         try {
             //chat table
@@ -488,11 +489,22 @@ class DB
             $chat_title = $chat->getTitle();
             $type = $chat->getType();
 
-            $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
+            if ($migrate_to_chat_id) {
+
+                $type = 'supergroup';
+
+                $sth2->bindParam(':id', $migrate_to_chat_id, \PDO::PARAM_INT);
+                $sth2->bindParam(':oldid', $chat_id, \PDO::PARAM_INT);
+
+            } else {
+
+                $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
+                $sth2->bindParam(':oldid', $migrate_to_chat_id, \PDO::PARAM_INT);
+            }
+
             $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
             $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
-            $sth2->bindParam(':oldid', $migrate_from_chat_id, \PDO::PARAM_INT);
 
             $status = $sth2->execute();
 
@@ -509,7 +521,7 @@ class DB
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
         }
-        
+
         if ($new_chat_participant) {
             //Insert the new chat user
             self::insertUser($new_chat_participant, $date, $chat);
@@ -569,6 +581,7 @@ class DB
             $supergroup_chat_created = $message->getSupergroupChatCreated();
             $channel_chat_created = $message->getChannelChatCreated();
             $migrate_from_chat_id = $message->getMigrateFromChatId();
+            $migrate_to_chat_id = $message->getMigrateToChatId();
 
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
@@ -618,10 +631,10 @@ class DB
             $sth->bindParam(':new_chat_photo', $new_chat_photo, \PDO::PARAM_STR);
             $sth->bindParam(':delete_chat_photo', $delete_chat_photo, \PDO::PARAM_STR);
             $sth->bindParam(':group_chat_created', $group_chat_created, \PDO::PARAM_STR);
-            $sth->bindParam(':supergroup_chat_created', $migrate_from_chat_id, \PDO::PARAM_INT);
-            $sth->bindParam(':channel_chat_created', $supergroup_chat_created, \PDO::PARAM_INT);
-            $sth->bindParam(':migrate_from_chat_id', $channel_chat_created, \PDO::PARAM_INT);
-            $sth->bindParam(':migrate_to_chat_id', $migrate_from_chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':supergroup_chat_created', $supergroup_chat_created, \PDO::PARAM_INT);
+            $sth->bindParam(':channel_chat_created', $channel_chat_created, \PDO::PARAM_INT);
+            $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, \PDO::PARAM_INT);
             $status = $sth->execute();
 
         } catch (PDOException $e) {
