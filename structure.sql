@@ -142,8 +142,8 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   `status` ENUM('active', 'cancelled', 'stopped') NOT NULL DEFAULT 'active' COMMENT 'active conversation is active, cancelled conversation has been truncated before end, stopped conversation has end',
   `command` varchar(160) DEFAULT '' COMMENT 'Default Command to execute',
   `notes` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
 
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
