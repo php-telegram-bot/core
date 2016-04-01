@@ -191,6 +191,7 @@ class Telegram
     public function enableExternalMysql($external_pdo_connection, $table_prefix = null)
     {
         $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
+        ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
     }
 
