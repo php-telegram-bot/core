@@ -48,8 +48,8 @@ class GenericmessageCommand extends SystemCommand
     {
         //If a conversation is busy, execute the conversation command after handling the message
         $conversation = new Conversation(
-            $this->getMessage()->getChat()->getId(),
-            $this->getMessage()->getFrom()->getId()
+            $this->getMessage()->getFrom()->getId(),
+            $this->getMessage()->getChat()->getId()
         );
         //Fetch conversation command if it exists and execute it
         if ($conversation->exists() && ($command = $conversation->getCommand())) {
