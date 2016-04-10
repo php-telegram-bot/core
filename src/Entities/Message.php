@@ -229,7 +229,13 @@ class Message extends Entity
         }
 
         $this->migrate_to_chat_id = isset($data['migrate_to_chat_id']) ? $data['migrate_to_chat_id'] : null;
+        if ($this->migrate_to_chat_id) {
+            $this->type = 'migrate_to_chat_id';
+        }
         $this->migrate_from_chat_id = isset($data['migrate_from_chat_id']) ? $data['migrate_from_chat_id'] : null;
+        if ($this->migrate_from_chat_id) {
+            $this->type = 'migrate_from_chat_id';
+        }
 
     }
 

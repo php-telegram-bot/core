@@ -468,6 +468,8 @@ class Telegram
                 'delete_chat_photo',
                 'group_chat_created',
                 'left_chat_participant',
+                'migrate_from_chat_id',
+                'migrate_to_chat_id',
                 'new_chat_participant',
                 'new_chat_photo',
                 'new_chat_title',
