@@ -241,7 +241,7 @@ class DB
     protected static function getTimestamp($time = null)
     {
         if (is_null($time)) {
-            return null;
+            return date('Y-m-d H:i:s', time());
         }
         return date('Y-m-d H:i:s', $time);
     }
