@@ -52,9 +52,9 @@ class ChatsCommand extends AdminCommand
         $group_chats = 0;
         $super_group_chats = 0;
 
-        if($text === '') {
+        if ($text === '') {
             $text_back = '';
-        } else if ($text == '*') {
+        } elseif ($text == '*') {
             $text_back = 'List of all bot chats:' . "\n";
         } else {
             $text_back = 'Chat search results:' . "\n";
@@ -66,19 +66,19 @@ class ChatsCommand extends AdminCommand
             $chat = new Chat($result);
 
             if ($chat->isPrivateChat() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false || strpos(strtolower($chat->getFirstName()), strtolower($text)) !== false || strpos(strtolower($chat->getLastName()), strtolower($text)) !== false)) {
-                if($text != '') {
+                if ($text != '') {
                     $text_back .= '- P ' . $chat->tryMention() . ' (' . $chat->getId() . ')' . "\n";
                 }
 
                 ++$user_chats;
             } elseif ($chat->isSuperGroup() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false)) {
-                if($text != '') {
+                if ($text != '') {
                     $text_back .= '- S ' . $chat->getTitle() . ' (' . $chat->getId() . ')' . "\n";
                 }
 
                 ++$super_group_chats;
             } elseif ($chat->isGroupChat() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false)) {
-                if($text != '') {
+                if ($text != '') {
                     $text_back .= '- G ' . $chat->getTitle() . ' (' . $chat->getId() . ')' . "\n";
                 }
 
