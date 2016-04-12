@@ -65,26 +65,26 @@ class ChatsCommand extends AdminCommand
             $result['id'] = $result['chat_id'];
             $chat = new Chat($result);
 
-            $whois = '';
+            $whois = $chat->getId();
             if ($this->telegram->getCommandObject('whois')) {
-                $whois = ' [/whois' . str_replace('-', 'g', $chat->getId()).']'; //We can't use '-' in command because part of it will become unclickable
+                $whois = '/whois' . str_replace('-', 'g', $chat->getId()); //We can't use '-' in command because part of it will become unclickable
             }
 
             if ($chat->isPrivateChat() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false || strpos(strtolower($chat->getFirstName()), strtolower($text)) !== false || strpos(strtolower($chat->getLastName()), strtolower($text)) !== false)) {
                 if ($text != '') {
-                    $text_back .= '- P ' . $chat->tryMention() . $whois . "\n";
+                    $text_back .= '- P ' . $chat->tryMention() . ' [' . $whois . ']' . "\n";
                 }
 
                 ++$user_chats;
             } elseif ($chat->isSuperGroup() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false)) {
                 if ($text != '') {
-                    $text_back .= '- S ' . $chat->getTitle() . $whois . "\n";
+                    $text_back .= '- S ' . $chat->getTitle() . ' [' . $whois . ']' . "\n";
                 }
 
                 ++$super_group_chats;
             } elseif ($chat->isGroupChat() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false)) {
                 if ($text != '') {
-                    $text_back .= '- G ' . $chat->getTitle() . $whois . "\n";
+                    $text_back .= '- G ' . $chat->getTitle() . ' [' . $whois . ']' . "\n";
                 }
 
                 ++$group_chats;
