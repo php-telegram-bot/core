@@ -626,9 +626,9 @@ class DB
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
-			$reply_chat_id = null;
+            $reply_chat_id = null;
             if ($reply_to_message_id) {
-				$reply_chat_id = $chat_id;
+                $reply_chat_id = $chat_id;
             }
             $sth->bindParam(':reply_to_chat', $reply_chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':reply_to_message', $reply_to_message_id, \PDO::PARAM_INT);
