@@ -715,6 +715,7 @@ class DB
         try {
             $query = 'SELECT * ,
                 ' . TB_CHAT . '.`id` AS `chat_id`,
+                ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
                 ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`,
                 ' . TB_USER . '.`id` AS `user_id`
                 FROM `' . TB_CHAT . '` LEFT JOIN `' . TB_USER . '`
