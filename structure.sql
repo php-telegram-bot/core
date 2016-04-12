@@ -15,8 +15,9 @@ CREATE TABLE IF NOT EXISTS  `chat` (
   `title` CHAR(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
-  `old_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifieri this is filled when a chat is converted to a superchat',
-  PRIMARY KEY (`id`)
+  `old_id` bigint DEFAULT NULL COMMENT 'Unique chat identifieri this is filled when a chat is converted to a superchat',
+   PRIMARY KEY (`id`),
+   KEY `old_id` (`old_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `user_chat` (
@@ -59,12 +60,13 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `message` (
+  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'User identifier',
-  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
   `forward_from` bigint NULL DEFAULT NULL COMMENT 'User id. For forwarded messages, sender of the original message',
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'For forwarded messages, date the original message was sent in Unix time',
+  `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message is a reply to another message.',
   `text` TEXT DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
   `audio` TEXT DEFAULT NULL COMMENT 'Audio object. Message is an audio file, information about the file',
@@ -86,53 +88,42 @@ CREATE TABLE IF NOT EXISTS  `message` (
   `channel_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the channel chat has been created',
   `migrate_from_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate from chat identifier.',
   `migrate_to_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate to chat identifier.',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`chat_id`, `id`),
   KEY `user_id` (`user_id`),
-  KEY `chat_id` (`chat_id`),
   KEY `forward_from` (`forward_from`),
+  KEY `reply_to_chat` (`reply_to_chat`),
   KEY `reply_to_message` (`reply_to_message`),
   KEY `new_chat_participant` (`new_chat_participant`),
   KEY `left_chat_participant` (`left_chat_participant`),
   KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
   KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
 
-  FOREIGN KEY (`user_id`)
-  REFERENCES `user` (`id`),
-  FOREIGN KEY (`chat_id`)
-  REFERENCES `chat` (`id`),
-  FOREIGN KEY (`forward_from`)
-  REFERENCES `user` (`id`),
-  FOREIGN KEY (`reply_to_message`)
-  REFERENCES `message` (`id`),
-  FOREIGN KEY (`forward_from`)
-  REFERENCES `user` (`id`),
-  FOREIGN KEY (`new_chat_participant`)
-  REFERENCES `user` (`id`),
-  FOREIGN KEY (`left_chat_participant`)
-  REFERENCES `user` (`id`)
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
+  FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`,`id`),
+  FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`new_chat_participant`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`left_chat_participant`) REFERENCES `user` (`id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
+  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
   `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The query unique identifier.',
   `chosen_inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
 
   PRIMARY KEY (`id`),
-  KEY `message_id` (`message_id`),
+  KEY `message_id` (`chat_id`, `message_id`),
   KEY `inline_query_id` (`inline_query_id`),
   KEY `chosen_inline_query_id` (`chosen_inline_query_id`),
 
-  FOREIGN KEY (`message_id`)
-  REFERENCES `message` (`id`),
-
-  FOREIGN KEY (`inline_query_id`)
-  REFERENCES `inline_query` (`id`),
-
-  FOREIGN KEY (`chosen_inline_query_id`)
-  REFERENCES `chosen_inline_query` (`id`)
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`,`id`),
+  FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
+  FOREIGN KEY (`chosen_inline_query_id`) REFERENCES `chosen_inline_query` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (

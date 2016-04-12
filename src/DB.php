@@ -252,15 +252,16 @@ class DB
      * @todo Needs to return something if successful
      *
      * @param int $id
+     * @param int $chat_id
      * @param int $message_id
      * @param int $inline_query_id
      * @param int $chosen_inline_query_id
      *
      * @return bool|null
      */
-    public static function insertTelegramUpdate($id, $message_id, $inline_query_id, $chosen_inline_query_id)
+    public static function insertTelegramUpdate($id, $chat_id, $message_id, $inline_query_id, $chosen_inline_query_id)
     {
-        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_query_id)) {
+        if (is_null($message_id) && is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_query_id)) {
             throw new TelegramException('Error both query_id and  message_id are null');
         }
 
@@ -272,14 +273,15 @@ class DB
             //telegram_update table
             $sth_insert_telegram_update = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
                 (
-                `id`, `message_id`, `inline_query_id`, `chosen_inline_query_id`
+                `id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_query_id`
                 )
                 VALUES (
-                :id, :message_id, :inline_query_id, :chosen_inline_query_id
+                :id, :chat_id, :message_id, :inline_query_id, :chosen_inline_query_id
                 )
                 ');
 
             $sth_insert_telegram_update->bindParam(':id', $id, \PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':inline_query_id', $inline_query_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':chosen_inline_query_id', $chosen_inline_query_id, \PDO::PARAM_INT);
@@ -374,13 +376,14 @@ class DB
         if ($update->getUpdateType() == 'message') {
             $message = $update->getMessage();
             $message_id = $message->getMessageId();
+            $chat_id = $message->getChat()->getId();
             self::insertMessageRequest($message);
-            return self::insertTelegramUpdate($update_id, $message_id, null, null);
+            return self::insertTelegramUpdate($update_id, $chat_id, $message_id, null, null);
         } elseif ($update->getUpdateType() == 'inline_query') {
             $inline_query = $update->getInlineQuery();
             $inline_query_id = $inline_query->getId();
             self::insertInlineQueryRequest($inline_query);
-            return self::insertTelegramUpdate($update_id, null, $inline_query_id, null);
+            return self::insertTelegramUpdate($update_id, null, null, $inline_query_id, null);
         } elseif ($update->getUpdateType() == 'chosen_inline_result') {
             $chosen_inline_query = $update->getChosenInlineResult();
 
@@ -422,7 +425,7 @@ class DB
                 throw new TelegramException($e->getMessage());
             }
 
-            return self::insertTelegramUpdate($update_id, null, null, $chosen_inline_query_local_id);
+            return self::insertTelegramUpdate($update_id, null, null, null, $chosen_inline_query_local_id);
         }
     }
 
@@ -571,7 +574,7 @@ class DB
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
                 `id`, `user_id`, `date`, `chat_id`, `forward_from`,
-                `forward_date`, `reply_to_message`, `text`, `audio`, `document`,
+                `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `new_chat_participant`, `left_chat_participant`,
                 `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
@@ -580,7 +583,7 @@ class DB
                 )
                 VALUES (
                 :message_id, :user_id, :date, :chat_id, :forward_from,
-                :forward_date, :reply_to_message, :text, :audio, :document,
+                :forward_date, :reply_to_chat, :reply_to_message, :text, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :new_chat_participant, :left_chat_participant,
                 :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
@@ -617,12 +620,17 @@ class DB
             $migrate_from_chat_id = $message->getMigrateFromChatId();
             $migrate_to_chat_id = $message->getMigrateToChatId();
 
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
+			$reply_chat_id = null;
+            if ($reply_to_message_id) {
+				$reply_chat_id = $chat_id;
+            }
+            $sth->bindParam(':reply_to_chat', $reply_chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':reply_to_message', $reply_to_message_id, \PDO::PARAM_INT);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
