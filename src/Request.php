@@ -317,8 +317,13 @@ class Request
             return new ServerResponse($fake_response, $bot_name);
         }
 
-        $response = self::executeCurl($action, $data);
-        return new ServerResponse(json_decode($response, true), $bot_name);
+        $response = json_decode(self::executeCurl($action, $data), true);
+
+        if (is_null($response)) {
+            throw new TelegramException('Telegram returned an invalid response! Please your bot name and api token.');
+        }
+
+        return new ServerResponse($response, $bot_name);
     }
 
     /**
