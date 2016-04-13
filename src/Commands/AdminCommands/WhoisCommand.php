@@ -70,8 +70,7 @@ class WhoisCommand extends AdminCommand
                 true, //Send to users (single chat)
                 null, //'yyyy-mm-dd hh:mm:ss' date range from
                 null,  //'yyyy-mm-dd hh:mm:ss' date range to
-                $user_id, //Specific chat_id to select
-                null //Text to search in user/group name
+                $user_id //Specific chat_id to select
             );
 
             if (is_array($result[0])) {
