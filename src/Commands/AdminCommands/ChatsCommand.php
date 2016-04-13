@@ -42,7 +42,7 @@ class ChatsCommand extends AdminCommand
 
         $results = DB::selectChats(
             true, //Send to groups (group chat)
-            true, //Send to supergroups (single chat)
+            true, //Send to supergroups (super group chat)
             true, //Send to users (single chat)
             null, //'yyyy-mm-dd hh:mm:ss' date range from
             null, //'yyyy-mm-dd hh:mm:ss' date range to
