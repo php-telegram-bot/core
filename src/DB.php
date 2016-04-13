@@ -689,6 +689,8 @@ class DB
     /**
      * Select Group and single Chats
      *
+     * @todo Seems to not return anything when $select_users = false
+     *
      * @param bool   $select_groups
      * @param bool   $select_super_groups
      * @param bool   $select_users
