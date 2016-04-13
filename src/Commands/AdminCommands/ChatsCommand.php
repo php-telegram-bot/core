@@ -41,9 +41,9 @@ class ChatsCommand extends AdminCommand
         $text = trim($message->getText(true));
 
         $results = DB::selectChats(
-            true, //Send to groups (group chat)
-            true, //Send to supergroups (super group chat)
-            true, //Send to users (single chat)
+            true, //Select groups (group chat)
+            true, //Select supergroups (super group chat)
+            true, //Select users (single chat)
             null, //'yyyy-mm-dd hh:mm:ss' date range from
             null, //'yyyy-mm-dd hh:mm:ss' date range to
             null, //Specific chat_id to select
