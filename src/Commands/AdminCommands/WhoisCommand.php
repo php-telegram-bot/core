@@ -64,25 +64,23 @@ class WhoisCommand extends AdminCommand
         } else {
             $user_id = $text;
 
-            $results = DB::selectChats(
+            $result = DB::selectChats(
                 true, //Send to groups (group chat)
                 true, //Send to supergroups (group chat)
                 true, //Send to users (single chat)
                 null, //'yyyy-mm-dd hh:mm:ss' date range from
-                null  //'yyyy-mm-dd hh:mm:ss' date range to
+                null,  //'yyyy-mm-dd hh:mm:ss' date range to
+                $user_id, //Specific chat_id to select
+                null //Text to search in user/group name
             );
 
-            foreach ($results as $result) {
-                if ($result['chat_id'] == $user_id) {
-                    $result['id'] = $result['chat_id'];
-                    $chat = new Chat($result);
+            if (is_array($result[0])) {
+                $result[0]['id'] = $result[0]['chat_id'];
+                $chat = new Chat($result[0]);
 
-                    $created_at = $result['chat_created_at'];
-                    $updated_at = $result['chat_updated_at'];
-                    $old_id = $result['old_id'];
-
-                    break;
-                }
+                $created_at = $result[0]['chat_created_at'];
+                $updated_at = $result[0]['chat_updated_at'];
+                $old_id = $result[0]['old_id'];
             }
 
             if ($chat != null) {

@@ -702,7 +702,9 @@ class DB
         $select_super_groups = true,
         $select_users = true,
         $date_from = null,
-        $date_to = null
+        $date_to = null,
+        $chat_id = null,
+        $text = null
     ) {
         if (!self::isDbConnected()) {
             return false;
@@ -746,6 +748,16 @@ class DB
             if (! is_null($date_to)) {
                 $where[] = TB_CHAT . '.`updated_at` <= :date_to';
                 $tokens[':date_to'] = $date_to;
+            }
+
+            if (! is_null($chat_id)) {
+                $where[] = TB_CHAT . '.`id` = :chat_id';
+                $tokens[':chat_id'] = $chat_id;
+            }
+
+            if (! is_null($text)) {
+                $where[] = '(LOWER('.TB_CHAT . '.`title`) LIKE :text OR LOWER(' . TB_USER . '.`first_name`) LIKE :text OR LOWER(' . TB_USER . '.`last_name`) LIKE :text OR LOWER(' . TB_USER . '.`username`) LIKE :text)';
+                $tokens[':text'] = '%'.strtolower($text).'%';
             }
 
             $a = 0;

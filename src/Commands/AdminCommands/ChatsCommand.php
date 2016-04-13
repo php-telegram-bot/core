@@ -45,7 +45,9 @@ class ChatsCommand extends AdminCommand
             true, //Send to supergroups (single chat)
             true, //Send to users (single chat)
             null, //'yyyy-mm-dd hh:mm:ss' date range from
-            null  //'yyyy-mm-dd hh:mm:ss' date range to
+            null, //'yyyy-mm-dd hh:mm:ss' date range to
+            null, //Specific chat_id to select
+            ($text === '' || $text == '*') ? null : $text //Text to search in user/group name
         );
 
         $user_chats = 0;
@@ -70,19 +72,19 @@ class ChatsCommand extends AdminCommand
                 $whois = '/whois' . str_replace('-', 'g', $chat->getId()); //We can't use '-' in command because part of it will become unclickable
             }
 
-            if ($chat->isPrivateChat() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false || strpos(strtolower($chat->getFirstName()), strtolower($text)) !== false || strpos(strtolower($chat->getLastName()), strtolower($text)) !== false)) {
+            if ($chat->isPrivateChat()) {
                 if ($text != '') {
                     $text_back .= '- P ' . $chat->tryMention() . ' [' . $whois . ']' . "\n";
                 }
 
                 ++$user_chats;
-            } elseif ($chat->isSuperGroup() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false)) {
+            } elseif ($chat->isSuperGroup()) {
                 if ($text != '') {
                     $text_back .= '- S ' . $chat->getTitle() . ' [' . $whois . ']' . "\n";
                 }
 
                 ++$super_group_chats;
-            } elseif ($chat->isGroupChat() && ($text === '' || $text == '*' || strpos(strtolower($chat->tryMention()), strtolower($text)) !== false)) {
+            } elseif ($chat->isGroupChat()) {
                 if ($text != '') {
                     $text_back .= '- G ' . $chat->getTitle() . ' [' . $whois . ']' . "\n";
                 }
