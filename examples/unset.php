@@ -3,7 +3,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
-$BOT_NAME = 'namebot';
+$BOT_NAME = 'username_bot';
 try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);

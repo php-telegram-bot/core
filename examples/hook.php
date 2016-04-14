@@ -9,7 +9,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 $API_KEY = 'your_bot_api_key';
-$BOT_NAME = 'namebot';
+$BOT_NAME = 'username_bot';
 //$commands_path = __DIR__ . '/Commands/';
 //$mysql_credentials = [
 //    'host'     => 'localhost',
