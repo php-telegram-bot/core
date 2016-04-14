@@ -62,7 +62,6 @@ class SendtoallCommand extends AdminCommand
             foreach ($results as $result) {
                 $status = '';
                 $type = '';
-                print_r($result);
                 if ($result->isOk()) {
                     $status = '✔️';
 
