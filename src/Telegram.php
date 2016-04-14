@@ -252,7 +252,7 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
-            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . ucfirst($command) . 'Command';
+            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
@@ -430,7 +430,7 @@ class Telegram
      */
     private function getCommandFromType($type)
     {
-        return ucfirst(str_replace('_', '', $type));
+        return $this->ucfirstUnicode(str_replace('_', '', $type));
     }
 
     /**
@@ -521,7 +521,7 @@ class Telegram
      */
     protected function sanitizeCommand($command)
     {
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $command)));
+        return str_replace(' ', '', $this->ucwordsUnicode(str_replace('_', ' ', $command)));
     }
 
     /**
@@ -758,5 +758,31 @@ class Telegram
         }
 
         return $result;
+    }
+
+    /**
+     * Replace function `ucwords` for UTF-8 characters in the class definition and commands
+     *
+     * @param string $str
+     * @param string $encoding (default = 'UTF-8')
+     *
+     * @return string
+     */
+    protected function ucwordsUnicode($str, $encoding = 'UTF-8')
+    {
+        return mb_convert_case($str, MB_CASE_TITLE, $encoding);
+    }
+
+    /**
+     * Replace function `ucfirst` for UTF-8 characters in the class definition and commands
+     *
+     * @param string $str
+     * @param string $encoding (default = 'UTF-8')
+     *
+     * @return string
+     */
+    protected function ucfirstUnicode($str, $encoding = 'UTF-8')
+    {
+        return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
     }
 }
