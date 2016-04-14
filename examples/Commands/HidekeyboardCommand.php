@@ -26,7 +26,7 @@ class HidekeyboardCommand extends UserCommand
     protected $name = 'hidekeyboard';
     protected $description = 'Hide the custom keyboard';
     protected $usage = '/hidekeyboard';
-    protected $version = '0.0.5';
+    protected $version = '0.0.6';
     /**#@-*/
 
     /**
@@ -37,10 +37,11 @@ class HidekeyboardCommand extends UserCommand
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = 'Keyboard Hided';
-        $data['reply_markup'] = new ReplyKeyboardHide([ 'selective' => false]);
+        $data = [
+            'chat_id'      => $chat_id,
+            'text'         => 'Keyboard Hidden',
+            'reply_markup' => new ReplyKeyboardHide(['selective' => false]),
+        ];
 
         return Request::sendMessage($data);
     }
