@@ -27,8 +27,8 @@ class WhoisCommand extends AdminCommand
      */
     protected $name = 'whois';
     protected $description = 'Lookup user or group info';
-    protected $usage = '/whois <id>';
-    protected $version = '1.0.0';
+    protected $usage = '/whois <id> or /whois <search string>';
+    protected $version = '1.1.0';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -64,22 +64,40 @@ class WhoisCommand extends AdminCommand
         } else {
             $user_id = $text;
 
-            $result = DB::selectChats(
-                true, //Select groups (group chat)
-                true, //Select supergroups (super group chat)
-                true, //Select users (single chat)
-                null, //'yyyy-mm-dd hh:mm:ss' date range from
-                null,  //'yyyy-mm-dd hh:mm:ss' date range to
-                $user_id //Specific chat_id to select
-            );
+            if (is_numeric($text)) {
+                $result = DB::selectChats(
+                    true, //Select groups (group chat)
+                    true, //Select supergroups (super group chat)
+                    true, //Select users (single chat)
+                    null, //'yyyy-mm-dd hh:mm:ss' date range from
+                    null,  //'yyyy-mm-dd hh:mm:ss' date range to
+                    $user_id //Specific chat_id to select
+                );
 
-            if (is_array($result[0])) {
-                $result[0]['id'] = $result[0]['chat_id'];
-                $chat = new Chat($result[0]);
+                $result = $result[0];
+            } else {
+                $results = DB::selectChats(
+                    true, //Select groups (group chat)
+                    true, //Select supergroups (super group chat)
+                    true, //Select users (single chat)
+                    null, //'yyyy-mm-dd hh:mm:ss' date range from
+                    null, //'yyyy-mm-dd hh:mm:ss' date range to
+                    null, //Specific chat_id to select
+                    $text //Text to search in user/group name
+                );
 
-                $created_at = $result[0]['chat_created_at'];
-                $updated_at = $result[0]['chat_updated_at'];
-                $old_id = $result[0]['old_id'];
+                if (is_array($results) && count($results) == 1)
+                    $result = $results[0];
+            }
+
+            if (is_array($result)) {
+                $result['id'] = $result['chat_id'];
+                $chat = new Chat($result);
+
+                $user_id = $result['id'];
+                $created_at = $result['chat_created_at'];
+                $updated_at = $result['chat_updated_at'];
+                $old_id = $result['old_id'];
             }
 
             if ($chat != null) {
@@ -127,6 +145,8 @@ class WhoisCommand extends AdminCommand
                     $text .= 'Bot added to group: ' . $created_at . "\n";
                     $text .= 'Last activity: ' . $updated_at . "\n";
                 }
+            } elseif (is_array($results) && count($results) > 1) {
+                $text = 'Multiple chats matched!';
             } else {
                 $text = 'Chat not found!';
             }
