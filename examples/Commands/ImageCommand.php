@@ -41,6 +41,14 @@ class ImageCommand extends UserCommand
         $data['chat_id'] = $chat_id;
         $data['caption'] = $text;
 
-        return Request::sendPhoto($data, $this->telegram->getUploadPath().'/'.'image.jpg');
+        //return Request::sendPhoto($data, $this->telegram->getUploadPath().'/'.'image.jpg');
+        return Request::sendPhoto($data, $this->ShowRandomImage($this->telegram->getUploadPath()));
     }
+    //return random picture from the telegram->getUploadPath();
+    
+    private function ShowRandomImage($dir) {
+		$image_list = scandir($dir);
+		return $dir . "/" . $image_list[mt_rand(2, count($image_list) - 1)];
+	}
+
 }
