@@ -500,7 +500,9 @@ class DB
 
         $date = self::getTimestamp($message->getDate());
         $forward_from = $message->getForwardFrom();
-        $forward_date = self::getTimestamp($message->getForwardDate());
+        if ($forward_from) {
+            $forward_date = self::getTimestamp($message->getForwardDate());
+        }
 
         $photo = $message->getPhoto();
         $new_chat_participant = $message->getNewChatParticipant();
