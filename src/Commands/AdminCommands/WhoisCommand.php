@@ -86,8 +86,9 @@ class WhoisCommand extends AdminCommand
                     $text //Text to search in user/group name
                 );
 
-                if (is_array($results) && count($results) == 1)
+                if (is_array($results) && count($results) == 1) {
                     $result = $results[0];
+                }
             }
 
             if (is_array($result)) {
