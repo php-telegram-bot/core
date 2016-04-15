@@ -691,6 +691,8 @@ class DB
     /**
      * Select Group and single Chats
      *
+     * @todo Seems to not return anything when $select_users = false
+     *
      * @param bool   $select_groups
      * @param bool   $select_super_groups
      * @param bool   $select_users
@@ -704,7 +706,9 @@ class DB
         $select_super_groups = true,
         $select_users = true,
         $date_from = null,
-        $date_to = null
+        $date_to = null,
+        $chat_id = null,
+        $text = null
     ) {
         if (!self::isDbConnected()) {
             return false;
@@ -717,6 +721,7 @@ class DB
         try {
             $query = 'SELECT * ,
                 ' . TB_CHAT . '.`id` AS `chat_id`,
+                ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
                 ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`,
                 ' . TB_USER . '.`id` AS `user_id`
                 FROM `' . TB_CHAT . '` LEFT JOIN `' . TB_USER . '`
@@ -747,6 +752,16 @@ class DB
             if (! is_null($date_to)) {
                 $where[] = TB_CHAT . '.`updated_at` <= :date_to';
                 $tokens[':date_to'] = $date_to;
+            }
+
+            if (! is_null($chat_id)) {
+                $where[] = TB_CHAT . '.`id` = :chat_id';
+                $tokens[':chat_id'] = $chat_id;
+            }
+
+            if (! is_null($text)) {
+                $where[] = '(LOWER('.TB_CHAT . '.`title`) LIKE :text OR LOWER(' . TB_USER . '.`first_name`) LIKE :text OR LOWER(' . TB_USER . '.`last_name`) LIKE :text OR LOWER(' . TB_USER . '.`username`) LIKE :text)';
+                $tokens[':text'] = '%'.strtolower($text).'%';
             }
 
             $a = 0;
