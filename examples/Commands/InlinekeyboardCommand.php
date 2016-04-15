@@ -110,10 +110,16 @@ class InlinekeyboardCommand extends UserCommand
             [
                 'text' => 'switch to inline',
                 'switch_inline_query' => 'thumb up'
-            ],
+            ]
+        ];
+        $inline_keyboard[] = [
             [
                 'text' => 'send callback query',
                 'callback_data' => 'thumb up'
+            ],
+            [
+                'text' => 'send callback query (no alert)',
+                'callback_data' => 'thumb down'
             ]
         ];
 

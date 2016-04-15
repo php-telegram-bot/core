@@ -34,10 +34,17 @@ class CallbackqueryCommand extends SystemCommand
         $update = $this->getUpdate();
         $callback_query = $update->getCallbackQuery();
         $callback_query_id = $callback_query->getId();
+        $callback_data = $callback_query->getData();
 
         $data['callback_query_id'] = $callback_query_id;
-        $data['text'] = 'Hello world!';
-        $data['show_alert'] = true;
+
+        if ($callback_data == 'thumb up') {
+            $data['text'] = 'Hello World!';
+            $data['show_alert'] = true;
+        } else {
+            $data['text'] = 'Hello World!';
+            $data['show_alert'] = false;
+        }
 
         return Request::answerCallbackQuery($data);
     }
