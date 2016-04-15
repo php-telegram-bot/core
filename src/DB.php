@@ -804,4 +804,3 @@ class DB
         return $result;
     }
 }
-
