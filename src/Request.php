@@ -59,6 +59,9 @@ class Request
         'unbanChatMember',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'editMessageText',
+        'editMessageCaption',
+        'editMessageReplyMarkup'
     ];
 
     /**
@@ -695,6 +698,54 @@ class Request
         }
 
         return self::send('answerInlineQuery', $data);
+    }
+
+    /**
+     * Edit message text
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function editMessageText(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('editMessageText', $data);
+    }
+
+    /**
+     * Edit message caption
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function editMessageCaption(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('editMessageCaption', $data);
+    }
+
+    /**
+     * Edit message reply markup
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function editMessageReplyMarkup(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('editMessageReplyMarkup', $data);
     }
 
     /**
