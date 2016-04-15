@@ -250,6 +250,9 @@ class Message extends Entity
         }
 
         $this->pinned_message = isset($data['pinned_message']) ? $data['pinned_message'] : null;
+        if ($this->pinned_message) {
+            $this->pinned_message = new Message($this->pinned_message, $this->getBotName());
+        }
 
         $this->entities = isset($data['entities']) ? $data['entities'] : null;
         if (!empty($this->entities)) {

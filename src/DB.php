@@ -572,6 +572,7 @@ class DB
         $forward_date = self::getTimestamp($message->getForwardDate());
 
         $photo = $message->getPhoto();
+        $entities = $message->getEntities();
         $new_chat_member = $message->getNewChatMember();
 
         $new_chat_photo = $message->getNewChatPhoto();
@@ -596,14 +597,11 @@ class DB
             $type = $chat->getType();
 
             if ($migrate_to_chat_id) {
-
                 $type = 'supergroup';
 
                 $sth2->bindParam(':id', $migrate_to_chat_id, \PDO::PARAM_INT);
                 $sth2->bindParam(':oldid', $chat_id, \PDO::PARAM_INT);
-
             } else {
-
                 $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
                 $sth2->bindParam(':oldid', $migrate_to_chat_id, \PDO::PARAM_INT);
             }
@@ -643,21 +641,21 @@ class DB
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
                 `id`, `user_id`, `date`, `chat_id`, `forward_from`,
-                `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `audio`, `document`,
+                `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `venue`, `new_chat_member`, `left_chat_member`,
                 `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                 `supergroup_chat_created`, `channel_chat_created`,
-                `migrate_from_chat_id`, `migrate_to_chat_id`
+                `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 )
                 VALUES (
                 :message_id, :user_id, :date, :chat_id, :forward_from,
-                :forward_date, :reply_to_chat, :reply_to_message, :text, :audio, :document,
+                :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :venue, :new_chat_member, :left_chat_member,
                 :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                 :supergroup_chat_created, :channel_chat_created,
-                :migrate_from_chat_id, :migrate_to_chat_id
+                :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
                 )');
 
             $message_id = $message->getMessageId();
@@ -689,6 +687,7 @@ class DB
             $channel_chat_created = $message->getChannelChatCreated();
             $migrate_from_chat_id = $message->getMigrateFromChatId();
             $migrate_to_chat_id = $message->getMigrateToChatId();
+            $pinned_message = $message->getPinnedMessage();
 
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
@@ -700,9 +699,22 @@ class DB
             if ($reply_to_message_id) {
                 $reply_chat_id = $chat_id;
             }
+
+            $var = [];
+            if (is_array($entities)) {
+                foreach ($entities as $elm) {
+                    $var[] = json_decode($elm, true);
+                }
+
+                $entities = json_encode($var);
+            } else {
+                $entities = '';
+            }
+
             $sth->bindParam(':reply_to_chat', $reply_chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':reply_to_message', $reply_to_message_id, \PDO::PARAM_INT);
             $sth->bindParam(':text', $text, \PDO::PARAM_STR);
+            $sth->bindParam(':entities', $entities, \PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
             $sth->bindParam(':document', $document, \PDO::PARAM_STR);
 
@@ -748,6 +760,8 @@ class DB
             $sth->bindParam(':channel_chat_created', $channel_chat_created, \PDO::PARAM_INT);
             $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':pinned_message', $pinned_message, \PDO::PARAM_INT);
+
             $status = $sth->execute();
 
         } catch (PDOException $e) {

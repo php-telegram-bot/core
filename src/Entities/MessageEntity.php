@@ -20,12 +20,12 @@ class MessageEntity extends Entity
     public function __construct(array $data)
     {
         $this->type = isset($data['type']) ? $data['type'] : null;
-        if (empty($this->type)) {
+        if (empty($this->type)) {                               // @todo check for value from this list: https://core.telegram.org/bots/api#messageentity
             throw new TelegramException('type is empty!');
         }
 
         $this->offset = isset($data['offset']) ? $data['offset'] : null;
-        if (empty($this->offset) && $this->offset != 0) {       // @todo:this is not an ideal solution?
+        if (empty($this->offset) && $this->offset != 0) {       // @todo this is not an ideal solution?
             throw new TelegramException('offset is empty!');
         }
 
