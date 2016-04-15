@@ -34,8 +34,13 @@ class GenericCommand extends SystemCommand
         $message = $this->getMessage();
 
         //You can use $command as param
-        $command = $message->getCommand();
         $chat_id = $message->getChat()->getId();
+        $user_id = $message->getFrom()->getId();
+        $command = $message->getCommand();
+
+        if (in_array($user_id, $this->telegram->getAdminList()) && strtolower(substr($command, 0, 5)) == 'whois') {
+            return $this->telegram->executeCommand('whois', $this->update);
+        }
 
         $data = [
             'chat_id' => $chat_id,
