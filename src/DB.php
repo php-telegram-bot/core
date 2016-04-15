@@ -191,7 +191,6 @@ class DB
             $sth_select_telegram_update->bindParam(':limit', $limit, \PDO::PARAM_INT);
             $sth_select_telegram_update->execute();
             $results = $sth_select_telegram_update->fetchAll(\PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -226,7 +225,6 @@ class DB
             $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
             $sth->execute();
             $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -292,7 +290,6 @@ class DB
             $sth_insert_telegram_update->bindParam(':callback_query_id', $callback_query_id, \PDO::PARAM_INT);
 
             $status = $sth_insert_telegram_update->execute();
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -340,7 +337,6 @@ class DB
             $sth1->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth1->execute();
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -361,7 +357,6 @@ class DB
                 $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
 
                 $status = $sth3->execute();
-
             } catch (PDOException $e) {
                 throw new TelegramException($e->getMessage());
             }
@@ -429,7 +424,6 @@ class DB
 
                 $status = $sth_insert_chosen_inline_query->execute();
                 $chosen_inline_query_local_id = self::$pdo->lastInsertId();
-
             } catch (PDOException $e) {
                 throw new TelegramException($e->getMessage());
             }
@@ -490,7 +484,6 @@ class DB
             $sth_insert_inline_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
             $status = $sth_insert_inline_query->execute();
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -543,7 +536,6 @@ class DB
             $sth_insert_callback_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
             $status = $sth_insert_callback_query->execute();
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -611,7 +603,6 @@ class DB
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth2->execute();
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -763,7 +754,6 @@ class DB
             $sth->bindParam(':pinned_message', $pinned_message, \PDO::PARAM_INT);
 
             $status = $sth->execute();
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -848,7 +838,6 @@ class DB
             $sth->execute($tokens);
 
             $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }

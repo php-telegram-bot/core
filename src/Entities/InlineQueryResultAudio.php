@@ -58,5 +58,4 @@ class InlineQueryResultAudio extends InlineQueryResult
     {
         return $this->audio_duration;
     }
-
 }

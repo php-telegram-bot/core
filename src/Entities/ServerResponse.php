@@ -48,7 +48,6 @@ class ServerResponse extends Entity
                 $this->ok = $data['ok'];
                 $this->error_code = null;
                 $this->description = null;
-
             } else {
                 if ($data['ok'] & $data['result'] == true) {
                     //Response from setWebhook set
@@ -67,9 +66,7 @@ class ServerResponse extends Entity
                     $this->error_code = $data['error_code'];
                     $this->description = $data['description'];
                 }
-
             }
-
         } else {
             //webHook not set
             $this->ok = false;

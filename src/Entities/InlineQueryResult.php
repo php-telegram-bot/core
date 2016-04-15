@@ -39,7 +39,4 @@ class InlineQueryResult extends Entity
     {
         return $this->id;
     }
-
-
-
 }

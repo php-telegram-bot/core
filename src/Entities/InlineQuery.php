@@ -64,5 +64,4 @@ class InlineQuery extends Entity
     {
         return $this->offset;
     }
-
 }

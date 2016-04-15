@@ -63,7 +63,6 @@ class ConversationDB extends DB
             $sth->execute();
 
             $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
         } catch (\Exception $e) {
             throw new TelegramException($e->getMessage());
         }

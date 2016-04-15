@@ -87,5 +87,4 @@ class InlineQueryResultArticle extends InlineQueryResult
     {
         return $this->thumb_height;
     }
-
 }
