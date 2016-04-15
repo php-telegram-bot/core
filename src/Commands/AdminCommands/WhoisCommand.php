@@ -143,7 +143,7 @@ class WhoisCommand extends AdminCommand
                     $text = 'Chat ID: ' . $user_id . (!empty($old_id) ? ' (previously: '.$old_id.')' : ''). "\n";
                     $text .= 'Type: ' . ucfirst($chat->getType()) . "\n";
                     $text .= 'Title: ' . $chat->getTitle() . "\n";
-                    $text .= 'Bot added to group: ' . $created_at . "\n";
+                    $text .= 'First time added to group: ' . $created_at . "\n";
                     $text .= 'Last activity: ' . $updated_at . "\n";
                 }
             } elseif (is_array($results) && count($results) > 1) {
