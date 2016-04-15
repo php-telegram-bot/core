@@ -21,7 +21,6 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
     protected $thumb_url;
     protected $title;
     protected $caption;
-    protected $message_text;
 
     public function __construct(array $data)
     {
@@ -44,7 +43,6 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
 
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
-        $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
 
     }
 
@@ -71,9 +69,5 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
     public function getCaption()
     {
         return $this->caption;
-    }
-    public function getMessageText()
-    {
-        return $this->message_text;
     }
 }
