@@ -30,10 +30,10 @@ CREATE TABLE IF NOT EXISTS  `user_chat` (
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-
 CREATE TABLE IF NOT EXISTS `inline_query` (
   `id` bigint UNSIGNED COMMENT 'Unique identifier for this query.',
   `user_id` bigint NULL COMMENT 'Sender',
+  `location` CHAR(255) NULL DEFAULT NULL COMMENT 'Location of the sender',
   `query` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Text of the query',
   `offset` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Offset of the result',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
@@ -49,7 +49,24 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for chosen query.',
   `result_id` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Id of the chosen result',
   `user_id` bigint NULL COMMENT 'Sender',
+  `location` CHAR(255) NULL DEFAULT NULL COMMENT 'Location object, senders\'s location.',
+  `inline_message_id` bigint NULL DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
   `query` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Text of the query',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+   PRIMARY KEY (`id`),
+   KEY `user_id` (`user_id`),
+
+   FOREIGN KEY (`user_id`)
+   REFERENCES `user` (`id`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+CREATE TABLE IF NOT EXISTS `callback_query` (
+  `id` bigint UNSIGNED COMMENT 'Unique identifier for this query.',
+  `user_id` bigint NULL COMMENT 'Sender',
+  `message` TEXT NULL DEFAULT NULL COMMENT 'Message',
+  `inline_message_id` bigint NULL DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
+  `data` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Data associated with the callback button.',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
    PRIMARY KEY (`id`),
    KEY `user_id` (`user_id`),
@@ -78,8 +95,9 @@ CREATE TABLE IF NOT EXISTS  `message` (
   `caption` TEXT DEFAULT NULL COMMENT  'For message with caption, the actual UTF-8 text of the caption',
   `contact` TEXT DEFAULT NULL COMMENT 'Contact object. Message is a shared contact, information about the contact',
   `location` TEXT DEFAULT NULL COMMENT 'Location object. Message is a shared location, information about the location',
-  `new_chat_participant` bigint NULL DEFAULT NULL COMMENT 'User id. A new member was added to the group, information about them (this member may be bot itself)',
-  `left_chat_participant` bigint NULL DEFAULT NULL COMMENT 'User id. A member was removed from the group, information about them (this member may be bot itself)',
+  `venue` TEXT DEFAULT NULL COMMENT 'Venue object. Message is a Venue, information about the Venue',
+  `new_chat_member` bigint NULL DEFAULT NULL COMMENT 'User id. A new member was added to the group, information about them (this member may be bot itself)',
+  `left_chat_member` bigint NULL DEFAULT NULL COMMENT 'User id. A member was removed from the group, information about them (this member may be bot itself)',
   `new_chat_title` CHAR(255) DEFAULT NULL COMMENT 'A group title was changed to this value',
   `new_chat_photo` TEXT DEFAULT NULL COMMENT 'Array of PhotoSize objects. A group photo was change to this value',
   `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group photo was deleted',
@@ -93,8 +111,8 @@ CREATE TABLE IF NOT EXISTS  `message` (
   KEY `forward_from` (`forward_from`),
   KEY `reply_to_chat` (`reply_to_chat`),
   KEY `reply_to_message` (`reply_to_message`),
-  KEY `new_chat_participant` (`new_chat_participant`),
-  KEY `left_chat_participant` (`left_chat_participant`),
+  KEY `new_chat_member` (`new_chat_member`),
+  KEY `left_chat_member` (`left_chat_member`),
   KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
   KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
 
@@ -103,27 +121,29 @@ CREATE TABLE IF NOT EXISTS  `message` (
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`,`id`),
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`new_chat_participant`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`left_chat_participant`) REFERENCES `user` (`id`)
+  FOREIGN KEY (`new_chat_member`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'The update\'s unique identifier.',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
-  `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The query unique identifier.',
+  `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The inline query unique identifier.',
   `chosen_inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
+  `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The callback query unique identifier.',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`chat_id`, `message_id`),
   KEY `inline_query_id` (`inline_query_id`),
   KEY `chosen_inline_query_id` (`chosen_inline_query_id`),
+  KEY `callback_query_id` (`callback_query_id`),
 
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`,`id`),
   FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
-  FOREIGN KEY (`chosen_inline_query_id`) REFERENCES `chosen_inline_query` (`id`)
+  FOREIGN KEY (`chosen_inline_query_id`) REFERENCES `chosen_inline_query` (`id`),
+  FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (

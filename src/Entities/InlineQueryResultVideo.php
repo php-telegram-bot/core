@@ -17,10 +17,13 @@ class InlineQueryResultVideo extends InlineQueryResult
 
     protected $video_url;
     protected $mime_type;
-    protected $message_text;
+    protected $thumb_url;
+    protected $title;
+    protected $caption;
     protected $video_width;
     protected $video_height;
     protected $video_duration;
+    protected $description;
 
     public function __construct(array $data)
     {
@@ -36,13 +39,17 @@ class InlineQueryResultVideo extends InlineQueryResult
         if (empty($this->mime_type)) {
             throw new TelegramException('mime_type is empty!');
         }
-        $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
-        if (empty($this->message_text)) {
-            throw new TelegramException('message_text is empty!');
+        $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
+        if (empty($this->thumb_url)) {
+            throw new TelegramException('thumb_url is empty!');
         }
+
+        $this->title = isset($data['title']) ? $data['title'] : null;
+        $this->caption = isset($data['caption']) ? $data['caption'] : null;
         $this->video_width = isset($data['video_width']) ? $data['video_width'] : null;
         $this->video_height = isset($data['video_height']) ? $data['video_height'] : null;
         $this->video_duration = isset($data['video_duration']) ? $data['video_duration'] : null;
+        $this->description = isset($data['description']) ? $data['description'] : null;
     }
 
     public function getVideoUrl()
@@ -53,9 +60,17 @@ class InlineQueryResultVideo extends InlineQueryResult
     {
         return $this->mime_type;
     }
-    public function getMessageText()
+    public function getThumbUrl()
     {
-        return $this->message_text;
+        return $this->thumb_url;
+    }
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    public function getCaption()
+    {
+        return $this->caption;
     }
     public function getVideoWidth()
     {
@@ -68,5 +83,9 @@ class InlineQueryResultVideo extends InlineQueryResult
     public function getVideoDuration()
     {
         return $this->video_duration;
+    }
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

@@ -17,6 +17,7 @@ class InlineQuery extends Entity
 
     protected $id;
     protected $from;
+    protected $location;
     protected $query;
     protected $offset;
 
@@ -34,6 +35,11 @@ class InlineQuery extends Entity
         }
         $this->from = new User($this->from);
 
+        $this->location = isset($data['location']) ? $data['location'] : null;
+        if (!empty($this->location)) {
+            $this->location = new Location($this->location);
+        }
+
         $this->query = isset($data['query']) ? $data['query'] : null;
         $this->offset = isset($data['offset']) ? $data['offset'] : null;
     }
@@ -42,10 +48,13 @@ class InlineQuery extends Entity
     {
         return $this->id;
     }
-
     public function getFrom()
     {
         return $this->from;
+    }
+    public function getLocation()
+    {
+        return $this->location;
     }
     public function getQuery()
     {
@@ -55,4 +64,5 @@ class InlineQuery extends Entity
     {
         return $this->offset;
     }
+
 }

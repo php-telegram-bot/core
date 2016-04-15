@@ -19,6 +19,7 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
     protected $mpeg4_width;
     protected $mpeg4_height;
     protected $thumb_url;
+    protected $title;
     protected $caption;
     protected $message_text;
 
@@ -41,6 +42,7 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
             throw new TelegramException('thumb_url is empty!');
         }
 
+        $this->title = isset($data['title']) ? $data['title'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
         $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
 
@@ -61,6 +63,10 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
     public function getThumbUrl()
     {
         return $this->thumb_url;
+    }
+    public function getTitle()
+    {
+        return $this->title;
     }
     public function getCaption()
     {

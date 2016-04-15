@@ -1,32 +1,30 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class ChosenInlineResult extends Entity
+class CallbackQuery extends Entity
 {
-
-    protected $result_id;
+    protected $id;
     protected $from;
-    protected $location;
+    protected $message;
     protected $inline_message_id;
-    protected $query;
+    protected $data;
 
     public function __construct(array $data)
     {
-
-        $this->result_id = isset($data['result_id']) ? $data['result_id'] : null;
-        if (empty($this->result_id)) {
-            throw new TelegramException('result_id is empty!');
+        $this->id = isset($data['id']) ? $data['id'] : null;
+        if (empty($this->id)) {
+            throw new TelegramException('id is empty!');
         }
 
         $this->from = isset($data['from']) ? $data['from'] : null;
@@ -35,18 +33,22 @@ class ChosenInlineResult extends Entity
         }
         $this->from = new User($this->from);
 
-        $this->location = isset($data['location']) ? $data['location'] : null;
-        if (!empty($this->location)) {
-            $this->location = new Location($this->location);
+        $this->message = isset($data['message']) ? $data['message'] : null;
+        if (!empty($this->message)) {
+            $this->message = new Message($this->message, $this->getBotName());
         }
 
         $this->inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
-        $this->query = isset($data['query']) ? $data['query'] : null;
+
+        $this->data = isset($data['data']) ? $data['data'] : null;
+        if (empty($this->data)) {
+            throw new TelegramException('data is empty!');
+        }
     }
 
-    public function getResultId()
+    public function getId()
     {
-        return $this->result_id;
+        return $this->id;
     }
 
     public function getFrom()
@@ -54,9 +56,9 @@ class ChosenInlineResult extends Entity
         return $this->from;
     }
 
-    public function getLocation()
+    public function getMessage()
     {
-        return $this->location;
+        return $this->message;
     }
 
     public function getInlineMessageId()
@@ -64,8 +66,8 @@ class ChosenInlineResult extends Entity
         return $this->inline_message_id;
     }
 
-    public function getQuery()
+    public function getData()
     {
-        return $this->query;
+        return $this->data;
     }
 }

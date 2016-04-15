@@ -38,6 +38,8 @@ class Request
      * @var array
      */
     private static $methods = [
+        'getUpdates',
+        'setWebhook',
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -48,11 +50,14 @@ class Request
         'sendVideo',
         'sendVoice',
         'sendLocation',
+        'sendVenue',
+        'sendContact',
         'sendChatAction',
         'getUserProfilePhotos',
-        'getUpdates',
-        'setWebhook',
         'getFile',
+        'kickChatMember',
+        'unbanChatMember',
+        'answerCallbackQuery',
         'answerInlineQuery',
     ];
 
@@ -514,6 +519,38 @@ class Request
     }
 
     /**
+     * Send venue
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function sendVenue(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('sendVenue', $data);
+    }
+
+    /**
+     * Send contact
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function sendContact(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('sendContact', $data);
+    }
+
+    /**
      * Send chat action
      *
      * @param array $data
@@ -594,6 +631,54 @@ class Request
         }
 
         return self::send('getFile', $data);
+    }
+
+    /**
+     * Kick Chat Member
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function kickChatMember(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('kickChatMember', $data);
+    }
+
+    /**
+     * Unban Chat Member
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function unbanChatMember(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('unbanChatMember', $data);
+    }
+
+    /**
+     * Answer callback query
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function answerCallbackQuery(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('answerCallbackQuery', $data);
     }
 
     /**

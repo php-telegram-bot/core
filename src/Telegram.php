@@ -448,7 +448,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, ['inline_query', 'chosen_inline_result'])) {
+        if (in_array($update_type, ['inline_query', 'chosen_inline_result', 'callback_query'])) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();
@@ -467,10 +467,10 @@ class Telegram
                 'channel_chat_created',
                 'delete_chat_photo',
                 'group_chat_created',
-                'left_chat_participant',
+                'left_chat_member',
                 'migrate_from_chat_id',
                 'migrate_to_chat_id',
-                'new_chat_participant',
+                'new_chat_member',
                 'new_chat_photo',
                 'new_chat_title',
                 'supergroup_chat_created',
