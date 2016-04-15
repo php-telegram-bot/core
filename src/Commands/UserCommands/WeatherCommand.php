@@ -37,7 +37,8 @@ class WeatherCommand extends UserCommand
      */
     private function getWeather($location)
     {
-        $url = 'http://api.openweathermap.org/data/2.5/weather?q=' . $location . '&units=metric';
+        $appid = 'Your_APIkey_from_openweathermap.org';
+        $url = 'http://api.openweathermap.org/data/2.5/weather?q=' . $location . '&units=metric&appid=' . $appid;
 
         $ch = curl_init();
         $curlConfig = [
