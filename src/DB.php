@@ -699,7 +699,7 @@ class DB
 
                 $entities = json_encode($var);
             } else {
-                $entities = '';
+                $entities = null;
             }
 
             $sth->bindParam(':reply_to_chat', $reply_chat_id, \PDO::PARAM_INT);
