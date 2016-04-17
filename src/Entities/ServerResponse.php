@@ -41,7 +41,7 @@ class ServerResponse extends Entity
                         $this->result = new File($data['result']);
                     } elseif (isset($data['result']['username'])) {
                         //Response getMe
-                        $this->result = $data['result'];
+                        $this->result = new User($data['result']);
                     } else {
                         //Response from sendMessage
                         $this->result = new Message($data['result'], $bot_name);
