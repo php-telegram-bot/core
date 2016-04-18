@@ -704,7 +704,9 @@ class DB
         $select_super_groups = true,
         $select_users = true,
         $date_from = null,
-        $date_to = null
+        $date_to = null,
+        $chat_id = null,
+        $text = null
     ) {
         if (!self::isDbConnected()) {
             return false;
@@ -717,26 +719,40 @@ class DB
         try {
             $query = 'SELECT * ,
                 ' . TB_CHAT . '.`id` AS `chat_id`,
-                ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`,
-                ' . TB_USER . '.`id` AS `user_id`
-                FROM `' . TB_CHAT . '` LEFT JOIN `' . TB_USER . '`
-                ON ' . TB_CHAT . '.`id`=' . TB_USER . '.`id`';
+                ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
+                ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`
+                ' .
+                (($select_users) ? ', ' . TB_USER . '.`id` AS `user_id` FROM `' . TB_CHAT . '` LEFT JOIN `' . TB_USER . '`
+                ON ' . TB_CHAT . '.`id`=' . TB_USER . '.`id`' : 'FROM `' . TB_CHAT . '`');
 
             //Building parts of query
-            $chat_or_user = '';
             $where = [];
             $tokens = [];
 
             if (!$select_groups || !$select_users || !$select_super_groups) {
+                $chat_or_user = '';
+
                 if ($select_groups) {
-                    $where[] = TB_CHAT . '.`type` = "group"';
+                    $chat_or_user .= TB_CHAT . '.`type` = "group"';
                 }
+
                 if ($select_super_groups) {
-                    $where[] = TB_CHAT . '.`type` = "supergroup"';
+                    if (!empty($chat_or_user)) {
+                        $chat_or_user .= ' OR ';
+                    }
+
+                    $chat_or_user .= TB_CHAT . '.`type` = "supergroup"';
                 }
+
                 if ($select_users) {
-                    $where[] = TB_CHAT . '.`type` = "private"';
+                    if (!empty($chat_or_user)) {
+                        $chat_or_user .= ' OR ';
+                    }
+
+                    $chat_or_user .= TB_CHAT . '.`type` = "private"';
                 }
+
+                $where[] = '(' . $chat_or_user . ')';
             }
 
             if (! is_null($date_from)) {
@@ -747,6 +763,21 @@ class DB
             if (! is_null($date_to)) {
                 $where[] = TB_CHAT . '.`updated_at` <= :date_to';
                 $tokens[':date_to'] = $date_to;
+            }
+
+            if (! is_null($chat_id)) {
+                $where[] = TB_CHAT . '.`id` = :chat_id';
+                $tokens[':chat_id'] = $chat_id;
+            }
+
+            if (! is_null($text)) {
+                if ($select_users) {
+                    $where[] = '(LOWER('.TB_CHAT . '.`title`) LIKE :text OR LOWER(' . TB_USER . '.`first_name`) LIKE :text OR LOWER(' . TB_USER . '.`last_name`) LIKE :text OR LOWER(' . TB_USER . '.`username`) LIKE :text)';
+                } else {
+                    $where[] = 'LOWER('.TB_CHAT . '.`title`) LIKE :text';
+                }
+
+                $tokens[':text'] = '%'.strtolower($text).'%';
             }
 
             $a = 0;
