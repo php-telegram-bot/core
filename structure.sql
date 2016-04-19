@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `callback_query` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS  `message` (
-  `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
+  `chat_id` bigint COMMENT 'Chat identifier.',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'User identifier',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
