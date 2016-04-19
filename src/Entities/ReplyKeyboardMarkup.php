@@ -1,13 +1,15 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  * Written by Marco Boretto <marco.bore@gmail.com>
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -19,6 +21,9 @@ class ReplyKeyboardMarkup extends Entity
     protected $one_time_keyboard;
     protected $selective;
 
+    /*
+     * @todo check for KeyboardButton elements
+     */
     public function __construct($data = array())
     {
         if (isset($data['keyboard'])) {

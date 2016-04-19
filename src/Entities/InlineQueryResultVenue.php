@@ -12,13 +12,13 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class InlineQueryResultArticle extends InlineQueryResult
+class InlineQueryResultVenue extends InlineQueryResult
 {
+    protected $latitude;
+    protected $longitude;
     protected $title;
-    protected $input_message_content;
-    protected $url;
-    protected $hide_url;
-    protected $description;
+    protected $address;
+    protected $foursquare_id;
     protected $thumb_url;
     protected $thumb_width;
     protected $thumb_height;
@@ -27,25 +27,43 @@ class InlineQueryResultArticle extends InlineQueryResult
     {
         parent::__construct($data);
 
-        $this->type = 'article';
+        $this->type = 'venue';
+
+        $this->latitude = isset($data['latitude']) ? $data['latitude'] : null;
+        if (empty($this->latitude)) {
+            throw new TelegramException('latitude is empty!');
+        }
+
+        $this->longitude = isset($data['longitude']) ? $data['longitude'] : null;
+        if (empty($this->longitude)) {
+            throw new TelegramException('longitude is empty!');
+        }
 
         $this->title = isset($data['title']) ? $data['title'] : null;
         if (empty($this->title)) {
             throw new TelegramException('title is empty!');
         }
 
-        $this->input_message_content = isset($data['input_message_content']) ? $data['input_message_content'] : null;
-        if (empty($this->input_message_content)) {
-            throw new TelegramException('input_message_content is empty!');
+        $this->address = isset($data['address']) ? $data['address'] : null;
+        if (empty($this->address)) {
+            throw new TelegramException('address is empty!');
         }
 
-        $this->url = isset($data['url']) ? $data['url'] : null;
-        $this->hide_url = isset($data['hide_url']) ? $data['hide_url'] : null;
-        $this->description = isset($data['description']) ? $data['description'] : null;
+        $this->foursquare_id = isset($data['foursquare_id']) ? $data['foursquare_id'] : null;
+
         $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
         $this->thumb_width = isset($data['thumb_width']) ? $data['thumb_width'] : null;
         $this->thumb_height = isset($data['thumb_height']) ? $data['thumb_height'] : null;
+    }
 
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 
     public function getTitle()
@@ -53,24 +71,14 @@ class InlineQueryResultArticle extends InlineQueryResult
         return $this->title;
     }
 
-    public function getInputMessageContent()
+    public function getAddress()
     {
-        return $this->input_message_content;
+        return $this->address;
     }
 
-    public function getUrl()
+    public function getFoursquareId()
     {
-        return $this->url;
-    }
-
-    public function getHideUrl()
-    {
-        return $this->hide_url;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
+        return $this->foursquare_id;
     }
 
     public function getThumbUrl()

@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -19,8 +19,8 @@ class InlineQueryResultGif extends InlineQueryResult
     protected $gif_width;
     protected $gif_height;
     protected $thumb_url;
+    protected $title;
     protected $caption;
-    protected $message_text;
 
     public function __construct(array $data)
     {
@@ -41,9 +41,8 @@ class InlineQueryResultGif extends InlineQueryResult
             throw new TelegramException('thumb_url is empty!');
         }
 
+        $this->title = isset($data['title']) ? $data['title'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
-        $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
-
 
     }
 
@@ -63,12 +62,12 @@ class InlineQueryResultGif extends InlineQueryResult
     {
         return $this->thumb_url;
     }
+    public function getTitle()
+    {
+        return $this->title;
+    }
     public function getCaption()
     {
         return $this->caption;
-    }
-    public function getMessageText()
-    {
-        return $this->message_text;
     }
 }

@@ -12,34 +12,23 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class Location extends Entity
+class InputLocationMessageContent extends InputMessageContent
 {
-
-    protected $longitude;
     protected $latitude;
+    protected $longitude;
 
     public function __construct(array $data)
     {
+        //parent::__construct($data);
 
-        $this->longitude = isset($data['longitude']) ? $data['longitude'] : null;
-        if (empty($this->longitude)) {
-            throw new TelegramException('longitude is empty!');
-        }
-
-        $this->latitude = isset($data['latitude']) ? $data['latitude'] : null;
+        $this->latitude isset($data['latitude']) ? $data['latitude'] : null;
         if (empty($this->latitude)) {
             throw new TelegramException('latitude is empty!');
         }
 
-    }
-
-    public function getLongitude()
-    {
-        return $this->longitude;
-    }
-
-    public function getLatitude()
-    {
-        return $this->latitude;
+        $this->longitude isset($data['longitude']) ? $data['longitude'] : null;
+        if (empty($this->longitude)) {
+            throw new TelegramException('longitude is empty!');
+        }
     }
 }

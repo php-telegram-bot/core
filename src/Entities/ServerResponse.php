@@ -1,15 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * ServerResponse.php
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -51,7 +49,6 @@ class ServerResponse extends Entity
                 $this->ok = $data['ok'];
                 $this->error_code = null;
                 $this->description = null;
-
             } else {
                 if ($data['ok'] & $data['result'] == true) {
                     //Response from setWebhook set
@@ -70,9 +67,7 @@ class ServerResponse extends Entity
                     $this->error_code = $data['error_code'];
                     $this->description = $data['description'];
                 }
-
             }
-
         } else {
             //webHook not set
             $this->ok = false;

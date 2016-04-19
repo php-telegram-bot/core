@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -19,16 +19,15 @@ class InlineQueryResultPhoto extends InlineQueryResult
     protected $photo_width;
     protected $photo_height;
     protected $thumb_url;
+    protected $title;
     protected $description;
     protected $caption;
-    protected $message_text;
 
     public function __construct(array $data)
     {
         parent::__construct($data);
 
         $this->type = 'photo';
-
 
         $this->photo_url = isset($data['photo_url']) ? $data['photo_url'] : null;
         if (empty($this->photo_url)) {
@@ -42,9 +41,10 @@ class InlineQueryResultPhoto extends InlineQueryResult
         if (empty($this->thumb_url)) {
             throw new TelegramException('thumb_url is empty!');
         }
+
+        $this->title = isset($data['title']) ? $data['title'] : null;
         $this->description = isset($data['description']) ? $data['description'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
-        $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
 
     }
 
@@ -64,6 +64,10 @@ class InlineQueryResultPhoto extends InlineQueryResult
     {
         return $this->thumb_url;
     }
+    public function getTitle()
+    {
+        return $this->title;
+    }
     public function getDescription()
     {
         return $this->description;
@@ -71,9 +75,5 @@ class InlineQueryResultPhoto extends InlineQueryResult
     public function getCaption()
     {
         return $this->caption;
-    }
-    public function getMessageText()
-    {
-        return $this->message_text;
     }
 }

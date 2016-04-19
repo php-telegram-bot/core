@@ -12,48 +12,26 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class Contact extends Entity
+class InputContactMessageContent extends InputMessageContent
 {
-
     protected $phone_number;
     protected $first_name;
     protected $last_name;
-    protected $user_id;
 
     public function __construct(array $data)
     {
+        //parent::__construct($data);
 
-        $this->phone_number = isset($data['phone_number']) ? $data['phone_number'] : null;
+        $this->phone_number isset($data['phone_number']) ? $data['phone_number'] : null;
         if (empty($this->phone_number)) {
             throw new TelegramException('phone_number is empty!');
         }
 
-        $this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
+        $this->first_name isset($data['first_name']) ? $data['first_name'] : null;
         if (empty($this->first_name)) {
             throw new TelegramException('first_name is empty!');
         }
 
-        $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
-        $this->user_id = isset($data['user_id']) ? $data['user_id'] : null;
-    }
-
-    public function getPhoneNumber()
-    {
-        return $this->phone_number;
-    }
-
-    public function getFirstName()
-    {
-        return $this->first_name;
-    }
-
-    public function getLastName()
-    {
-        return $this->last_name;
-    }
-
-    public function getUserId()
-    {
-        return $this->user_id;
+        $this->last_name isset($data['last_name']) ? $data['last_name'] : null;
     }
 }

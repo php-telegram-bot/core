@@ -12,16 +12,20 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class Contact extends Entity
+class InlineQueryResultContact extends InlineQueryResult
 {
-
     protected $phone_number;
     protected $first_name;
     protected $last_name;
-    protected $user_id;
+    protected $thumb_url;
+    protected $thumb_width;
+    protected $thumb_height;
 
     public function __construct(array $data)
     {
+        parent::__construct($data);
+
+        $this->type = 'contact';
 
         $this->phone_number = isset($data['phone_number']) ? $data['phone_number'] : null;
         if (empty($this->phone_number)) {
@@ -34,7 +38,10 @@ class Contact extends Entity
         }
 
         $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
-        $this->user_id = isset($data['user_id']) ? $data['user_id'] : null;
+
+        $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
+        $this->thumb_width = isset($data['thumb_width']) ? $data['thumb_width'] : null;
+        $this->thumb_height = isset($data['thumb_height']) ? $data['thumb_height'] : null;
     }
 
     public function getPhoneNumber()
@@ -52,8 +59,18 @@ class Contact extends Entity
         return $this->last_name;
     }
 
-    public function getUserId()
+    public function getThumbUrl()
     {
-        return $this->user_id;
+        return $this->thumb_url;
+    }
+
+    public function getThumbWidth()
+    {
+        return $this->thumb_width;
+    }
+
+    public function getThumbHeight()
+    {
+        return $this->thumb_height;
     }
 }

@@ -12,12 +12,12 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class InlineQueryResultArticle extends InlineQueryResult
+class InlineQueryResultDocument extends InlineQueryResult
 {
     protected $title;
-    protected $input_message_content;
-    protected $url;
-    protected $hide_url;
+    protected $caption;
+    protected $document_url;
+    protected $mime_type;
     protected $description;
     protected $thumb_url;
     protected $thumb_width;
@@ -27,25 +27,29 @@ class InlineQueryResultArticle extends InlineQueryResult
     {
         parent::__construct($data);
 
-        $this->type = 'article';
+        $this->type = 'document';
 
         $this->title = isset($data['title']) ? $data['title'] : null;
         if (empty($this->title)) {
             throw new TelegramException('title is empty!');
         }
 
-        $this->input_message_content = isset($data['input_message_content']) ? $data['input_message_content'] : null;
-        if (empty($this->input_message_content)) {
-            throw new TelegramException('input_message_content is empty!');
+        $this->caption = isset($data['caption']) ? $data['caption'] : null;
+
+        $this->document_url = isset($data['document_url']) ? $data['document_url'] : null;
+        if (empty($this->document_url)) {
+            throw new TelegramException('document_url is empty!');
         }
 
-        $this->url = isset($data['url']) ? $data['url'] : null;
-        $this->hide_url = isset($data['hide_url']) ? $data['hide_url'] : null;
+        $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
+        if (empty($this->mime_type)) {
+            throw new TelegramException('mime_type is empty!');
+        }
+
         $this->description = isset($data['description']) ? $data['description'] : null;
         $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
         $this->thumb_width = isset($data['thumb_width']) ? $data['thumb_width'] : null;
         $this->thumb_height = isset($data['thumb_height']) ? $data['thumb_height'] : null;
-
     }
 
     public function getTitle()
@@ -53,19 +57,19 @@ class InlineQueryResultArticle extends InlineQueryResult
         return $this->title;
     }
 
-    public function getInputMessageContent()
+    public function getCaption()
     {
-        return $this->input_message_content;
+        return $this->caption;
     }
 
-    public function getUrl()
+    public function getDocumentUrl()
     {
-        return $this->url;
+        return $this->document_url;
     }
 
-    public function getHideUrl()
+    public function getMimeType()
     {
-        return $this->hide_url;
+        return $this->mime_type;
     }
 
     public function getDescription()

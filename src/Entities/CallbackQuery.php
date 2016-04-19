@@ -12,18 +12,16 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class InlineQuery extends Entity
+class CallbackQuery extends Entity
 {
-
     protected $id;
     protected $from;
-    protected $location;
-    protected $query;
-    protected $offset;
+    protected $message;
+    protected $inline_message_id;
+    protected $data;
 
     public function __construct(array $data)
     {
-
         $this->id = isset($data['id']) ? $data['id'] : null;
         if (empty($this->id)) {
             throw new TelegramException('id is empty!');
@@ -35,33 +33,41 @@ class InlineQuery extends Entity
         }
         $this->from = new User($this->from);
 
-        $this->location = isset($data['location']) ? $data['location'] : null;
-        if (!empty($this->location)) {
-            $this->location = new Location($this->location);
+        $this->message = isset($data['message']) ? $data['message'] : null;
+        if (!empty($this->message)) {
+            $this->message = new Message($this->message, $this->getBotName());
         }
 
-        $this->query = isset($data['query']) ? $data['query'] : null;
-        $this->offset = isset($data['offset']) ? $data['offset'] : null;
+        $this->inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
+
+        $this->data = isset($data['data']) ? $data['data'] : null;
+        if (empty($this->data)) {
+            throw new TelegramException('data is empty!');
+        }
     }
 
     public function getId()
     {
         return $this->id;
     }
+
     public function getFrom()
     {
         return $this->from;
     }
-    public function getLocation()
+
+    public function getMessage()
     {
-        return $this->location;
+        return $this->message;
     }
-    public function getQuery()
+
+    public function getInlineMessageId()
     {
-        return $this->query;
+        return $this->inline_message_id;
     }
-    public function getOffset()
+
+    public function getData()
     {
-        return $this->offset;
+        return $this->data;
     }
 }

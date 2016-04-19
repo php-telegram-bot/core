@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -19,6 +19,8 @@ class Update extends Entity
     protected $message;
     protected $inline_query;
     protected $chosen_inline_result;
+    protected $callback_query;
+
     private $update_type;
 
     public function __construct(array $data, $bot_name)
@@ -44,10 +46,17 @@ class Update extends Entity
             $this->inline_query = new InlineQuery($this->inline_query);
             $this->update_type = 'inline_query';
         }
+
         $this->chosen_inline_result = isset($data['chosen_inline_result']) ? $data['chosen_inline_result'] : null;
         if (!empty($this->chosen_inline_result)) {
             $this->chosen_inline_result = new ChosenInlineResult($this->chosen_inline_result);
             $this->update_type = 'chosen_inline_result';
+        }
+
+        $this->callback_query = isset($data['callback_query']) ? $data['callback_query'] : null;
+        if (!empty($this->callback_query)) {
+            $this->callback_query = new CallbackQuery($this->callback_query);
+            $this->update_type = 'callback_query';
         }
     }
 
@@ -63,6 +72,10 @@ class Update extends Entity
     public function getInlineQuery()
     {
         return $this->inline_query;
+    }
+    public function getCallbackQuery()
+    {
+        return $this->callback_query;
     }
     public function getChosenInlineResult()
     {
@@ -80,6 +93,8 @@ class Update extends Entity
             return $this->getInlineQuery();
         } elseif ($this->update_type == 'chosen_inline_result') {
             return $this->getChosenInlineResult();
+        } elseif ($this->update_type == 'callback_query') {
+            return $this->getCallbackQuery();
         }
     }
 }

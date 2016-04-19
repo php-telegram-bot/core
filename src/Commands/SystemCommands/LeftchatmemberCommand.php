@@ -13,15 +13,15 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat participant command
+ * Left chat member command
  */
-class LeftchatparticipantCommand extends SystemCommand
+class LeftchatmemberCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'leftchatparticipant';
-    protected $description = 'Left Chat Participant';
+    protected $name = 'Leftchatmember';
+    protected $description = 'Left Chat Member';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -31,6 +31,6 @@ class LeftchatparticipantCommand extends SystemCommand
     /*public function execute()
     {
         //$message = $this->getMessage();
-        //$participant = $message->getLeftChatParticipant();
+        //$member = $message->getLeftChatMember();
     }*/
 }

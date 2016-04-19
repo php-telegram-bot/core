@@ -14,15 +14,15 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * New chat participant command
+ * New chat member command
  */
-class NewchatparticipantCommand extends SystemCommand
+class NewchatmemberCommand extends SystemCommand
 {
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Newchatparticipant';
-    protected $description = 'New Chat Participant';
+    protected $name = 'Newchatmember';
+    protected $description = 'New Chat Member';
     protected $version = '1.0.1';
     /**#@-*/
 
@@ -34,12 +34,12 @@ class NewchatparticipantCommand extends SystemCommand
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $participant = $message->getNewChatParticipant();
+        $member = $message->getNewChatMember();
 
-        if (strtolower($participant->getUsername()) === strtolower($this->getTelegram()->getBotName())) {
+        if ($message->botAddedInChat()) {
             $text = 'Hi there!';
         } else {
-            $text = 'Hi ' . $participant->tryMention() . '!';
+            $text = 'Hi ' . $member->tryMention() . '!';
         }
 
         $data = [

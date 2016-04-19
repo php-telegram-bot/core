@@ -39,9 +39,9 @@ class InlinequeryCommand extends SystemCommand
         $data = ['inline_query_id' => $inline_query->getId()];
 
         $articles = [
-            ['id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
-            ['id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
-            ['id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
+            ['id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => [ 'message_text' => $query ] ],
+            ['id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => [ 'message_text' => $query ] ],
+            ['id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => [ 'message_text' => $query ] ],
         ];
 
         $array_article = [];

@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -17,6 +17,8 @@ class ChosenInlineResult extends Entity
 
     protected $result_id;
     protected $from;
+    protected $location;
+    protected $inline_message_id;
     protected $query;
 
     public function __construct(array $data)
@@ -33,8 +35,13 @@ class ChosenInlineResult extends Entity
         }
         $this->from = new User($this->from);
 
+        $this->location = isset($data['location']) ? $data['location'] : null;
+        if (!empty($this->location)) {
+            $this->location = new Location($this->location);
+        }
+
+        $this->inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
         $this->query = isset($data['query']) ? $data['query'] : null;
-        $this->offset = isset($data['offset']) ? $data['offset'] : null;
     }
 
     public function getResultId()
@@ -46,6 +53,17 @@ class ChosenInlineResult extends Entity
     {
         return $this->from;
     }
+
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    public function getInlineMessageId()
+    {
+        return $this->inline_message_id;
+    }
+
     public function getQuery()
     {
         return $this->query;

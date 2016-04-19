@@ -25,7 +25,7 @@ class KeyboardCommand extends UserCommand
     protected $name = 'keyboard';
     protected $description = 'Show a custom keybord with reply markup';
     protected $usage = '/keyboard';
-    protected $version = '0.0.5';
+    protected $version = '0.0.6';
     /**#@-*/
 
     /**
@@ -49,7 +49,7 @@ class KeyboardCommand extends UserCommand
         $keyboard[] = ['4','5','6'];
         $keyboard[] = ['1','2','3'];
         $keyboard[] = [' ','0',' '];
-       
+
         $keyboards[] = $keyboard;
         unset($keyboard);
 
@@ -74,6 +74,21 @@ class KeyboardCommand extends UserCommand
         $keyboard[] = ['A'];
         $keyboard[] = ['B'];
         $keyboard[] = ['C','D'];
+
+        $keyboards[] = $keyboard;
+        unset($keyboard);
+
+        //4  (bots 2.0)
+        $keyboard[] = [
+            [
+                'text' => 'request_contact',
+                'request_contact' => true
+            ],
+            [
+                'text' => 'request_location',
+                'request_location' => true
+            ]
+        ];
 
         $keyboards[] = $keyboard;
         unset($keyboard);

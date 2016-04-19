@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
@@ -38,6 +38,8 @@ class Request
      * @var array
      */
     private static $methods = [
+        'getUpdates',
+        'setWebhook',
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -48,12 +50,18 @@ class Request
         'sendVideo',
         'sendVoice',
         'sendLocation',
+        'sendVenue',
+        'sendContact',
         'sendChatAction',
         'getUserProfilePhotos',
-        'getUpdates',
-        'setWebhook',
         'getFile',
+        'kickChatMember',
+        'unbanChatMember',
+        'answerCallbackQuery',
         'answerInlineQuery',
+        'editMessageText',
+        'editMessageCaption',
+        'editMessageReplyMarkup'
     ];
 
     /**
@@ -519,6 +527,38 @@ class Request
     }
 
     /**
+     * Send venue
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function sendVenue(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('sendVenue', $data);
+    }
+
+    /**
+     * Send contact
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function sendContact(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('sendContact', $data);
+    }
+
+    /**
      * Send chat action
      *
      * @param array $data
@@ -602,6 +642,54 @@ class Request
     }
 
     /**
+     * Kick Chat Member
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function kickChatMember(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('kickChatMember', $data);
+    }
+
+    /**
+     * Unban Chat Member
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function unbanChatMember(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('unbanChatMember', $data);
+    }
+
+    /**
+     * Answer callback query
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function answerCallbackQuery(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('answerCallbackQuery', $data);
+    }
+
+    /**
      * Answer inline query
      *
      * @param array $data
@@ -615,6 +703,54 @@ class Request
         }
 
         return self::send('answerInlineQuery', $data);
+    }
+
+    /**
+     * Edit message text
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function editMessageText(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('editMessageText', $data);
+    }
+
+    /**
+     * Edit message caption
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function editMessageCaption(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('editMessageCaption', $data);
+    }
+
+    /**
+     * Edit message reply markup
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function editMessageReplyMarkup(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('editMessageReplyMarkup', $data);
     }
 
     /**

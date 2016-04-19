@@ -91,7 +91,6 @@ class WhoamiCommand extends UserCommand
             if ($ServerResponse->isOk()) {
                 Request::downloadFile($ServerResponse->getResult());
             }
-
         } else {
             //No Photo just send text
             $data['text'] = $caption;
