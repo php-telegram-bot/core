@@ -66,11 +66,12 @@ and have interactions in a matter of minutes.
 
 The Bot can:
 - retrieve updates with webhook and getUpdate methods.
-- supports all types and methods according to Telegram API (20 January 2016).
+- supports all types and methods according to Telegram API (9 April 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface.
-- full support for **inline bots**. (**new!**)
+- full support for **inline bots**. 
+- inline keyboard.
 - Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
 - Conversation feature (**new!**)
 
@@ -451,7 +452,8 @@ $telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_he
 Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
-- Post any content to your channels */sendtochannel* (NEW! see below how to configure it)
+- Post any content to your channels */sendtochannel* 
+- inspect a user or a chat wiht */whois* (new!)
 
 #### Set Admins
 
