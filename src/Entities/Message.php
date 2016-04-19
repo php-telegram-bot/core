@@ -190,6 +190,18 @@ class Message extends Entity
             $this->type = 'Venue';
         }
 
+        $this->new_chat_member = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
+        if (!empty($this->new_chat_member)) {
+            $this->new_chat_member = new User($this->new_chat_member);
+            $this->type = 'new_chat_member';
+        }
+
+        $this->left_chat_member = isset($data['left_chat_participant']) ? $data['left_chat_participant'] : null;
+        if (!empty($this->left_chat_member)) {
+            $this->left_chat_member = new User($this->left_chat_member);
+            $this->type = 'left_chat_member';
+        }
+
         $this->new_chat_member = isset($data['new_chat_member']) ? $data['new_chat_member'] : null;
         if (!empty($this->new_chat_member)) {
             $this->new_chat_member = new User($this->new_chat_member);
@@ -405,6 +417,16 @@ class Message extends Entity
     public function getVenue()
     {
         return $this->venue;
+    }
+
+    public function getNewChatParticipant()
+    {
+        return $this->new_chat_member;
+    }
+
+    public function getLeftChatParticipant()
+    {
+        return $this->left_chat_member;
     }
 
     public function getNewChatMember()
