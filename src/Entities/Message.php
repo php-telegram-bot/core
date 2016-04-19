@@ -190,16 +190,13 @@ class Message extends Entity
             $this->type = 'Venue';
         }
 
-        $this->new_chat_member = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
-        if (!empty($this->new_chat_member)) {
-            $this->new_chat_member = new User($this->new_chat_member);
-            $this->type = 'new_chat_member';
+        //retrocompatibility
+        if (isset($data['new_chat_participant'])) {
+            $data['new_chat_member'] = $data['new_chat_participant'];
         }
 
-        $this->left_chat_member = isset($data['left_chat_participant']) ? $data['left_chat_participant'] : null;
-        if (!empty($this->left_chat_member)) {
-            $this->left_chat_member = new User($this->left_chat_member);
-            $this->type = 'left_chat_member';
+        if (isset($data['left_chat_participant'])) {
+            $data['left_chat_member'] = $data['left_chat_participant'];
         }
 
         $this->new_chat_member = isset($data['new_chat_member']) ? $data['new_chat_member'] : null;

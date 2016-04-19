@@ -70,7 +70,7 @@ class WhoisCommand extends AdminCommand
                     true, //Select supergroups (super group chat)
                     true, //Select users (single chat)
                     null, //'yyyy-mm-dd hh:mm:ss' date range from
-                    null,  //'yyyy-mm-dd hh:mm:ss' date range to
+                    null, //'yyyy-mm-dd hh:mm:ss' date range to
                     $user_id //Specific chat_id to select
                 );
 
