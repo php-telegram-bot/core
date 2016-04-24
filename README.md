@@ -314,7 +314,7 @@ To send a local photo, provide the file path as the second parameter:
 
 ```php
 $data = ['chat_id' => $chat_id];
-$result = Request::sendPhoto($data, $telegram->getUploadPath() . '/image.jpg');
+$result = Request::sendPhoto($data, 'full-path-on-your-server-to/image.jpg');
 ```
 
 If you know the `file_id` of a previously uploaded file, just include it in the data array:
