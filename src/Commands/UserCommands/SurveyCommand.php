@@ -189,8 +189,8 @@ class SurveyCommand extends UserCommand
                 // no break
             case 6:
                 $this->conversation->update();
-		$out_text = '/Survey result:' . "\n";
-		unset($this->conversation->notes['state']);
+                $out_text = '/Survey result:' . "\n";
+                unset($this->conversation->notes['state']);
                 foreach ($this->conversation->notes as $k => $v) {
                     $out_text .= "\n" . ucfirst($k).': ' . $v;
                 }
