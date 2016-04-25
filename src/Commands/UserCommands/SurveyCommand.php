@@ -152,18 +152,18 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
 
                     $keyboard = [];
-                    $keyboard[] = [ 
-                        [ 'text' => 'request_contact', 'request_contact' => true ], 
-                        [ 'text' => 'request_location', 'request_location' => true ] 
+                    $keyboard[] = [
+                        [ 'text' => 'request_contact', 'request_contact' => true ],
+                        [ 'text' => 'request_location', 'request_location' => true ]
                             ];
                     $reply_keyboard_markup = new ReplyKeyboardMarkup(
-                            [
+                        [
                             'keyboard' => $keyboard ,
                             'resize_keyboard' => true,
                             'one_time_keyboard' => true,
                             'selective' => true
                             ]
-                            );
+                    );
                     $data['reply_markup'] = $reply_keyboard_markup;
 
                     $data['text'] = 'Insert your home location (need location object):';
@@ -189,8 +189,8 @@ class SurveyCommand extends UserCommand
                 // no break
             case 6:
                 $this->conversation->update();
-				$out_text = '/Survey result:' . "\n";
-				unset($this->conversation->notes['state']);
+		$out_text = '/Survey result:' . "\n";
+		unset($this->conversation->notes['state']);
                 foreach ($this->conversation->notes as $k => $v) {
                     $out_text .= "\n" . ucfirst($k).': ' . $v;
                 }
