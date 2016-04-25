@@ -146,49 +146,49 @@ class SurveyCommand extends UserCommand
                 $text = '';
            
                 // no break
-			case 4:
-				if (is_null($message->getLocation())) {
-					$this->conversation->notes['state'] = 4;
-					$this->conversation->update();
+            case 4:
+                if (is_null($message->getLocation())) {
+                    $this->conversation->notes['state'] = 4;
+                    $this->conversation->update();
 
-					$keyboard = [];
-					$keyboard[] = [ 
-						[ 'text' => 'request_contact', 'request_contact' => true ], 
-						[ 'text' => 'request_location', 'request_location' => true ] 
-							];
-					$reply_keyboard_markup = new ReplyKeyboardMarkup(
-							[
-							'keyboard' => $keyboard ,
-							'resize_keyboard' => true,
-							'one_time_keyboard' => true,
-							'selective' => true
-							]
-							);
-					$data['reply_markup'] = $reply_keyboard_markup;
+                    $keyboard = [];
+                    $keyboard[] = [ 
+                        [ 'text' => 'request_contact', 'request_contact' => true ], 
+                        [ 'text' => 'request_location', 'request_location' => true ] 
+                            ];
+                    $reply_keyboard_markup = new ReplyKeyboardMarkup(
+                            [
+                            'keyboard' => $keyboard ,
+                            'resize_keyboard' => true,
+                            'one_time_keyboard' => true,
+                            'selective' => true
+                            ]
+                            );
+                    $data['reply_markup'] = $reply_keyboard_markup;
 
-					$data['text'] = 'Insert your home location (need location object):';
-					$result = Request::sendMessage($data);
-					break;
-				}
+                    $data['text'] = 'Insert your home location (need location object):';
+                    $result = Request::sendMessage($data);
+                    break;
+                }
 
-				$this->conversation->notes['longitude'] = $message->getLocation()->getLongitude();
-				$this->conversation->notes['latitude'] = $message->getLocation()->getLatitude();
+                $this->conversation->notes['longitude'] = $message->getLocation()->getLongitude();
+                $this->conversation->notes['latitude'] = $message->getLocation()->getLatitude();
 
-				// no break
-			case 5:
-				if (is_null($message->getPhoto())) {
-					$this->conversation->notes['state'] = 5;
-					$this->conversation->update();
+                // no break
+            case 5:
+                if (is_null($message->getPhoto())) {
+                    $this->conversation->notes['state'] = 5;
+                    $this->conversation->update();
 
-					$data['text'] = 'Insert your picture:';
-					$result = Request::sendMessage($data);
-					break;
-				}
-				$this->conversation->notes['photo_id'] = $message->getPhoto()[0]->getFileId();
+                    $data['text'] = 'Insert your picture:';
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                $this->conversation->notes['photo_id'] = $message->getPhoto()[0]->getFileId();
 
-				// no break
-			case 6:
-				$this->conversation->update();
+                // no break
+            case 6:
+                $this->conversation->update();
 				$out_text = '/Survey result:' . "\n";
 				unset($this->conversation->notes['state']);
                 foreach ($this->conversation->notes as $k => $v) {
