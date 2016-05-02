@@ -158,8 +158,8 @@ class SurveyCommand extends UserCommand
                         'one_time_keyboard' => true,
                         'selective'         => true,
                     ]);
-		    $data['text'] = 'Share your current location:';
-		    $result = Request::sendMessage($data);
+                    $data['text'] = 'Share your location:';
+                    $result = Request::sendMessage($data);
                     break;
                 }
 
@@ -178,13 +178,13 @@ class SurveyCommand extends UserCommand
                 }
                 $this->conversation->notes['photo_id'] = $message->getPhoto()[0]->getFileId();
 
-		// no break
+        // no break
             case 6:
                 if (is_null($message->getContact())) {
                     $this->conversation->notes['state'] = 6;
                     $this->conversation->update();
 
-		    $data['text'] = 'Share your contact information:';
+                    $data['text'] = 'Share your contact information:';
                     $data['reply_markup'] = new ReplyKeyboardMarkup([
                         'keyboard' => [[
                             [ 'text' => 'Share Contact', 'request_contact' => true ],
@@ -198,7 +198,7 @@ class SurveyCommand extends UserCommand
                 }
                 $this->conversation->notes['phone_number'] = $message->getContact()->getPhoneNumber();
 
-		// no break
+        // no break
             case 7:
                 $this->conversation->update();
                 $out_text = '/Survey result:' . "\n";
