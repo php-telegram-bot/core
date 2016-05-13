@@ -66,7 +66,7 @@ and have interactions in a matter of minutes.
 
 The Bot can:
 - retrieve updates with webhook and getUpdate methods.
-- supports all types and methods according to Telegram API (9 April 2016).
+- supports all types and methods according to Telegram API (6 May 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface.

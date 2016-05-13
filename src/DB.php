@@ -364,6 +364,57 @@ class DB
     }
 
     /**
+     * Insert chat
+     *
+     * @todo Needs to return something if successful
+     *
+     * @param  Entities\Chat $chat
+     * @param  string        $date
+     * @param  int           $migrate_to_chat_id
+     */
+    public static function insertChat(Chat $chat, $date, $migrate_to_chat_id = null)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        $chat_id = $chat->getId();
+        $chat_title = $chat->getTitle();
+        $type = $chat->getType();
+
+        try {
+            //chat table
+            $sth2 = self::$pdo->prepare('INSERT INTO `' . TB_CHAT . '`
+                (
+                `id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`
+                )
+                VALUES (
+                :id, :type, :title, :date, :date, :oldid
+                )
+                ON DUPLICATE KEY UPDATE `type`=:type, `title`=:title, `updated_at`=:date
+                ');
+
+            if ($migrate_to_chat_id) {
+                $type = 'supergroup';
+
+                $sth2->bindParam(':id', $migrate_to_chat_id, \PDO::PARAM_INT);
+                $sth2->bindParam(':oldid', $chat_id, \PDO::PARAM_INT);
+            } else {
+                $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
+                $sth2->bindParam(':oldid', $migrate_to_chat_id, \PDO::PARAM_INT);
+            }
+
+            $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
+            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
+            $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
+
+            $status = $sth2->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
      * Insert request into database
      *
      * @param Entities\Update &$update
@@ -561,64 +612,35 @@ class DB
 
         $date = self::getTimestamp($message->getDate());
         $forward_from = $message->getForwardFrom();
-        if ($forward_from) {
-            $forward_date = self::getTimestamp($message->getForwardDate());
-        }
-
+        $forward_from_chat = $message->getForwardFromChat();
         $photo = $message->getPhoto();
         $entities = $message->getEntities();
         $new_chat_member = $message->getNewChatMember();
-
         $new_chat_photo = $message->getNewChatPhoto();
         $left_chat_member = $message->getLeftChatMember();
-
         $migrate_from_chat_id = $message->getMigrateFromChatId();
         $migrate_to_chat_id = $message->getMigrateToChatId();
 
-        try {
-            //chat table
-            $sth2 = self::$pdo->prepare('INSERT INTO `' . TB_CHAT . '`
-                (
-                `id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`
-                )
-                VALUES (
-                :id, :type, :title, :date, :date, :oldid
-                )
-                ON DUPLICATE KEY UPDATE `type`=:type, `title`=:title, `updated_at`=:date
-                ');
-
-            $chat_title = $chat->getTitle();
-            $type = $chat->getType();
-
-            if ($migrate_to_chat_id) {
-                $type = 'supergroup';
-
-                $sth2->bindParam(':id', $migrate_to_chat_id, \PDO::PARAM_INT);
-                $sth2->bindParam(':oldid', $chat_id, \PDO::PARAM_INT);
-            } else {
-                $sth2->bindParam(':id', $chat_id, \PDO::PARAM_INT);
-                $sth2->bindParam(':oldid', $migrate_to_chat_id, \PDO::PARAM_INT);
-            }
-
-            $sth2->bindParam(':type', $type, \PDO::PARAM_INT);
-            $sth2->bindParam(':title', $chat_title, \PDO::PARAM_STR, 255);
-            $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
-
-            $status = $sth2->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
+        self::insertChat($chat, $date, $migrate_to_chat_id);
 
         //Insert user and the relation with the chat
         self::insertUser($from, $date, $chat);
 
+        //Forwarded object
+        if ($forward_from || $forward_from_chat) {
+            $forward_date = self::getTimestamp($message->getForwardDate());
+        }
         //Insert the forwarded message user in users table
-        $forward_from = null;
         if (is_object($forward_from)) {
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
         }
-
+        if (is_object($forward_from_chat)) {
+            self::insertChat($forward_from_chat, $forward_date);
+            $forward_from_chat = $forward_from_chat->getId();
+        }
+        
+        //New and left chat member
         if ($new_chat_member) {
             //Insert the new chat user
             self::insertUser($new_chat_member, $date, $chat);
@@ -633,7 +655,7 @@ class DB
             //message Table
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                `id`, `user_id`, `date`, `chat_id`, `forward_from`,
+                `id`, `user_id`, `date`, `chat_id`, `forward_from`, `forward_from_chat`,
                 `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `venue`, `new_chat_member`, `left_chat_member`,
@@ -642,7 +664,7 @@ class DB
                 `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 )
                 VALUES (
-                :message_id, :user_id, :date, :chat_id, :forward_from,
+                :message_id, :user_id, :date, :chat_id, :forward_from, :forward_from_chat,
                 :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :venue, :new_chat_member, :left_chat_member,
@@ -687,6 +709,7 @@ class DB
             $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_INT);
+            $sth->bindParam(':forward_from_chat', $forward_from_chat, \PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
             $reply_chat_id = null;
             if ($reply_to_message_id) {
