@@ -28,7 +28,7 @@ class SurveyCommand extends UserCommand
     protected $name = 'survey';
     protected $description = 'Survery for bot users';
     protected $usage = '/survey';
-    protected $version = '0.1.1';
+    protected $version = '0.2.0';
     protected $need_mysql = true;
     /**#@-*/
 
@@ -150,9 +150,15 @@ class SurveyCommand extends UserCommand
                 if (is_null($message->getLocation())) {
                     $this->conversation->notes['state'] = 4;
                     $this->conversation->update();
-
-                    $data['text'] = 'Insert your home location (need location object):';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = new ReplyKeyboardMarkup([
+                        'keyboard' => [[
+                            [ 'text' => 'Share Location', 'request_location' => true ],
+                        ]],
+                        'resize_keyboard'   => true,
+                        'one_time_keyboard' => true,
+                        'selective'         => true,
+                    ]);
+                    $data['text'] = 'Share your location:';
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -167,6 +173,7 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
 
                     $data['text'] = 'Insert your picture:';
+                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -174,6 +181,27 @@ class SurveyCommand extends UserCommand
 
                 // no break
             case 6:
+                if (is_null($message->getContact())) {
+                    $this->conversation->notes['state'] = 6;
+                    $this->conversation->update();
+
+                    $data['text'] = 'Share your contact information:';
+                    $data['reply_markup'] = new ReplyKeyboardMarkup([
+                        'keyboard' => [[
+                            [ 'text' => 'Share Contact', 'request_contact' => true ],
+                        ]],
+                        'resize_keyboard'   => true,
+                        'one_time_keyboard' => true,
+                        'selective'         => true,
+                    ]);
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                $this->conversation->notes['phone_number'] = $message->getContact()->getPhoneNumber();
+
+                // no break
+            case 7:
+                $this->conversation->update();
                 $out_text = '/Survey result:' . "\n";
                 unset($this->conversation->notes['state']);
                 foreach ($this->conversation->notes as $k => $v) {
