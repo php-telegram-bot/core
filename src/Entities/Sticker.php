@@ -18,8 +18,8 @@ class Sticker extends Entity
     protected $width;
     protected $height;
     protected $thumb;
+    protected $emoji;
     protected $file_size;
-
 
     public function __construct(array $data)
     {
@@ -45,8 +45,9 @@ class Sticker extends Entity
         }
         $this->thumb = new PhotoSize($this->thumb);
 
-        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
+        $this->emoji = isset($data['emoji']) ? $data['emoji'] : null;
 
+        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
     public function getFileId()
@@ -63,10 +64,17 @@ class Sticker extends Entity
     {
          return $this->height;
     }
+
     public function getThumb()
     {
          return $this->thumb;
     }
+
+    public function getEmoji()
+    {
+         return $this->emoji;
+    }
+
     public function getFileSize()
     {
          return $this->file_size;
