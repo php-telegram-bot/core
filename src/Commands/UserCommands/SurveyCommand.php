@@ -173,6 +173,7 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
 
                     $data['text'] = 'Insert your picture:';
+                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
                     $result = Request::sendMessage($data);
                     break;
                 }
