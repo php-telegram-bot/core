@@ -122,7 +122,6 @@ class Message extends Entity
         $this->forward_from = isset($data['forward_from']) ? $data['forward_from'] : null;
         if (!empty($this->forward_from)) {
             $this->forward_from = new User($this->forward_from);
-
         }
 
         $this->forward_from_chat = isset($data['forward_from_chat']) ? $data['forward_from_chat'] : null;

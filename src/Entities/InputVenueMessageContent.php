@@ -22,8 +22,6 @@ class InputVenueMessageContent extends InputMessageContent
 
     public function __construct(array $data)
     {
-        //parent::__construct($data);
-
         $this->latitude isset($data['latitude']) ? $data['latitude'] : null;
         if (empty($this->latitude)) {
             throw new TelegramException('latitude is empty!');

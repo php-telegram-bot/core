@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultPhoto extends InlineQueryResult
 {
-
     protected $photo_url;
     protected $photo_width;
     protected $photo_height;
@@ -45,33 +44,38 @@ class InlineQueryResultPhoto extends InlineQueryResult
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->description = isset($data['description']) ? $data['description'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
-
     }
 
     public function getPhotoUrl()
     {
         return $this->photo_url;
     }
+
     public function getPhotoWidth()
     {
         return $this->photo_width;
     }
+
     public function getPhotoHeight()
     {
         return $this->photo_height;
     }
+
     public function getThumbUrl()
     {
         return $this->thumb_url;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function getDescription()
     {
         return $this->description;
     }
+
     public function getCaption()
     {
         return $this->caption;

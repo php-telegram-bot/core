@@ -14,10 +14,8 @@ class Entity
 {
     protected $bot_name;
 
-
     public function getBotName()
     {
-
         return $this->bot_name;
     }
 

@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class ChosenInlineResult extends Entity
 {
-
     protected $result_id;
     protected $from;
     protected $location;
@@ -23,7 +22,6 @@ class ChosenInlineResult extends Entity
 
     public function __construct(array $data)
     {
-
         $this->result_id = isset($data['result_id']) ? $data['result_id'] : null;
         if (empty($this->result_id)) {
             throw new TelegramException('result_id is empty!');

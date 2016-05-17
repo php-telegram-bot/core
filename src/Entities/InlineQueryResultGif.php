@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultGif extends InlineQueryResult
 {
-
     protected $gif_url;
     protected $gif_width;
     protected $gif_height;
@@ -43,29 +42,33 @@ class InlineQueryResultGif extends InlineQueryResult
 
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
-
     }
 
     public function getGifUrl()
     {
         return $this->gif_url;
     }
+
     public function getGifWidth()
     {
         return $this->gif_width;
     }
+
     public function getGifHeight()
     {
         return $this->gif_height;
     }
+
     public function getThumbUrl()
     {
         return $this->thumb_url;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function getCaption()
     {
         return $this->caption;

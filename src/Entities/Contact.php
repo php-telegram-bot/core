@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Contact extends Entity
 {
-
     protected $phone_number;
     protected $first_name;
     protected $last_name;
@@ -22,7 +21,6 @@ class Contact extends Entity
 
     public function __construct(array $data)
     {
-
         $this->phone_number = isset($data['phone_number']) ? $data['phone_number'] : null;
         if (empty($this->phone_number)) {
             throw new TelegramException('phone_number is empty!');
