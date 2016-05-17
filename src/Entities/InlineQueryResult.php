@@ -35,8 +35,19 @@ class InlineQueryResult extends Entity
     {
         return $this->type;
     }
+
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getInputMessageContent()
+    {
+        return $this->input_message_content;
+    }
+
+    public function getReplyMarkup()
+    {
+        return $this->reply_markup;
     }
 }
