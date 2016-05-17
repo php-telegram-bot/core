@@ -67,17 +67,18 @@ class DB
      * @param array    $credentials  Database connection details
      * @param Telegram $telegram     Telegram object to connect with this object
      * @param string   $table_prefix Table prefix
+     * @param string   $encoding     Database character encoding
      *
      * @return PDO PDO database object
      */
-    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null)
+    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null, $encoding = 'utf8mb4')
     {
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
         }
 
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
+        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
         try {
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
