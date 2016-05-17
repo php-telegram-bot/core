@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `inline_query` (
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-CREATE TABLE IF NOT EXISTS `chosen_inline_query` (
+CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for chosen query.',
   `result_id` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Id of the chosen result',
   `user_id` bigint NULL COMMENT 'Sender',
@@ -136,18 +136,18 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Chat identifier.',
   `message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
   `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The inline query unique identifier.',
-  `chosen_inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
+  `chosen_inline_result_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
   `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The callback query unique identifier.',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`chat_id`, `message_id`),
   KEY `inline_query_id` (`inline_query_id`),
-  KEY `chosen_inline_query_id` (`chosen_inline_query_id`),
+  KEY `chosen_inline_result_id` (`chosen_inline_result_id`),
   KEY `callback_query_id` (`callback_query_id`),
 
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`,`id`),
   FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
-  FOREIGN KEY (`chosen_inline_query_id`) REFERENCES `chosen_inline_query` (`id`),
+  FOREIGN KEY (`chosen_inline_result_id`) REFERENCES `chosen_inline_result` (`id`),
   FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
