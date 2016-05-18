@@ -22,26 +22,26 @@ class InputVenueMessageContent extends InputMessageContent
 
     public function __construct(array $data)
     {
-        $this->latitude isset($data['latitude']) ? $data['latitude'] : null;
+        $this->latitude = isset($data['latitude']) ? $data['latitude'] : null;
         if (empty($this->latitude)) {
             throw new TelegramException('latitude is empty!');
         }
 
-        $this->longitude isset($data['longitude']) ? $data['longitude'] : null;
+        $this->longitude = isset($data['longitude']) ? $data['longitude'] : null;
         if (empty($this->longitude)) {
             throw new TelegramException('longitude is empty!');
         }
 
-        $this->title isset($data['title']) ? $data['title'] : null;
+        $this->title = isset($data['title']) ? $data['title'] : null;
         if (empty($this->title)) {
             throw new TelegramException('title is empty!');
         }
 
-        $this->address isset($data['address']) ? $data['address'] : null;
+        $this->address = isset($data['address']) ? $data['address'] : null;
         if (empty($this->address)) {
             throw new TelegramException('address is empty!');
         }
 
-        $this->foursquare_id isset($data['foursquare_id']) ? $data['foursquare_id'] : null;
+        $this->foursquare_id = isset($data['foursquare_id']) ? $data['foursquare_id'] : null;
     }
 }
