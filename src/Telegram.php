@@ -568,6 +568,12 @@ class Telegram
         if ($user_id === null && $this->update !== null) {
             if (($message = $this->update->getMessage()) && ($from = $message->getFrom())) {
                 $user_id = $from->getId();
+            } elseif (($inline_query = $this->update->getInlineQuery()) && ($from = $inline_query->getFrom())) {
+                $user_id = $from->getId();
+            } elseif (($callback_query = $this->update->getCallbackQuery()) && ($from = $callback_query->getFrom())) {
+                $user_id = $from->getId();
+            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
+                $user_id = $from->getId();
             }
         }
 
