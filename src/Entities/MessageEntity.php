@@ -18,23 +18,22 @@ class MessageEntity extends Entity
     protected $url;
 
     /**
-     * @todo check for value from this list: https://core.telegram.org/bots/api#messageentity
-     * @todo "empty($this->offset) && $this->offset != 0" - not an ideal solution?
+     * @todo check for type value from this list: https://core.telegram.org/bots/api#messageentity
      */
     public function __construct(array $data)
     {
         $this->type = isset($data['type']) ? $data['type'] : null;
-        if (empty($this->type)) {                               //
+        if (empty($this->type)) {
             throw new TelegramException('type is empty!');
         }
 
         $this->offset = isset($data['offset']) ? $data['offset'] : null;
-        if (empty($this->offset) && $this->offset != 0) {       //
+        if ($this->offset === '') {
             throw new TelegramException('offset is empty!');
         }
 
         $this->length = isset($data['length']) ? $data['length'] : null;
-        if (empty($this->length) && $this->offset != 0) {       //
+        if ($this->length === '') {
             throw new TelegramException('length is empty!');
         }
 
