@@ -12,12 +12,9 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
-class InlineQueryResultPhoto extends InlineQueryResult
+class InlineQueryResultCachedPhoto extends InlineQueryResult
 {
-    protected $photo_url;
-    protected $photo_width;
-    protected $photo_height;
-    protected $thumb_url;
+    protected $photo_file_id;
     protected $title;
     protected $description;
     protected $caption;
@@ -28,17 +25,9 @@ class InlineQueryResultPhoto extends InlineQueryResult
 
         $this->type = 'photo';
 
-        $this->photo_url = isset($data['photo_url']) ? $data['photo_url'] : null;
-        if (empty($this->photo_url)) {
-            throw new TelegramException('photo_url is empty!');
-        }
-
-        $this->photo_width = isset($data['photo_width']) ? $data['photo_width'] : null;
-        $this->photo_height = isset($data['photo_height']) ? $data['photo_height'] : null;
-
-        $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
-        if (empty($this->thumb_url)) {
-            throw new TelegramException('thumb_url is empty!');
+        $this->photo_file_id = isset($data['photo_file_id']) ? $data['photo_file_id'] : null;
+        if (empty($this->photo_file_id)) {
+            throw new TelegramException('photo_file_id is empty!');
         }
 
         $this->title = isset($data['title']) ? $data['title'] : null;
@@ -46,24 +35,9 @@ class InlineQueryResultPhoto extends InlineQueryResult
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
     }
 
-    public function getPhotoUrl()
+    public function getPhotoFileId()
     {
-        return $this->photo_url;
-    }
-
-    public function getPhotoWidth()
-    {
-        return $this->photo_width;
-    }
-
-    public function getPhotoHeight()
-    {
-        return $this->photo_height;
-    }
-
-    public function getThumbUrl()
-    {
-        return $this->thumb_url;
+        return $this->photo_file_id;
     }
 
     public function getTitle()

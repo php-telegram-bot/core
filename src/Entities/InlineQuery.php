@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQuery extends Entity
 {
-
     protected $id;
     protected $from;
     protected $location;
@@ -23,7 +22,6 @@ class InlineQuery extends Entity
 
     public function __construct(array $data)
     {
-
         $this->id = isset($data['id']) ? $data['id'] : null;
         if (empty($this->id)) {
             throw new TelegramException('id is empty!');
@@ -48,18 +46,22 @@ class InlineQuery extends Entity
     {
         return $this->id;
     }
+
     public function getFrom()
     {
         return $this->from;
     }
+
     public function getLocation()
     {
         return $this->location;
     }
+
     public function getQuery()
     {
         return $this->query;
     }
+
     public function getOffset()
     {
         return $this->offset;

@@ -67,7 +67,7 @@ class SendtochannelCommand extends AdminCommand
         switch ($state) {
             case -1:
                 // getConfig has not been configured asking for channel to administer
-                if ($type != 'Message' || empty($text)) {
+                if ($type != 'Message' || $text === '') {
                     $this->conversation->notes['state'] = -1;
                     $this->conversation->update();
 
@@ -116,7 +116,7 @@ class SendtochannelCommand extends AdminCommand
                 // no break
             case 1:
                 insert:
-                if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || ($type == 'Message' && empty($text))) {
+                if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || ($type == 'Message' && $text === '')) {
                     $this->conversation->notes['state'] = 1;
                     $this->conversation->update();
 
@@ -245,7 +245,7 @@ class SendtochannelCommand extends AdminCommand
         $data = [];
         $data['chat_id'] = $chat_id;
 
-        if (empty($text)) {
+        if ($text === '') {
             $data['text'] = 'Usage: /sendtochannel <text>';
         } else {
             $channels = (array) $this->getConfig('your_channel');
