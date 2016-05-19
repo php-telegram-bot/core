@@ -35,7 +35,7 @@ install:
   - travis_retry composer install --no-interaction
 
 before_script:
-  - mysql -e 'create database telegrambot; use telegrambot; source structure.sql;'
+  - mysql -u root -e 'create database telegrambot; use telegrambot; source structure.sql;'
 
 script:
   - ./vendor/bin/phpunit
