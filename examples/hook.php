@@ -48,6 +48,9 @@ try {
     //$telegram->setDownloadPath('../Download');
     //$telegram->setUploadPath('../Upload');
 
+    //// Botan.io integration
+    //$telegram->enableBotan('your_token');
+
     // Handle telegram webhook request
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
