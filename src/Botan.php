@@ -155,7 +155,8 @@ class Botan
 
         $options = [
             'http' => [
-                'ignore_errors' => true
+                'ignore_errors' => true,
+                'timeout' => 3
             ]
         ];
 
