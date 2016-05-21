@@ -75,6 +75,9 @@ class Entity
                 } elseif ($array_of_array_obj) {
                     foreach ($object->$name as $elm) {
                         $temp = null;
+                        if (!is_array($elm) && !is_object($elm)) {
+                            continue;
+                        }
                         foreach ($elm as $obj) {
                             $temp[] = $this->reflect($obj);
                         }

@@ -138,6 +138,13 @@ class Telegram
     protected $last_command_response;
 
     /**
+     * Botan.io integration
+     *
+     * @var boolean
+     */
+    protected $botan_enabled = false;
+
+    /**
      * Constructor
      *
      * @param string $api_key
@@ -490,6 +497,11 @@ class Telegram
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
             $this->last_command_response = $command_obj->preExecute();
+
+            //Botan.io integration
+            if ($this->botan_enabled) {
+                Botan::track($this->input, $command);
+            }
         }
 
         return $this->last_command_response;
@@ -769,5 +781,19 @@ class Telegram
     protected function ucfirstUnicode($str, $encoding = 'UTF-8')
     {
         return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
+    }
+
+    /**
+     * Enable Botan.io integration
+     *
+     * @param  $token
+     * @param  $custom
+     * @return Telegram
+     */
+    public function enableBotan($token)
+    {
+        Botan::initializeBotan($token);
+        $this->botan_enabled = true;
+        return $this;
     }
 }

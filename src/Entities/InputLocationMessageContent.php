@@ -19,12 +19,12 @@ class InputLocationMessageContent extends InputMessageContent
 
     public function __construct(array $data)
     {
-        $this->latitude isset($data['latitude']) ? $data['latitude'] : null;
+        $this->latitude = isset($data['latitude']) ? $data['latitude'] : null;
         if (empty($this->latitude)) {
             throw new TelegramException('latitude is empty!');
         }
 
-        $this->longitude isset($data['longitude']) ? $data['longitude'] : null;
+        $this->longitude = isset($data['longitude']) ? $data['longitude'] : null;
         if (empty($this->longitude)) {
             throw new TelegramException('longitude is empty!');
         }

@@ -50,6 +50,9 @@ try {
     //$telegram->setDownloadPath('../Download');
     //$telegram->setUploadPath('../Upload');
 
+    //// Botan.io integration
+    //$telegram->enableBotan('your_token');
+
     // Handle telegram getUpdate request
     $ServerResponse = $telegram->handleGetUpdates();
 
