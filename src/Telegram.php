@@ -262,78 +262,57 @@ class Telegram
     }
 
     /**
-     * Set log requests
+     * Redirect log stream to an existing monolog entity
      *
-     * 0 don't store
-     * 1 store the Curl verbose output with Telegram updates
+     * @param \Monolog\Logger    $monolog
+     * @param string $table_prefix
+     */
+    public function enableExternalLog(\Monolog\Logger $monolog = null)
+    {
+        TelegramLog::initialize($monolog);
+    }
+
+    /**
+     * Set error log
      *
-     * @param bool $log_requests
+     * @param string $path
      *
      * @return Telegram
      */
-    public function setLogRequests($log_requests)
+    public function setErrorLog($path)
     {
-        $this->log_requests = $log_requests;
+        TelegramLog::initErrorLog($path);
         return $this;
     }
 
     /**
-     * Get log requests
+     * Set requests log
      *
-     * @return bool
+     * For debug purpore logs all requests done from Request.php
+     *
+     * @param string $path
+     *
+     * @return Telegram
      */
-    public function getLogRequests()
+    public function setDebugLog($path)
     {
-        return $this->log_requests;
-    }
-
-    /**
-     * Set log path
-     *
-     * @param string $log_path
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setLogPath($log_path)
-    {
-        $this->log_path = $log_path;
+        TelegramLog::initDebugLog($path);
         return $this;
     }
 
     /**
-     * Get log path
+     * Set Update log
      *
-     * @return string
+     * Log row request coming from Telegram
+     *
+     * @param string $path
+     *
+     * @return Telegram
      */
-    public function getLogPath()
+    public function setUpdateLog($path)
     {
-        return $this->log_path;
-    }
-
-    /**
-     * Set log Verbosity
-     *
-     * @param int $log_verbosity
-     *
-     * 1 only incoming updates from webhook and getUpdates
-     * 3 incoming updates from webhook and getUpdates and curl request info and response
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setLogVerbosity($log_verbosity)
-    {
-        $this->log_verbosity = $log_verbosity;
+        TelegramLog::initUpdateLog($path);
         return $this;
-    }
-
-    /**
-     * Get log verbosity
-     *
-     * @return int
-     */
-    public function getLogVerbosity()
-    {
-        return $this->log_verbosity;
     }
 
     /**

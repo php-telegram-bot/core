@@ -10,6 +10,7 @@
 
 namespace Longman\TelegramBot;
 
+use Longman\TelegramBot\TelegramBot;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -90,6 +91,7 @@ class Request
     {
         if (is_string($input) | $input == false) {
             self::$input = $input;
+            TelegramLog::update(self::$input);
         } else {
             throw new TelegramException('Input must be a string!');
         }
@@ -107,31 +109,7 @@ class Request
         } else {
             self::setInputRaw(file_get_contents('php://input'));
         }
-        self::log(self::$input);
         return self::$input;
-    }
-
-    /**
-     * Write log entry
-     *
-     * @todo Take log verbosity into account
-     *
-     * @param string $string
-     *
-     * @return mixed
-     */
-    private static function log($string)
-    {
-        if (!self::$telegram->getLogRequests()) {
-            return false;
-        }
-
-        $path = self::$telegram->getLogPath();
-        if (!$path) {
-            return false;
-        }
-
-        return file_put_contents($path, $string . "\n", FILE_APPEND);
     }
 
     /**
@@ -198,28 +176,27 @@ class Request
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
         }
 
-        if (self::$telegram->getLogVerbosity() >= 3) {
+        if (TelegramLog::isDebugLogActive()) {
             $curlConfig[CURLOPT_VERBOSE] = true;
-            $verbose = fopen('php://temp', 'w+');
-            curl_setopt($ch, CURLOPT_STDERR, $verbose);
+            $verbose_curl_output = fopen('php://temp', 'w+');
+            curl_setopt($ch, CURLOPT_STDERR, $verbose_curl_output);
         }
 
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
 
         //Logging curl requests
-        if (self::$telegram->getLogVerbosity() >= 3) {
-            rewind($verbose);
-            $verboseLog = stream_get_contents($verbose);
-            self::log('Verbose curl output:' . "\n" . htmlspecialchars($verboseLog) . "\n");
+        if (TelegramLog::isDebugLogActive()) {
+            rewind($verbose_curl_output);
+            $verboseLog = stream_get_contents($verbose_curl_output);
+            fclose($verbose_curl_output);
+            TelegramLog::debug('Verbose curl output:' . "\n" . htmlspecialchars($verboseLog) . "\n");
         }
 
         //Logging getUpdates Update
-        //Logging curl updates
-        if ($action == 'getUpdates' & self::$telegram->getLogVerbosity() >= 1 | self::$telegram->getLogVerbosity() >= 3
-        ) {
+        if ($action == 'getUpdates') {
+            //Will be Logged in Update steam
             self::setInputRaw($result);
-            self::log($result);
         }
 
         if ($result === false) {
