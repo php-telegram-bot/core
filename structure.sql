@@ -201,6 +201,6 @@ CREATE TABLE IF NOT EXISTS `edited_message` (
   KEY `user_id` (`user_id`),
 
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
-  FOREIGN KEY (`message_id`) REFERENCES `message` (`id`),
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
