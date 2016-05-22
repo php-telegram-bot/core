@@ -455,7 +455,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, ['inline_query', 'chosen_inline_result', 'callback_query'])) {
+        if (in_array($update_type, ['inline_query', 'chosen_inline_result', 'callback_query', 'edited_message'])) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();

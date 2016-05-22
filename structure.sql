@@ -138,17 +138,20 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The inline query unique identifier.',
   `chosen_inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
   `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The callback query unique identifier.',
+  `edited_message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique edited message identifier',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`chat_id`, `message_id`),
   KEY `inline_query_id` (`inline_query_id`),
   KEY `chosen_inline_query_id` (`chosen_inline_query_id`),
   KEY `callback_query_id` (`callback_query_id`),
+  KEY `edited_message_id` (`edited_message_id`),
 
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`,`id`),
   FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
   FOREIGN KEY (`chosen_inline_query_id`) REFERENCES `chosen_inline_query` (`id`),
-  FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`)
+  FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`),
+  FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
@@ -180,5 +183,24 @@ CREATE TABLE IF NOT EXISTS `botan_shortener` (
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
   PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+CREATE TABLE IF NOT EXISTS `edited_message` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry.',
+  `chat_id` bigint COMMENT 'Chat identifier.',
+  `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
+  `user_id` bigint NULL COMMENT 'User identifier',
+  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
+  `text` TEXT DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
+  `entities` TEXT DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
+  `caption` TEXT DEFAULT NULL COMMENT  'For message with caption, the actual UTF-8 text of the caption',
+  PRIMARY KEY (`id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`),
+
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
+  FOREIGN KEY (`message_id`) REFERENCES `message` (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
