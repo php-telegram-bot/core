@@ -802,7 +802,7 @@ class DB
     /**
      * Insert Edited Message request in db
      *
-     * @param Entities\Message &$message
+     * @param Entities\Message &$edited_message
      *
      * @return bool If the insert was successful
      */
@@ -861,6 +861,8 @@ class DB
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
+
+        return true;
     }
 
     /**
