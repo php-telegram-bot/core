@@ -40,8 +40,7 @@ CREATE TABLE IF NOT EXISTS `inline_query` (
    PRIMARY KEY (`id`),
    KEY `user_id` (`user_id`),
 
-   FOREIGN KEY (`user_id`)
-   REFERENCES `user` (`id`)
+   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -56,8 +55,7 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
    PRIMARY KEY (`id`),
    KEY `user_id` (`user_id`),
 
-   FOREIGN KEY (`user_id`)
-   REFERENCES `user` (`id`)
+   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -71,8 +69,7 @@ CREATE TABLE IF NOT EXISTS `callback_query` (
    PRIMARY KEY (`id`),
    KEY `user_id` (`user_id`),
 
-   FOREIGN KEY (`user_id`)
-   REFERENCES `user` (`id`)
+   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -166,8 +163,18 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   KEY `chat_id` (`chat_id`),
   KEY `status` (`status`),
 
-  FOREIGN KEY (`user_id`)
-  REFERENCES `user` (`id`),
-  FOREIGN KEY (`chat_id`)
-  REFERENCES `chat` (`id`)
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `botan_shortener` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry.',
+  `user_id` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier',
+  `url` text NOT NULL DEFAULT '' COMMENT 'Original URL',
+  `short_url` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Shortened URL',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

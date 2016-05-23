@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultMpeg4Gif extends InlineQueryResult
 {
-
     protected $mpeg4_url;
     protected $mpeg4_width;
     protected $mpeg4_height;
@@ -43,29 +42,33 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
 
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
-
     }
 
     public function getMpeg4Url()
     {
         return $this->mpeg4_url;
     }
+
     public function getMpeg4Width()
     {
         return $this->mpeg4_width;
     }
+
     public function getMpeg4Height()
     {
         return $this->mpeg4_height;
     }
+
     public function getThumbUrl()
     {
         return $this->thumb_url;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function getCaption()
     {
         return $this->caption;

@@ -14,7 +14,6 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultVideo extends InlineQueryResult
 {
-
     protected $video_url;
     protected $mime_type;
     protected $thumb_url;
@@ -56,34 +55,42 @@ class InlineQueryResultVideo extends InlineQueryResult
     {
         return $this->video_url;
     }
+
     public function getMimeType()
     {
         return $this->mime_type;
     }
+
     public function getThumbUrl()
     {
         return $this->thumb_url;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function getCaption()
     {
         return $this->caption;
     }
+
     public function getVideoWidth()
     {
         return $this->video_width;
     }
+
     public function getVideoHeight()
     {
         return $this->video_height;
     }
+
     public function getVideoDuration()
     {
         return $this->video_duration;
     }
+
     public function getDescription()
     {
         return $this->description;
