@@ -11,9 +11,10 @@
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\CallbackQuery;
+use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\ChosenInlineResult;
+use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
@@ -66,17 +67,18 @@ class DB
      * @param array    $credentials  Database connection details
      * @param Telegram $telegram     Telegram object to connect with this object
      * @param string   $table_prefix Table prefix
+     * @param string   $encoding     Database character encoding
      *
      * @return PDO PDO database object
      */
-    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null)
+    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null, $encoding = 'utf8mb4')
     {
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
         }
 
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
+        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
         try {
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
@@ -135,11 +137,11 @@ class DB
         if (!defined('TB_INLINE_QUERY')) {
             define('TB_INLINE_QUERY', self::$table_prefix.'inline_query');
         }
+        if (!defined('TB_CHOSEN_INLINE_RESULT')) {
+            define('TB_CHOSEN_INLINE_RESULT', self::$table_prefix.'chosen_inline_result');
+        }
         if (!defined('TB_CALLBACK_QUERY')) {
             define('TB_CALLBACK_QUERY', self::$table_prefix.'callback_query');
-        }
-        if (!defined('TB_CHOSEN_INLINE_QUERY')) {
-            define('TB_CHOSEN_INLINE_QUERY', self::$table_prefix.'chosen_inline_query');
         }
         if (!defined('TB_USER')) {
             define('TB_USER', self::$table_prefix.'user');
@@ -256,14 +258,14 @@ class DB
      * @param int $chat_id
      * @param int $message_id
      * @param int $inline_query_id
-     * @param int $chosen_inline_query_id
+     * @param int $chosen_inline_result_id
      * @param int $callback_query_id
      *
      * @return bool|null
      */
-    public static function insertTelegramUpdate($id, $chat_id, $message_id, $inline_query_id, $chosen_inline_query_id, $callback_query_id)
+    public static function insertTelegramUpdate($id, $chat_id, $message_id, $inline_query_id, $chosen_inline_result_id, $callback_query_id)
     {
-        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_query_id) && is_null($callback_query_id)) {
+        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_result_id) && is_null($callback_query_id)) {
             throw new TelegramException('Error both query_id and message_id are null');
         }
 
@@ -275,10 +277,10 @@ class DB
             //telegram_update table
             $sth_insert_telegram_update = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
                 (
-                `id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_query_id`, `callback_query_id`
+                `id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`
                 )
                 VALUES (
-                :id, :chat_id, :message_id, :inline_query_id, :chosen_inline_query_id, :callback_query_id
+                :id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id
                 )
                 ');
 
@@ -286,7 +288,7 @@ class DB
             $sth_insert_telegram_update->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':inline_query_id', $inline_query_id, \PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(':chosen_inline_query_id', $chosen_inline_query_id, \PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':callback_query_id', $callback_query_id, \PDO::PARAM_INT);
 
             $status = $sth_insert_telegram_update->execute();
@@ -436,50 +438,10 @@ class DB
             self::insertInlineQueryRequest($inline_query);
             return self::insertTelegramUpdate($update_id, null, null, $inline_query_id, null, null);
         } elseif ($update->getUpdateType() == 'chosen_inline_result') {
-            $chosen_inline_query = $update->getChosenInlineResult();
-
-            if (!self::isDbConnected()) {
-                return false;
-            }
-            try {
-                //Inline query Table
-                $mysql_query = 'INSERT INTO `' . TB_CHOSEN_INLINE_QUERY . '`
-                    (
-                    `result_id`, `user_id`, `location`, `inline_message_id`, `query`, `created_at`
-                    )
-                    VALUES (
-                    :result_id, :user_id, :location, :inline_message_id, :query, :created_at
-                    )';
-
-                $sth_insert_chosen_inline_query = self::$pdo->prepare($mysql_query);
-
-                $date = self::getTimestamp(time());
-                $result_id = $chosen_inline_query->getResultId();
-                $from = $chosen_inline_query->getFrom();
-                $user_id = null;
-                if (is_object($from)) {
-                    $user_id = $from->getId();
-                    self::insertUser($from, $date);
-                }
-
-                $location = $chosen_inline_query->getLocation();
-                $inline_message_id = $chosen_inline_query->getInlineMessageId();
-                $query = $chosen_inline_query->getQuery();
-
-                $sth_insert_chosen_inline_query->bindParam(':result_id', $result_id, \PDO::PARAM_STR);
-                $sth_insert_chosen_inline_query->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-                $sth_insert_chosen_inline_query->bindParam(':location', $location, \PDO::PARAM_INT);
-                $sth_insert_chosen_inline_query->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_INT);
-                $sth_insert_chosen_inline_query->bindParam(':query', $query, \PDO::PARAM_STR);
-                $sth_insert_chosen_inline_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
-
-                $status = $sth_insert_chosen_inline_query->execute();
-                $chosen_inline_query_local_id = self::$pdo->lastInsertId();
-            } catch (PDOException $e) {
-                throw new TelegramException($e->getMessage());
-            }
-
-            return self::insertTelegramUpdate($update_id, null, null, null, $chosen_inline_query_local_id, null);
+            $chosen_inline_result = $update->getChosenInlineResult();
+            self::insertChosenInlineResultRequest($chosen_inline_result);
+            $chosen_inline_result_local_id = self::$pdo->lastInsertId();
+            return self::insertTelegramUpdate($update_id, null, null, null, $chosen_inline_result_local_id, null);
         } elseif ($update->getUpdateType() == 'callback_query') {
             $callback_query = $update->getCallbackQuery();
             $callback_query_id = $callback_query->getId();
@@ -539,6 +501,57 @@ class DB
             throw new TelegramException($e->getMessage());
         }
     }
+
+    /**
+     * Insert chosen inline result request into database
+     *
+     * @param Entities\ChosenInlineResult &$chosen_inline_result
+     *
+     * @return bool
+     */
+    public static function insertChosenInlineResultRequest(ChosenInlineResult &$chosen_inline_result)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+        try {
+            //Chosen inline result Table
+            $mysql_query = 'INSERT INTO `' . TB_CHOSEN_INLINE_RESULT . '`
+                    (
+                    `result_id`, `user_id`, `location`, `inline_message_id`, `query`, `created_at`
+                    )
+                    VALUES (
+                    :result_id, :user_id, :location, :inline_message_id, :query, :created_at
+                    )';
+
+            $sth_insert_chosen_inline_result = self::$pdo->prepare($mysql_query);
+
+            $date = self::getTimestamp(time());
+            $result_id = $chosen_inline_result->getResultId();
+            $from = $chosen_inline_result->getFrom();
+            $user_id = null;
+            if (is_object($from)) {
+                $user_id = $from->getId();
+                self::insertUser($from, $date);
+            }
+
+            $location = $chosen_inline_result->getLocation();
+            $inline_message_id = $chosen_inline_result->getInlineMessageId();
+            $query = $chosen_inline_result->getQuery();
+
+            $sth_insert_chosen_inline_result->bindParam(':result_id', $result_id, \PDO::PARAM_STR);
+            $sth_insert_chosen_inline_result->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+            $sth_insert_chosen_inline_result->bindParam(':location', $location, \PDO::PARAM_INT);
+            $sth_insert_chosen_inline_result->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_INT);
+            $sth_insert_chosen_inline_result->bindParam(':query', $query, \PDO::PARAM_STR);
+            $sth_insert_chosen_inline_result->bindParam(':created_at', $date, \PDO::PARAM_STR);
+
+            $status = $sth_insert_chosen_inline_result->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
 
     /**
      * Insert callback query request into database
@@ -711,6 +724,7 @@ class DB
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_INT);
             $sth->bindParam(':forward_from_chat', $forward_from_chat, \PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
+
             $reply_chat_id = null;
             if ($reply_to_message_id) {
                 $reply_chat_id = $chat_id;

@@ -35,7 +35,7 @@ class ConversationTest extends TestCase
     {
         $credentials = [
             'host'     => '127.0.0.1',
-            'user'     => 'travis',
+            'user'     => 'root',
             'password' => '',
             'database' => 'telegrambot',
         ];
