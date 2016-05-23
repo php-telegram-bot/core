@@ -34,6 +34,7 @@ A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.or
 - [Utils](#utils)
     - [MySQL storage (Recommended)](#mysql-storage-recommended)
     - [Channels Support](#channels-support)
+    - [Botan.io integration (Optional)](#botanio-integration-optional)
 - [Commands](#commands)
     - [Predefined Commands](#predefined-commands)
     - [Custom Commands](#custom-commands)
@@ -400,6 +401,27 @@ $telegram->enableExternalMysql($external_pdo_connection)
 
 All methods implemented can be used to manage channels.
 With [admin commands](#admin-commands) you can manage your channels directly with your bot private chat.
+
+### Botan.io integration (Optional)
+
+You can enable the integration using this line:
+
+```php
+$telegram->enableBotan('your_token');
+```
+
+Replace ```'your_token'``` with your Botan.io token, check [this page](https://github.com/botanio/sdk#creating-an-account) to see how to obtain one.
+
+The following actions will be tracked:
+- Commands (shown as `Command (/command_name)` in the stats
+- Inline Queries, Chosen Inline Results and Callback Queries
+- Messages sent to the bot (or replies in groups)
+
+In order to use the URL shortener you must include the class ```use Longman\TelegramBot\Botan;``` and call it like this:
+
+```Botan::shortenUrl('https://github.com/akalongman/php-telegram-bot', $user_id);```
+
+Shortened URLs are cached in the database (if MySQL storage is enabled).
 
 ### Commands
 
