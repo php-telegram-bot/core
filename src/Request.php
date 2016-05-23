@@ -222,6 +222,8 @@ class Request
             self::log($result);
         }
 
+        curl_close($ch);
+
         if ($result === false) {
             throw new TelegramException(curl_error($ch), curl_errno($ch));
         }
@@ -229,7 +231,6 @@ class Request
             throw new TelegramException('Empty server response');
         }
 
-        curl_close($ch);
         return $result;
     }
 

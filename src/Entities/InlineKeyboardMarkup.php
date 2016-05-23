@@ -16,9 +16,6 @@ class InlineKeyboardMarkup extends Entity
 {
     protected $inline_keyboard;
 
-    /*
-     * @todo check for InlineKeyboardButton elements
-     */
     public function __construct($data = array())
     {
         if (isset($data['inline_keyboard'])) {

@@ -20,14 +20,12 @@ class InputTextMessageContent extends InputMessageContent
 
     public function __construct(array $data)
     {
-        //parent::__construct($data);
-
-        $this->message_text isset($data['message_text']) ? $data['message_text'] : null;
+        $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;
         if (empty($this->message_text)) {
             throw new TelegramException('message_text is empty!');
         }
 
-        $this->parse_mode isset($data['parse_mode']) ? $data['parse_mode'] : null;
-        $this->disable_web_page_preview isset($data['disable_web_page_preview']) ? $data['disable_web_page_preview'] : null;
+        $this->parse_mode = isset($data['parse_mode']) ? $data['parse_mode'] : null;
+        $this->disable_web_page_preview = isset($data['disable_web_page_preview']) ? $data['disable_web_page_preview'] : null;
     }
 }
