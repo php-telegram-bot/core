@@ -521,7 +521,7 @@ class Telegram
 
             //Botan.io integration
             if ($this->botan_enabled) {
-                Botan::track($this->input, $command);
+                Botan::track($this->update, $command);
             }
         }
 
