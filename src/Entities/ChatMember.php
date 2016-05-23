@@ -19,9 +19,9 @@ class ChatMember extends Entity
     {
         $this->user = isset($data['user']) ? $data['user'] : null;
         if (empty($this->user)) {
-            throw new TelegramException('type is empty!');
+            throw new TelegramException('user is empty!');
         }
-        $this->from = new User($this->user);
+        $this->user = new User($data['user']);
 
         $this->status = isset($data['status']) ? $data['status'] : null;
         if ($this->status === '') {
