@@ -1,4 +1,12 @@
-sudo: false
+dist: trusty
+sudo: required
+
+addons:
+    apt:
+        packages:
+            - mysql-server-5.6
+            - mysql-client-core-5.6
+            - mysql-client-5.6
 
 language: php
 
@@ -27,7 +35,7 @@ install:
   - travis_retry composer install --no-interaction
 
 before_script:
-  - mysql -e 'create database telegrambot; use telegrambot; source structure.sql;'
+  - mysql -u root -e 'create database telegrambot; use telegrambot; source structure.sql;'
 
 script:
   - ./vendor/bin/phpunit
