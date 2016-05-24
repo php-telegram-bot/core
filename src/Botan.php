@@ -35,6 +35,11 @@ class Botan
     protected static $token = '';
 
     /**
+     * @var string The actual command that is going to be reported
+     */
+    public static $command = '';
+
+    /**
      * Initilize botan
      */
     public static function initializeBotan($token)
@@ -47,17 +52,30 @@ class Botan
     }
 
     /**
-     * Track function
+     * Lock function to make sure only the first command is reported
+     * ( in case commands are calling other commands $telegram->executedCommand() )
      *
-     * @todo Advanced integration: https://github.com/botanio/sdk#advanced-integration
+     * @param  string $command
+     */
+    public static function lock($command = '')
+    {
+        if (empty(self::$command)) {
+            self::$command = $command;
+        }
+    }
+
+    /**
+     * Track function
      *
      * @param  string $input
      * @param  string $command
+     *
      * @return bool|string
+     * @throws TelegramException
      */
     public static function track($input, $command = '')
     {
-        if (empty(self::$token)) {
+        if (empty(self::$token) || $command != self::$command) {
             return false;
         }
 
@@ -129,7 +147,9 @@ class Botan
      *
      * @param  $url
      * @param  $user_id
+     *
      * @return string
+     * @throws TelegramException
      */
     public static function shortenUrl($url, $user_id)
     {
