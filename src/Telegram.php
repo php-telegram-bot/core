@@ -587,9 +587,11 @@ class Telegram
                 $user_id = $from->getId();
             } elseif (($inline_query = $this->update->getInlineQuery()) && ($from = $inline_query->getFrom())) {
                 $user_id = $from->getId();
+            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
+                $user_id = $from->getId();
             } elseif (($callback_query = $this->update->getCallbackQuery()) && ($from = $callback_query->getFrom())) {
                 $user_id = $from->getId();
-            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
+            } elseif (($edited_message = $this->update->getEditedMessage()) && ($from = $edited_message->getFrom())) {
                 $user_id = $from->getId();
             }
         }
