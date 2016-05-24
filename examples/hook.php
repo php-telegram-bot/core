@@ -3,7 +3,7 @@
 //This configuration file is intended to run the bot with the webhook method.
 //Uncommented parameters must be filled
 //Please notice that if you open this file with your browser you'll get the "Input is empty!" Exception.
-//This is a normal behaviour because this address has to be reached only by Telegram server
+//This is a normal behaviour because this address has to be reached only by Telegram server.
 
 // Load composer
 require __DIR__ . '/vendor/autoload.php';
@@ -40,9 +40,11 @@ try {
     //$telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
 
     //// Logging
-    //$telegram->setLogRequests(true);
-    //$telegram->setLogPath($BOT_NAME . '.log');
-    //$telegram->setLogVerbosity(3);
+    //$telegram->enableExternalLog($insert_ here_your_extenl_monolog_instance)
+    //$path = 'your_path'
+    //$telegram->setErrorLog($path . '/' . $BOT_NAME . '_error.log');
+    //$telegram->setDebugLog($path . '/' . $BOT_NAME . '_debug.log');
+    //$telegram->setUpdateLog($path . '/' . $BOT_NAME . '_update.log');
 
     //// Set custom Upload and Download path
     //$telegram->setDownloadPath('../Download');
@@ -55,6 +57,7 @@ try {
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // Silence is golden!
-    // log telegram errors
     // echo $e;
+    // log telegram errors
+    \Longman\TelegramBot\TelegramLog::error($e);
 }

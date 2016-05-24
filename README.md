@@ -43,7 +43,7 @@ A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.or
     - [Set Admins](#set-admins)
     - [Channel Administration](#channel-administration)
 - [Upload and Download directory path](#upload-and-download-directory-path)
-- [Logging](#logging)
+- [Logging](doc/01-utils.md)
 - [Documentation](#documentation)
 - [Projects with this library](#projects-with-this-library)
 - [Troubleshooting](#troubleshooting)
@@ -509,27 +509,6 @@ You can override the default Upload and Download directory with:
 ```php
 $telegram->setDownloadPath('yourpath/Download');
 $telegram->setUploadPath('yourpath/Upload');
-```
-
-### Logging
-Thrown Exceptions are not stored by default. You can Enable this feature adding this line in your 'webhook.php' or 'getUpdates.php'
-
-```php
-    Longman\TelegramBot\Logger::initialize('your_path/TelegramException.log');
-```
-
-Incoming update (json string from webhook and getUpdates) can be logged in a text file. Set those options with the methods:
-```php
-$telegram->setLogRequests(true);
-$telegram->setLogPath($BOT_NAME . '.log');
-```
-
-Set verbosity to 3 to also log curl requests and responses from the bot to Telegram:
-
-```php
-$telegram->setLogRequests(true);
-$telegram->setLogPath($BOT_NAME . '.log');
-$telegram->setLogVerbosity(3);
 ```
 
 ## Documentation
