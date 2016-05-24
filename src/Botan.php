@@ -87,7 +87,7 @@ class Botan
         if (isset($obj['message'])) {
             $data = $obj['message'];
 
-            if ((isset($obj['message']['entities']) && $obj['message']['entities'][0]['type'] == 'bot_command' && $obj['message']['entities'][0]['offset'] == 0) || substr($obj['message']['text'], 0, 1) == '/') {
+            if ((isset($obj['message']['entities']) && $obj['message']['entities'][0]['type'] == 'bot_command' && $obj['message']['entities'][0]['offset'] == 0) || (substr($obj['message']['text'], 0, 1) == '/' && $obj['message']['text'] != '/')) {
                 if (strtolower($command) == 'generic') {
                     $command = 'Generic';
                 } elseif (strtolower($command) == 'genericmessage') {
