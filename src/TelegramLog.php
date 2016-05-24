@@ -136,10 +136,7 @@ class TelegramLog
      */
     public static function isErrorLogActive()
     {
-        if (self::$error_log_path === null) {
-            return 0;
-        }
-        return 1;
+        return (self::$error_log_path !== null);
     }
 
     /**
@@ -149,10 +146,7 @@ class TelegramLog
      */
     public static function isDebugLogActive()
     {
-        if (self::$debug_log_path === null) {
-            return 0;
-        }
-        return 1;
+        return (self::$debug_log_path !== null);
     }
 
     /**
@@ -162,10 +156,7 @@ class TelegramLog
      */
     public static function isUpdateLogActive()
     {
-        if (self::$update_log_path === null) {
-            return 0;
-        }
-        return 1;
+        return (self::$update_log_path !== null);
     }
 
     /**

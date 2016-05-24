@@ -10,7 +10,6 @@
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\TelegramBot;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -177,9 +176,9 @@ class Request
         }
 
         if (TelegramLog::isDebugLogActive()) {
-            $curlConfig[CURLOPT_VERBOSE] = true;
             $verbose_curl_output = fopen('php://temp', 'w+');
-            curl_setopt($ch, CURLOPT_STDERR, $verbose_curl_output);
+            $curlConfig[CURLOPT_VERBOSE] = true;
+            $curlConfig[CURLOPT_STDERR] = $verbose_curl_output;
         }
 
         curl_setopt_array($ch, $curlConfig);
@@ -199,10 +198,13 @@ class Request
             self::setInputRaw($result);
         }
 
+        $curl_error = curl_error($ch);
+        $curl_errno = curl_errno($ch);
+
         curl_close($ch);
 
         if ($result === false) {
-            throw new TelegramException(curl_error($ch), curl_errno($ch));
+            throw new TelegramException($curl_error, $curl_errno);
         }
         if (empty($result) | is_null($result)) {
             throw new TelegramException('Empty server response');
