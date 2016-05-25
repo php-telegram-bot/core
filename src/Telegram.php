@@ -181,9 +181,9 @@ class Telegram
      *
      * @return Telegram
      */
-    public function enableMySql(array $credential, $table_prefix = null)
+    public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
     {
-        $this->pdo = DB::initialize($credential, $this, $table_prefix);
+        $this->pdo = DB::initialize($credential, $this, $table_prefix, $encoding);
         ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
         return $this;
@@ -521,7 +521,7 @@ class Telegram
 
             //Botan.io integration
             if ($this->botan_enabled) {
-                Botan::track($this->input, $command);
+                Botan::track($this->update, $command);
             }
         }
 
