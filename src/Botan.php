@@ -83,6 +83,8 @@ class Botan
             throw new TelegramException('Input is empty!');
         }
 
+        self::$command = '';
+
         $obj = json_decode($input, true);
         if (isset($obj['message'])) {
             $data = $obj['message'];
@@ -116,8 +118,6 @@ class Botan
         if (empty($event_name)) {
             return false;
         }
-
-        self::$command = '';
 
         $uid = $data['from']['id'];
         $request = str_replace(
