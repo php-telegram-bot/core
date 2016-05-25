@@ -86,19 +86,21 @@ class Botan
         $obj = json_decode($input, true);
         if (isset($obj['message'])) {
             $data = $obj['message'];
+            $event_name = 'Message';
 
-            if ((isset($obj['message']['entities']) && $obj['message']['entities'][0]['type'] == 'bot_command' && $obj['message']['entities'][0]['offset'] == 0) || (substr($obj['message']['text'], 0, 1) == '/' && $obj['message']['text'] != '/')) {
-                if (strtolower($command) == 'generic') {
-                    $command = 'Generic';
-                } elseif (strtolower($command) == 'genericmessage') {
-                    $command = 'Generic Message';
-                } else {
-                    $command = '/' . strtolower($command);
+            if (isset($obj['message']['entities']) && is_array($obj['message']['entities'])) {
+                foreach ($obj['message']['entities'] as $entity) {
+                    if ($entity['type'] == 'bot_command' && $entity['offset'] == 0) {
+                        if (strtolower($command) == 'generic') {
+                            $command = 'Generic';
+                        } else {
+                            $command = '/' . strtolower($command);
+                        }
+
+                        $event_name = 'Command (' . $command . ')';
+                        break;
+                    }
                 }
-
-                $event_name = 'Command ('.$command.')';
-            } else {
-                $event_name = 'Message';
             }
         } elseif (isset($obj['inline_query'])) {
             $data = $obj['inline_query'];
@@ -114,6 +116,8 @@ class Botan
         if (empty($event_name)) {
             return false;
         }
+
+        self::$command = '';
 
         $uid = $data['from']['id'];
         $request = str_replace(
