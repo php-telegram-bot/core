@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `edited_message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
   `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'Unique user identifier',
-  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
+  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was edited in timestamp format',
   `text` TEXT DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
   `entities` TEXT DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `caption` TEXT DEFAULT NULL COMMENT  'For message with caption, the actual UTF-8 text of the caption',
