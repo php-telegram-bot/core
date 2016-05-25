@@ -68,20 +68,6 @@ class Telegram
     protected $update;
 
     /**
-     * Log verbose curl output
-     *
-     * @var bool
-     */
-    protected $log_requests;
-
-    /**
-     * Log path
-     *
-     * @var string
-     */
-    protected $log_path;
-
-    /**
      * Upload path
      *
      * @var string
@@ -94,13 +80,6 @@ class Telegram
      * @var string
      */
     protected $download_path;
-
-    /**
-     * Log verbosity
-     *
-     * @var int
-     */
-    protected $log_verbosity = 1;
 
     /**
      * MySQL integration
@@ -232,6 +211,7 @@ class Telegram
 
                     require_once $file->getPathname();
 
+
                     $command_obj = $this->getCommandObject($command);
                     if ($command_obj instanceof Commands\Command) {
                         $commands[$command_name] = $command_obj;
@@ -266,60 +246,6 @@ class Telegram
         }
 
         return null;
-    }
-
-    /**
-     * Redirect log stream to an existing monolog entity
-     *
-     * @param \Monolog\Logger    $monolog
-     * @param string $table_prefix
-     */
-    public function enableExternalLog(\Monolog\Logger $monolog = null)
-    {
-        TelegramLog::initialize($monolog);
-    }
-
-    /**
-     * Set error log
-     *
-     * @param string $path
-     *
-     * @return Telegram
-     */
-    public function setErrorLog($path)
-    {
-        TelegramLog::initErrorLog($path);
-        return $this;
-    }
-
-    /**
-     * Set requests log
-     *
-     * For debug purpore logs all requests done from Request.php
-     *
-     * @param string $path
-     *
-     * @return Telegram
-     */
-    public function setDebugLog($path)
-    {
-        TelegramLog::initDebugLog($path);
-        return $this;
-    }
-
-    /**
-     * Set Update log
-     *
-     * Log row request coming from Telegram
-     *
-     * @param string $path
-     *
-     * @return Telegram
-     */
-    public function setUpdateLog($path)
-    {
-        TelegramLog::initUpdateLog($path);
-        return $this;
     }
 
     /**
