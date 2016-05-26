@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS  `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint COMMENT 'Unique user identifier',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User\'s first name',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User\'s last name',
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS  `user` (
   KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS  `chat` (
+CREATE TABLE IF NOT EXISTS `chat` (
   `id` bigint COMMENT 'Unique user or chat identifier',
   `type` ENUM('private', 'group', 'supergroup', 'channel') NOT NULL COMMENT 'Chat type, either private, group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'Chat (group) title, is null if chat type is private',
@@ -152,13 +152,32 @@ CREATE TABLE IF NOT EXISTS `edited_message` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `edited_message` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry.',
+  `chat_id` bigint COMMENT 'Chat identifier.',
+  `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
+  `user_id` bigint NULL COMMENT 'User identifier',
+  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
+  `text` TEXT DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
+  `entities` TEXT DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
+  `caption` TEXT DEFAULT NULL COMMENT  'For message with caption, the actual UTF-8 text of the caption',
+  PRIMARY KEY (`id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`),
+
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'Update\'s unique identifier',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
-  `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique inline query unique identifier',
-  `chosen_inline_result_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Local chosen query unique identifier',
-  `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique callback query unique identifier',
+  `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique inline query identifier',
+  `chosen_inline_result_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Local chosen inline result identifier',
+  `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique callback query identifier',
   `edited_message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Local edited message identifier',
 
   PRIMARY KEY (`id`),

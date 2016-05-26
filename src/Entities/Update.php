@@ -17,6 +17,7 @@ class Update extends Entity
 
     protected $update_id;
     protected $message;
+    protected $edited_message;
     protected $inline_query;
     protected $chosen_inline_result;
     protected $callback_query;
@@ -35,6 +36,12 @@ class Update extends Entity
         if (!empty($this->message)) {
             $this->message = new Message($this->message, $bot_name);
             $this->update_type = 'message';
+        }
+
+        $this->edited_message = isset($data['edited_message']) ? $data['edited_message'] : null;
+        if (!empty($this->edited_message)) {
+            $this->edited_message = new Message($this->edited_message, $bot_name);
+            $this->update_type = 'edited_message';
         }
 
         if (empty($update_id)) {
@@ -68,6 +75,10 @@ class Update extends Entity
     public function getMessage()
     {
         return $this->message;
+    }
+    public function getEditedMessage()
+    {
+        return $this->edited_message;
     }
     public function getInlineQuery()
     {

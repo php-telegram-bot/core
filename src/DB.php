@@ -348,11 +348,10 @@ class DB
             throw new TelegramException($e->getMessage());
         }
 
-        //insert also the relationship to the chat
+        //insert also the relationship to the chat into user_chat table
         if (!is_null($chat)) {
             $chat_id = $chat->getId();
             try {
-                //user_chat table
                 $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_USER_CHAT . '`
                     (
                     `user_id`, `chat_id`
@@ -427,6 +426,8 @@ class DB
     /**
      * Insert request into database
      *
+     * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
+     *
      * @param Entities\Update &$update
      *
      * @return bool
@@ -441,14 +442,6 @@ class DB
                 $message_id = $message->getMessageId();
                 $chat_id = $message->getChat()->getId();
                 return self::insertTelegramUpdate($update_id, $chat_id, $message_id, null, null, null, null);
-            }
-        } elseif ($update->getUpdateType() == 'edited_message') {
-            $edited_message = $update->getEditedMessage();
-
-            if (self::insertEditedMessageRequest($edited_message)) {
-                $chat_id = $edited_message->getChat()->getId();
-                $edited_message_local_id = self::$pdo->lastInsertId();
-                return self::insertTelegramUpdate($update_id, $chat_id, null, null, null, null, $edited_message_local_id);
             }
         } elseif ($update->getUpdateType() == 'inline_query') {
             $inline_query = $update->getInlineQuery();
@@ -470,6 +463,14 @@ class DB
             if (self::insertCallbackQueryRequest($callback_query)) {
                 $callback_query_id = $callback_query->getId();
                 return self::insertTelegramUpdate($update_id, null, null, null, null, $callback_query_id, null);
+            }
+        } elseif ($update->getUpdateType() == 'edited_message') {
+            $edited_message = $update->getEditedMessage();
+
+            if (self::insertEditedMessageRequest($edited_message)) {
+                $chat_id = $edited_message->getChat()->getId();
+                $edited_message_local_id = self::$pdo->lastInsertId();
+                return self::insertTelegramUpdate($update_id, $chat_id, null, null, null, null, $edited_message_local_id);
             }
         }
 
@@ -693,7 +694,6 @@ class DB
         }
 
         try {
-            //message Table
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
                 `id`, `user_id`, `date`, `chat_id`, `forward_from`, `forward_from_chat`,
@@ -850,7 +850,6 @@ class DB
         $entities = $edited_message->getEntities();
 
         try {
-            //edited_message Table
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
                 (
                 `chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`
