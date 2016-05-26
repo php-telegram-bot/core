@@ -72,10 +72,10 @@ class TelegramLog
                 self::$monolog = $external_monolog;
 
                 foreach (self::$monolog->getHandlers() as $handler) {
-                    if ($handler->getLevel() == 400 ) {
+                    if ($handler->getLevel() == 400) {
                         self::$error_log_path = true;
                     }
-                    if ($handler->getLevel() == 100 ) {
+                    if ($handler->getLevel() == 100) {
                         self::$debug_log_path = true;
                     }
                 }
