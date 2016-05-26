@@ -134,6 +134,9 @@ class DB
         if (!defined('TB_MESSAGE')) {
             define('TB_MESSAGE', self::$table_prefix.'message');
         }
+        if (!defined('TB_EDITED_MESSAGE')) {
+            define('TB_EDITED_MESSAGE', self::$table_prefix.'edited_message');
+        }
         if (!defined('TB_INLINE_QUERY')) {
             define('TB_INLINE_QUERY', self::$table_prefix.'inline_query');
         }
@@ -260,13 +263,14 @@ class DB
      * @param int $inline_query_id
      * @param int $chosen_inline_result_id
      * @param int $callback_query_id
+     * @param int $edited_message_id
      *
      * @return bool|null
      */
-    public static function insertTelegramUpdate($id, $chat_id, $message_id, $inline_query_id, $chosen_inline_result_id, $callback_query_id)
+    public static function insertTelegramUpdate($id, $chat_id, $message_id, $inline_query_id, $chosen_inline_result_id, $callback_query_id, $edited_message_id)
     {
-        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_result_id) && is_null($callback_query_id)) {
-            throw new TelegramException('Error both query_id and message_id are null');
+        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_result_id) && is_null($callback_query_id) && is_null($edited_message_id)) {
+            throw new TelegramException('message_id, inline_query_id, chosen_inline_result_id, callback_query_id, edited_message_id are all null');
         }
 
         if (!self::isDbConnected()) {
@@ -277,10 +281,10 @@ class DB
             //telegram_update table
             $sth_insert_telegram_update = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
                 (
-                `id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`
+                `id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `edited_message_id`
                 )
                 VALUES (
-                :id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id
+                :id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id
                 )
                 ');
 
@@ -290,6 +294,7 @@ class DB
             $sth_insert_telegram_update->bindParam(':inline_query_id', $inline_query_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, \PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':callback_query_id', $callback_query_id, \PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(':edited_message_id', $edited_message_id, \PDO::PARAM_INT);
 
             $status = $sth_insert_telegram_update->execute();
         } catch (PDOException $e) {
@@ -419,6 +424,8 @@ class DB
     /**
      * Insert request into database
      *
+     * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
+     *
      * @param Entities\Update &$update
      *
      * @return bool
@@ -431,22 +438,28 @@ class DB
             $message_id = $message->getMessageId();
             $chat_id = $message->getChat()->getId();
             self::insertMessageRequest($message);
-            return self::insertTelegramUpdate($update_id, $chat_id, $message_id, null, null, null);
+            return self::insertTelegramUpdate($update_id, $chat_id, $message_id, null, null, null, null);
+        } elseif ($update->getUpdateType() == 'edited_message') {
+            $edited_message = $update->getEditedMessage();
+            $chat_id = $edited_message->getChat()->getId();
+            self::insertEditedMessageRequest($edited_message);
+            $edited_message_local_id = self::$pdo->lastInsertId();
+            return self::insertTelegramUpdate($update_id, $chat_id, null, null, null, null, $edited_message_local_id);
         } elseif ($update->getUpdateType() == 'inline_query') {
             $inline_query = $update->getInlineQuery();
             $inline_query_id = $inline_query->getId();
             self::insertInlineQueryRequest($inline_query);
-            return self::insertTelegramUpdate($update_id, null, null, $inline_query_id, null, null);
+            return self::insertTelegramUpdate($update_id, null, null, $inline_query_id, null, null, null);
         } elseif ($update->getUpdateType() == 'chosen_inline_result') {
             $chosen_inline_result = $update->getChosenInlineResult();
             self::insertChosenInlineResultRequest($chosen_inline_result);
             $chosen_inline_result_local_id = self::$pdo->lastInsertId();
-            return self::insertTelegramUpdate($update_id, null, null, null, $chosen_inline_result_local_id, null);
+            return self::insertTelegramUpdate($update_id, null, null, null, $chosen_inline_result_local_id, null, null);
         } elseif ($update->getUpdateType() == 'callback_query') {
             $callback_query = $update->getCallbackQuery();
             $callback_query_id = $callback_query->getId();
             self::insertCallbackQueryRequest($callback_query);
-            return self::insertTelegramUpdate($update_id, null, null, null, null, $callback_query_id);
+            return self::insertTelegramUpdate($update_id, null, null, null, null, $callback_query_id, null);
         }
     }
 
@@ -551,7 +564,6 @@ class DB
             throw new TelegramException($e->getMessage());
         }
     }
-
 
     /**
      * Insert callback query request into database
@@ -791,6 +803,72 @@ class DB
             $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, \PDO::PARAM_INT);
             $sth->bindParam(':pinned_message', $pinned_message, \PDO::PARAM_INT);
+
+            $status = $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
+     * Insert Edited Message request in db
+     *
+     * @param Entities\Message &$edited_message
+     *
+     * @return bool If the insert was successful
+     */
+    public static function insertEditedMessageRequest(Message &$edited_message)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        $from = $edited_message->getFrom();
+        $chat = $edited_message->getChat();
+
+        $chat_id = $chat->getId();
+
+        $edit_date = self::getTimestamp($edited_message->getEditDate());
+
+        $entities = $edited_message->getEntities();
+
+        try {
+            //edited_message Table
+            $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
+                (
+                `chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`
+                )
+                VALUES (
+                :chat_id, :message_id, :user_id, :date, :text, :entities, :caption
+                )');
+
+            $message_id = $edited_message->getMessageId();
+            $from_id = $from->getId();
+
+            $text = $edited_message->getText();
+            $caption = $edited_message->getCaption();
+
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
+            $sth->bindParam(':date', $edit_date, \PDO::PARAM_STR);
+
+            $var = [];
+            if (is_array($entities)) {
+                foreach ($entities as $elm) {
+                    $var[] = json_decode($elm, true);
+                }
+
+                $entities = json_encode($var);
+            } else {
+                $entities = null;
+            }
+
+            $sth->bindParam(':text', $text, \PDO::PARAM_STR);
+            $sth->bindParam(':entities', $entities, \PDO::PARAM_STR);
+            $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
 
             $status = $sth->execute();
         } catch (PDOException $e) {

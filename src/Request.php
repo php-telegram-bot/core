@@ -56,7 +56,12 @@ class Request
         'getUserProfilePhotos',
         'getFile',
         'kickChatMember',
+        'leaveChat',
         'unbanChatMember',
+        'getChat',
+        'getChatAdministrators',
+        'getChatMember',
+        'getChatMembersCount',
         'answerCallbackQuery',
         'answerInlineQuery',
         'editMessageText',
@@ -659,6 +664,22 @@ class Request
     }
 
     /**
+     * Leave Chat
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function leaveChat(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('leaveChat', $data);
+    }
+
+    /**
      * Unban Chat Member
      *
      * @param array $data
@@ -672,6 +693,78 @@ class Request
         }
 
         return self::send('unbanChatMember', $data);
+    }
+
+    /**
+     * Get Chat
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function getChat(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('getChat', $data);
+    }
+
+    /**
+     * Get Chat Administrators
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function getChatAdministrators(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('getChatAdministrators', $data);
+    }
+
+    /**
+     * Get Chat Members Count
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function getChatMembersCount(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('getChatMembersCount', $data);
+    }
+
+    /**
+     * Get Chat Member
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public static function getChatMember(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+
+        return self::send('getChatMember', $data);
     }
 
     /**

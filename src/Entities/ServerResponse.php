@@ -14,32 +14,42 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class ServerResponse extends Entity
 {
-
     protected $ok;
     protected $result;
     protected $error_code;
     protected $description;
 
-
     public function __construct(array $data, $bot_name)
     {
         if (isset($data['ok']) & isset($data['result'])) {
             if (is_array($data['result'])) {
-                if ($data['ok'] & !$this->isAssoc($data['result'])) {
-                    //get update
+                if ($data['ok'] & !$this->isAssoc($data['result']) & !isset($data['result'][0]['user'])) {
+                    //Get Update
                     foreach ($data['result'] as $update) {
                         $this->result[] = new Update($update, $bot_name);
                     }
+                } elseif ($data['ok'] & !$this->isAssoc($data['result']) & isset($data['result'][0]['user'])) {
+                    //Response from getChatAdministrators
+                    $this->result = [];
+                    foreach ($data['result'] as $user) {
+                        array_push($this->result, new ChatMember($user));
+                    }
                 } elseif ($data['ok'] & $this->isAssoc($data['result'])) {
                     if (isset($data['result']['total_count'])) {
-                        //getUserProfilePhotos
+                        //Response from getUserProfilePhotos
                         $this->result = new UserProfilePhotos($data['result']);
                     } elseif (isset($data['result']['file_id'])) {
-                        //Response getFile
+                        //Response from getFile
                         $this->result = new File($data['result']);
                     } elseif (isset($data['result']['username'])) {
-                        //Response getMe
+                        //Response from getMe
                         $this->result = new User($data['result']);
+                    } elseif (isset($data['result']['id'])) {
+                        //Response from getChat
+                        $this->result = new Chat($data['result']);
+                    } elseif (isset($data['result']['user'])) {
+                        //Response from getChatMember
+                        $this->result = new ChatMember($data['result']);
                     } else {
                         //Response from sendMessage
                         $this->result = new Message($data['result'], $bot_name);
@@ -50,17 +60,20 @@ class ServerResponse extends Entity
                 $this->error_code = null;
                 $this->description = null;
             } else {
-                if ($data['ok'] & $data['result'] == true) {
+                if ($data['ok'] & $data['result'] === true) {
                     //Response from setWebhook set
                     $this->ok = $data['ok'];
                     $this->result = true;
                     $this->error_code = null;
-    
+
                     if (isset($data['description'])) {
                         $this->description = $data['description'];
                     } else {
                         $this->description = '';
                     }
+                } elseif (is_numeric($data['result'])) {
+                    //Response from getChatMembersCount
+                    $this->result = $data['result'];
                 } else {
                     $this->ok = false;
                     $this->result = null;

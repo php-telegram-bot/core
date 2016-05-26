@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS  `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint COMMENT 'Unique user identifier',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User first name',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User last name',
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS  `user` (
   KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS  `chat` (
+CREATE TABLE IF NOT EXISTS `chat` (
   `id` bigint COMMENT 'Unique user or chat identifier',
   `type` ENUM('private', 'group', 'supergroup', 'channel') NOT NULL COMMENT 'chat type private, group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `callback_query` (
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS  `message` (
+CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Chat identifier.',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'User identifier',
@@ -121,11 +121,30 @@ CREATE TABLE IF NOT EXISTS  `message` (
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
-  FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`,`id`),
+  FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`new_chat_member`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `edited_message` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry.',
+  `chat_id` bigint COMMENT 'Chat identifier.',
+  `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
+  `user_id` bigint NULL COMMENT 'User identifier',
+  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
+  `text` TEXT DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
+  `entities` TEXT DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
+  `caption` TEXT DEFAULT NULL COMMENT  'For message with caption, the actual UTF-8 text of the caption',
+  PRIMARY KEY (`id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`),
+
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `telegram_update` (
@@ -135,17 +154,20 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The inline query unique identifier.',
   `chosen_inline_result_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The chosen query unique identifier.',
   `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The callback query unique identifier.',
+  `edited_message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Unique edited message identifier',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`chat_id`, `message_id`),
   KEY `inline_query_id` (`inline_query_id`),
   KEY `chosen_inline_result_id` (`chosen_inline_result_id`),
   KEY `callback_query_id` (`callback_query_id`),
+  KEY `edited_message_id` (`edited_message_id`),
 
-  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`,`id`),
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
   FOREIGN KEY (`chosen_inline_result_id`) REFERENCES `chosen_inline_result` (`id`),
-  FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`)
+  FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`),
+  FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (

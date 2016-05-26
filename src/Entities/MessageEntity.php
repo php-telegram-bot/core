@@ -16,6 +16,7 @@ class MessageEntity extends Entity
     protected $offset;
     protected $length;
     protected $url;
+    protected $user;
 
     /**
      * @todo check for type value from this list: https://core.telegram.org/bots/api#messageentity
@@ -38,6 +39,7 @@ class MessageEntity extends Entity
         }
 
         $this->url = isset($data['url']) ? $data['url'] : null;
+        $this->user = isset($data['user']) ? new User($data['user']) : null;
     }
 
     public function getType()
@@ -58,5 +60,10 @@ class MessageEntity extends Entity
     public function getUrl()
     {
         return $this->url;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }
