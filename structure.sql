@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS  `user_chat` (
   `chat_id` bigint COMMENT 'Unique user or chat identifier',
 
   PRIMARY KEY (`user_id`, `chat_id`),
+
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -161,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `edited_message` (
   `text` TEXT DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
   `entities` TEXT DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `caption` TEXT DEFAULT NULL COMMENT  'For message with caption, the actual UTF-8 text of the caption',
+
   PRIMARY KEY (`id`),
   KEY `chat_id` (`chat_id`),
   KEY `message_id` (`message_id`),
