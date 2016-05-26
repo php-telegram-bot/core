@@ -22,26 +22,22 @@ use \Longman\TelegramBot\Entities\Message;
 class MessageTest extends TestCase
 {
     /**
-    * @var \Longman\TelegramBot\Telegram
-    */
+     * @var \Longman\TelegramBot\Telegram
+     */
     private $message;
-    
+
     /**
-    * setUp
-    */
+     * setUp
+     */
     protected function setUp()
     {
     }
 
-
-
     protected function generateMessage($string) {
 
-
-        //$string = addslashes($string);
         $string = str_replace("\n", "\\n", $string);
         $json = '{"message_id":961,"from":{"id":123,"first_name":"john","username":"john"},"chat":{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"},"date":1435920612,"text":"'.$string.'"}';
-        //$json = utf8_encode($json);  
+        //$json = utf8_encode($json);
         return json_decode($json, true);
     }
     /**
@@ -56,8 +52,8 @@ class MessageTest extends TestCase
         $this->assertEquals('help', $this->message->getCommand());
         $this->assertEquals('/help', $this->message->getText());
         $this->assertEquals('', $this->message->getText(true));
-  
-        // text 
+
+        // text
         $this->message = new Message($this->generateMessage('some text'), 'testbot');
 
         $this->assertEquals('', $this->message->getFullCommand());

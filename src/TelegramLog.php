@@ -70,6 +70,15 @@ class TelegramLog
         if (self::$monolog === null) {
             if ($external_monolog !== null) {
                 self::$monolog = $external_monolog;
+
+                foreach (self::$monolog->getHandlers() as $handler) {
+                    if ($handler->getLevel() == 400 ) {
+                        self::$error_log_path = true;
+                    }
+                    if ($handler->getLevel() == 100 ) {
+                        self::$debug_log_path = true;
+                    }
+                }
             } else {
                 self::$monolog = new Logger('bot_log');
             }
@@ -86,7 +95,7 @@ class TelegramLog
      */
     public static function initErrorLog($path)
     {
-        if ($path !== '') {
+        if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for error log');
         }
         self::initialize();
@@ -103,7 +112,7 @@ class TelegramLog
      */
     public static function initDebugLog($path)
     {
-        if ($path !== '') {
+        if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for debug log');
         }
         self::initialize();
@@ -117,11 +126,13 @@ class TelegramLog
      * Initilize monolog instance. Singleton
      * Is possbile provide an external monolog instance
      *
+     * @param string $path
+     *
      * @return \Monolog\Logger
      */
     public static function initUpdateLog($path)
     {
-        if ($path !== '') {
+        if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for update log');
         }
         self::$update_log_path = $path;
