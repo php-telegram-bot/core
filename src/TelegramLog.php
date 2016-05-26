@@ -8,11 +8,12 @@
  * file that was distributed with this source code.
  */
 
+namespace Longman\TelegramBot;
+
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use TelegramBot\Exception\TelegramLogException;
-
-namespace Longman\TelegramBot;
+use Monolog\Formatter\LineFormatter;
+use Longman\TelegramBot\Exception\TelegramLogException;
 
 /**
  * Class TelegramLog.
@@ -64,13 +65,13 @@ class TelegramLog
      *
      * @return \Monolog\Logger
      */
-    public static function initialize(\Monolog\Logger $external_monolog = null)
+    public static function initialize(Logger $external_monolog = null)
     {
         if (self::$monolog === null) {
             if ($external_monolog !== null) {
                 self::$monolog = $external_monolog;
             } else {
-                self::$monolog = new \Monolog\Logger('bot_log');
+                self::$monolog = new Logger('bot_log');
             }
         }
         return self::$monolog;
@@ -85,12 +86,12 @@ class TelegramLog
      */
     public static function initErrorLog($path)
     {
-        if (empty($path)) {
-            throw new \Longman\TelegramBot\Exception\TelegramLogException('Empty path for error log');
+        if ($path !== '') {
+            throw new TelegramLogException('Empty path for error log');
         }
         self::initialize();
         self::$error_log_path = $path;
-        return self::$monolog->pushHandler(new \Monolog\Handler\StreamHandler(self::$error_log_path, \Monolog\Logger::ERROR));
+        return self::$monolog->pushHandler(new StreamHandler(self::$error_log_path, Logger::ERROR));
     }
 
     /**
@@ -102,12 +103,12 @@ class TelegramLog
      */
     public static function initDebugLog($path)
     {
-        if (empty($path)) {
-            throw new \Longman\TelegramBot\Exception\TelegramLogException('Empty path for debug log');
+        if ($path !== '') {
+            throw new TelegramLogException('Empty path for debug log');
         }
         self::initialize();
         self::$debug_log_path = $path;
-        return self::$monolog->pushHandler(new \Monolog\Handler\StreamHandler(self::$debug_log_path, \Monolog\Logger::DEBUG));
+        return self::$monolog->pushHandler(new StreamHandler(self::$debug_log_path, Logger::DEBUG));
     }
 
     /**
@@ -120,18 +121,18 @@ class TelegramLog
      */
     public static function initUpdateLog($path)
     {
-        if (empty($path)) {
-            throw new \Longman\TelegramBot\Exception\TelegramLogException('Empty path for update log');
+        if ($path !== '') {
+            throw new TelegramLogException('Empty path for update log');
         }
         self::$update_log_path = $path;
         if (self::$monolog_update === null) {
-            self::$monolog_update = new \Monolog\Logger('bot_update_log');
+            self::$monolog_update = new Logger('bot_update_log');
             // Create a formatter
             $output = "%message%\n";
-            $formatter = new \Monolog\Formatter\LineFormatter($output);
+            $formatter = new LineFormatter($output);
 
             // Update handler
-            $update_handler = new \Monolog\Handler\StreamHandler(self::$update_log_path, \Monolog\Logger::INFO);
+            $update_handler = new StreamHandler(self::$update_log_path, Logger::INFO);
             $update_handler->setFormatter($formatter);
 
             self::$monolog_update->pushHandler($update_handler);
