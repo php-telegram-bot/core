@@ -515,11 +515,16 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('Generic');
         } else {
+            //Botan.io integration, make sure only the command user executed is reported
+            if ($this->botan_enabled) {
+                Botan::lock($command);
+            }
+
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
             $this->last_command_response = $command_obj->preExecute();
 
-            //Botan.io integration
+            //Botan.io integration, send report after executing the command
             if ($this->botan_enabled) {
                 Botan::track($this->update, $command);
             }
@@ -582,9 +587,11 @@ class Telegram
                 $user_id = $from->getId();
             } elseif (($inline_query = $this->update->getInlineQuery()) && ($from = $inline_query->getFrom())) {
                 $user_id = $from->getId();
+            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
+                $user_id = $from->getId();
             } elseif (($callback_query = $this->update->getCallbackQuery()) && ($from = $callback_query->getFrom())) {
                 $user_id = $from->getId();
-            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
+            } elseif (($edited_message = $this->update->getEditedMessage()) && ($from = $edited_message->getFrom())) {
                 $user_id = $from->getId();
             }
         }
@@ -808,7 +815,6 @@ class Telegram
      * Enable Botan.io integration
      *
      * @param  $token
-     * @param  $custom
      * @return Telegram
      */
     public function enableBotan($token)
