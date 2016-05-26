@@ -10,6 +10,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Longman\TelegramBot\Exception\TelegramLogException;
 
 namespace Longman\TelegramBot;
 
@@ -84,6 +85,9 @@ class TelegramLog
      */
     public static function initErrorLog($path)
     {
+        if (empty($path)) {
+            throw new TelegramLogException('Empty path for error log');
+        }
         self::initialize();
         self::$error_log_path = $path;
         return self::$monolog->pushHandler(new \Monolog\Handler\StreamHandler(self::$error_log_path, \Monolog\Logger::ERROR));
@@ -98,6 +102,9 @@ class TelegramLog
      */
     public static function initDebugLog($path)
     {
+        if (empty($path)) {
+            throw new TelegramLogException('Empty path for debug log');
+        }
         self::initialize();
         self::$debug_log_path = $path;
         return self::$monolog->pushHandler(new \Monolog\Handler\StreamHandler(self::$debug_log_path, \Monolog\Logger::DEBUG));
@@ -113,6 +120,9 @@ class TelegramLog
      */
     public static function initUpdateLog($path)
     {
+        if (empty($path)) {
+            throw new TelegramLogException('Empty path for update log');
+        }
         self::$update_log_path = $path;
         if (self::$monolog_update === null) {
             self::$monolog_update = new \Monolog\Logger('bot_update_log');
