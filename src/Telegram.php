@@ -68,20 +68,6 @@ class Telegram
     protected $update;
 
     /**
-     * Log verbose curl output
-     *
-     * @var bool
-     */
-    protected $log_requests;
-
-    /**
-     * Log path
-     *
-     * @var string
-     */
-    protected $log_path;
-
-    /**
      * Upload path
      *
      * @var string
@@ -94,13 +80,6 @@ class Telegram
      * @var string
      */
     protected $download_path;
-
-    /**
-     * Log verbosity
-     *
-     * @var int
-     */
-    protected $log_verbosity = 1;
 
     /**
      * MySQL integration
@@ -232,6 +211,7 @@ class Telegram
 
                     require_once $file->getPathname();
 
+
                     $command_obj = $this->getCommandObject($command);
                     if ($command_obj instanceof Commands\Command) {
                         $commands[$command_name] = $command_obj;
@@ -266,81 +246,6 @@ class Telegram
         }
 
         return null;
-    }
-
-    /**
-     * Set log requests
-     *
-     * 0 don't store
-     * 1 store the Curl verbose output with Telegram updates
-     *
-     * @param bool $log_requests
-     *
-     * @return Telegram
-     */
-    public function setLogRequests($log_requests)
-    {
-        $this->log_requests = $log_requests;
-        return $this;
-    }
-
-    /**
-     * Get log requests
-     *
-     * @return bool
-     */
-    public function getLogRequests()
-    {
-        return $this->log_requests;
-    }
-
-    /**
-     * Set log path
-     *
-     * @param string $log_path
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setLogPath($log_path)
-    {
-        $this->log_path = $log_path;
-        return $this;
-    }
-
-    /**
-     * Get log path
-     *
-     * @return string
-     */
-    public function getLogPath()
-    {
-        return $this->log_path;
-    }
-
-    /**
-     * Set log Verbosity
-     *
-     * @param int $log_verbosity
-     *
-     * 1 only incoming updates from webhook and getUpdates
-     * 3 incoming updates from webhook and getUpdates and curl request info and response
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setLogVerbosity($log_verbosity)
-    {
-        $this->log_verbosity = $log_verbosity;
-        return $this;
-    }
-
-    /**
-     * Get log verbosity
-     *
-     * @return int
-     */
-    public function getLogVerbosity()
-    {
-        return $this->log_verbosity;
     }
 
     /**

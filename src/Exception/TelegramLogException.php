@@ -13,6 +13,6 @@ namespace Longman\TelegramBot\Exception;
 /**
  * Main exception class used for exception handling
  */
-class TelegramException extends \Exception
+class TelegramLogException extends \Exception
 {
 }
