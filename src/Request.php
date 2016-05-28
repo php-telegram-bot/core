@@ -10,6 +10,8 @@
 
 namespace Longman\TelegramBot;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -24,6 +26,13 @@ class Request
     private static $telegram;
 
     /**
+     * URI of the Telegram API
+     *
+     * @var string
+     */
+    private static $api_uri = 'https://api.telegram.org/bot#APIKEY/#ACTION';
+
+    /**
      * Input value of the request
      *
      * @var string
@@ -31,13 +40,11 @@ class Request
     private static $input;
 
     /**
-     * Available methods to request
-     *
-     * @todo Possibly rename to "actions"?
+     * Available actions to send
      *
      * @var array
      */
-    private static $methods = [
+    private static $actions = [
         'getUpdates',
         'setWebhook',
         'getMe',
@@ -66,7 +73,7 @@ class Request
         'answerInlineQuery',
         'editMessageText',
         'editMessageCaption',
-        'editMessageReplyMarkup'
+        'editMessageReplyMarkup',
     ];
 
     /**
@@ -84,35 +91,25 @@ class Request
     }
 
     /**
-     * Set raw input data string
-     *
-     * @todo Possibly set this to private, since getInput overwrites the input anyway
-     * @todo Why the "| $input == false"?
-     *
-     * @param string $input
-     */
-    public static function setInputRaw($input)
-    {
-        if (is_string($input) | $input == false) {
-            self::$input = $input;
-            TelegramLog::update(self::$input);
-        } else {
-            throw new TelegramException('Input must be a string!');
-        }
-    }
-
-    /**
      * Set input from custom input or stdin and return it
      *
      * @return string
      */
     public static function getInput()
     {
-        if ($input = self::$telegram->getCustomInput()) {
-            self::setInputRaw($input);
-        } else {
-            self::setInputRaw(file_get_contents('php://input'));
+        // First check if a custom input has been set, else get the PHP input.
+        if (!($input = self::$telegram->getCustomInput())) {
+            $input = file_get_contents('php://input');
         }
+
+        // Make sure we have a string to work with.
+        if (is_string($input)) {
+            self::$input = $input;
+        } else {
+            throw new TelegramException('Input must be a string!');
+        }
+
+        TelegramLog::update(self::$input);
         return self::$input;
     }
 
@@ -155,64 +152,46 @@ class Request
     }
 
     /**
-     * Execute cURL call
+     * Execute HTTP Request
      *
      * @param string     $action Action to execute
      * @param array|null $data   Data to attach to the execution
      *
-     * @return mixed Result of the cURL call
+     * @return mixed Result of the HTTP Request
      */
-    public static function executeCurl($action, array $data = null)
+    public static function execute($action, array $data = null)
     {
-        $ch = curl_init();
-        if ($ch === false) {
-            throw new TelegramException('Curl failed to initialize');
-        }
+        $client = new Client();
+        $debug = (TelegramLog::isDebugLogActive()) ? fopen('php://temp', 'w+') : false;
 
-        $curlConfig = [
-            CURLOPT_URL            => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
-            CURLOPT_POST           => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SAFE_UPLOAD    => true,
+        $post_url = str_replace(
+            ['#APIKEY', '#ACTION'],
+            [self::$telegram->getApiKey(), $action],
+            self::$api_uri
+        );
+        $post_data = [
+            'debug'       => $debug,
+            'form_params' => $data,
         ];
 
-        if (!empty($data)) {
-            $curlConfig[CURLOPT_POSTFIELDS] = $data;
+        try {
+            $response = $client->post($post_url, $post_data);
+        } catch (RequestException $e) {
+            throw new TelegramException($e->getMessage());
         }
 
-        if (TelegramLog::isDebugLogActive()) {
-            $verbose_curl_output = fopen('php://temp', 'w+');
-            $curlConfig[CURLOPT_VERBOSE] = true;
-            $curlConfig[CURLOPT_STDERR] = $verbose_curl_output;
+        //Logging verbose debug output
+        if ($debug !== false) {
+            rewind($debug);
+            TelegramLog::debug(sprintf("Verbose HTTP Request output:\n%s\n", stream_get_contents($debug)));
+            fclose($debug);
         }
 
-        curl_setopt_array($ch, $curlConfig);
-        $result = curl_exec($ch);
-
-        //Logging curl requests
-        if (TelegramLog::isDebugLogActive()) {
-            rewind($verbose_curl_output);
-            $verboseLog = stream_get_contents($verbose_curl_output);
-            fclose($verbose_curl_output);
-            TelegramLog::debug('Verbose curl output:' . "\n" . htmlspecialchars($verboseLog) . "\n");
-        }
+        $result = $response->getBody();
 
         //Logging getUpdates Update
-        if ($action == 'getUpdates') {
-            //Will be Logged in Update steam
-            self::setInputRaw($result);
-        }
-
-        $curl_error = curl_error($ch);
-        $curl_errno = curl_errno($ch);
-
-        curl_close($ch);
-
-        if ($result === false) {
-            throw new TelegramException($curl_error, $curl_errno);
-        }
-        if (empty($result) | is_null($result)) {
-            throw new TelegramException('Empty server response');
+        if ($action === 'getUpdates') {
+            TelegramLog::update($result);
         }
 
         return $result;
@@ -230,14 +209,11 @@ class Request
         $path = $file->getFilePath();
 
         //Create the directory
-        $basepath = self::$telegram->getDownloadPath();
-        $loc_path = $basepath . '/' . $path;
+        $loc_path = self::$telegram->getDownloadPath() . '/' . $path;
 
         $dirname = dirname($loc_path);
-        if (!is_dir($dirname)) {
-            if (!mkdir($dirname, 0755, true)) {
-                throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
-            }
+        if (!is_dir($dirname) && !mkdir($dirname, 0755, true)) {
+            throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
         }
         //Open file to write
         $fp = fopen($loc_path, 'w+');
@@ -289,7 +265,6 @@ class Request
      * Send command
      *
      * @todo Fake response doesn't need json encoding?
-     * @todo Rename "methods" to "actions"
      *
      * @param string     $action
      * @param array|null $data
@@ -298,8 +273,8 @@ class Request
      */
     public static function send($action, array $data = null)
     {
-        if (!in_array($action, self::$methods)) {
-            throw new TelegramException('This method doesn\'t exist!');
+        if (!in_array($action, self::$actions)) {
+            throw new TelegramException('The action ' . $action . ' doesn\'t exist!');
         }
 
         $bot_name = self::$telegram->getBotName();
@@ -309,7 +284,7 @@ class Request
             return new ServerResponse($fake_response, $bot_name);
         }
 
-        $response = json_decode(self::executeCurl($action, $data), true);
+        $response = json_decode(self::execute($action, $data), true);
 
         if (is_null($response)) {
             throw new TelegramException('Telegram returned an invalid response! Please your bot name and api token.');
