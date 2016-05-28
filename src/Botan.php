@@ -95,6 +95,8 @@ class Botan
                     if ($entity['type'] == 'bot_command' && $entity['offset'] == 0) {
                         if (strtolower($command) == 'generic') {
                             $command = 'Generic';
+                        } elseif (strtolower($command) == 'genericmessage') {
+                            $command = 'Generic Message';
                         } else {
                             $command = '/' . strtolower($command);
                         }
