@@ -67,14 +67,15 @@ and have interactions in a matter of minutes.
 
 The Bot can:
 - retrieve updates with webhook and getUpdate methods.
-- supports all types and methods according to Telegram API (6 May 2016).
+- supports all types and methods according to Telegram API (25 May 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface.
 - full support for **inline bots**. 
 - inline keyboard.
 - Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
-- Conversation feature (**new!**)
+- *Botan.io* integration and database cache system. (**new!**)
+- Conversation feature  
 
 -----
 This code is available on
