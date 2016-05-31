@@ -30,7 +30,14 @@ class Request
      *
      * @var string
      */
-    private static $api_uri = 'https://api.telegram.org/bot#APIKEY/#ACTION';
+    private static $api_base_uri = 'https://api.telegram.org';
+
+    /**
+     * Guzzle Client object
+     *
+     * @var \GuzzleHttp\Client
+     */
+    private static $client;
 
     /**
      * Input value of the request
@@ -85,6 +92,7 @@ class Request
     {
         if (is_object($telegram)) {
             self::$telegram = $telegram;
+            self::$client = new Client(['base_uri' => self::$api_base_uri]);
         } else {
             throw new TelegramException('Telegram pointer is empty!');
         }
@@ -161,30 +169,25 @@ class Request
      */
     public static function execute($action, array $data = null)
     {
-        $client = new Client();
-        $debug = (TelegramLog::isDebugLogActive()) ? fopen('php://temp', 'w+') : false;
-
-        $post_url = str_replace(
-            ['#APIKEY', '#ACTION'],
-            [self::$telegram->getApiKey(), $action],
-            self::$api_uri
-        );
-        $post_data = [
-            'debug'       => $debug,
-            'form_params' => $data,
-        ];
+        $debug_handle = (TelegramLog::isDebugLogActive()) ? fopen('php://temp', 'w+') : false;
 
         try {
-            $response = $client->post($post_url, $post_data);
+            $response = self::$client->post(
+                '/bot' . self::$telegram->getApiKey() . '/' . $action,
+                ['debug' => $debug_handle, 'form_params' => $data]
+            );
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
-        }
-
-        //Logging verbose debug output
-        if ($debug !== false) {
-            rewind($debug);
-            TelegramLog::debug(sprintf("Verbose HTTP Request output:\n%s\n", stream_get_contents($debug)));
-            fclose($debug);
+        } finally {
+            //Logging verbose debug output
+            if ($debug_handle !== false) {
+                rewind($debug_handle);
+                TelegramLog::debug(sprintf(
+                    "Verbose HTTP Request output:\n%s\n",
+                    stream_get_contents($debug_handle)
+                ));
+                fclose($debug_handle);
+            }
         }
 
         $result = $response->getBody();
@@ -215,36 +218,27 @@ class Request
         if (!is_dir($dirname) && !mkdir($dirname, 0755, true)) {
             throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
         }
-        //Open file to write
-        $fp = fopen($loc_path, 'w+');
-        if ($fp === false) {
-            throw new TelegramException('File can\'t be created');
+
+        $debug_handle = (TelegramLog::isDebugLogActive()) ? fopen('php://temp', 'w+') : false;
+
+        try {
+            $response = self::$client->get(
+                '/file/bot' . self::$telegram->getApiKey() . '/' . $path,
+                ['debug' => $debug_handle, 'sink' => $loc_path]
+            );
+        } catch (RequestException $e) {
+            throw new TelegramException($e->getMessage());
+        } finally {
+            //Logging verbose debug output
+            if ($debug_handle !== false) {
+                rewind($debug_handle);
+                TelegramLog::debug(sprintf(
+                    "Verbose HTTP File Download Request output:\n%s\n",
+                    stream_get_contents($debug_handle)
+                ));
+                fclose($debug_handle);
+            }
         }
-
-        $ch = curl_init();
-        if ($ch === false) {
-            throw new TelegramException('Curl failed to initialize');
-        }
-
-        $curlConfig = [
-            CURLOPT_URL            => 'https://api.telegram.org/file/bot' . self::$telegram->getApiKey() . '/' . $path,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER         => 0,
-            CURLOPT_BINARYTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_FILE           => $fp,
-        ];
-
-        curl_setopt_array($ch, $curlConfig);
-        $result = curl_exec($ch);
-        if ($result === false) {
-            throw new TelegramException(curl_error($ch), curl_errno($ch));
-        }
-
-        //Close curl
-        curl_close($ch);
-        //Close local file
-        fclose($fp);
 
         return (filesize($loc_path) > 0);
     }
