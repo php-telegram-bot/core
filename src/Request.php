@@ -169,7 +169,7 @@ class Request
      */
     public static function execute($action, array $data = null)
     {
-        $debug_handle = (TelegramLog::isDebugLogActive()) ? fopen('php://temp', 'w+') : false;
+        $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
             $response = self::$client->post(
@@ -180,14 +180,7 @@ class Request
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
-            if ($debug_handle !== false) {
-                rewind($debug_handle);
-                TelegramLog::debug(sprintf(
-                    "Verbose HTTP Request output:\n%s\n",
-                    stream_get_contents($debug_handle)
-                ));
-                fclose($debug_handle);
-            }
+            TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
         }
 
         $result = $response->getBody();
@@ -219,7 +212,7 @@ class Request
             throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
         }
 
-        $debug_handle = (TelegramLog::isDebugLogActive()) ? fopen('php://temp', 'w+') : false;
+        $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
             $response = self::$client->get(
@@ -230,14 +223,7 @@ class Request
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
-            if ($debug_handle !== false) {
-                rewind($debug_handle);
-                TelegramLog::debug(sprintf(
-                    "Verbose HTTP File Download Request output:\n%s\n",
-                    stream_get_contents($debug_handle)
-                ));
-                fclose($debug_handle);
-            }
+            TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
         }
 
         return (filesize($loc_path) > 0);

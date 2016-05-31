@@ -56,6 +56,13 @@ class TelegramLog
     static protected $update_log_path = null;
 
     /**
+     * Temporary stream handle for debug log
+     *
+     * @var null
+     */
+    static protected $debug_log_temp_stream_handle = null;
+
+    /**
      * Initialize
      *
      * Initilize monolog instance. Singleton
@@ -118,6 +125,41 @@ class TelegramLog
         self::initialize();
         self::$debug_log_path = $path;
         return self::$monolog->pushHandler(new StreamHandler(self::$debug_log_path, Logger::DEBUG));
+    }
+
+    /**
+     * Get the stream handle of the temporary debug output
+     *
+     * @return mixed The stream if debug is active, else false
+     */
+    public static function getDebugLogTempStream()
+    {
+        if (self::$debug_log_temp_stream_handle === null) {
+            if (self::isDebugLogActive()) {
+                self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+');
+            } else {
+                return false;
+            }
+        }
+        return self::$debug_log_temp_stream_handle;
+    }
+
+    /**
+     * Write the temporary debug stream to log and close the stream handle
+     *
+     * @param string $message Message (with placeholder) to write to the debug log
+     */
+    public static function endDebugLogTempStream($message = '%s')
+    {
+        if (self::$debug_log_temp_stream_handle !== null) {
+            rewind(self::$debug_log_temp_stream_handle);
+            self::debug(sprintf(
+                $message,
+                stream_get_contents(self::$debug_log_temp_stream_handle)
+            ));
+            fclose(self::$debug_log_temp_stream_handle);
+            self::$debug_log_temp_stream_handle = null;
+        }
     }
 
     /**
