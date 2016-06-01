@@ -10,6 +10,8 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -25,16 +27,29 @@ class DateCommand extends UserCommand
     protected $name = 'date';
     protected $description = 'Show date/time by location';
     protected $usage = '/date <location>';
-    protected $version = '1.2.1';
-    protected $public = true;
+    protected $version = '1.3.0';
     /**#@-*/
 
     /**
-     * Base URL for Google Maps API
+     * Guzzle Client object
+     *
+     * @var \GuzzleHttp\Client
+     */
+    private $client;
+
+    /**
+     * Base URI for Google Maps API
      *
      * @var string
      */
-    private $base_url = 'https://maps.googleapis.com/maps/api';
+    private $google_api_base_uri = 'https://maps.googleapis.com/maps/api/';
+
+    /**
+     * The Google API Key from the command config
+     *
+     * @var string
+     */
+    private $google_api_key;
 
     /**
      * Date format
@@ -52,32 +67,28 @@ class DateCommand extends UserCommand
      */
     private function getCoordinates($location)
     {
-        $url = $this->base_url . '/geocode/json?';
-        $params = 'address=' . urlencode($location);
+        $path = 'geocode/json';
+        $query = ['address' => urlencode($location)];
 
-        $google_api_key = $this->getConfig('google_api_key');
-        if (!empty($google_api_key)) {
-            $params .= '&key=' . $google_api_key;
+        if ($this->google_api_key !== null) {
+            $query['key'] = $this->google_api_key;
         }
 
-        $data = $this->request($url . $params);
-        if (empty($data)) {
+        try {
+            $response = $this->client->get($path, ['query' => $query]);
+        } catch (RequestException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        if (!($result = $this->validateResponseData($response->getBody()))) {
             return false;
         }
 
-        $data = json_decode($data, true);
-        if (empty($data)) {
-            return false;
-        }
-
-        if ($data['status'] !== 'OK') {
-            return false;
-        }
-
-        $lat = $data['results'][0]['geometry']['location']['lat'];
-        $lng = $data['results'][0]['geometry']['location']['lng'];
-        $acc = $data['results'][0]['geometry']['location_type'];
-        $types = $data['results'][0]['types'];
+        $result = $result['results'][0];
+        $lat = $result['geometry']['location']['lat'];
+        $lng = $result['geometry']['location']['lng'];
+        $acc = $result['geometry']['location_type'];
+        $types = $result['types'];
 
         return [$lat, $lng, $acc, $types];
     }
@@ -92,20 +103,44 @@ class DateCommand extends UserCommand
      */
     private function getDate($lat, $lng)
     {
-        $url = $this->base_url . '/timezone/json?';
+        $path = 'timezone/json';
 
-        $date_utc = new \DateTime(null, new \DateTimeZone("UTC"));
-
+        $date_utc = new \DateTime(null, new \DateTimeZone('UTC'));
         $timestamp = $date_utc->format('U');
 
-        $params = 'location=' . urlencode($lat) . ',' . urlencode($lng) . '&timestamp=' . urlencode($timestamp);
+        $query = [
+            'location'  => urlencode($lat) . ',' . urlencode($lng),
+            'timestamp' => urlencode($timestamp)
+        ];
 
-        $google_api_key = $this->getConfig('google_api_key');
-        if (!empty($google_api_key)) {
-            $params .= '&key=' . $google_api_key;
+        if ($this->google_api_key !== null) {
+            $query['key'] = $this->google_api_key;
         }
 
-        $data = $this->request($url . $params);
+        try {
+            $response = $this->client->get($path, ['query' => $query]);
+        } catch (RequestException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        if (!($result = $this->validateResponseData($response->getBody()))) {
+            return false;
+        }
+
+        $local_time = $timestamp + $result['rawOffset'] + $result['dstOffset'];
+
+        return [$local_time, $result['timeZoneId']];
+    }
+
+    /**
+     * Evaluate the response data and see if the request was successful
+     *
+     * @param string $data
+     *
+     * @return bool|array
+     */
+    private function validateResponseData($data)
+    {
         if (empty($data)) {
             return false;
         }
@@ -115,13 +150,11 @@ class DateCommand extends UserCommand
             return false;
         }
 
-        if ($data['status'] !== 'OK') {
+        if (isset($data['status']) && $data['status'] !== 'OK') {
             return false;
         }
 
-        $local_time = $timestamp + $data['rawOffset'] + $data['dstOffset'];
-
-        return [$local_time, $data['timeZoneId']];
+        return $data;
     }
 
     /**
@@ -151,55 +184,30 @@ class DateCommand extends UserCommand
     }
 
     /**
-     * Perform a simple cURL request
-     *
-     * @param string $url
-     *
-     * @return object
-     */
-    private function request($url)
-    {
-        $ch = curl_init();
-        $curlConfig = [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true];
-
-        curl_setopt_array($ch, $curlConfig);
-        $response = curl_exec($ch);
-
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code !== 200) {
-            throw new TelegramException('Error receiving data from url');
-        }
-        curl_close($ch);
-
-        return $response;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function execute()
     {
+        //First we set up the necessary member variables.
+        $this->client = new Client(['base_uri' => $this->google_api_base_uri]);
+        if (($this->google_api_key = trim($this->getConfig('google_api_key'))) === '') {
+            $this->google_api_key = null;
+        }
+
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
-        $text = $message->getText(true);
+        $location = $message->getText(true);
 
-        if (empty($text)) {
+        if (empty($location)) {
             $text = 'You must specify location in format: /date <city>';
         } else {
-            $date = $this->getformattedDate($text);
-            if (empty($date)) {
-                $text = 'Can not find date for location: ' . $text;
-            } else {
-                $text = $date;
-            }
+            $text = $this->getformattedDate($location);
         }
 
         $data = [
-            'chat_id'             => $chat_id,
-            'reply_to_message_id' => $message_id,
-            'text'                => $text,
+            'chat_id' => $chat_id,
+            'text'    => $text,
         ];
 
         return Request::sendMessage($data);
