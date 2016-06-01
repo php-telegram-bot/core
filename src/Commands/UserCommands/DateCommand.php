@@ -38,7 +38,7 @@ class DateCommand extends UserCommand
     private $client;
 
     /**
-     * Base URL for Google Maps API
+     * Base URI for Google Maps API
      *
      * @var string
      */
@@ -70,17 +70,17 @@ class DateCommand extends UserCommand
         $path = 'geocode/json';
         $query = ['address' => urlencode($location)];
 
-        if ($this->google_api_key !== '') {
+        if ($this->google_api_key !== null) {
             $query['key'] = $this->google_api_key;
         }
 
         try {
-            $response = $this->client->get($path, ['query' => $query])->getBody();
+            $response = $this->client->get($path, ['query' => $query]);
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         }
 
-        if (!($result = $this->validateResponseData($response))) {
+        if (!($result = $this->validateResponseData($response->getBody()))) {
             return false;
         }
 
@@ -113,17 +113,17 @@ class DateCommand extends UserCommand
             'timestamp' => urlencode($timestamp)
         ];
 
-        if ($this->google_api_key !== '') {
+        if ($this->google_api_key !== null) {
             $query['key'] = $this->google_api_key;
         }
 
         try {
-            $response = $this->client->get($path, ['query' => $query])->getBody();
+            $response = $this->client->get($path, ['query' => $query]);
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         }
 
-        if (!($result = $this->validateResponseData($response))) {
+        if (!($result = $this->validateResponseData($response->getBody()))) {
             return false;
         }
 
@@ -190,12 +190,13 @@ class DateCommand extends UserCommand
     {
         //First we set up the necessary member variables.
         $this->client = new Client(['base_uri' => $this->google_api_base_uri]);
-        $this->google_api_key = $this->getConfig('google_api_key');
+        if (($this->google_api_key = trim($this->getConfig('google_api_key'))) === '') {
+            $this->google_api_key = null;
+        }
 
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
         $location = $message->getText(true);
 
         if (empty($location)) {
