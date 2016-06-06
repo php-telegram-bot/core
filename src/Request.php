@@ -172,6 +172,11 @@ class Request
         $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
+            //Fix so that the keyboard markup is a string, not an object
+            if (isset($data['reply_markup']) && !is_string($data['reply_markup'])) {
+                $data['reply_markup'] = (string)$data['reply_markup'];
+            }
+
             $response = self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 ['debug' => $debug_handle, 'form_params' => $data]
