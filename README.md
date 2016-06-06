@@ -476,7 +476,7 @@ Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
 - Post any content to your channels */sendtochannel* 
-- inspect a user or a chat wiht */whois* (new!)
+- inspect a user or a chat with */whois* (new!)
 
 #### Set Admins
 
