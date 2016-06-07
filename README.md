@@ -464,10 +464,14 @@ Inside *examples/Commands/* there are some samples that show how to use types.
 
 #### Commands Configuration
 
-With this method you can set some command specific parameters, for
-example, google geocode/timezone api key for date command:
+With this method you can set some command specific parameters:
+
 ```php
+//Google geocode/timezone API key for date command
 $telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
+
+//OpenWeatherMap API key for weather command
+$telegram->setCommandConfig('weather', ['owm_api_key' => 'your_owm_api_key_here']);
 ```
 
 ### Admin Commands

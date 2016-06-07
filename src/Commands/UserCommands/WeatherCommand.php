@@ -10,7 +10,10 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 /**
@@ -24,89 +27,79 @@ class WeatherCommand extends UserCommand
     protected $name = 'weather';
     protected $description = 'Show weather by location';
     protected $usage = '/weather <location>';
-    protected $version = '1.0.1';
-    protected $public = true;
+    protected $version = '1.1.0';
     /**#@-*/
 
     /**
-     * Get weather using cURL request
+     * Base URI for OpenWeatherMap API
+     *
+     * @var string
+     */
+    private $owm_api_base_uri = 'http://api.openweathermap.org/data/2.5/';
+
+    /**
+     * Get weather data using HTTP request
      *
      * @param string $location
      *
-     * @return object
+     * @return string
      */
-    private function getWeather($location)
+    private function getWeatherData($location)
     {
-        $url = 'http://api.openweathermap.org/data/2.5/weather?q=' . $location . '&units=metric';
-
-        $ch = curl_init();
-        $curlConfig = [
-            CURLOPT_URL            => $url,
-            CURLOPT_RETURNTRANSFER => true,
+        $client = new Client(['base_uri' => $this->owm_api_base_uri]);
+        $path = 'weather';
+        $query = [
+            'q'     => $location,
+            'units' => 'metric',
+            'APPID' => trim($this->getConfig('owm_api_key')),
         ];
 
-        curl_setopt_array($ch, $curlConfig);
-        $response = curl_exec($ch);
-
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code !== 200) {
-            throw new \Exception('Error receiving data from url');
+        try {
+            $response = $client->get($path, ['query' => $query]);
+        } catch (RequestException $e) {
+            throw new TelegramException($e->getMessage());
         }
-        curl_close($ch);
 
-        return $response;
+        return (string)$response->getBody();
     }
 
     /**
-     * Get weather string
+     * Get weather string from weather data
      *
-     * @param string $location
+     * @param array $data
      *
      * @return bool|string
      */
-    private function getWeatherString($location)
+    private function getWeatherString(array $data)
     {
-        if (empty($location)) {
-            return false;
-        }
-
         try {
-            $data = $this->getWeather($location);
-
-            $decode = json_decode($data, true);
-            if (empty($decode) || $decode['cod'] != 200) {
+            if (empty($data) || $data['cod'] !== 200) {
                 return false;
             }
 
-            $city = $decode['name'];
-            $country = $decode['sys']['country'];
-            $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . '°C';
-            $conditions = 'Current conditions are: ' . $decode['weather'][0]['description'];
+            //http://openweathermap.org/weather-conditions
+            $conditions = [
+                'clear'        => ' ☀️',
+                'clouds'       => ' ☁️',
+                'rain'         => ' ☔',
+                'drizzle'      => ' ☔',
+                'thunderstorm' => ' ⚡️',
+                'snow'         => ' ❄️',
+            ];
+            $conditions_now = strtolower($data['weather'][0]['main']);
 
-            switch (strtolower($decode['weather'][0]['main'])) {
-                case 'clear':
-                    $conditions .= ' ☀';
-                    break;
-
-                case 'clouds':
-                    $conditions .= ' ☁☁';
-                    break;
-
-                case 'rain':
-                    $conditions .= ' ☔';
-                    break;
-
-                case 'thunderstorm':
-                    $conditions .= ' ☔☔☔☔';
-                    break;
-            }
-
-            $result = $temp . "\n" . $conditions;
+            return sprintf(
+                'The temperature in %1$s (%2$s) is %3$s°C' . "\n" .
+                'Current conditions are: %4$s%5$s',
+                $data['name'], //city
+                $data['sys']['country'], //country
+                $data['main']['temp'], //temperature
+                $data['weather'][0]['description'], //description of weather
+                (isset($conditions[$conditions_now])) ? $conditions[$conditions_now] : ''
+            );
         } catch (\Exception $e) {
-            $result = '';
+            return false;
         }
-
-        return $result;
     }
 
     /**
@@ -115,26 +108,27 @@ class WeatherCommand extends UserCommand
     public function execute()
     {
         $message = $this->getMessage();
-
         $chat_id = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
-        $text = $message->getText(true);
+        $text = '';
 
-        if (empty($text)) {
-            $text = 'You must specify location in format: /weather <city>';
-        } else {
-            $weather = $this->getWeatherString($text);
-            if (empty($weather)) {
-                $text = 'Can not find weather for location: ' . $text;
+        if (trim($this->getConfig('owm_api_key'))) {
+            if ($location = trim($message->getText(true))) {
+                if ($weather_data = json_decode($this->getWeatherData($location), true)) {
+                    $text = $this->getWeatherString($weather_data);
+                }
+                if (!$text) {
+                    $text = 'Cannot find weather for location: ' . $location;
+                }
             } else {
-                $text = $weather;
+                $text = 'You must specify location in format: /weather <city>';
             }
+        } else {
+            $text = 'OpenWeatherMap API key not defined.';
         }
 
         $data = [
-            'chat_id'             => $chat_id,
-            'reply_to_message_id' => $message_id,
-            'text'                => $text,
+            'chat_id' => $chat_id,
+            'text'    => $text,
         ];
 
         return Request::sendMessage($data);
