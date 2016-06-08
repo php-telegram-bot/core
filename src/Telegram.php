@@ -291,6 +291,13 @@ class Telegram
      */
     public function handleGetUpdates($limit = null, $timeout = null)
     {
+        if (!DB::isDbConnected()) {
+            return new Entities\ServerResponse([
+                'ok'          => false,
+                'description' => 'getUpdates needs MySQL connection!',
+            ], $this->bot_name);
+        }
+
         //DB Query
         $last_update = DB::selectTelegramUpdate(1);
 
