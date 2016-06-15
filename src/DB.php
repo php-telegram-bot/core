@@ -618,8 +618,8 @@ class DB
             $chat_id = null;
             $message_id = null;
             if ($message) {
-                $chat_id = $callback_query->getMessage()->getChat()->getId();
-                $message_id = $callback_query->getMessage()->getMessageId();
+                $chat_id = $message->getChat()->getId();
+                $message_id = $message->getMessageId();
                 self::insertMessageRequest($message);
             }
 
