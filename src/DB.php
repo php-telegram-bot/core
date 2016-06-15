@@ -569,7 +569,7 @@ class DB
             $sth_insert_chosen_inline_result->bindParam(':result_id', $result_id, \PDO::PARAM_STR);
             $sth_insert_chosen_inline_result->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
             $sth_insert_chosen_inline_result->bindParam(':location', $location, \PDO::PARAM_INT);
-            $sth_insert_chosen_inline_result->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_INT);
+            $sth_insert_chosen_inline_result->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth_insert_chosen_inline_result->bindParam(':query', $query, \PDO::PARAM_STR);
             $sth_insert_chosen_inline_result->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
@@ -596,10 +596,10 @@ class DB
         try {
             $mysql_query = 'INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
                 (
-                `id`, `user_id`, `message`, `inline_message_id`, `data`, `created_at`
+                `id`, `user_id`, `message_id`, `inline_message_id`, `data`, `created_at`
                 )
                 VALUES (
-                :callback_query_id, :user_id, :message, :inline_message_id, :data, :created_at
+                :callback_query_id, :user_id, :message_id, :inline_message_id, :data, :created_at
                 )';
 
             $sth_insert_callback_query = self::$pdo->prepare($mysql_query);
@@ -615,12 +615,18 @@ class DB
             }
 
             $message = $callback_query->getMessage();
+            $message_id = null;
+            if ($message) {
+                $message_id = $callback_query->getMessage()->getMessageId();
+                self::insertMessageRequest($message);
+            }
+
             $inline_message_id = $callback_query->getInlineMessageId();
             $data = $callback_query->getData();
 
             $sth_insert_callback_query->bindParam(':callback_query_id', $callback_query_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth_insert_callback_query->bindParam(':message', $message, \PDO::PARAM_STR);
+            $sth_insert_callback_query->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth_insert_callback_query->bindParam(':data', $data, \PDO::PARAM_STR);
             $sth_insert_callback_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
@@ -681,7 +687,7 @@ class DB
             self::insertChat($forward_from_chat, $forward_date);
             $forward_from_chat = $forward_from_chat->getId();
         }
-        
+
         //New and left chat member
         if ($new_chat_member) {
             //Insert the new chat user
