@@ -596,10 +596,10 @@ class DB
         try {
             $mysql_query = 'INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
                 (
-                `id`, `user_id`, `message_id`, `inline_message_id`, `data`, `created_at`
+                `id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`
                 )
                 VALUES (
-                :callback_query_id, :user_id, :message_id, :inline_message_id, :data, :created_at
+                :callback_query_id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at
                 )';
 
             $sth_insert_callback_query = self::$pdo->prepare($mysql_query);
@@ -615,8 +615,10 @@ class DB
             }
 
             $message = $callback_query->getMessage();
+            $chat_id = null;
             $message_id = null;
             if ($message) {
+                $chat_id = $callback_query->getMessage()->getChat()->getId();
                 $message_id = $callback_query->getMessage()->getMessageId();
                 self::insertMessageRequest($message);
             }
@@ -626,6 +628,7 @@ class DB
 
             $sth_insert_callback_query->bindParam(':callback_query_id', $callback_query_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
+            $sth_insert_callback_query->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth_insert_callback_query->bindParam(':data', $data, \PDO::PARAM_STR);

@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `message` (
 CREATE TABLE IF NOT EXISTS `callback_query` (
   `id` bigint UNSIGNED COMMENT 'Unique identifier for this query',
   `user_id` bigint NULL COMMENT 'Unique user identifier',
+  `chat_id` bigint NULL COMMENT 'Unique chat identifier',
   `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `inline_message_id` CHAR(255) NULL DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
   `data` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Data associated with the callback button',
@@ -128,10 +129,11 @@ CREATE TABLE IF NOT EXISTS `callback_query` (
 
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
+  KEY `chat_id` (`chat_id`),
   KEY `message_id` (`message_id`),
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`user_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`)
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `edited_message` (
