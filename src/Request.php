@@ -285,7 +285,9 @@ class Request
      */
     public static function getMe()
     {
-        return self::send('getMe');
+        // Added fake parameter, because of some cURL version failed POST request without parameters
+        // see https://github.com/akalongman/php-telegram-bot/pull/228
+        return self::send('getMe', ['whoami']);
     }
 
     /**
