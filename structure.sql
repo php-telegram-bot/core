@@ -68,7 +68,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'Unique user identifier',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
-  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was edited in timestamp format',
   `forward_from` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
   `forward_from_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',

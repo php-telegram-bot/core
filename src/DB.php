@@ -620,7 +620,17 @@ class DB
             if ($message) {
                 $chat_id = $message->getChat()->getId();
                 $message_id = $message->getMessageId();
-                self::insertMessageRequest($message);
+
+                $sth = self::$pdo->prepare('SELECT * FROM `' . TB_MESSAGE . '`
+                    WHERE `id` = ' . $message_id . ' AND `chat_id` = ' . $chat_id . ' LIMIT 1'
+                );
+                $sth->execute();
+
+                if ($sth->rowCount() > 0) {
+                    self::insertEditedMessageRequest($message);
+                } else {
+                    self::insertMessageRequest($message);
+                }
             }
 
             $inline_message_id = $callback_query->getInlineMessageId();
@@ -660,11 +670,6 @@ class DB
         $chat_id = $chat->getId();
 
         $date = self::getTimestamp($message->getDate());
-        $edit_date = self::getTimestamp($message->getEditDate());
-
-        if ($edit_date == $date) {
-            $edit_date = null;
-        }
 
         $forward_from = $message->getForwardFrom();
         $forward_from_chat = $message->getForwardFromChat();
@@ -709,9 +714,9 @@ class DB
         }
 
         try {
-            $sth = self::$pdo->prepare('INSERT INTO `' . TB_MESSAGE . '`
+            $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                `id`, `user_id`, `chat_id`, `date`, `edit_date`, `forward_from`, `forward_from_chat`,
+                `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`,
                 `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `venue`, `new_chat_member`, `left_chat_member`,
@@ -720,7 +725,7 @@ class DB
                 `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 )
                 VALUES (
-                :message_id, :user_id, :chat_id, :date, :edit_date, :forward_from, :forward_from_chat,
+                :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat,
                 :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :venue, :new_chat_member, :left_chat_member,
@@ -728,7 +733,6 @@ class DB
                 :supergroup_chat_created, :channel_chat_created,
                 :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
                 )
-                ON DUPLICATE KEY UPDATE `text` = :text, `entities` = :entities, `caption` = :caption, `edit_date` = :edit_date
                 ');
 
             $message_id = $message->getMessageId();
@@ -766,7 +770,6 @@ class DB
             $sth->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, \PDO::PARAM_INT);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':edit_date', $edit_date, \PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, \PDO::PARAM_INT);
             $sth->bindParam(':forward_from_chat', $forward_from_chat, \PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, \PDO::PARAM_STR);
@@ -866,6 +869,12 @@ class DB
         $edit_date = self::getTimestamp($edited_message->getEditDate());
 
         $entities = $edited_message->getEntities();
+
+        //Insert chat
+        self::insertChat($chat, $edit_date);
+
+        //Insert user and the relation with the chat
+        self::insertUser($from, $edit_date, $chat);
 
         try {
             $sth = self::$pdo->prepare('INSERT INTO `' . TB_EDITED_MESSAGE . '`
