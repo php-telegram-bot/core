@@ -622,8 +622,7 @@ class DB
                 $message_id = $message->getMessageId();
 
                 $sth = self::$pdo->prepare('SELECT * FROM `' . TB_MESSAGE . '`
-                    WHERE `id` = ' . $message_id . ' AND `chat_id` = ' . $chat_id . ' LIMIT 1'
-                );
+                    WHERE `id` = ' . $message_id . ' AND `chat_id` = ' . $chat_id . ' LIMIT 1');
                 $sth->execute();
 
                 if ($sth->rowCount() > 0) {
