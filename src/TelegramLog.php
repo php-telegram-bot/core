@@ -107,7 +107,11 @@ class TelegramLog
         }
         self::initialize();
         self::$error_log_path = $path;
-        return self::$monolog->pushHandler(new StreamHandler(self::$error_log_path, Logger::ERROR));
+
+        return self::$monolog->pushHandler(
+            (new StreamHandler(self::$error_log_path, Logger::ERROR))
+                ->setFormatter(new LineFormatter(null, null, true))
+        );
     }
 
     /**
@@ -124,7 +128,11 @@ class TelegramLog
         }
         self::initialize();
         self::$debug_log_path = $path;
-        return self::$monolog->pushHandler(new StreamHandler(self::$debug_log_path, Logger::DEBUG));
+
+        return self::$monolog->pushHandler(
+            (new StreamHandler(self::$debug_log_path, Logger::DEBUG))
+                ->setFormatter(new LineFormatter(null, null, true))
+        );
     }
 
     /**
