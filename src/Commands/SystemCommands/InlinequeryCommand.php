@@ -37,7 +37,7 @@ class InlinequeryCommand extends SystemCommand
         $inline_query = $update->getInlineQuery();
         $query = $inline_query->getQuery();
 
-        $data = ['inline_query_id' => $inline_query->getId()];
+        $data['inline_query_id'] = $inline_query->getId();
 
         $articles = [
             ['id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => new InputTextMessageContent([ 'message_text' => ' ' . $query ])],
