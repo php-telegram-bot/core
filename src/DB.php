@@ -569,7 +569,7 @@ class DB
             $sth_insert_chosen_inline_result->bindParam(':result_id', $result_id, \PDO::PARAM_STR);
             $sth_insert_chosen_inline_result->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
             $sth_insert_chosen_inline_result->bindParam(':location', $location, \PDO::PARAM_INT);
-            $sth_insert_chosen_inline_result->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_INT);
+            $sth_insert_chosen_inline_result->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth_insert_chosen_inline_result->bindParam(':query', $query, \PDO::PARAM_STR);
             $sth_insert_chosen_inline_result->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
@@ -596,10 +596,10 @@ class DB
         try {
             $mysql_query = 'INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
                 (
-                `id`, `user_id`, `message`, `inline_message_id`, `data`, `created_at`
+                `id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`
                 )
                 VALUES (
-                :callback_query_id, :user_id, :message, :inline_message_id, :data, :created_at
+                :callback_query_id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at
                 )';
 
             $sth_insert_callback_query = self::$pdo->prepare($mysql_query);
@@ -615,12 +615,30 @@ class DB
             }
 
             $message = $callback_query->getMessage();
+            $chat_id = null;
+            $message_id = null;
+            if ($message) {
+                $chat_id = $message->getChat()->getId();
+                $message_id = $message->getMessageId();
+
+                $sth = self::$pdo->prepare('SELECT * FROM `' . TB_MESSAGE . '`
+                    WHERE `id` = ' . $message_id . ' AND `chat_id` = ' . $chat_id . ' LIMIT 1');
+                $sth->execute();
+
+                if ($sth->rowCount() > 0) {
+                    self::insertEditedMessageRequest($message);
+                } else {
+                    self::insertMessageRequest($message);
+                }
+            }
+
             $inline_message_id = $callback_query->getInlineMessageId();
             $data = $callback_query->getData();
 
             $sth_insert_callback_query->bindParam(':callback_query_id', $callback_query_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth_insert_callback_query->bindParam(':message', $message, \PDO::PARAM_STR);
+            $sth_insert_callback_query->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth_insert_callback_query->bindParam(':message_id', $message_id, \PDO::PARAM_INT);
             $sth_insert_callback_query->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth_insert_callback_query->bindParam(':data', $data, \PDO::PARAM_STR);
             $sth_insert_callback_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
@@ -651,6 +669,7 @@ class DB
         $chat_id = $chat->getId();
 
         $date = self::getTimestamp($message->getDate());
+
         $forward_from = $message->getForwardFrom();
         $forward_from_chat = $message->getForwardFromChat();
         $photo = $message->getPhoto();
@@ -681,7 +700,7 @@ class DB
             self::insertChat($forward_from_chat, $forward_date);
             $forward_from_chat = $forward_from_chat->getId();
         }
-        
+
         //New and left chat member
         if ($new_chat_member) {
             //Insert the new chat user
@@ -696,7 +715,7 @@ class DB
         try {
             $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                `id`, `user_id`, `date`, `chat_id`, `forward_from`, `forward_from_chat`,
+                `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`,
                 `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
                 `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                 `location`, `venue`, `new_chat_member`, `left_chat_member`,
@@ -705,14 +724,15 @@ class DB
                 `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 )
                 VALUES (
-                :message_id, :user_id, :date, :chat_id, :forward_from, :forward_from_chat,
+                :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat,
                 :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
                 :photo, :sticker, :video, :voice, :caption, :contact,
                 :location, :venue, :new_chat_member, :left_chat_member,
                 :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                 :supergroup_chat_created, :channel_chat_created,
                 :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
-                )');
+                )
+                ');
 
             $message_id = $message->getMessageId();
             $from_id = $from->getId();
@@ -849,8 +869,14 @@ class DB
 
         $entities = $edited_message->getEntities();
 
+        //Insert chat
+        self::insertChat($chat, $edit_date);
+
+        //Insert user and the relation with the chat
+        self::insertUser($from, $edit_date, $chat);
+
         try {
-            $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
+            $sth = self::$pdo->prepare('INSERT INTO `' . TB_EDITED_MESSAGE . '`
                 (
                 `chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`
                 )
