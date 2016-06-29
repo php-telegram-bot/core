@@ -20,6 +20,11 @@ class CallbackQuery extends Entity
     protected $inline_message_id;
     protected $data;
 
+    /**
+     * CallbackQuery constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? $data['id'] : null;

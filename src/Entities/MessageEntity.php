@@ -10,6 +10,8 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Exception\TelegramException;
+
 class MessageEntity extends Entity
 {
     protected $type;
@@ -19,7 +21,11 @@ class MessageEntity extends Entity
     protected $user;
 
     /**
+     * MessageEntity constructor.
+     *
      * @todo check for type value from this list: https://core.telegram.org/bots/api#messageentity
+     *
+     * @param array $data
      */
     public function __construct(array $data)
     {

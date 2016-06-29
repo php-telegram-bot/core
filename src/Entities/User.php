@@ -20,6 +20,11 @@ class User extends Entity
     protected $last_name;
     protected $username;
 
+    /**
+     * User constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
 

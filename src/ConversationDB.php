@@ -10,7 +10,6 @@
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -49,7 +48,6 @@ class ConversationDB extends DB
             $query .= 'AND `chat_id` = :chat_id ';
             $query .= 'AND `user_id` = :user_id ';
 
-            $tokens = [':chat_id' => $chat_id, ':user_id' => $user_id];
             if (!is_null($limit)) {
                 $query .= ' LIMIT :limit';
             }

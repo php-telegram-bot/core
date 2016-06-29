@@ -21,6 +21,11 @@ class Chat extends Entity
     protected $first_name;
     protected $last_name;
 
+    /**
+     * Chat constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? $data['id'] : null;

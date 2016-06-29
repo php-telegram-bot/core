@@ -18,6 +18,11 @@ class Location extends Entity
     protected $longitude;
     protected $latitude;
 
+    /**
+     * Location constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
 

@@ -18,8 +18,12 @@ class PhotoSize extends Entity
     protected $width;
     protected $height;
     protected $file_size;
-
-
+    
+    /**
+     * PhotoSize constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
 

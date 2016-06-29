@@ -19,6 +19,11 @@ class InlineQueryResultCachedVoice extends InlineQueryResult
     protected $description;
     protected $caption;
 
+    /**
+     * InlineQueryResultCachedVoice constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

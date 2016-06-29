@@ -239,7 +239,7 @@ class Request
      *
      * @param string $file
      *
-     * @return CURLFile
+     * @return \CURLFile
      */
     protected static function encodeFile($file)
     {
@@ -308,7 +308,7 @@ class Request
         $string_len_utf8 = mb_strlen($text, 'UTF-8');
         if ($string_len_utf8 > 4096) {
             $data['text'] = mb_substr($text, 0, 4096);
-            $result = self::send('sendMessage', $data);
+            self::send('sendMessage', $data);
             $data['text'] = mb_substr($text, 4096, $string_len_utf8);
             return self::sendMessage($data);
         }

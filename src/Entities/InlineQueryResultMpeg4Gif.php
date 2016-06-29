@@ -21,6 +21,11 @@ class InlineQueryResultMpeg4Gif extends InlineQueryResult
     protected $title;
     protected $caption;
 
+    /**
+     * InlineQueryResultMpeg4Gif constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

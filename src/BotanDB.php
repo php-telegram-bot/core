@@ -10,7 +10,6 @@
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -33,8 +32,10 @@ class BotanDB extends DB
      *
      * @param  $user_id
      * @param  $url
-     * @return bool|string
+     *
      * @throws TelegramException
+     *
+     * @return bool|string
      */
     public static function selectShortUrl($user_id, $url)
     {
@@ -65,8 +66,10 @@ class BotanDB extends DB
      * @param  $user_id
      * @param  $url
      * @param  $short_url
-     * @return bool
+     *
      * @throws TelegramException
+     *
+     * @return bool
      */
     public static function insertShortUrl($user_id, $url, $short_url)
     {

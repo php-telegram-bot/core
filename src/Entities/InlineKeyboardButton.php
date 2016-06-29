@@ -19,8 +19,13 @@ class InlineKeyboardButton extends Entity
     protected $callback_data;
     protected $switch_inline_query;
 
+
     /**
+     * InlineKeyboardButton constructor.
+     *
      * @todo check if only one of 'url, callback_data, switch_inline_query' fields is set, documentation states that only one of these can be used
+     *
+     * @param array $data
      */
     public function __construct($data = array())
     {

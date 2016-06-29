@@ -33,7 +33,7 @@ class SendtochannelCommand extends AdminCommand
     /**
      * Conversation Object
      *
-     * @var Longman\TelegramBot\Conversation
+     * @var \Longman\TelegramBot\Conversation
      */
     protected $conversation;
 
@@ -128,7 +128,6 @@ class SendtochannelCommand extends AdminCommand
                 $this->conversation->notes['last_message_id'] = $message->getMessageId();
                 $this->conversation->notes['message'] = $message->reflect();
                 $this->conversation->notes['message_type'] = $type;
-
                 // no break
             case 2:
                 if ($this->conversation->notes['last_message_id'] == $message->getMessageId() || !($text == 'Yes' || $text == 'No')) {
@@ -258,7 +257,7 @@ class SendtochannelCommand extends AdminCommand
     /**
      * Publish a message to a channel and return success or failure message
      *
-     * @param Entities\Message $message
+     * @param \Longman\TelegramBot\Entities\Message $message
      * @param int              $channel
      * @param string|null      $caption
      *
@@ -292,10 +291,10 @@ class SendtochannelCommand extends AdminCommand
      * @todo This method will be moved at an higher level maybe in AdminCommand or Command
      * @todo Looking for a more significative name
      *
-     * @param Entities\Message $message
+     * @param \Longman\TelegramBot\Entities\Message $message
      * @param array            $data
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     protected function sendBack(Message $message, array $data)
     {

@@ -21,6 +21,11 @@ class Sticker extends Entity
     protected $emoji;
     protected $file_size;
 
+    /**
+     * Sticker constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
 

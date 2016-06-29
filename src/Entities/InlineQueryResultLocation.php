@@ -21,6 +21,11 @@ class InlineQueryResultLocation extends InlineQueryResult
     protected $thumb_width;
     protected $thumb_height;
 
+    /**
+     * InlineQueryResultLocation constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

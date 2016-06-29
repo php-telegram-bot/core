@@ -18,6 +18,11 @@ class InlineQueryResultVoice extends InlineQueryResult
     protected $title;
     protected $voice_duration;
 
+    /**
+     * InlineQueryResultVoice constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

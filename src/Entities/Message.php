@@ -82,6 +82,12 @@ class Message extends Entity
 
     private $type;
 
+    /**
+     * Message constructor.
+     *
+     * @param array $data
+     * @param $bot_name
+     */
     public function __construct(array $data, $bot_name)
     {
 
@@ -334,6 +340,11 @@ class Message extends Entity
         return $this->message_id;
     }
 
+    /**
+     * Get User object related to the  message
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getFrom()
     {
         return $this->from;
@@ -344,16 +355,31 @@ class Message extends Entity
         return $this->date;
     }
 
+    /**
+     * Get User object related to the  message
+     *
+     * @return \Longman\TelegramBot\Entities\Chat
+     */
     public function getChat()
     {
         return $this->chat;
     }
 
+    /**
+     * Get User object related to the forwarded message
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getForwardFrom()
     {
         return $this->forward_from;
     }
 
+    /**
+     * Get User object related to the  message
+     *
+     * @return \Longman\TelegramBot\Entities\Chat
+     */
     public function getForwardFromChat()
     {
         return $this->forward_from_chat;
@@ -388,30 +414,48 @@ class Message extends Entity
         return $text;
     }
 
+    /**
+     * @return \Longman\TelegramBot\Entities\Audio
+     */
     public function getAudio()
     {
         return $this->audio;
     }
+
+    /**
+     * @return \Longman\TelegramBot\Entities\Document
+     */
     public function getDocument()
     {
         return $this->document;
     }
 
+    /**
+     * @return array
+     */
     public function getPhoto()
     {
         return $this->photo;
     }
 
+    /**
+     * @return \Longman\TelegramBot\Entities\Sticker
+     */
     public function getSticker()
     {
         return $this->sticker;
     }
 
+    /**
+     * @return \Longman\TelegramBot\Entities\Video
+     */
     public function getVideo()
     {
         return $this->video;
     }
-
+    /**
+     * @return \Longman\TelegramBot\Entities\Voice
+     */
     public function getVoice()
     {
         return $this->voice;
@@ -422,11 +466,17 @@ class Message extends Entity
         return $this->caption;
     }
 
+    /**
+     * @return \Longman\TelegramBot\Entities\Contact
+     */
     public function getContact()
     {
         return $this->contact;
     }
 
+    /**
+     * @return \Longman\TelegramBot\Entities\Location
+     */
     public function getLocation()
     {
         return $this->location;
@@ -446,12 +496,21 @@ class Message extends Entity
     {
         return $this->left_chat_member;
     }
-
+    /**
+     * Get User object related to the new member
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getNewChatMember()
     {
         return $this->new_chat_member;
     }
 
+    /**
+     * Get User object related to the left member
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getLeftChatMember()
     {
         return $this->left_chat_member;

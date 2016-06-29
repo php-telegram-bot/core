@@ -18,6 +18,11 @@ class KeyboardButton extends Entity
     protected $request_contact;
     protected $request_location;
 
+    /**
+     * KeyboardButton constructor.
+     *
+     * @param array $data
+     */
     public function __construct($data = array())
     {
         $this->text = isset($data['text']) ? $data['text'] : null;
