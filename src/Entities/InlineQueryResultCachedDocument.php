@@ -19,6 +19,11 @@ class InlineQueryResultCachedDocument extends InlineQueryResult
     protected $description;
     protected $caption;
 
+    /**
+     * InlineQueryResultCachedDocument constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

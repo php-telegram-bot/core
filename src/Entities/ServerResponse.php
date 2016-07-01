@@ -10,8 +10,6 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
 class ServerResponse extends Entity
 {
     protected $ok;
@@ -19,6 +17,12 @@ class ServerResponse extends Entity
     protected $error_code;
     protected $description;
 
+    /**
+     * ServerResponse constructor.
+     *
+     * @param array $data
+     * @param $bot_name
+     */
     public function __construct(array $data, $bot_name)
     {
         if (isset($data['ok']) & isset($data['result'])) {

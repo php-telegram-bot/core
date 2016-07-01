@@ -20,6 +20,11 @@ class InlineQuery extends Entity
     protected $query;
     protected $offset;
 
+    /**
+     * InlineQuery constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? $data['id'] : null;

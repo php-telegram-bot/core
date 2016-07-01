@@ -16,6 +16,11 @@ class InlineQueryResultCachedSticker extends InlineQueryResult
 {
     protected $sticker_file_id;
 
+    /**
+     * InlineQueryResultCachedSticker constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

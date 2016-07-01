@@ -21,6 +21,11 @@ class Venue extends Entity
     protected $address;
     protected $foursquare_id;
 
+    /**
+     * Venue constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->location = isset($data['location']) ? $data['location'] : null;

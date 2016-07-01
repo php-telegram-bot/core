@@ -35,7 +35,7 @@ class SurveyCommand extends UserCommand
     /**
      * Conversation Object
      *
-     * @var Longman\TelegramBot\Conversation
+     * @var \Longman\TelegramBot\Conversation
      */
     protected $conversation;
 
@@ -57,7 +57,6 @@ class SurveyCommand extends UserCommand
         $data = [];
         if ($chat->isGroupChat() || $chat->isSuperGroup()) {
             //reply to message id is applied by default
-            $data['reply_to_message_id'] = $message_id;
             //Force reply is applied by default to so can work with privacy on
             $data['reply_markup'] = new ForceReply([ 'selective' => true]);
         }

@@ -24,6 +24,11 @@ class InlineQueryResultVideo extends InlineQueryResult
     protected $video_duration;
     protected $description;
 
+    /**
+     * InlineQueryResultVideo constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

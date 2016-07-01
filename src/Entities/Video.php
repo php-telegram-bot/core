@@ -22,6 +22,11 @@ class Video extends Entity
     protected $mime_type;
     protected $file_size;
 
+    /**
+     * Video constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
 

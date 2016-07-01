@@ -19,6 +19,11 @@ class Contact extends Entity
     protected $last_name;
     protected $user_id;
 
+    /**
+     * Contact constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->phone_number = isset($data['phone_number']) ? $data['phone_number'] : null;

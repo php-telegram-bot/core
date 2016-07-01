@@ -18,6 +18,11 @@ class InputTextMessageContent extends InputMessageContent
     protected $parse_mode;
     protected $disable_web_page_preview;
 
+    /**
+     * InputTextMessageContent constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->message_text = isset($data['message_text']) ? $data['message_text'] : null;

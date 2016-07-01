@@ -19,6 +19,11 @@ class InlineQueryResultCachedPhoto extends InlineQueryResult
     protected $description;
     protected $caption;
 
+    /**
+     * InlineQueryResultCachedPhoto constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

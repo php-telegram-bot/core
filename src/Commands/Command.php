@@ -13,9 +13,7 @@ namespace Longman\TelegramBot\Commands;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\User;
 
 /**
  * Abstract Command Class
@@ -32,14 +30,14 @@ abstract class Command
     /**
      * Update object
      *
-     * @var Entities\Update
+     * @var \Longman\TelegramBot\Entities\Update
      */
     protected $update;
 
     /**
      * Message object
      *
-     * @var Entities\Message
+     * @var \Longman\TelegramBot\Entities\Message
      */
     protected $message;
 
@@ -96,7 +94,7 @@ abstract class Command
      * Constructor
      *
      * @param Telegram        $telegram
-     * @param Entities\Update $update
+     * @param \Longman\TelegramBot\Entities\Update $update
      */
     public function __construct(Telegram $telegram, Update $update = null)
     {
@@ -108,7 +106,7 @@ abstract class Command
     /**
      * Set update object
      *
-     * @param Entities\Update $update
+     * @param \Longman\TelegramBot\Entities\Update $update
      * @return Command
      */
     public function setUpdate(Update $update = null)
@@ -123,7 +121,7 @@ abstract class Command
     /**
      * Pre-execute command
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function preExecute()
     {
@@ -136,14 +134,14 @@ abstract class Command
     /**
      * Execute command
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     abstract public function execute();
 
     /**
      * Execution if MySQL is required but not available
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function executeNoDb()
     {
@@ -162,7 +160,7 @@ abstract class Command
     /**
      * Get update object
      *
-     * @return Entities\Update
+     * @return \Longman\TelegramBot\Entities\Update
      */
     public function getUpdate()
     {
@@ -172,7 +170,7 @@ abstract class Command
     /**
      * Get message object
      *
-     * @return Entities\Message
+     * @return \Longman\TelegramBot\Entities\Message
      */
     public function getMessage()
     {

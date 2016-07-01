@@ -19,6 +19,11 @@ class InlineQueryResultAudio extends InlineQueryResult
     protected $performer;
     protected $audio_duration;
 
+    /**
+     * InlineQueryResultAudio constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

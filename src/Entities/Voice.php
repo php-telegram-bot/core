@@ -19,10 +19,13 @@ class Voice extends Entity
     protected $mime_type;
     protected $file_size;
 
-
+    /**
+     * Voice constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
-
         $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;
         if (empty($this->file_id)) {
             throw new TelegramException('file_id is empty!');
@@ -35,7 +38,6 @@ class Voice extends Entity
 
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-
     }
 
     public function getFileId()

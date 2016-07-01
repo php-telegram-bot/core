@@ -68,7 +68,7 @@ class CancelCommand extends UserCommand
      *
      * @param string $text
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     private function hideKeyboard($text)
     {

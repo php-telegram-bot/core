@@ -24,6 +24,12 @@ class Update extends Entity
 
     private $update_type;
 
+    /**
+     * Update constructor.
+     *
+     * @param array $data
+     * @param $bot_name
+     */
     public function __construct(array $data, $bot_name)
     {
 

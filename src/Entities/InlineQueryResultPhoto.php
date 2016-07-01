@@ -22,6 +22,11 @@ class InlineQueryResultPhoto extends InlineQueryResult
     protected $description;
     protected $caption;
 
+    /**
+     * InlineQueryResultPhoto constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

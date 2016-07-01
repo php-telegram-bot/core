@@ -20,6 +20,11 @@ class Document extends Entity
     protected $mime_type;
     protected $file_size;
 
+    /**
+     * Document constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;

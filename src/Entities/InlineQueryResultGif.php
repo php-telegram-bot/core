@@ -21,6 +21,11 @@ class InlineQueryResultGif extends InlineQueryResult
     protected $title;
     protected $caption;
 
+    /**
+     * InlineQueryResultGif constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

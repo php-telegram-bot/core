@@ -23,6 +23,11 @@ class InlineQueryResultDocument extends InlineQueryResult
     protected $thumb_width;
     protected $thumb_height;
 
+    /**
+     * InlineQueryResultDocument constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

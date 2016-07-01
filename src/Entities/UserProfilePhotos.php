@@ -18,6 +18,11 @@ class UserProfilePhotos extends Entity
     protected $total_count;
     protected $photos;
 
+    /**
+     * UserProfilePhotos constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
 

@@ -15,6 +15,11 @@ class ChatMember extends Entity
     protected $user;
     protected $status;
 
+    /**
+     * ChatMember constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->user = isset($data['user']) ? $data['user'] : null;

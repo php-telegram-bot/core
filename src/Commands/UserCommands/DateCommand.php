@@ -202,7 +202,7 @@ class DateCommand extends UserCommand
         if (empty($location)) {
             $text = 'You must specify location in format: /date <city>';
         } else {
-            $text = $this->getformattedDate($location);
+            $text = $this->getFormattedDate($location);
         }
 
         $data = [

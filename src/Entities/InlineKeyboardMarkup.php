@@ -16,6 +16,11 @@ class InlineKeyboardMarkup extends Entity
 {
     protected $inline_keyboard;
 
+    /**
+     * InlineKeyboardMarkup constructor.
+     *
+     * @param array $data
+     */
     public function __construct($data = array())
     {
         if (isset($data['inline_keyboard'])) {

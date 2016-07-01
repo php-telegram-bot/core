@@ -16,6 +16,11 @@ class InlineQueryResultCachedAudio extends InlineQueryResult
 {
     protected $audio_file_id;
 
+    /**
+     * InlineQueryResultCachedAudio constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         parent::__construct($data);

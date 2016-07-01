@@ -171,7 +171,7 @@ class Telegram
     /**
      * Initialize Database external connection
      *
-     * @param PDO    $external_pdo_connection PDO database object
+     * @param /PDO    $external_pdo_connection PDO database object
      * @param string $table_prefix
      */
     public function enableExternalMysql($external_pdo_connection, $table_prefix = null)
@@ -230,7 +230,7 @@ class Telegram
      *
      * @param string $command
      *
-     * @return Entities\Command|null
+     * @return \Longman\TelegramBot\Commands\Command|null
      */
     public function getCommandObject($command)
     {
@@ -445,8 +445,13 @@ class Telegram
         return $this->last_command_response;
     }
 
+
     /**
-     * @todo Complete DocBlock
+     * Sanitize Command
+     *
+     * @param string $command
+     *
+     * @return string
      */
     protected function sanitizeCommand($command)
     {

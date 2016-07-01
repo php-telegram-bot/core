@@ -17,6 +17,11 @@ class InputLocationMessageContent extends InputMessageContent
     protected $latitude;
     protected $longitude;
 
+    /**
+     * InputLocationMessageContent constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->latitude = isset($data['latitude']) ? $data['latitude'] : null;

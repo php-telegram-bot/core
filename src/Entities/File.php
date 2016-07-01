@@ -18,6 +18,11 @@ class File extends Entity
     protected $file_size;
     protected $file_path;
 
+    /**
+     * File constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;

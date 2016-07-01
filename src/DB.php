@@ -199,7 +199,7 @@ class DB
             $sth_select_telegram_update->bindParam(':limit', $limit, \PDO::PARAM_INT);
             $sth_select_telegram_update->execute();
             $results = $sth_select_telegram_update->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
 
@@ -234,7 +234,7 @@ class DB
             $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
             $sth->execute();
             $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
 
@@ -299,7 +299,7 @@ class DB
             $sth_insert_telegram_update->bindParam(':edited_message_id', $edited_message_id, \PDO::PARAM_INT);
 
             return $sth_insert_telegram_update->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -344,7 +344,7 @@ class DB
             $sth1->bindParam(':date', $date, \PDO::PARAM_STR);
 
             $status = $sth1->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
 
@@ -364,7 +364,7 @@ class DB
                 $sth3->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
 
                 $status = $sth3->execute();
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 throw new TelegramException($e->getMessage());
             }
         }
@@ -418,7 +418,7 @@ class DB
             $sth2->bindParam(':date', $date, \PDO::PARAM_STR);
 
             return $sth2->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -523,7 +523,7 @@ class DB
             $sth_insert_inline_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
             return $sth_insert_inline_query->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -574,7 +574,7 @@ class DB
             $sth_insert_chosen_inline_result->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
             return $sth_insert_chosen_inline_result->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -644,7 +644,7 @@ class DB
             $sth_insert_callback_query->bindParam(':created_at', $date, \PDO::PARAM_STR);
 
             return $sth_insert_callback_query->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -685,18 +685,15 @@ class DB
         //Insert user and the relation with the chat
         self::insertUser($from, $date, $chat);
 
-        //Forwarded object
-        if ($forward_from || $forward_from_chat) {
-            $forward_date = self::getTimestamp($message->getForwardDate());
-        }
-
         //Insert the forwarded message user in users table
         if (is_object($forward_from)) {
+            $forward_date = self::getTimestamp($message->getForwardDate());
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
         }
 
         if (is_object($forward_from_chat)) {
+            $forward_date = self::getTimestamp($message->getForwardDate());
             self::insertChat($forward_from_chat, $forward_date);
             $forward_from_chat = $forward_from_chat->getId();
         }
@@ -841,7 +838,7 @@ class DB
             $sth->bindParam(':pinned_message', $pinned_message, \PDO::PARAM_INT);
 
             return $sth->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -911,7 +908,7 @@ class DB
             $sth->bindParam(':caption', $caption, \PDO::PARAM_STR);
 
             return $sth->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -1027,7 +1024,7 @@ class DB
             $sth->execute($tokens);
 
             $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
 

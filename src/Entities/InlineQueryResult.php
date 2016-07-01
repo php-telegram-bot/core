@@ -19,6 +19,11 @@ class InlineQueryResult extends Entity
     protected $input_message_content;
     protected $reply_markup;
 
+    /**
+     * InlineQueryResult constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->type = null;
