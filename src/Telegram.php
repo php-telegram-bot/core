@@ -459,20 +459,34 @@ class Telegram
     }
 
     /**
-     * Enable Admin Account
+     * Enable a single Admin account
      *
-     * @param array $admins_list List of admins
+     * @param integer $admin_id Single admin id
      *
-     * @return string
+     * @return Telegram
      */
-    public function enableAdmins(array $admins_list)
+    public function enableAdmin($admin_id)
     {
-        foreach ($admins_list as $admin) {
-            if ($admin > 0) {
-                $this->admins_list[] = $admin;
-            } else {
-                throw new TelegramException('Invalid value "' . $admin . '" for admin!');
-            }
+        if (is_int($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list)) {
+            $this->admins_list[] = $admin_id;
+        } else {
+            TelegramLog::error('Invalid value "' . $admin_id . '" for admin.');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Enable a list of Admin Accounts
+     *
+     * @param array $admin_ids List of admin ids
+     *
+     * @return Telegram
+     */
+    public function enableAdmins(array $admin_ids)
+    {
+        foreach ($admin_ids as $admin_id) {
+            $this->enableAdmin($admin_id);
         }
 
         return $this;
@@ -531,25 +545,42 @@ class Telegram
     }
 
     /**
-     * Add custom commands path
+     * Add a single custom commands path
      *
-     * @param string $path   Custom commands path
+     * @param string $path   Custom commands path to add
      * @param bool   $before If the path should be prepended or appended to the list
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function addCommandsPath($path, $before = true)
     {
         if (!is_dir($path)) {
-            throw new TelegramException('Commands path "' . $path . '" does not exist!');
-        }
-        if (!in_array($path, $this->commands_paths)) {
+            TelegramLog::error('Commands path "' . $path . '" does not exist.');
+        } elseif (!in_array($path, $this->commands_paths)) {
             if ($before) {
                 array_unshift($this->commands_paths, $path);
             } else {
                 array_push($this->commands_paths, $path);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Add multiple custom commands paths
+     *
+     * @param array $paths  Custom commands paths to add
+     * @param bool  $before If the paths should be prepended or appended to the list
+     *
+     * @return Telegram
+     */
+    public function addCommandsPaths(array $paths, $before = true)
+    {
+        foreach ($paths as $path) {
+            $this->addCommandsPath($path);
+        }
+
         return $this;
     }
 
