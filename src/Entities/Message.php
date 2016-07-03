@@ -403,11 +403,12 @@ class Message extends Entity
     public function getText($without_cmd = false)
     {
         $text = $this->text;
-        if ($without_cmd) {
-            $command = $this->getFullCommand();
-            if (!empty($command)) {
-                //$text = substr($text, strlen($command.' '), strlen($text));
-                $text = substr($text, strlen($command) + 1, strlen($text));
+
+        if ($without_cmd && $command = $this->getFullCommand()) {
+            if (strlen($command) + 1 < strlen($text)) {
+                $text = substr($text, strlen($command) + 1);
+            } else {
+                $text = '';
             }
         }
 
