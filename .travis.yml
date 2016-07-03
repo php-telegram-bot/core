@@ -1,38 +1,40 @@
 dist: trusty
 sudo: required
-
-addons:
-    apt:
-        packages:
-            - mysql-server-5.6
-            - mysql-client-core-5.6
-            - mysql-client-5.6
-
 language: php
 
+addons:
+  apt:
+    packages:
+      - mysql-server-5.6
+      - mysql-client-core-5.6
+      - mysql-client-5.6
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 php:
-    - 5.5
-    - 5.6
-    - 7.0
-    - hhvm
+  - 5.5
+  - 5.6
+  - 7.0
+  - nightly
+  - hhvm
 
 matrix:
   allow_failures:
+    - php: nightly
     - php: hhvm
   fast_finish: true
 
 notifications:
-    on_success: never
-    on_failure: always
+  on_success: never
+  on_failure: always
 
 git:
   depth: 1
 
-before_install:
-  - composer self-update
-
 install:
-  - travis_retry composer install --no-interaction
+  - travis_retry composer install --prefer-dist --no-interaction
 
 before_script:
   - mysql -u root -e 'create database telegrambot; use telegrambot; source structure.sql;'
