@@ -25,7 +25,7 @@ class InlinequeryCommand extends SystemCommand
      */
     protected $name = 'inlinequery';
     protected $description = 'Reply to inline query';
-    protected $version = '1.0.1';
+    protected $version = '1.0.2';
     /**#@-*/
 
     /**
@@ -36,6 +36,10 @@ class InlinequeryCommand extends SystemCommand
         $update = $this->getUpdate();
         $inline_query = $update->getInlineQuery();
         $query = $inline_query->getQuery();
+
+        if ($query === '') {
+            return Request::emptyResponse();
+        }
 
         $data['inline_query_id'] = $inline_query->getId();
 
