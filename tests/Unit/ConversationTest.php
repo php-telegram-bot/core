@@ -34,14 +34,14 @@ class ConversationTest extends TestCase
     protected function setUp()
     {
         $credentials = [
-            'host'     => '127.0.0.1',
-            'user'     => 'root',
-            'password' => '',
-            'database' => 'telegrambot',
+            'host'     => PHPUNIT_DB_HOST,
+            'database' => PHPUNIT_DB_NAME,
+            'user'     => PHPUNIT_DB_USER,
+            'password' => PHPUNIT_DB_PASS,
         ];
 
         $this->telegram = new Telegram('testapikey', 'testbotname');
-        $this->telegram->enableMySQL($credentials);
+        $this->telegram->enableMySql($credentials);
 
         //Make sure we start with an empty DB for each test.
         TestHelpers::emptyDB($credentials);
