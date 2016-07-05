@@ -26,13 +26,6 @@ class ChatTest extends TestCase
     * @var \Longman\TelegramBot\Entities\Chat
     */
     private $chat;
-    
-    /**
-    * setUp
-    */
-    protected function setUp()
-    {
-    }
 
     public function testChatType()
     {

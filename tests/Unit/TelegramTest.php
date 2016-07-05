@@ -42,7 +42,7 @@ class TelegramTest extends TestCase
     {
         $this->telegram = new Telegram('apikey', 'testbot');
 
-        // Create a few custom commands paths.
+        // Create a few dummy custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
             mkdir($custom_path);
         }
@@ -87,7 +87,7 @@ class TelegramTest extends TestCase
 
     public function testEnableAdmins()
     {
-        $tg = &$this->telegram;
+        $tg = $this->telegram;
 
         $this->assertEmpty($tg->getAdminList());
 
@@ -106,7 +106,7 @@ class TelegramTest extends TestCase
 
     public function testAddCustomCommandsPaths()
     {
-        $tg = &$this->telegram;
+        $tg = $this->telegram;
 
         $this->assertAttributeCount(1, 'commands_paths', $tg);
 

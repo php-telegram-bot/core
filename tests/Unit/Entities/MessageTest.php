@@ -26,13 +26,6 @@ class MessageTest extends TestCase
      */
     private $message;
 
-    /**
-     * setUp
-     */
-    protected function setUp()
-    {
-    }
-
     public function testTextAndCommandRecognise() {
         // /command
         $this->message = TestHelpers::getFakeMessageObject(['text' => '/help']);

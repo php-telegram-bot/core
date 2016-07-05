@@ -26,7 +26,7 @@ class UpdateTest extends TestCase
     */
     private $update;
 
-    public function testUpdateCast() 
+    public function testUpdateCast()
     {
         $json = '
 {"update_id":137809336,
@@ -35,8 +35,7 @@ class UpdateTest extends TestCase
         $struct = json_decode($json, true);
         $update = new Update($struct, 'mybot');
 
-        $array_string_after = json_decode($update->toJSON(), true);
+        $array_string_after = json_decode($update->toJson(), true);
         $this->assertEquals($struct, $array_string_after);
-
     }
 }
