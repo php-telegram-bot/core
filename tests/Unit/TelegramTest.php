@@ -40,7 +40,7 @@ class TelegramTest extends TestCase
     */
     protected function setUp()
     {
-        $this->telegram = new Telegram('testapikey', 'testbotname');
+        $this->telegram = new Telegram('apikey', 'testbot');
 
         // Create a few custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
@@ -64,7 +64,7 @@ class TelegramTest extends TestCase
      */
     public function testNewInstanceWithoutApiKeyParam()
     {
-        new Telegram(null, 'testbotname');
+        new Telegram(null, 'testbot');
     }
 
     /**
@@ -72,17 +72,17 @@ class TelegramTest extends TestCase
      */
     public function testNewInstanceWithoutBotNameParam()
     {
-        new Telegram('testapikey', null);
+        new Telegram('apikey', null);
     }
 
     public function testGetApiKey()
     {
-        $this->assertEquals('testapikey', $this->telegram->getApiKey());
+        $this->assertEquals('apikey', $this->telegram->getApiKey());
     }
 
     public function testGetBotName()
     {
-        $this->assertEquals('testbotname', $this->telegram->getBotName());
+        $this->assertEquals('testbot', $this->telegram->getBotName());
     }
 
     public function testEnableAdmins()

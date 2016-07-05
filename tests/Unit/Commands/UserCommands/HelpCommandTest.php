@@ -47,7 +47,7 @@ class HelpCommandTest extends CommandTestCase
             ->getResult()
             ->getText();
         $this->assertContains(
-            "botname v. " . $this->telegram->getVersion() . "\n\nCommands List:",
+            'testbot v. ' . $this->telegram->getVersion() . "\n\nCommands List:",
             $text
         );
     }

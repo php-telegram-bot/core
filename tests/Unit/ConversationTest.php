@@ -40,7 +40,7 @@ class ConversationTest extends TestCase
             'password' => PHPUNIT_DB_PASS,
         ];
 
-        $this->telegram = new Telegram('testapikey', 'testbotname');
+        $this->telegram = new Telegram('apikey', 'testbot');
         $this->telegram->enableMySql($credentials);
 
         //Make sure we start with an empty DB for each test.
