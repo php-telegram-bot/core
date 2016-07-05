@@ -10,7 +10,8 @@
 
 namespace Tests\Unit;
 
-use \Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\Chat;
+use Tests\TestHelpers;
 
 /**
  * @package         TelegramTest
@@ -35,14 +36,13 @@ class ChatTest extends TestCase
 
     public function testChatType()
     {
-
-        $this->chat = new Chat(json_decode('{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"}',true));
+        $this->chat = TestHelpers::getFakeChatObject();
         $this->assertEquals('private', $this->chat->getType());
 
-        $this->chat = new Chat(json_decode('{"id":-123,"title":"ChatTitle","first_name":null,"last_name":null,"username":"null"}',true));
+        $this->chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => null]);
         $this->assertEquals('group', $this->chat->getType());
 
-        $this->chat = new Chat(json_decode('{"id":-123,"type":"channel","title":"ChatTitle","first_name":null,"last_name":null,"username":"null"}',true));
+        $this->chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'channel']);
         $this->assertEquals('channel', $this->chat->getType());
     }
 }

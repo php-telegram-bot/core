@@ -57,7 +57,7 @@ class ConversationTest extends TestCase
 
     public function testConversationThatExistsPropertiesSetCorrectly()
     {
-        $info = TestHelpers::startFakeConversation('command');
+        $info = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
         $this->assertAttributeEquals($info['user_id'], 'user_id', $conversation);
         $this->assertAttributeEquals($info['chat_id'], 'chat_id', $conversation);
@@ -81,7 +81,7 @@ class ConversationTest extends TestCase
 
     public function testNewConversationThatWontExistWithoutCommand()
     {
-        TestHelpers::startFakeConversation(null);
+        TestHelpers::startFakeConversation();
         $conversation = new Conversation(0, 0);
         $this->assertFalse($conversation->exists());
         $this->assertNull($conversation->getCommand());
@@ -89,7 +89,7 @@ class ConversationTest extends TestCase
 
     public function testNewConversationThatWillExistWithCommand()
     {
-        $info = TestHelpers::startFakeConversation('command');
+        $info = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
         $this->assertTrue($conversation->exists());
         $this->assertEquals('command', $conversation->getCommand());
@@ -97,7 +97,7 @@ class ConversationTest extends TestCase
 
     public function testStopConversation()
     {
-        $info = TestHelpers::startFakeConversation('command');
+        $info = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
         $this->assertTrue($conversation->exists());
         $conversation->stop();
@@ -108,7 +108,7 @@ class ConversationTest extends TestCase
 
     public function testCancelConversation()
     {
-        $info = TestHelpers::startFakeConversation('command');
+        $info = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
         $this->assertTrue($conversation->exists());
         $conversation->cancel();
@@ -119,7 +119,7 @@ class ConversationTest extends TestCase
 
     public function testUpdateConversationNotes()
     {
-        $info = TestHelpers::startFakeConversation('command');
+        $info = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
         $conversation->notes = 'newnote';
         $conversation->update();
