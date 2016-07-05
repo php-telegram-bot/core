@@ -34,8 +34,6 @@ class CommandTestCase extends TestCase
 
     /**
      * Make sure the version number is in the format x.x.x, x.x or x
-     *
-     * @test
      */
     public function testVersionNumberFormat()
     {

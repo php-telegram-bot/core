@@ -56,35 +56,29 @@ class TelegramLogTest extends TestCase
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramLogException
      */
-    public function newInstanceWithoutErrorPath()
+    public function testNewInstanceWithoutErrorPath()
     {
         TelegramLog::initErrorLog('');
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramLogException
      */
-    public function newInstanceWithoutDebugPath()
+    public function testNewInstanceWithoutDebugPath()
     {
         TelegramLog::initDebugLog('');
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramLogException
      */
-    public function newInstanceWithoutUpdatePath()
+    public function testNewInstanceWithoutUpdatePath()
     {
         TelegramLog::initUpdateLog('');
     }
 
-    /**
-     * @test
-     */
     public function testErrorStream()
     {
         $file = $this->logfiles['error'];
@@ -95,9 +89,6 @@ class TelegramLogTest extends TestCase
         $this->assertContains('bot_log.ERROR: my error', file_get_contents($file));
     }
 
-    /**
-     * @test
-     */
     public function testDebugStream()
     {
         $file = $this->logfiles['debug'];
@@ -108,9 +99,6 @@ class TelegramLogTest extends TestCase
         $this->assertContains('bot_log.DEBUG: my debug', file_get_contents($file));
     }
 
-    /**
-     * @test
-     */
     public function testUpdateStream()
     {
         $file = $this->logfiles['update'];
@@ -121,9 +109,6 @@ class TelegramLogTest extends TestCase
         $this->assertContains('my update', file_get_contents($file));
     }
 
-    /**
-     * @test
-     */
     public function testExternalStream()
     {
         $file = $this->logfiles['external'];

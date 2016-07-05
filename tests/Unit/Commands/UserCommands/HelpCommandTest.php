@@ -29,9 +29,6 @@ class HelpCommandTest extends CommandTestCase
         $this->command = new HelpCommand($this->telegram);
     }
 
-    /**
-     * @test
-     */
     public function testHelpCommandProperties()
     {
         $this->assertAttributeEquals('help', 'name', $this->command);
@@ -39,9 +36,6 @@ class HelpCommandTest extends CommandTestCase
         $this->assertAttributeEquals('/help or /help <command>', 'usage', $this->command);
     }
 
-    /**
-     * @test
-     */
     public function testHelpCommandExecuteWithoutParameter()
     {
         $text = $this->command
@@ -55,9 +49,6 @@ class HelpCommandTest extends CommandTestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function testHelpCommandExecuteWithParameterInvalidCommand()
     {
         $text = $this->command
@@ -68,9 +59,6 @@ class HelpCommandTest extends CommandTestCase
         $this->assertEquals('No help available: Command /invalidcommand not found', $text);
     }
 
-    /**
-     * @test
-     */
     public function testHelpCommandExecuteWithParameterValidCommand()
     {
         $text = $this->command

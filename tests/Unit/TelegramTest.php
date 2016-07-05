@@ -60,43 +60,32 @@ class TelegramTest extends TestCase
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
      */
-    public function newInstanceWithoutApiKeyParam()
+    public function testNewInstanceWithoutApiKeyParam()
     {
         new Telegram(null, 'testbotname');
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
      */
-    public function newInstanceWithoutBotNameParam()
+    public function testNewInstanceWithoutBotNameParam()
     {
         new Telegram('testapikey', null);
     }
 
-    /**
-     * @test
-     */
-    public function getApiKey()
+    public function testGetApiKey()
     {
         $this->assertEquals('testapikey', $this->telegram->getApiKey());
     }
 
-    /**
-     * @test
-     */
-    public function getBotName()
+    public function testGetBotName()
     {
         $this->assertEquals('testbotname', $this->telegram->getBotName());
     }
 
-    /**
-     * @test
-     */
-    public function enableAdmins()
+    public function testEnableAdmins()
     {
         $tg = &$this->telegram;
 
@@ -115,10 +104,7 @@ class TelegramTest extends TestCase
         $this->assertCount(3, $tg->getAdminList());
     }
 
-    /**
-     * @test
-     */
-    public function addCustomCommandsPaths()
+    public function testAddCustomCommandsPaths()
     {
         $tg = &$this->telegram;
 
@@ -140,20 +126,14 @@ class TelegramTest extends TestCase
         $this->assertAttributeCount(4, 'commands_paths', $tg);
     }
 
-    /**
-     * @test
-     */
-    public function getCommandsList()
+    public function testGetCommandsList()
     {
         $commands = $this->telegram->getCommandsList();
         $this->assertInternalType('array', $commands);
         $this->assertNotCount(0, $commands);
     }
 
-    /**
-     * @test
-     */
-    public function getHelpCommandObject()
+    public function testGetHelpCommandObject()
     {
         $command = $this->telegram->getCommandObject('help');
         $this->assertInstanceOf('Longman\TelegramBot\Commands\UserCommands\HelpCommand', $command);

@@ -33,11 +33,7 @@ class ChatTest extends TestCase
     {
     }
 
-    /**
-     * @test
-     */
- 
-    public function testChatType() 
+    public function testChatType()
     {
 
         $this->chat = new Chat(json_decode('{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"}',true));

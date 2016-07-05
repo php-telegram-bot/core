@@ -26,10 +26,6 @@ class UpdateTest extends TestCase
     */
     private $update;
 
-    /**
-     * @test
-     */
-
     public function testUpdateCast() 
     {
         $json = '

@@ -37,10 +37,6 @@ class ServerResponseTest extends TestCase
     {
     }
 
-    /**
-     * @test
-     */
-
     public function sendMessageOk()
     {
         return '{
@@ -80,10 +76,6 @@ class ServerResponseTest extends TestCase
 
     }
 
-    /**
-     * @test
-     */
-
     public function sendMessageFail()
     {
         return '{
@@ -105,10 +97,6 @@ class ServerResponseTest extends TestCase
         $this->assertEquals('Error: Bad Request: wrong chat id', $this->server->getDescription());
     }
 
-    /**
-     * @test
-     */
-
    public function setWebHookOk()
     {
         return '{"ok":true,"result":true,"description":"Webhook was set"}';
@@ -125,10 +113,6 @@ class ServerResponseTest extends TestCase
         $this->assertNull($this->server->getErrorCode());
         $this->assertEquals('Webhook was set', $this->server->getDescription());
     }
-
-    /**
-     * @test
-     */
 
     public function setWebHookFail()
     {
@@ -151,12 +135,6 @@ class ServerResponseTest extends TestCase
         $this->assertEquals(400, $this->server->getErrorCode());
         $this->assertEquals("Error: Bad request: htttps://domain.host.org/dir/hook.php", $this->server->getDescription());
     }
-
-
-
-    /**
-     * @test
-     */
 
     public function getUpdatesArray()
     {
@@ -210,10 +188,6 @@ class ServerResponseTest extends TestCase
         $this->assertInstanceOf('\Longman\TelegramBot\Entities\Update', $this->server->getResult()[0]);
     }
 
-    /**
-     * @test
-     */
-
     public function getUpdatesEmpty()
     {
         return '{"ok":true,"result":[]}';
@@ -225,12 +199,6 @@ class ServerResponseTest extends TestCase
         $this->server = new ServerResponse(json_decode($result, true), 'testbot');
         $this->assertNull($this->server->getResult());
     }
-
-
-    /**
-     * @test
-     */
-
 
     public function getUserProfilePhotos()
     {
@@ -273,12 +241,6 @@ class ServerResponseTest extends TestCase
 
     }
 
-
-    /**
-     * @test
-     */
-
-
     public function getFile()
     {
         return '{
@@ -302,11 +264,6 @@ class ServerResponseTest extends TestCase
         $this->assertInstanceOf('\Longman\TelegramBot\Entities\File', $this->server->getResult());
 
     }
-
-
-    /**
-     * @test
-     */
 
     public function testSetGeneralTestFakeResponse() {
         //setWebhook ok

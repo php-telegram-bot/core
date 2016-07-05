@@ -47,10 +47,7 @@ class ConversationTest extends TestCase
         TestHelpers::emptyDB($credentials);
     }
 
-    /**
-     * @test
-     */
-    public function conversationThatDoesntExistPropertiesSetCorrectly()
+    public function testConversationThatDoesntExistPropertiesSetCorrectly()
     {
         $conversation = new Conversation(123, 456);
         $this->assertAttributeEquals(123, 'user_id', $conversation);
@@ -58,10 +55,7 @@ class ConversationTest extends TestCase
         $this->assertAttributeEquals(null, 'command', $conversation);
     }
 
-    /**
-     * @test
-     */
-    public function conversationThatExistsPropertiesSetCorrectly()
+    public function testConversationThatExistsPropertiesSetCorrectly()
     {
         $info = TestHelpers::startFakeConversation('command');
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
@@ -70,10 +64,7 @@ class ConversationTest extends TestCase
         $this->assertAttributeEquals('command', 'command', $conversation);
     }
 
-    /**
-     * @test
-     */
-    public function conversationThatDoesntExistWithoutCommand()
+    public function testConversationThatDoesntExistWithoutCommand()
     {
         $conversation = new Conversation(1, 1);
         $this->assertFalse($conversation->exists());
@@ -81,18 +72,14 @@ class ConversationTest extends TestCase
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
      */
-    public function conversationThatDoesntExistWithCommand()
+    public function testConversationThatDoesntExistWithCommand()
     {
         new Conversation(1, 1, 'command');
     }
 
-    /**
-     * @test
-     */
-    public function newConversationThatWontExistWithoutCommand()
+    public function testNewConversationThatWontExistWithoutCommand()
     {
         TestHelpers::startFakeConversation(null);
         $conversation = new Conversation(0, 0);
@@ -100,10 +87,7 @@ class ConversationTest extends TestCase
         $this->assertNull($conversation->getCommand());
     }
 
-    /**
-     * @test
-     */
-    public function newConversationThatWillExistWithCommand()
+    public function testNewConversationThatWillExistWithCommand()
     {
         $info = TestHelpers::startFakeConversation('command');
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
@@ -111,10 +95,7 @@ class ConversationTest extends TestCase
         $this->assertEquals('command', $conversation->getCommand());
     }
 
-    /**
-     * @test
-     */
-    public function stopConversation()
+    public function testStopConversation()
     {
         $info = TestHelpers::startFakeConversation('command');
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
@@ -125,10 +106,7 @@ class ConversationTest extends TestCase
         $this->assertFalse($conversation2->exists());
     }
 
-    /**
-     * @test
-     */
-    public function cancelConversation()
+    public function testCancelConversation()
     {
         $info = TestHelpers::startFakeConversation('command');
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
@@ -139,10 +117,7 @@ class ConversationTest extends TestCase
         $this->assertFalse($conversation2->exists());
     }
 
-    /**
-     * @test
-     */
-    public function updateConversationNotes()
+    public function testUpdateConversationNotes()
     {
         $info = TestHelpers::startFakeConversation('command');
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');

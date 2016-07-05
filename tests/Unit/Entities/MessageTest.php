@@ -40,9 +40,6 @@ class MessageTest extends TestCase
         //$json = utf8_encode($json);
         return json_decode($json, true);
     }
-    /**
-     * @test
-     */
 
     public function testTextAndCommandRecognise() {
         // /command
