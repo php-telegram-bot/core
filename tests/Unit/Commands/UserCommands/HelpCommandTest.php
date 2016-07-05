@@ -23,6 +23,9 @@ use Longman\TelegramBot\Commands\UserCommands\HelpCommand;
  */
 class HelpCommandTest extends CommandTestCase
 {
+    /**
+     * setUp
+     */
     public function setUp()
     {
         parent::setUp();

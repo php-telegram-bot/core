@@ -18,15 +18,15 @@ use \Longman\TelegramBot\Request;
 
 /**
  * @package         TelegramTest
- * @author             Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright         Avtandil Kikabidze <akalongman@gmail.com>
+ * @author          Avtandil Kikabidze <akalongman@gmail.com>
+ * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link             http://www.github.com/akalongman/php-telegram-bot
+ * @link            http://www.github.com/akalongman/php-telegram-bot
  */
 class ServerResponseTest extends TestCase
 {
     /**
-    * @var \Longman\TelegramBot\Telegram
+    * @var \Longman\TelegramBot\Entities\ServerResponse
     */
     private $server;
 

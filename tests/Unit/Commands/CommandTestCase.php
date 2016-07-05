@@ -22,9 +22,19 @@ use Longman\TelegramBot\Telegram;
  */
 class CommandTestCase extends TestCase
 {
+    /**
+     * @var \Longman\TelegramBot\Telegram
+     */
     protected $telegram;
+
+    /**
+     * @var \Longman\TelegramBot\Commands\Command
+     */
     protected $command;
 
+    /**
+     * setUp
+     */
     public function setUp()
     {
         $this->telegram = new Telegram('apikey', 'botname');

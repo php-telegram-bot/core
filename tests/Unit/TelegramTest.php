@@ -27,7 +27,7 @@ class TelegramTest extends TestCase
     private $telegram;
 
     /**
-     * @var array
+     * @var array A few dummy custom commands paths
      */
     private $custom_commands_paths = [
         '/tmp/php-telegram-bot-custom-commands-1',

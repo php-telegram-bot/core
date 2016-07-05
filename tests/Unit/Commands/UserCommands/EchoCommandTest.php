@@ -24,6 +24,9 @@ use Longman\TelegramBot\Commands\UserCommands\EchoCommand;
  */
 class EchoCommandTest extends CommandTestCase
 {
+    /**
+     * setUp
+     */
     public function setUp()
     {
         parent::setUp();

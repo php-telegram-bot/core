@@ -23,12 +23,29 @@ use Longman\TelegramBot\Telegram;
  */
 class CommandTest extends TestCase
 {
+    /**
+     * @var string
+     */
     private $command_namespace = 'Longman\TelegramBot\Commands\Command';
 
+    /**
+     * @var \Longman\TelegramBot\Telegram
+     */
     private $telegram;
+
+    /**
+     * @var \Longman\TelegramBot\Commands\Command
+     */
     private $command_stub;
 
+    /**
+     * @var \Longman\TelegramBot\Telegram
+     */
     private $telegram_with_config;
+
+    /**
+     * @var \Longman\TelegramBot\Commands\Command
+     */
     private $command_stub_with_config;
 
     public function setUp()

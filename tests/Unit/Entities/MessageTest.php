@@ -13,16 +13,16 @@ namespace Tests\Unit;
 use \Longman\TelegramBot\Entities\Message;
 
 /**
- * @package 		TelegramTest
- * @author 		Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
- * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/php-telegram-bot
+ * @package         TelegramTest
+ * @author          Avtandil Kikabidze <akalongman@gmail.com>
+ * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
+ * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
+ * @link            http://www.github.com/akalongman/php-telegram-bot
  */
 class MessageTest extends TestCase
 {
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var \Longman\TelegramBot\Entities\Message
      */
     private $message;
 

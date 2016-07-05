@@ -26,7 +26,7 @@ use Tests\TestHelpers;
 class TelegramLogTest extends TestCase
 {
     /**
-     * Logfile paths
+     * @var array Dummy logfile paths
      */
     private $logfiles = [
         'error'    => '/tmp/errorlog.log',

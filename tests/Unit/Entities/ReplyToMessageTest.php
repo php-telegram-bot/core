@@ -14,25 +14,25 @@ use \Longman\TelegramBot\Entities\Update;
 use \Longman\TelegramBot\Entities\ReplyToMessage;
 
 /**
- * @package 		TelegramTest
- * @author 		Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
- * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/php-telegram-bot
+ * @package         TelegramTest
+ * @author          Avtandil Kikabidze <akalongman@gmail.com>
+ * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
+ * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
+ * @link            http://www.github.com/akalongman/php-telegram-bot
  */
 class ReplyToMessageTest extends TestCase
 {
     /**
-    * @var \Longman\TelegramBot\Telegram
-    */
+     * @var \Longman\TelegramBot\Entities\Message
+     */
     private $reply_to_message;
-    private $message;
 
     /**
-     * @test
+     * @var \Longman\TelegramBot\Entities\Message
      */
- 
-    public function testChatType() 
+    private $message;
+
+    public function testChatType()
     {
         $json = '
 {"update_id":137809335,
