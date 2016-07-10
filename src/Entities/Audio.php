@@ -34,7 +34,7 @@ class Audio extends Entity
         }
 
         $this->duration = isset($data['duration']) ? $data['duration'] : null;
-        if ($this->duration === '') {
+        if ($this->duration === '' || $this->duration === null) {
             throw new TelegramException('duration is empty!');
         }
 
