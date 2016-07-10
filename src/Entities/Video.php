@@ -45,7 +45,7 @@ class Video extends Entity
             throw new TelegramException('height is empty!');
         }
         $this->duration = isset($data['duration']) ? $data['duration'] : null;
-        if (empty($this->duration)) {
+        if ($this->duration === '') {
             throw new TelegramException('duration is empty!');
         }
         $this->thumb = isset($data['thumb']) ? $data['thumb'] : null;
