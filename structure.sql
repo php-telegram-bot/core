@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `chat` (
   `id` bigint COMMENT 'Unique user or chat identifier',
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
 
   PRIMARY KEY (`id`),
   KEY `old_id` (`old_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS  `user_chat` (
   `user_id` bigint COMMENT 'Unique user identifier',
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS  `user_chat` (
     ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `inline_query` (
   `id` bigint UNSIGNED COMMENT 'Unique identifier for this query',
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `inline_query` (
   KEY `user_id` (`user_id`),
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
   KEY `user_id` (`user_id`),
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
-  `text` TEXT COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',
+  `text` TEXT COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf16_unicode_520_ci',
   `entities` TEXT COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `audio` TEXT COMMENT 'Audio object. Message is an audio file, information about the file',
   `document` TEXT COMMENT 'Document object. Message is a general file, information about the file',
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`new_chat_member`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `callback_query` (
   `id` bigint UNSIGNED COMMENT 'Unique identifier for this query',
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `callback_query` (
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `edited_message` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `edited_message` (
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'Update\'s unique identifier',
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   FOREIGN KEY (`chosen_inline_result_id`) REFERENCES `chosen_inline_result` (`id`),
   FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`),
   FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
   `id` bigint(20) unsigned AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `botan_shortener` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
@@ -208,4 +208,4 @@ CREATE TABLE IF NOT EXISTS `botan_shortener` (
   PRIMARY KEY (`id`),
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf16_unicode_520_ci COLLATE=utf16_unicode_520_ci;
