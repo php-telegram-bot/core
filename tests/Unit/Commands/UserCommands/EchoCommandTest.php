@@ -24,15 +24,15 @@ use Longman\TelegramBot\Commands\UserCommands\EchoCommand;
  */
 class EchoCommandTest extends CommandTestCase
 {
+    /**
+     * setUp
+     */
     public function setUp()
     {
         parent::setUp();
         $this->command = new EchoCommand($this->telegram);
     }
 
-    /**
-     * @test
-     */
     public function testEchoCommandProperties()
     {
         $this->assertAttributeEquals('echo', 'name', $this->command);
@@ -40,9 +40,6 @@ class EchoCommandTest extends CommandTestCase
         $this->assertAttributeEquals('/echo <text>', 'usage', $this->command);
     }
 
-    /**
-     * @test
-     */
     public function testEchoCommandExecuteWithoutParameter()
     {
         $text = $this->command
@@ -60,9 +57,6 @@ class EchoCommandTest extends CommandTestCase
         $this->assertEquals('Command usage: /echo <text>', $text);
     }
 
-    /**
-     * @test
-     */
     public function testEchoCommandExecuteWithParameter()
     {
         $text = $this->command

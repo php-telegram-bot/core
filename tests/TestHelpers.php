@@ -84,21 +84,21 @@ class TestHelpers
      *
      * @param array $data Pass custom data array if needed
      *
-     * @return Entities\Update
+     * @return \Longman\TelegramBot\Entities\Update
      */
     public static function getFakeUpdateObject($data = null)
     {
         $data = $data ?: [
-            'update_id' => 1,
+            'update_id' => mt_rand(),
             'message'   => [
-                'message_id' => 1,
+                'message_id' => mt_rand(),
                 'chat' => [
-                    'id' => 1,
+                    'id' => mt_rand(),
                 ],
-                'date' => 1,
+                'date' => time(),
             ]
         ];
-        return new Update($data, 'botname');
+        return new Update($data, 'testbot');
     }
 
     /**
@@ -106,17 +106,17 @@ class TestHelpers
      *
      * @param string $command_text
      *
-     * @return Entities\Update
+     * @return \Longman\TelegramBot\Entities\Update
      */
     public static function getFakeUpdateCommandObject($command_text)
     {
         $data = [
-            'update_id' => 1,
+            'update_id' => mt_rand(),
             'message' => [
-                'message_id' => 1,
+                'message_id' => mt_rand(),
                 'from'       => self::$user_template,
                 'chat'       => self::$chat_template,
-                'date'       => 1,
+                'date'       => time(),
                 'text'       => $command_text,
             ],
         ];
@@ -126,61 +126,73 @@ class TestHelpers
     /**
      * Return a fake user object.
      *
-     * @return Entities\User
+     * @param array $data Pass custom data array if needed
+     *
+     * @return \Longman\TelegramBot\Entities\User
      */
-    public static function getFakeUserObject()
+    public static function getFakeUserObject(array $data = [])
     {
-        return new User(self::$user_template);
+        ($data === null) && $data = [];
+
+        return new User($data + self::$user_template);
     }
 
     /**
      * Return a fake chat object.
      *
-     * @return Entities\Chat
+     * @param array $data Pass custom data array if needed
+     *
+     * @return \Longman\TelegramBot\Entities\Chat
      */
-    public static function getFakeChatObject()
+    public static function getFakeChatObject(array $data = [])
     {
-        return new Chat(self::$chat_template);
+        ($data === null) && $data = [];
+
+        return new Chat($data + self::$chat_template);
     }
 
     /**
      * Return a fake message object using the passed ids.
      *
-     * @param integer $message_id
-     * @param integer $user_id
-     * @param integer $chat_id
+     * @param array $message_data Pass custom message data array if needed
+     * @param array $user_data    Pass custom user data array if needed
+     * @param array $chat_data    Pass custom chat data array if needed
      *
-     * @return Entities\Message
+     * @return \Longman\TelegramBot\Entities\Message
      */
-    public static function getFakeMessageObject($message_id = 1, $user_id = 1, $chat_id = 1)
+    public static function getFakeMessageObject(array $message_data = [], array $user_data = [], array $chat_data = [])
     {
-        return new Message([
-            'message_id' => $message_id,
-            'from'       => ['id' => $user_id] + self::$user_template,
-            'chat'       => ['id' => $chat_id] + self::$chat_template,
-            'date'       => 1,
-        ], 'botname');
+        ($message_data === null) && $message_data = [];
+        ($user_data === null) && $user_data = [];
+        ($chat_data === null) && $chat_data = [];
+
+        return new Message($message_data + [
+            'message_id' => mt_rand(),
+            'from'       => $user_data + self::$user_template,
+            'chat'       => $chat_data + self::$chat_template,
+            'date'       => time(),
+            'text'       => 'dummy',
+        ], 'testbot');
     }
 
     /**
      * Start a fake conversation for the passed command and return the randomly generated ids.
      *
-     * @param string $command
      * @return array
      */
-    public static function startFakeConversation($command)
+    public static function startFakeConversation()
     {
         if (!DB::isDbConnected()) {
             return false;
         }
 
         //Just get some random values.
-        $message_id = rand();
-        $user_id = rand();
-        $chat_id = rand();
+        $message_id = mt_rand();
+        $user_id = mt_rand();
+        $chat_id = mt_rand();
 
         //Make sure we have a valid user and chat available.
-        $message = self::getFakeMessageObject($message_id, $user_id, $chat_id);
+        $message = self::getFakeMessageObject(['message_id' => $message_id], ['id' => $user_id], ['id' => $chat_id]);
         DB::insertMessageRequest($message);
         DB::insertUser($message->getFrom(), null, $message->getChat());
 
@@ -196,20 +208,17 @@ class TestHelpers
     {
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
-        try {
-            $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
-            $pdo->prepare('
-                DELETE FROM `conversation`;
-                DELETE FROM `telegram_update`;
-                DELETE FROM `chosen_inline_query`;
-                DELETE FROM `inline_query`;
-                DELETE FROM `message`;
-                DELETE FROM `user_chat`;
-                DELETE FROM `chat`;
-                DELETE FROM `user`;
-            ')->execute();
-        } catch (\Exception $e) {
-            throw new TelegramException($e->getMessage());
-        }
+
+        $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
+        $pdo->prepare('
+            DELETE FROM `conversation`;
+            DELETE FROM `telegram_update`;
+            DELETE FROM `chosen_inline_result`;
+            DELETE FROM `inline_query`;
+            DELETE FROM `message`;
+            DELETE FROM `user_chat`;
+            DELETE FROM `chat`;
+            DELETE FROM `user`;
+        ')->execute();
     }
 }

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   KEY `old_id` (`old_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS  `user_chat` (
+CREATE TABLE IF NOT EXISTS `user_chat` (
   `user_id` bigint COMMENT 'Unique user identifier',
   `chat_id` bigint COMMENT 'Unique user or chat identifier',
 

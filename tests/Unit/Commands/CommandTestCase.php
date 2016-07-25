@@ -22,20 +22,28 @@ use Longman\TelegramBot\Telegram;
  */
 class CommandTestCase extends TestCase
 {
+    /**
+     * @var \Longman\TelegramBot\Telegram
+     */
     protected $telegram;
+
+    /**
+     * @var \Longman\TelegramBot\Commands\Command
+     */
     protected $command;
 
+    /**
+     * setUp
+     */
     public function setUp()
     {
-        $this->telegram = new Telegram('apikey', 'botname');
+        $this->telegram = new Telegram('apikey', 'testbot');
         $this->telegram->addCommandsPath(BASE_COMMANDS_PATH . '/UserCommands');
         $this->telegram->getCommandsList();
     }
 
     /**
      * Make sure the version number is in the format x.x.x, x.x or x
-     *
-     * @test
      */
     public function testVersionNumberFormat()
     {

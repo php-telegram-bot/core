@@ -13,24 +13,20 @@ namespace Tests\Unit;
 use \Longman\TelegramBot\Entities\Update;
 
 /**
- * @package 		TelegramTest
- * @author 		Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
- * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/php-telegram-bot
+ * @package         TelegramTest
+ * @author          Avtandil Kikabidze <akalongman@gmail.com>
+ * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
+ * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
+ * @link            http://www.github.com/akalongman/php-telegram-bot
  */
 class UpdateTest extends TestCase
 {
     /**
-    * @var \Longman\TelegramBot\Telegram
+    * @var \Longman\TelegramBot\Entities\Update
     */
     private $update;
 
-    /**
-     * @test
-     */
-
-    public function testUpdateCast() 
+    public function testUpdateCast()
     {
         $json = '
 {"update_id":137809336,
@@ -39,8 +35,7 @@ class UpdateTest extends TestCase
         $struct = json_decode($json, true);
         $update = new Update($struct, 'mybot');
 
-        $array_string_after = json_decode($update->toJSON(), true);
+        $array_string_after = json_decode($update->toJson(), true);
         $this->assertEquals($struct, $array_string_after);
-
     }
 }

@@ -27,7 +27,7 @@ class TelegramTest extends TestCase
     private $telegram;
 
     /**
-     * @var array
+     * @var array A few dummy custom commands paths
      */
     private $custom_commands_paths = [
         '/tmp/php-telegram-bot-custom-commands-1',
@@ -40,9 +40,9 @@ class TelegramTest extends TestCase
     */
     protected function setUp()
     {
-        $this->telegram = new Telegram('testapikey', 'testbotname');
+        $this->telegram = new Telegram('apikey', 'testbot');
 
-        // Create a few custom commands paths.
+        // Create a few dummy custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
             mkdir($custom_path);
         }
@@ -60,45 +60,34 @@ class TelegramTest extends TestCase
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
      */
-    public function newInstanceWithoutApiKeyParam()
+    public function testNewInstanceWithoutApiKeyParam()
     {
-        new Telegram(null, 'testbotname');
+        new Telegram(null, 'testbot');
     }
 
     /**
-     * @test
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
      */
-    public function newInstanceWithoutBotNameParam()
+    public function testNewInstanceWithoutBotNameParam()
     {
-        new Telegram('testapikey', null);
+        new Telegram('apikey', null);
     }
 
-    /**
-     * @test
-     */
-    public function getApiKey()
+    public function testGetApiKey()
     {
-        $this->assertEquals('testapikey', $this->telegram->getApiKey());
+        $this->assertEquals('apikey', $this->telegram->getApiKey());
     }
 
-    /**
-     * @test
-     */
-    public function getBotName()
+    public function testGetBotName()
     {
-        $this->assertEquals('testbotname', $this->telegram->getBotName());
+        $this->assertEquals('testbot', $this->telegram->getBotName());
     }
 
-    /**
-     * @test
-     */
-    public function enableAdmins()
+    public function testEnableAdmins()
     {
-        $tg = &$this->telegram;
+        $tg = $this->telegram;
 
         $this->assertEmpty($tg->getAdminList());
 
@@ -115,12 +104,9 @@ class TelegramTest extends TestCase
         $this->assertCount(3, $tg->getAdminList());
     }
 
-    /**
-     * @test
-     */
-    public function addCustomCommandsPaths()
+    public function testAddCustomCommandsPaths()
     {
-        $tg = &$this->telegram;
+        $tg = $this->telegram;
 
         $this->assertAttributeCount(1, 'commands_paths', $tg);
 
@@ -140,20 +126,14 @@ class TelegramTest extends TestCase
         $this->assertAttributeCount(4, 'commands_paths', $tg);
     }
 
-    /**
-     * @test
-     */
-    public function getCommandsList()
+    public function testGetCommandsList()
     {
         $commands = $this->telegram->getCommandsList();
         $this->assertInternalType('array', $commands);
         $this->assertNotCount(0, $commands);
     }
 
-    /**
-     * @test
-     */
-    public function getHelpCommandObject()
+    public function testGetHelpCommandObject()
     {
         $command = $this->telegram->getCommandObject('help');
         $this->assertInstanceOf('Longman\TelegramBot\Commands\UserCommands\HelpCommand', $command);

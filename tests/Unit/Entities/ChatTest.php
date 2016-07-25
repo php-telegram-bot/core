@@ -10,43 +10,32 @@
 
 namespace Tests\Unit;
 
-use \Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\Chat;
+use Tests\TestHelpers;
 
 /**
- * @package 		TelegramTest
- * @author 		Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright 		Avtandil Kikabidze <akalongman@gmail.com>
- * @license 		http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link 			http://www.github.com/akalongman/php-telegram-bot
+ * @package         TelegramTest
+ * @author          Avtandil Kikabidze <akalongman@gmail.com>
+ * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
+ * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
+ * @link            http://www.github.com/akalongman/php-telegram-bot
  */
 class ChatTest extends TestCase
 {
     /**
-    * @var \Longman\TelegramBot\Telegram
+    * @var \Longman\TelegramBot\Entities\Chat
     */
     private $chat;
-    
-    /**
-    * setUp
-    */
-    protected function setUp()
-    {
-    }
 
-    /**
-     * @test
-     */
- 
-    public function testChatType() 
+    public function testChatType()
     {
-
-        $this->chat = new Chat(json_decode('{"id":123,"title":null,"first_name":"john","last_name":null,"username":"null"}',true));
+        $this->chat = TestHelpers::getFakeChatObject();
         $this->assertEquals('private', $this->chat->getType());
 
-        $this->chat = new Chat(json_decode('{"id":-123,"title":"ChatTitle","first_name":null,"last_name":null,"username":"null"}',true));
+        $this->chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => null]);
         $this->assertEquals('group', $this->chat->getType());
 
-        $this->chat = new Chat(json_decode('{"id":-123,"type":"channel","title":"ChatTitle","first_name":null,"last_name":null,"username":"null"}',true));
+        $this->chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'channel']);
         $this->assertEquals('channel', $this->chat->getType());
     }
 }
