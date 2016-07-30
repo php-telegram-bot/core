@@ -31,8 +31,10 @@ try {
     //// Add an additional commands path
     //$telegram->addCommandsPath($commands_path);
 
-    //// Here you can enable admin interface for the channel you want to manage
-    //$telegram->enableAdmins(['your_telegram_id']);
+    //// Enable admin users
+    //$telegram->enableAdmin(your_telegram_id);
+
+    //// Add the channel you want to manage
     //$telegram->setCommandConfig('sendtochannel', ['your_channel' => '@type_here_your_channel']);
 
     //// Here you can set some command specific parameters,
