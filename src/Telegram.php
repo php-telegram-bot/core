@@ -467,7 +467,7 @@ class Telegram
      */
     public function enableAdmin($admin_id)
     {
-        if (is_int($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list)) {
+        if (is_numeric($admin_id) && !is_float($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list)) {
             $this->admins_list[] = $admin_id;
         } else {
             TelegramLog::error('Invalid value "' . $admin_id . '" for admin.');
