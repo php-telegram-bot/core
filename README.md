@@ -487,7 +487,11 @@ Enabling this feature, the admin bot can perform some super user commands like:
 You can specify one or more admins with this option:
 
 ```php
-$telegram->enableAdmins(['your_telegram_user_id', 'other_telegram_user_id']);
+//Single admin
+$telegram->enableAdmin(your_telegram_user_id);
+
+//Multiple admins
+$telegram->enableAdmins([your_telegram_user_id, other_telegram_user_id]);
 ```
 Telegram user id can be retrieved with the command **/whoami**.
 Admin commands are stored in *src/Admin/* folder.
