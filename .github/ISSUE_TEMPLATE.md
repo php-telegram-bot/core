@@ -4,6 +4,7 @@
 - PHP Telegram Bot version:
 - Using MySQL database: yes / no
 - Update Method: Webhook / getUpdates
+- Self-signed certificate: yes / no
 - RAW update (if available):
 
 ### Expected behaviour
