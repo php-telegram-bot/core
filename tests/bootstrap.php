@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests;
-
 /*
  * Set error reporting to the max level.
  */
@@ -26,7 +24,7 @@ $autoloader = __DIR__ . '/../vendor/autoload.php';
  * Check that --dev composer installation was done
  */
 if (!file_exists($autoloader)) {
-    throw new \Exception(
+    throw new Exception(
         'Please run "php composer.phar install --dev" in root directory '
         . 'to setup unit test dependencies before running the tests'
     );

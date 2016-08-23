@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests;
+namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\TelegramLog;
 use Monolog\Handler\StreamHandler;
