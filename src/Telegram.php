@@ -759,10 +759,9 @@ class Telegram
      */
     protected function ucfirstUnicode($str, $encoding = 'UTF-8')
     {
-        return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_strtolower(mb_substr($str, 1,
-                                                                                                    mb_strlen($str),
-                                                                                                    $encoding),
-                                                                                          $encoding);
+        return
+            mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding)
+            . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
     }
 
     /**
