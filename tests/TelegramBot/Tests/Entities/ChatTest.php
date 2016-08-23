@@ -8,10 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit;
-
-use Longman\TelegramBot\Entities\Chat;
-use Tests\TestHelpers;
+namespace Longman\TelegramBot\Tests;
 
 /**
  * @package         TelegramTest

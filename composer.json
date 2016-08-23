@@ -31,7 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Longman\\TelegramBot\\Tests\\": "tests/TelegramBot/Tests"
         }
     },
     "require-dev": {

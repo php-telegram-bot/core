@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit\Commands;
+namespace Longman\TelegramBot\Tests\Commands;
 
-use Tests\Unit\TestCase;
-use Tests\TestHelpers;
+use Longman\TelegramBot\Tests\TestCase;
+use Longman\TelegramBot\Tests\TestHelpers;
 use Longman\TelegramBot\Telegram;
 
 /**

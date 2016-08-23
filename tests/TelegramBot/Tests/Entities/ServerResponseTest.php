@@ -10,10 +10,9 @@
  * Written by Marco Boretto
  */
 
-namespace Tests\Unit;
+namespace Longman\TelegramBot\Tests;
 
 use \Longman\TelegramBot\Entities\ServerResponse;
-use \Longman\TelegramBot\Entities\Message;
 use \Longman\TelegramBot\Request;
 
 /**
