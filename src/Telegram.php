@@ -13,8 +13,14 @@ namespace Longman\TelegramBot;
 define('BASE_PATH', __DIR__);
 define('BASE_COMMANDS_PATH', BASE_PATH . '/Commands');
 
+use Exception;
+use Longman\TelegramBot\Commands\Command;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 
 class Telegram
 {
@@ -189,9 +195,9 @@ class Telegram
         foreach ($this->commands_paths as $path) {
             try {
                 //Get all "*Command.php" files
-                $files = new \RegexIterator(
-                    new \RecursiveIteratorIterator(
-                        new \RecursiveDirectoryIterator($path)
+                $files = new RegexIterator(
+                    new RecursiveIteratorIterator(
+                        new RecursiveDirectoryIterator($path)
                     ),
                     '/^.+Command.php$/'
                 );
@@ -208,11 +214,11 @@ class Telegram
                     require_once $file->getPathname();
 
                     $command_obj = $this->getCommandObject($command);
-                    if ($command_obj instanceof Commands\Command) {
+                    if ($command_obj instanceof Command) {
                         $commands[$command_name] = $command_obj;
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new TelegramException('Error getting commands from path: ' . $path);
             }
         }
@@ -287,10 +293,13 @@ class Telegram
     public function handleGetUpdates($limit = null, $timeout = null)
     {
         if (!DB::isDbConnected()) {
-            return new Entities\ServerResponse([
-                                                   'ok'          => false,
-                                                   'description' => 'getUpdates needs MySQL connection!',
-                                               ], $this->bot_name);
+            return new ServerResponse(
+                [
+                    'ok'          => false,
+                    'description' => 'getUpdates needs MySQL connection!',
+                ],
+                $this->bot_name
+            );
         }
 
         //DB Query
@@ -307,7 +316,7 @@ class Telegram
 
         if ($response->isOk()) {
             //Process all updates
-            foreach ((array) $response->getResult() as $result) {
+            foreach ((array)$response->getResult() as $result) {
                 $this->processUpdate($result);
             }
         }
