@@ -1,37 +1,34 @@
 ## Logging
-Telegram bot library feats [Monolog](https://github.com/Seldaek/monolog) to store logs.
+PHP Telegram Bot library features [Monolog](https://github.com/Seldaek/monolog) to store logs.
 
-Logs are divided in those streams:
+Logs are divided into the following streams:
 ### Error
-Collects all the exceptions throwned by the library:
-
+Collects all the exceptions thrown by the library:
 ```php
 TelegramLog::initErrorLog($path . '/' . $BOT_NAME . '_error.log');
 ```
 
 ### Debug
-Stores Curl messages with the server, useful for debugging:
-
+Stores requests made to the Telegram API, useful for debugging:
 ```php
 TelegramLog::initDebugLog($path . '/' . $BOT_NAME . '_debug.log');
 ```
 
 ### Raw data
-Incoming updates (json string from webhook and getUpdates) can be logged in a text file. Set this option with the methods:
+Incoming updates (JSON string from Webhook and getUpdates) get logged in a text file:
 ```php
 TelegramLog::initUpdateLog($path . '/' . $BOT_NAME . '_update.log');
 ```
-Why I need raw log?  
-Telegram api changes continuously and often happen that db schema is not uptodate with new entities/features. So can happen that your table schema would not be able to store valuable new information coming from Telegram.
+Why do I need to log the raw updates?
+Telegram API changes continuously and it often happens that the database schema is not up to date with new entities/features. So it can happen that your table schema doesn't allow storing new valuable information coming from Telegram.
 
-If you store raw data you can port all updates on the newest table schema just using [this script](../utils/importFromLog.php).
-Remember always backup first!!
+If you store the raw data you can import all updates on the newest table schema by simply using [this script](../utils/importFromLog.php).
+Remember to always backup first!!
 
 ## Stream and external sources
-Error and Debug streams relies on the `bot_log` instance that can be provided from an external source:
-
+Error and Debug streams rely on the `bot_log` instance that can be provided from an external source:
 ```php
 TelegramLog::initialize($monolog);
 ```
 
-Raw data relies on the `bot_update_log` instance that feats a custom format for this kind of logs.
+Raw data relies on the `bot_update_log` instance that uses a custom format.

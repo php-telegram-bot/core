@@ -91,15 +91,23 @@ class TelegramTest extends TestCase
 
         $this->assertEmpty($tg->getAdminList());
 
+        // Single
         $tg->enableAdmin(1);
         $this->assertCount(1, $tg->getAdminList());
 
+        // Multiple
         $tg->enableAdmins([2, 3]);
         $this->assertCount(3, $tg->getAdminList());
 
+        // Already added
         $tg->enableAdmin(2);
         $this->assertCount(3, $tg->getAdminList());
 
+        // Integer as a string
+        $tg->enableAdmin('4');
+        $this->assertCount(3, $tg->getAdminList());
+
+        // Random string
         $tg->enableAdmin('a string?');
         $this->assertCount(3, $tg->getAdminList());
     }
