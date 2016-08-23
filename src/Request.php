@@ -21,7 +21,7 @@ class Request
     /**
      * Telegram object
      *
-     * @var Telegram
+     * @var \Longman\TelegramBot\Telegram
      */
     private static $telegram;
 
@@ -86,13 +86,14 @@ class Request
     /**
      * Initialize
      *
-     * @param Telegram $telegram
+     * @param \Longman\TelegramBot\Telegram $telegram
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function initialize(Telegram $telegram)
     {
         if (is_object($telegram)) {
             self::$telegram = $telegram;
-            self::$client = new Client(['base_uri' => self::$api_base_uri]);
+            self::$client   = new Client(['base_uri' => self::$api_base_uri]);
         } else {
             throw new TelegramException('Telegram pointer is empty!');
         }
@@ -102,6 +103,7 @@ class Request
      * Set input from custom input or stdin and return it
      *
      * @return string
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getInput()
     {
@@ -145,13 +147,13 @@ class Request
         //some data to let iniatilize the class method SendMessage
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
-            $data['date'] = '1441378360';
-            $data['from'] = [
+            $data['date']       = '1441378360';
+            $data['from']       = [
                 'id'         => 123456789,
                 'first_name' => 'botname',
                 'username'   => 'namebot',
             ];
-            $data['chat'] = ['id' => $data['chat_id']];
+            $data['chat']       = ['id' => $data['chat_id']];
 
             $fake_response['result'] = $data;
         }
@@ -166,6 +168,7 @@ class Request
      * @param array|null $data   Data to attach to the execution
      *
      * @return mixed Result of the HTTP Request
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function execute($action, array $data = null)
     {
@@ -224,6 +227,7 @@ class Request
      * @param Entities\File $file
      *
      * @return boolean
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function downloadFile(File $file)
     {
@@ -260,6 +264,7 @@ class Request
      * @param string $file
      *
      * @return resource
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected static function encodeFile($file)
     {
@@ -278,7 +283,8 @@ class Request
      * @param string     $action
      * @param array|null $data
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function send($action, array $data = null)
     {
@@ -322,13 +328,14 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendMessage(array $data)
     {
         if (empty($data)) {
             throw new TelegramException('Data is empty!');
         }
-        $text = $data['text'];
+        $text            = $data['text'];
         $string_len_utf8 = mb_strlen($text, 'UTF-8');
         if ($string_len_utf8 > 4096) {
             $data['text'] = mb_substr($text, 0, 4096);
@@ -345,6 +352,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function forwardMessage(array $data)
     {
@@ -358,10 +366,11 @@ class Request
     /**
      * Send photo
      *
-     * @param array $data
+     * @param array  $data
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendPhoto(array $data, $file = null)
     {
@@ -383,6 +392,7 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendAudio(array $data, $file = null)
     {
@@ -404,6 +414,7 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendDocument(array $data, $file = null)
     {
@@ -425,6 +436,7 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendSticker(array $data, $file = null)
     {
@@ -446,6 +458,7 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVideo(array $data, $file = null)
     {
@@ -467,6 +480,7 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVoice(array $data, $file = null)
     {
@@ -487,6 +501,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendLocation(array $data)
     {
@@ -503,6 +518,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVenue(array $data)
     {
@@ -519,6 +535,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendContact(array $data)
     {
@@ -535,6 +552,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendChatAction(array $data)
     {
@@ -551,6 +569,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getUserProfilePhotos(array $data)
     {
@@ -602,6 +621,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getFile(array $data)
     {
@@ -618,6 +638,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function kickChatMember(array $data)
     {
@@ -634,6 +655,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function leaveChat(array $data)
     {
@@ -650,6 +672,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function unbanChatMember(array $data)
     {
@@ -668,6 +691,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChat(array $data)
     {
@@ -686,6 +710,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChatAdministrators(array $data)
     {
@@ -704,6 +729,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChatMembersCount(array $data)
     {
@@ -722,6 +748,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChatMember(array $data)
     {
@@ -738,6 +765,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function answerCallbackQuery(array $data)
     {
@@ -754,6 +782,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function answerInlineQuery(array $data)
     {
@@ -770,6 +799,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageText(array $data)
     {
@@ -786,6 +816,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageCaption(array $data)
     {
@@ -802,6 +833,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageReplyMarkup(array $data)
     {
@@ -837,6 +869,7 @@ class Request
      * @param string  $date_to
      *
      * @return array
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendToActiveChats(
         $callback_function,
@@ -857,7 +890,7 @@ class Request
         $results = [];
         foreach ($chats as $row) {
             $data['chat_id'] = $row['chat_id'];
-            $results[] = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+            $results[]       = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
         }
 
         return $results;

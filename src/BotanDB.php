@@ -10,7 +10,9 @@
 
 namespace Longman\TelegramBot;
 
+use Exception;
 use Longman\TelegramBot\Exception\TelegramException;
+use PDO;
 
 /**
  * Class BotanDB
@@ -33,7 +35,7 @@ class BotanDB extends DB
      * @param  $user_id
      * @param  $url
      *
-     * @throws TelegramException
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      *
      * @return bool|string
      */
@@ -48,12 +50,12 @@ class BotanDB extends DB
                 WHERE `user_id` = :user_id AND `url` = :url
                 ');
 
-            $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth->bindParam(':url', $url, \PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':url', $url, PDO::PARAM_INT);
             $sth->execute();
 
-            $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
+            $results = $sth->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
 
@@ -67,7 +69,7 @@ class BotanDB extends DB
      * @param  $url
      * @param  $short_url
      *
-     * @throws TelegramException
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      *
      * @return bool
      */
@@ -95,7 +97,7 @@ class BotanDB extends DB
             $sth->bindParam(':date', $created_at);
 
             $status = $sth->execute();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
 

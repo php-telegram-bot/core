@@ -15,9 +15,6 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Longman\TelegramBot\Exception\TelegramLogException;
 
-/**
- * Class TelegramLog.
- */
 class TelegramLog
 {
     /**
@@ -99,6 +96,7 @@ class TelegramLog
      * @param string $path
      *
      * @return \Monolog\Logger
+     * @throws \Longman\TelegramBot\Exception\TelegramLogException
      */
     public static function initErrorLog($path)
     {
@@ -120,6 +118,7 @@ class TelegramLog
      * @param string $path
      *
      * @return \Monolog\Logger
+     * @throws \Longman\TelegramBot\Exception\TelegramLogException
      */
     public static function initDebugLog($path)
     {
@@ -162,9 +161,9 @@ class TelegramLog
         if (self::$debug_log_temp_stream_handle !== null) {
             rewind(self::$debug_log_temp_stream_handle);
             self::debug(sprintf(
-                $message,
-                stream_get_contents(self::$debug_log_temp_stream_handle)
-            ));
+                            $message,
+                            stream_get_contents(self::$debug_log_temp_stream_handle)
+                        ));
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }
@@ -179,6 +178,7 @@ class TelegramLog
      * @param string $path
      *
      * @return \Monolog\Logger
+     * @throws \Longman\TelegramBot\Exception\TelegramLogException
      */
     public static function initUpdateLog($path)
     {
@@ -189,7 +189,7 @@ class TelegramLog
         if (self::$monolog_update === null) {
             self::$monolog_update = new Logger('bot_update_log');
             // Create a formatter
-            $output = "%message%\n";
+            $output    = "%message%\n";
             $formatter = new LineFormatter($output);
 
             // Update handler

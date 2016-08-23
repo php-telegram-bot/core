@@ -16,7 +16,6 @@ define('BASE_COMMANDS_PATH', BASE_PATH . '/Commands');
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 
-
 class Telegram
 {
     /**
@@ -152,6 +151,7 @@ class Telegram
      *
      * @param array  $credential
      * @param string $table_prefix
+     * @param string $encoding
      *
      * @return \Longman\TelegramBot\Telegram
      */

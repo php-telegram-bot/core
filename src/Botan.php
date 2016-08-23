@@ -40,7 +40,10 @@ class Botan
     public static $command = '';
 
     /**
-     * Initilize botan
+     * Initialize Botan
+     *
+     * @param $token
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function initializeBotan($token)
     {
@@ -71,7 +74,7 @@ class Botan
      * @param  string $command
      *
      * @return bool|string
-     * @throws TelegramException
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function track($input, $command = '')
     {
@@ -87,7 +90,7 @@ class Botan
 
         $obj = json_decode($input, true);
         if (isset($obj['message'])) {
-            $data = $obj['message'];
+            $data       = $obj['message'];
             $event_name = 'Message';
 
             if (isset($obj['message']['entities']) && is_array($obj['message']['entities'])) {
@@ -107,13 +110,13 @@ class Botan
                 }
             }
         } elseif (isset($obj['inline_query'])) {
-            $data = $obj['inline_query'];
+            $data       = $obj['inline_query'];
             $event_name = 'Inline Query';
         } elseif (isset($obj['chosen_inline_result'])) {
-            $data = $obj['chosen_inline_result'];
+            $data       = $obj['chosen_inline_result'];
             $event_name = 'Chosen Inline Result';
         } elseif (isset($obj['callback_query'])) {
-            $data = $obj['callback_query'];
+            $data       = $obj['callback_query'];
             $event_name = 'Callback Query';
         }
 
@@ -121,7 +124,7 @@ class Botan
             return false;
         }
 
-        $uid = $data['from']['id'];
+        $uid     = $data['from']['id'];
         $request = str_replace(
             ['#TOKEN', '#UID', '#NAME'],
             [self::$token, $uid, urlencode($event_name)],
@@ -130,15 +133,15 @@ class Botan
 
         $options = [
             'http' => [
-                'header'  => 'Content-Type: application/json',
-                'method'  => 'POST',
-                'content' => json_encode($data),
+                'header'        => 'Content-Type: application/json',
+                'method'        => 'POST',
+                'content'       => json_encode($data),
                 'ignore_errors' => true
             ]
         ];
 
-        $context = stream_context_create($options);
-        $response = @file_get_contents($request, false, $context);
+        $context      = stream_context_create($options);
+        $response     = @file_get_contents($request, false, $context);
         $responseData = json_decode($response, true);
 
         if ($responseData['status'] != 'accepted') {
@@ -155,7 +158,7 @@ class Botan
      * @param  $user_id
      *
      * @return string
-     * @throws TelegramException
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function shortenUrl($url, $user_id)
     {
@@ -182,16 +185,17 @@ class Botan
         $options = [
             'http' => [
                 'ignore_errors' => true,
-                'timeout' => 3
+                'timeout'       => 3
             ]
         ];
 
-        $context = stream_context_create($options);
+        $context  = stream_context_create($options);
         $response = @file_get_contents($request, false, $context);
 
         if (!filter_var($response, FILTER_VALIDATE_URL) === false) {
             BotanDB::insertShortUrl($user_id, $url, $response);
         } else {
+            // @FIXME: Add telegram log
             error_log('Botan.io API replied with error: ' . $response);
             return $url;
         }

@@ -10,11 +10,10 @@
 
 namespace Longman\TelegramBot;
 
+use Exception;
 use Longman\TelegramBot\Exception\TelegramException;
+use PDO;
 
-/**
- * Class ConversationDB
- */
 class ConversationDB extends DB
 {
     /**
@@ -35,6 +34,7 @@ class ConversationDB extends DB
      * @param bool $limit
      *
      * @return array|bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function selectConversation($user_id, $chat_id, $limit = null)
     {
@@ -54,14 +54,14 @@ class ConversationDB extends DB
             $sth = self::$pdo->prepare($query);
 
             $active = 'active';
-            $sth->bindParam(':status', $active, \PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
-            $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
+            $sth->bindParam(':status', $active, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+            $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
             $sth->execute();
 
-            $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
+            $results = $sth->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
         return $results;
@@ -75,6 +75,7 @@ class ConversationDB extends DB
      * @param string $command
      *
      * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function insertConversation($user_id, $chat_id, $command)
     {
@@ -83,7 +84,7 @@ class ConversationDB extends DB
         }
 
         try {
-            $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
+            $sth    = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
                 (
                 `status`, `user_id`, `chat_id`, `command`, `notes`, `created_at`, `updated_at`
                 )
@@ -93,7 +94,7 @@ class ConversationDB extends DB
                ');
             $active = 'active';
             //$notes = json_encode('');
-            $notes = '""';
+            $notes      = '""';
             $created_at = self::getTimestamp();
 
             $sth->bindParam(':status', $active);
@@ -104,7 +105,7 @@ class ConversationDB extends DB
             $sth->bindParam(':date', $created_at);
 
             $status = $sth->execute();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
         return $status;
@@ -133,6 +134,7 @@ class ConversationDB extends DB
      * @todo This function is generic should be moved in DB.php
      *
      * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function update($table, array $fields_values, array $where_fields_values)
     {
@@ -143,10 +145,10 @@ class ConversationDB extends DB
         $fields_values['updated_at'] = self::getTimestamp();
 
         //Values
-        $update = '';
-        $tokens = [];
+        $update         = '';
+        $tokens         = [];
         $tokens_counter = 0;
-        $a = 0;
+        $a              = 0;
         foreach ($fields_values as $field => $value) {
             if ($a) {
                 $update .= ', ';
@@ -158,8 +160,8 @@ class ConversationDB extends DB
         }
 
         //Where
-        $a = 0;
-        $where  = '';
+        $a     = 0;
+        $where = '';
         foreach ($where_fields_values as $field => $value) {
             if ($a) {
                 $where .= ' AND ';
@@ -168,15 +170,15 @@ class ConversationDB extends DB
                 $where .= 'WHERE ';
             }
             ++$tokens_counter;
-            $where .= '`' . $field .'`= :' . $tokens_counter;
+            $where .= '`' . $field . '`= :' . $tokens_counter;
             $tokens[':' . $tokens_counter] = $value;
         }
 
         $query = 'UPDATE `' . $table . '` SET ' . $update . ' ' . $where;
         try {
-            $sth = self::$pdo->prepare($query);
+            $sth    = self::$pdo->prepare($query);
             $status = $sth->execute($tokens);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
         return $status;
