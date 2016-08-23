@@ -71,11 +71,11 @@ The Bot can:
 - supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface.
-- full support for **inline bots**. 
+- full support for **inline bots**.
 - inline keyboard.
 - Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
 - *Botan.io* integration and database cache system. (**new!**)
-- Conversation feature  
+- Conversation feature
 
 -----
 This code is available on
@@ -479,7 +479,7 @@ $telegram->setCommandConfig('weather', ['owm_api_key' => 'your_owm_api_key_here'
 Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
-- Post any content to your channels */sendtochannel* 
+- Post any content to your channels */sendtochannel*
 - inspect a user or a chat with */whois* (new!)
 
 #### Set Admins
@@ -537,7 +537,7 @@ If you like living on the edge, please report any bugs you find on the
 
 ## Contributing
 
-See [CONTRIBUTING](CONTRIBUTING.md) for more information.
+See [CONTRIBUTING](.github/CONTRIBUTING.md) for more information.
 
 ## License
 
