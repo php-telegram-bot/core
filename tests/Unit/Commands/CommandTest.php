@@ -65,25 +65,30 @@ class CommandTest extends TestCase
         $this->command_stub_with_config->__construct($this->telegram_with_config);
     }
 
+    // Test idea from here: http://stackoverflow.com/a/4371606
     public function testCommandConstructorNeedsTelegramObject()
     {
-        $error_message = 'must be an instance of Longman\TelegramBot\Telegram';
+        $exception_count = 0;
         $params_to_test = [
             [],
             [null],
+            [12345],
             ['something'],
             [new \stdClass],
+            [$this->telegram], // only this one is valid
         ];
 
         foreach ($params_to_test as $param) {
             try {
                 $this->getMockForAbstractClass($this->command_namespace, $param);
             } catch (\Exception $e) {
-                $this->assertContains($error_message, $e->getMessage());
+                $exception_count++;
             } catch (\Throwable $e) { //For PHP7
-                $this->assertContains($error_message, $e->getMessage());
+                $exception_count++;
             }
         }
+
+        $this->assertEquals(5, $exception_count);
     }
 
     public function testCommandHasCorrectTelegramObject()
