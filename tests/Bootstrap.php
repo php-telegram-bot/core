@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests;
+namespace Longman\TelegramBot\Tests;
 
 /*
  * Set error reporting to the max level.
