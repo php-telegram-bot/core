@@ -43,7 +43,6 @@ class PhotoSize extends Entity
         }
 
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-
     }
 
     public function getFileId()
