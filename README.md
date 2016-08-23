@@ -8,8 +8,8 @@
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
 
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?branch=master)
-[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?branch=master)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/feature%2Fimprove-code.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=feature%2Fimprove-code)
+[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot/feature%2Fimprove-code.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=feature%2Fimprove-code)
 
 
 A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
