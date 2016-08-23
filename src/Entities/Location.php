@@ -35,7 +35,6 @@ class Location extends Entity
         if (empty($this->latitude)) {
             throw new TelegramException('latitude is empty!');
         }
-
     }
 
     public function getLongitude()
