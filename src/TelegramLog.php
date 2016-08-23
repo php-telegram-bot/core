@@ -160,10 +160,12 @@ class TelegramLog
     {
         if (self::$debug_log_temp_stream_handle !== null) {
             rewind(self::$debug_log_temp_stream_handle);
-            self::debug(sprintf(
-                            $message,
-                            stream_get_contents(self::$debug_log_temp_stream_handle)
-                        ));
+            self::debug(
+                sprintf(
+                    $message,
+                    stream_get_contents(self::$debug_log_temp_stream_handle)
+                )
+            );
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }

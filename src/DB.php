@@ -296,8 +296,11 @@ class DB
             $sth_insert_telegram_update->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':message_id', $message_id, PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(':chosen_inline_result_id', $chosen_inline_result_id,
-                                                   PDO::PARAM_INT);
+            $sth_insert_telegram_update->bindParam(
+                ':chosen_inline_result_id',
+                $chosen_inline_result_id,
+                PDO::PARAM_INT
+            );
             $sth_insert_telegram_update->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
             $sth_insert_telegram_update->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_INT);
 
@@ -458,8 +461,15 @@ class DB
 
             if (self::insertChosenInlineResultRequest($chosen_inline_result)) {
                 $chosen_inline_result_local_id = self::$pdo->lastInsertId();
-                return self::insertTelegramUpdate($update_id, null, null, null, $chosen_inline_result_local_id, null,
-                                                  null);
+                return self::insertTelegramUpdate(
+                    $update_id,
+                    null,
+                    null,
+                    null,
+                    $chosen_inline_result_local_id,
+                    null,
+                    null
+                );
             }
         } elseif ($update->getUpdateType() == 'callback_query') {
             $callback_query = $update->getCallbackQuery();
@@ -474,8 +484,15 @@ class DB
             if (self::insertEditedMessageRequest($edited_message)) {
                 $chat_id                 = $edited_message->getChat()->getId();
                 $edited_message_local_id = self::$pdo->lastInsertId();
-                return self::insertTelegramUpdate($update_id, $chat_id, null, null, null, null,
-                                                  $edited_message_local_id);
+                return self::insertTelegramUpdate(
+                    $update_id,
+                    $chat_id,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $edited_message_local_id
+                );
             }
         }
 

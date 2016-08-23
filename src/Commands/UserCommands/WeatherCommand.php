@@ -60,7 +60,7 @@ class WeatherCommand extends UserCommand
             throw new TelegramException($e->getMessage());
         }
 
-        return (string)$response->getBody();
+        return (string) $response->getBody();
     }
 
     /**
