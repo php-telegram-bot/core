@@ -324,6 +324,8 @@ class Telegram
      * Handle bot request from webhook
      *
      * @return bool
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handle()
     {
@@ -337,7 +339,11 @@ class Telegram
             throw new TelegramException('Invalid JSON!');
         }
 
-        return $this->processUpdate(new Update($post, $this->bot_name))->isOk();
+        if ($response = $this->processUpdate(new Update($post, $this->bot_name))) {
+            return $response->isOk();
+        }
+
+        return false;
     }
 
     /**
