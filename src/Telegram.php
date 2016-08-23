@@ -16,13 +16,7 @@ define('BASE_COMMANDS_PATH', BASE_PATH . '/Commands');
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 
-/**
- * @package         Telegram
- * @author          Avtandil Kikabidze <akalongman@gmail.com>
- * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
- * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            http://www.github.com/akalongman/php-telegram-bot
- */
+
 class Telegram
 {
     /**
@@ -63,7 +57,7 @@ class Telegram
     /**
      * Current Update object
      *
-     * @var Entities\Update
+     * @var \Longman\TelegramBot\Entities\Update
      */
     protected $update;
 
@@ -112,7 +106,7 @@ class Telegram
     /**
      * ServerResponse of the last Command execution
      *
-     * @var Entities\ServerResponse
+     * @var \Longman\TelegramBot\Entities\ServerResponse
      */
     protected $last_command_response;
 
@@ -124,10 +118,11 @@ class Telegram
     protected $botan_enabled = false;
 
     /**
-     * Constructor
+     * Telegram constructor.
      *
-     * @param string $api_key
-     * @param string $bot_name
+     * @param $api_key
+     * @param $bot_name
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($api_key, $bot_name)
     {
@@ -139,7 +134,7 @@ class Telegram
             throw new TelegramException('Bot Username not defined!');
         }
 
-        $this->api_key = $api_key;
+        $this->api_key  = $api_key;
         $this->bot_name = $bot_name;
 
         //Set default download and upload path
@@ -158,7 +153,7 @@ class Telegram
      * @param array  $credential
      * @param string $table_prefix
      *
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
     {
@@ -185,6 +180,7 @@ class Telegram
      * Get commands list
      *
      * @return array $commands
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function getCommandsList()
     {
@@ -202,7 +198,7 @@ class Telegram
 
                 foreach ($files as $file) {
                     //Remove "Command.php" from filename
-                    $command = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
+                    $command      = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
                     $command_name = strtolower($command);
 
                     if (array_key_exists($command_name, $commands)) {
@@ -210,7 +206,6 @@ class Telegram
                     }
 
                     require_once $file->getPathname();
-
 
                     $command_obj = $this->getCommandObject($command);
                     if ($command_obj instanceof Commands\Command) {
@@ -274,7 +269,7 @@ class Telegram
     /**
      * Get the ServerResponse of the last Command execution
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function getLastCommandResponse()
     {
@@ -293,9 +288,9 @@ class Telegram
     {
         if (!DB::isDbConnected()) {
             return new Entities\ServerResponse([
-                'ok'          => false,
-                'description' => 'getUpdates needs MySQL connection!',
-            ], $this->bot_name);
+                                                   'ok'          => false,
+                                                   'description' => 'getUpdates needs MySQL connection!',
+                                               ], $this->bot_name);
         }
 
         //DB Query
@@ -305,14 +300,14 @@ class Telegram
         $offset = (isset($last_update[0]['id'])) ? $last_update[0]['id'] + 1 : null;
 
         $response = Request::getUpdates([
-            'offset'  => $offset,
-            'limit'   => $limit,
-            'timeout' => $timeout,
-        ]);
+                                            'offset'  => $offset,
+                                            'limit'   => $limit,
+                                            'timeout' => $timeout,
+                                        ]);
 
         if ($response->isOk()) {
             //Process all updates
-            foreach ((array) $response->getResult() as $result) {
+            foreach ((array)$response->getResult() as $result) {
                 $this->processUpdate($result);
             }
         }
@@ -361,9 +356,9 @@ class Telegram
     /**
      * Process bot Update request
      *
-     * @param Entities\Update $update
+     * @param \Longman\TelegramBot\Entities\Update $update
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function processUpdate(Update $update)
     {
@@ -419,6 +414,7 @@ class Telegram
      * @param string $command
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function executeCommand($command)
     {
@@ -451,7 +447,6 @@ class Telegram
         return $this->last_command_response;
     }
 
-
     /**
      * Sanitize Command
      *
@@ -469,7 +464,7 @@ class Telegram
      *
      * @param integer $admin_id Single admin id
      *
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function enableAdmin($admin_id)
     {
@@ -487,7 +482,7 @@ class Telegram
      *
      * @param array $admin_ids List of admin ids
      *
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function enableAdmins(array $admin_ids)
     {
@@ -556,7 +551,7 @@ class Telegram
      * @param string $path   Custom commands path to add
      * @param bool   $before If the path should be prepended or appended to the list
      *
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function addCommandsPath($path, $before = true)
     {
@@ -579,7 +574,7 @@ class Telegram
      * @param array $paths  Custom commands paths to add
      * @param bool  $before If the paths should be prepended or appended to the list
      *
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function addCommandsPaths(array $paths, $before = true)
     {
@@ -699,10 +694,11 @@ class Telegram
     /**
      * Set Webhook for bot
      *
-     * @param string       $url
-     * @param string|null  $path_certificate
+     * @param string      $url
+     * @param string|null $path_certificate
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function setWebHook($url, $path_certificate = null)
     {
@@ -724,7 +720,8 @@ class Telegram
     /**
      * Unset Webhook for bot
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function unsetWebHook()
     {
@@ -762,14 +759,17 @@ class Telegram
      */
     protected function ucfirstUnicode($str, $encoding = 'UTF-8')
     {
-        return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
+        return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_strtolower(mb_substr($str, 1,
+                                                                                                    mb_strlen($str),
+                                                                                                    $encoding),
+                                                                                          $encoding);
     }
 
     /**
      * Enable Botan.io integration
      *
      * @param  $token
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function enableBotan($token)
     {
