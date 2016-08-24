@@ -38,20 +38,20 @@ class ServerResponse extends Entity
      */
     public function __construct(array $data, $bot_name)
     {
-        if (isset($data['ok']) & isset($data['result'])) {
+        if (isset($data['ok']) && isset($data['result'])) {
             if (is_array($data['result'])) {
-                if ($data['ok'] & !$this->isAssoc($data['result']) & !isset($data['result'][0]['user'])) {
+                if ($data['ok'] && !$this->isAssoc($data['result']) && !isset($data['result'][0]['user'])) {
                     //Get Update
                     foreach ($data['result'] as $update) {
                         $this->result[] = new Update($update, $bot_name);
                     }
-                } elseif ($data['ok'] & !$this->isAssoc($data['result']) & isset($data['result'][0]['user'])) {
+                } elseif ($data['ok'] && !$this->isAssoc($data['result']) && isset($data['result'][0]['user'])) {
                     //Response from getChatAdministrators
                     $this->result = [];
                     foreach ($data['result'] as $user) {
                         array_push($this->result, new ChatMember($user));
                     }
-                } elseif ($data['ok'] & $this->isAssoc($data['result'])) {
+                } elseif ($data['ok'] && $this->isAssoc($data['result'])) {
                     if (isset($data['result']['total_count'])) {
                         //Response from getUserProfilePhotos
                         $this->result = new UserProfilePhotos($data['result']);
@@ -77,7 +77,7 @@ class ServerResponse extends Entity
                 $this->error_code  = null;
                 $this->description = null;
             } else {
-                if ($data['ok'] & $data['result'] === true) {
+                if ($data['ok'] && $data['result'] === true) {
                     //Response from setWebhook set
                     $this->ok         = $data['ok'];
                     $this->result     = true;

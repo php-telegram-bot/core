@@ -204,11 +204,11 @@ class Message extends Entity
     /**
      * Common init to Message and ReplyToMessage
      *
-     * @param array $data
-     * @param       $bot_name
+     * @param array  $data
+     * @param string $bot_name
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    protected function init(array & $data, & $bot_name)
+    protected function init(array &$data, $bot_name)
     {
         $this->bot_name = $bot_name;
 
