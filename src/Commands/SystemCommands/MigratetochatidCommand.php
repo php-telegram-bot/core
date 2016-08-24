@@ -17,17 +17,21 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class MigratetochatidCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Migratetochatid';
-    protected $description = 'Migrate to chat id';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
+    protected $description = 'Migrate to chat id';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
     /*public function execute()
     {
         //$message = $this->getMessage();

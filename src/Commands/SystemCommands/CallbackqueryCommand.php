@@ -18,31 +18,40 @@ use Longman\TelegramBot\Request;
  */
 class CallbackqueryCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'callbackquery';
-    protected $description = 'Reply to callback query';
-    protected $version = '1.0.0';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Reply to callback query';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
-        $update = $this->getUpdate();
-        $callback_query = $update->getCallbackQuery();
+        $update            = $this->getUpdate();
+        $callback_query    = $update->getCallbackQuery();
         $callback_query_id = $callback_query->getId();
-        $callback_data = $callback_query->getData();
+        $callback_data     = $callback_query->getData();
 
         $data['callback_query_id'] = $callback_query_id;
 
         if ($callback_data == 'thumb up') {
-            $data['text'] = 'Hello World!';
+            $data['text']       = 'Hello World!';
             $data['show_alert'] = true;
         } else {
-            $data['text'] = 'Hello World!';
+            $data['text']       = 'Hello World!';
             $data['show_alert'] = false;
         }
 

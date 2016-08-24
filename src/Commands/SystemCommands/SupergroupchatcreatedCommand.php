@@ -17,17 +17,21 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class SupergroupchatcreatedCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Supergroupchatcreated';
-    protected $description = 'Super group chat created';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
+    protected $description = 'Super group chat created';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
     /*public function execute()
     {
         //$message = $this->getMessage();

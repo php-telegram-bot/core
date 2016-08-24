@@ -17,17 +17,21 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class EditedmessageCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'editedmessage';
-    protected $description = 'User edited message';
-    protected $version = '1.0.0';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
+    protected $description = 'User edited message';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.0';
+
     /*public function execute()
     {
         $update = $this->getUpdate();

@@ -17,17 +17,21 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class ChoseninlineresultCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
-    protected $name        = 'choseninlineresult';
-    protected $description = 'Chosen result query';
-    protected $version     = '1.0.1';
-    /**#@-*/
+    protected $name = 'choseninlineresult';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
+    protected $description = 'Chosen result query';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
     /*public function execute()
     {
         //Information about chosen result is returned

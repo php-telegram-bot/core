@@ -18,24 +18,37 @@ use Longman\TelegramBot\Request;
  */
 class StartCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'start';
-    protected $description = 'Start command';
-    protected $usage = '/start';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Start command';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/start';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text = 'Hi there!' . "\n" . 'Type /help to see all commands!';
+        $text    = 'Hi there!' . "\n" . 'Type /help to see all commands!';
 
         $data = [
             'chat_id' => $chat_id,

@@ -18,16 +18,25 @@ use Longman\TelegramBot\Request;
  */
 class GenericCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Generic';
-    protected $description = 'Handles generic commands or is executed by default when a command is not found';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Handles generic commands or is executed by default when a command is not found';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {

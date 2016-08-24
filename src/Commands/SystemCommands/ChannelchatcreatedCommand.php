@@ -17,17 +17,21 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class ChannelchatcreatedCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name        = 'Channelchatcreated';
-    protected $description = 'Channel chat created';
-    protected $version     = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
+    protected $description = 'Channel chat created';
+
+    /**
+     * @var string
+     */
+    protected $version     = '1.0.1';
+
     /*public function execute()
     {
         //$message = $this->getMessage();

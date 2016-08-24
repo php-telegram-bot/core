@@ -20,31 +20,55 @@ use Longman\TelegramBot\Request;
  */
 class InlinequeryCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'inlinequery';
-    protected $description = 'Reply to inline query';
-    protected $version = '1.0.2';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Reply to inline query';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.2';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
-        $update = $this->getUpdate();
+        $update       = $this->getUpdate();
         $inline_query = $update->getInlineQuery();
-        $query = $inline_query->getQuery();
+        $query        = $inline_query->getQuery();
 
-        $data = ['inline_query_id' => $inline_query->getId()];
+        $data    = ['inline_query_id' => $inline_query->getId()];
         $results = [];
 
         if ($query !== '') {
             $articles = [
-                ['id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'description' => 'you enter: ' . $query, 'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])],
-                ['id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'description' => 'you enter: ' . $query, 'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])],
-                ['id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'description' => 'you enter: ' . $query, 'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])],
+                [
+                    'id'                    => '001',
+                    'title'                 => 'https://core.telegram.org/bots/api#answerinlinequery',
+                    'description'           => 'you enter: ' . $query,
+                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])
+                ],
+                [
+                    'id'                    => '002',
+                    'title'                 => 'https://core.telegram.org/bots/api#answerinlinequery',
+                    'description'           => 'you enter: ' . $query,
+                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])
+                ],
+                [
+                    'id'                    => '003',
+                    'title'                 => 'https://core.telegram.org/bots/api#answerinlinequery',
+                    'description'           => 'you enter: ' . $query,
+                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])
+                ],
             ];
 
             foreach ($articles as $article) {
