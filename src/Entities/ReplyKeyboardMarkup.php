@@ -16,15 +16,31 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class ReplyKeyboardMarkup extends Entity
 {
+    /**
+     * @var array
+     */
     protected $keyboard;
+
+    /**
+     * @var bool
+     */
     protected $resize_keyboard;
+
+    /**
+     * @var bool
+     */
     protected $one_time_keyboard;
+
+    /**
+     * @var bool
+     */
     protected $selective;
 
     /**
      * ReplyKeyboardMarkup constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($data = array())
     {
@@ -43,8 +59,8 @@ class ReplyKeyboardMarkup extends Entity
             throw new TelegramException('Keyboard field is empty!');
         }
 
-        $this->resize_keyboard = isset($data['resize_keyboard']) ? $data['resize_keyboard'] : false;
+        $this->resize_keyboard   = isset($data['resize_keyboard']) ? $data['resize_keyboard'] : false;
         $this->one_time_keyboard = isset($data['one_time_keyboard']) ? $data['one_time_keyboard'] : false;
-        $this->selective = isset($data['selective']) ? $data['selective'] : false;
+        $this->selective         = isset($data['selective']) ? $data['selective'] : false;
     }
 }

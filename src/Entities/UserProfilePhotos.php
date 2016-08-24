@@ -14,14 +14,21 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class UserProfilePhotos extends Entity
 {
-
+    /**
+     * @var mixed|null
+     */
     protected $total_count;
+
+    /**
+     * @var array
+     */
     protected $photos;
 
     /**
      * UserProfilePhotos constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -49,11 +56,21 @@ class UserProfilePhotos extends Entity
         $this->photos = $photos;
     }
 
+    /**
+     * Get total count
+     *
+     * @return mixed|null
+     */
     public function getTotalCount()
     {
         return $this->total_count;
     }
 
+    /**
+     * Get photos
+     *
+     * @return array
+     */
     public function getPhotos()
     {
         return $this->photos;

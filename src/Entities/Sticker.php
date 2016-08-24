@@ -14,17 +14,41 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Sticker extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $width;
+
+    /**
+     * @var mixed|null
+     */
     protected $height;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\PhotoSize
+     */
     protected $thumb;
+
+    /**
+     * @var mixed|null
+     */
     protected $emoji;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
 
     /**
      * Sticker constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -55,33 +79,63 @@ class Sticker extends Entity
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get width
+     *
+     * @return mixed|null
+     */
     public function getWidth()
     {
-         return $this->width;
+        return $this->width;
     }
 
+    /**
+     * Get height
+     *
+     * @return mixed|null
+     */
     public function getHeight()
     {
-         return $this->height;
+        return $this->height;
     }
 
+    /**
+     * Get thumb
+     *
+     * @return \Longman\TelegramBot\Entities\PhotoSize
+     */
     public function getThumb()
     {
-         return $this->thumb;
+        return $this->thumb;
     }
 
+    /**
+     * Get emoji
+     *
+     * @return mixed|null
+     */
     public function getEmoji()
     {
-         return $this->emoji;
+        return $this->emoji;
     }
 
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
-         return $this->file_size;
+        return $this->file_size;
     }
 }

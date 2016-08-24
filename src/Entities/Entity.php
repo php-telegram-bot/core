@@ -10,30 +10,51 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use ReflectionObject;
+
 class Entity
 {
+    /**
+     * @var string
+     */
     protected $bot_name;
 
+    /**
+     * Get bot name
+     *
+     * @return string
+     */
     public function getBotName()
     {
         return $this->bot_name;
     }
 
+    /**
+     * Perform to json
+     *
+     * @return string
+     */
     public function toJson()
     {
         $fields = $this->reflect($this);
-        $json = json_encode($fields);
+        $json   = json_encode($fields);
 
         return $json;
     }
 
+    /**
+     * Reflect
+     *
+     * @param null $object
+     * @return array
+     */
     public function reflect($object = null)
     {
         if ($object == null) {
             $object = $this;
         }
 
-        $reflection = new \ReflectionObject($object);
+        $reflection = new ReflectionObject($object);
         $properties = $reflection->getProperties();
 
         $fields = [];
@@ -45,10 +66,10 @@ class Entity
             }
 
             if (!$property->isPrivate()) {
-                $array_of_obj = false;
+                $array_of_obj       = false;
                 $array_of_array_obj = false;
                 if (is_array($object->$name)) {
-                    $array_of_obj = true;
+                    $array_of_obj       = true;
                     $array_of_array_obj = true;
                     foreach ($object->$name as $elm) {
                         if (!is_object($elm)) {
@@ -96,6 +117,11 @@ class Entity
         return $fields;
     }
 
+    /**
+     * Perform to string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->toJson();

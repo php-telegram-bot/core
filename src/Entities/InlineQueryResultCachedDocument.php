@@ -14,15 +14,31 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultCachedDocument extends InlineQueryResult
 {
+    /**
+     * @var mixed|null
+     */
     protected $document_file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $title;
+
+    /**
+     * @var mixed|null
+     */
     protected $description;
+
+    /**
+     * @var mixed|null
+     */
     protected $caption;
 
     /**
      * InlineQueryResultCachedDocument constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -41,24 +57,44 @@ class InlineQueryResultCachedDocument extends InlineQueryResult
         }
 
         $this->description = isset($data['description']) ? $data['description'] : null;
-        $this->caption = isset($data['caption']) ? $data['caption'] : null;
+        $this->caption     = isset($data['caption']) ? $data['caption'] : null;
     }
 
+    /**
+     * Get document file id
+     *
+     * @return mixed|null
+     */
     public function getDocumentFileId()
     {
         return $this->document_file_id;
     }
 
+    /**
+     * Get title
+     *
+     * @return mixed|null
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Get description
+     *
+     * @return mixed|null
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
+    /**
+     * Get caption
+     *
+     * @return mixed|null
+     */
     public function getCaption()
     {
         return $this->caption;

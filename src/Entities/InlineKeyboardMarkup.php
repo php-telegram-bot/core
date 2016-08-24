@@ -14,12 +14,16 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineKeyboardMarkup extends Entity
 {
+    /**
+     * @var array
+     */
     protected $inline_keyboard;
 
     /**
      * InlineKeyboardMarkup constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($data = array())
     {

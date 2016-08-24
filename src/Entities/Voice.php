@@ -14,15 +14,31 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Voice extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $duration;
+
+    /**
+     * @var mixed|null
+     */
     protected $mime_type;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
 
     /**
      * Voice constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -40,23 +56,43 @@ class Voice extends Entity
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get duration
+     *
+     * @return mixed|null
+     */
     public function getDuration()
     {
-         return $this->duration;
+        return $this->duration;
     }
 
+    /**
+     * Get mime type
+     *
+     * @return mixed|null
+     */
     public function getMimeType()
     {
-         return $this->mime_type;
+        return $this->mime_type;
     }
 
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
-         return $this->file_size;
+        return $this->file_size;
     }
 }

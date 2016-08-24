@@ -14,79 +14,181 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Message extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $message_id;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\User|null
+     */
     protected $from;
 
+    /**
+     * @var mixed|null
+     */
     protected $date;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Chat|null
+     */
     protected $chat;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\User|null
+     */
     protected $forward_from;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Chat|null
+     */
     protected $forward_from_chat;
 
+    /**
+     * @var mixed|null
+     */
     protected $forward_date;
 
+    /**
+     * @var mixed|null
+     */
     protected $edit_date;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\ReplyToMessage
+     */
     protected $reply_to_message;
 
+    /**
+     * @var string|null
+     */
     protected $text;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Audio|null
+     */
     protected $audio;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Document|null
+     */
     protected $document;
 
+    /**
+     * @var array|null
+     */
     protected $photo;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Sticker|null
+     */
     protected $sticker;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Video|null
+     */
     protected $video;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Voice|null
+     */
     protected $voice;
 
+    /**
+     * @var mixed|null
+     */
     protected $caption;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Contact|null
+     */
     protected $contact;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\Location|null
+     */
     protected $location;
 
+    /**
+     * @var mixed|null
+     */
     protected $venue;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\User|null
+     */
     protected $new_chat_member;
 
+    /**
+     * @var \Longman\TelegramBot\Entities\User|null
+     */
     protected $left_chat_member;
 
+    /**
+     * @var mixed|null
+     */
     protected $new_chat_title;
 
+    /**
+     * @var mixed|null
+     */
     protected $new_chat_photo;
 
+    /**
+     * @var mixed|null
+     */
     protected $delete_chat_photo;
 
+    /**
+     * @var mixed|null
+     */
     protected $group_chat_created;
 
+    /**
+     * @var mixed|null
+     */
     protected $supergroup_chat_created;
 
+    /**
+     * @var mixed|null
+     */
     protected $channel_chat_created;
 
+    /**
+     * @var mixed|null
+     */
     protected $migrate_to_chat_id;
 
+    /**
+     * @var mixed|null
+     */
     protected $migrate_from_chat_id;
 
+    /**
+     * @var mixed|null
+     */
     protected $pinned_message;
 
+    /**
+     * @var mixed|null
+     */
     protected $entities;
 
+    /**
+     * @var mixed|null
+     */
     private $command;
 
+    /**
+     * @var mixed|null
+     */
     private $type;
 
     /**
      * Message constructor.
      *
      * @param array $data
-     * @param $bot_name
+     * @param       $bot_name
      */
     public function __construct(array $data, $bot_name)
     {
@@ -99,7 +201,13 @@ class Message extends Entity
         $this->init($data, $bot_name);
     }
 
-    //Common init to Message and ReplyToMessage
+    /**
+     * Common init to Message and ReplyToMessage
+     *
+     * @param array $data
+     * @param       $bot_name
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
     protected function init(array & $data, & $bot_name)
     {
         $this->bot_name = $bot_name;
@@ -142,7 +250,7 @@ class Message extends Entity
         $this->edit_date = isset($data['edit_date']) ? $data['edit_date'] : null;
 
         $this->text = isset($data['text']) ? $data['text'] : null;
-        $command = $this->getCommand();
+        $command    = $this->getCommand();
         if (!empty($command)) {
             $this->type = 'command';
         }
@@ -150,13 +258,13 @@ class Message extends Entity
         $this->audio = isset($data['audio']) ? $data['audio'] : null;
         if (!empty($this->audio)) {
             $this->audio = new Audio($this->audio);
-            $this->type = 'Audio';
+            $this->type  = 'Audio';
         }
 
         $this->document = isset($data['document']) ? $data['document'] : null;
         if (!empty($this->document)) {
             $this->document = new Document($this->document);
-            $this->type = 'Document';
+            $this->type     = 'Document';
         }
 
         $this->photo = isset($data['photo']) ? $data['photo'] : null; //array of photosize
@@ -167,25 +275,25 @@ class Message extends Entity
                 }
             }
             $this->photo = $photos;
-            $this->type = 'Photo';
+            $this->type  = 'Photo';
         }
 
         $this->sticker = isset($data['sticker']) ? $data['sticker'] : null;
         if (!empty($this->sticker)) {
             $this->sticker = new Sticker($this->sticker);
-            $this->type = 'Sticker';
+            $this->type    = 'Sticker';
         }
 
         $this->video = isset($data['video']) ? $data['video'] : null;
         if (!empty($this->video)) {
             $this->video = new Video($this->video);
-            $this->type = 'Video';
+            $this->type  = 'Video';
         }
 
         $this->voice = isset($data['voice']) ? $data['voice'] : null;
         if (!empty($this->voice)) {
             $this->voice = new Voice($this->voice);
-            $this->type = 'Voice';
+            $this->type  = 'Voice';
         }
 
         $this->caption = isset($data['caption']) ? $data['caption'] : null;//string
@@ -198,13 +306,13 @@ class Message extends Entity
         $this->location = isset($data['location']) ? $data['location'] : null;
         if (!empty($this->location)) {
             $this->location = new Location($this->location);
-            $this->type = 'Location';
+            $this->type     = 'Location';
         }
 
         $this->venue = isset($data['venue']) ? $data['venue'] : null;
         if (!empty($this->venue)) {
             $this->venue = new Venue($this->venue);
-            $this->type = 'Venue';
+            $this->type  = 'Venue';
         }
 
         //retrocompatibility
@@ -219,13 +327,13 @@ class Message extends Entity
         $this->new_chat_member = isset($data['new_chat_member']) ? $data['new_chat_member'] : null;
         if (!empty($this->new_chat_member)) {
             $this->new_chat_member = new User($this->new_chat_member);
-            $this->type = 'new_chat_member';
+            $this->type            = 'new_chat_member';
         }
 
         $this->left_chat_member = isset($data['left_chat_member']) ? $data['left_chat_member'] : null;
         if (!empty($this->left_chat_member)) {
             $this->left_chat_member = new User($this->left_chat_member);
-            $this->type = 'left_chat_member';
+            $this->type             = 'left_chat_member';
         }
 
         $this->new_chat_title = isset($data['new_chat_title']) ? $data['new_chat_title'] : null;
@@ -241,7 +349,7 @@ class Message extends Entity
                 }
             }
             $this->new_chat_photo = $photos;
-            $this->type = 'new_chat_photo';
+            $this->type           = 'new_chat_photo';
         }
 
         $this->delete_chat_photo = isset($data['delete_chat_photo']) ? $data['delete_chat_photo'] : null;
@@ -290,11 +398,15 @@ class Message extends Entity
         }
     }
 
-    //return the entire command like /echo or /echo@bot1 if specified
+    /**
+     * return the entire command like /echo or /echo@bot1 if specified
+     *
+     * @return string|void
+     */
     public function getFullCommand()
     {
         if (substr($this->text, 0, 1) === '/') {
-            $no_EOL = strtok($this->text, PHP_EOL);
+            $no_EOL   = strtok($this->text, PHP_EOL);
             $no_space = strtok($this->text, ' ');
 
             //try to understand which separator \n or space divide /command from text
@@ -308,6 +420,11 @@ class Message extends Entity
         }
     }
 
+    /**
+     * Get command
+     *
+     * @return bool|string
+     */
     public function getCommand()
     {
         if (!empty($this->command)) {
@@ -335,13 +452,18 @@ class Message extends Entity
         return false;
     }
 
+    /**
+     * Get message id
+     *
+     * @return mixed
+     */
     public function getMessageId()
     {
         return $this->message_id;
     }
 
     /**
-     * Get User object related to the  message
+     * Get User object related to the message
      *
      * @return \Longman\TelegramBot\Entities\User
      */
@@ -350,6 +472,11 @@ class Message extends Entity
         return $this->from;
     }
 
+    /**
+     * Get date
+     *
+     * @return mixed
+     */
     public function getDate()
     {
         return $this->date;
@@ -385,21 +512,42 @@ class Message extends Entity
         return $this->forward_from_chat;
     }
 
+    /**
+     * Get forward date
+     *
+     * @return mixed
+     */
     public function getForwardDate()
     {
         return $this->forward_date;
     }
 
+    /**
+     * Get edit date
+     *
+     * @return mixed
+     */
     public function getEditDate()
     {
         return $this->edit_date;
     }
 
+    /**
+     * Get reply to message
+     *
+     * @return \Longman\TelegramBot\Entities\ReplyToMessage
+     */
     public function getReplyToMessage()
     {
         return $this->reply_to_message;
     }
 
+    /**
+     * Get text
+     *
+     * @param bool $without_cmd
+     * @return string
+     */
     public function getText($without_cmd = false)
     {
         $text = $this->text;
@@ -416,6 +564,8 @@ class Message extends Entity
     }
 
     /**
+     * Get audio
+     *
      * @return \Longman\TelegramBot\Entities\Audio
      */
     public function getAudio()
@@ -424,6 +574,8 @@ class Message extends Entity
     }
 
     /**
+     * Get document
+     *
      * @return \Longman\TelegramBot\Entities\Document
      */
     public function getDocument()
@@ -432,6 +584,8 @@ class Message extends Entity
     }
 
     /**
+     * Get photo
+     *
      * @return array
      */
     public function getPhoto()
@@ -440,6 +594,8 @@ class Message extends Entity
     }
 
     /**
+     * Get sticker
+     *
      * @return \Longman\TelegramBot\Entities\Sticker
      */
     public function getSticker()
@@ -448,13 +604,18 @@ class Message extends Entity
     }
 
     /**
+     * Get video
+     *
      * @return \Longman\TelegramBot\Entities\Video
      */
     public function getVideo()
     {
         return $this->video;
     }
+
     /**
+     * Get voice
+     *
      * @return \Longman\TelegramBot\Entities\Voice
      */
     public function getVoice()
@@ -462,12 +623,19 @@ class Message extends Entity
         return $this->voice;
     }
 
+    /**
+     * Get caption
+     *
+     * @return mixed
+     */
     public function getCaption()
     {
         return $this->caption;
     }
 
     /**
+     * Get content
+     *
      * @return \Longman\TelegramBot\Entities\Contact
      */
     public function getContact()
@@ -476,6 +644,8 @@ class Message extends Entity
     }
 
     /**
+     * Get location
+     *
      * @return \Longman\TelegramBot\Entities\Location
      */
     public function getLocation()
@@ -483,20 +653,36 @@ class Message extends Entity
         return $this->location;
     }
 
+    /**
+     * Get venue
+     *
+     * @return mixed
+     */
     public function getVenue()
     {
         return $this->venue;
     }
 
+    /**
+     * Get new chat participant
+     *
+     * @return mixed
+     */
     public function getNewChatParticipant()
     {
         return $this->new_chat_member;
     }
 
+    /**
+     * Get left chat participant
+     *
+     * @return mixed
+     */
     public function getLeftChatParticipant()
     {
         return $this->left_chat_member;
     }
+
     /**
      * Get User object related to the new member
      *
@@ -517,46 +703,91 @@ class Message extends Entity
         return $this->left_chat_member;
     }
 
+    /**
+     * Get new chat title
+     *
+     * @return mixed
+     */
     public function getNewChatTitle()
     {
         return $this->new_chat_title;
     }
 
+    /**
+     * Get new chat photo
+     *
+     * @return mixed
+     */
     public function getNewChatPhoto()
     {
         return $this->new_chat_photo;
     }
 
+    /**
+     * Get delete chat photo
+     *
+     * @return mixed
+     */
     public function getDeleteChatPhoto()
     {
         return $this->delete_chat_photo;
     }
 
+    /**
+     * Get group chat created
+     *
+     * @return mixed
+     */
     public function getGroupChatCreated()
     {
         return $this->group_chat_created;
     }
 
+    /**
+     * Get supergroup chat created
+     *
+     * @return mixed
+     */
     public function getSupergroupChatCreated()
     {
         return $this->supergroup_chat_created;
     }
 
+    /**
+     * Get channel chat created
+     *
+     * @return mixed
+     */
     public function getChannelChatCreated()
     {
         return $this->channel_chat_created;
     }
 
+    /**
+     * Get migrate to chat id
+     *
+     * @return mixed
+     */
     public function getMigrateToChatId()
     {
         return $this->migrate_to_chat_id;
     }
 
+    /**
+     * Get migrate from chat id
+     *
+     * @return mixed
+     */
     public function getMigrateFromChatId()
     {
         return $this->migrate_from_chat_id;
     }
 
+    /**
+     * Bot added in chat
+     *
+     * @return bool
+     */
     public function botAddedInChat()
     {
         if (!empty($this->new_chat_member)) {
@@ -568,16 +799,31 @@ class Message extends Entity
         return false;
     }
 
+    /**
+     * Get type
+     *
+     * @return mixed
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * Get pinned message
+     *
+     * @return mixed
+     */
     public function getPinnedMessage()
     {
         return $this->pinned_message;
     }
 
+    /**
+     * Get entities
+     *
+     * @return mixed
+     */
     public function getEntities()
     {
         return $this->entities;

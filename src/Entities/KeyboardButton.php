@@ -14,14 +14,26 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class KeyboardButton extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $text;
+
+    /**
+     * @var mixed|null
+     */
     protected $request_contact;
+
+    /**
+     * @var mixed|null
+     */
     protected $request_location;
 
     /**
      * KeyboardButton constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($data = array())
     {
@@ -30,7 +42,7 @@ class KeyboardButton extends Entity
             throw new TelegramException('text is empty!');
         }
 
-        $this->request_contact = isset($data['request_contact']) ? $data['request_contact'] : null;
+        $this->request_contact  = isset($data['request_contact']) ? $data['request_contact'] : null;
         $this->request_location = isset($data['request_location']) ? $data['request_location'] : null;
     }
 }

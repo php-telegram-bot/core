@@ -14,20 +14,30 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineKeyboardButton extends Entity
 {
-    /**#@+
-     * @var string
+    /**
+     * @var mixed|null
      */
     protected $text;
+
+    /**
+     * @var string
+     */
     protected $url;
+
+    /**
+     * @var mixed
+     */
     protected $callback_data;
+
+    /**
+     * @var mixed
+     */
     protected $switch_inline_query;
-    /**#@-*/
 
     /**
      * InlineKeyboardButton constructor.
      *
      * @param array $data
-     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])

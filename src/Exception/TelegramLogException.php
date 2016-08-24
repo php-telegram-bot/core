@@ -15,4 +15,5 @@ namespace Longman\TelegramBot\Exception;
  */
 class TelegramLogException extends \Exception
 {
+
 }

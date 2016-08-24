@@ -14,17 +14,41 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Audio extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $duration;
+
+    /**
+     * @var mixed|null
+     */
     protected $performer;
+
+    /**
+     * @var mixed|null
+     */
     protected $title;
+
+    /**
+     * @var mixed|null
+     */
     protected $mime_type;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
 
     /**
      * Audio constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -40,38 +64,68 @@ class Audio extends Entity
 
         $this->performer = isset($data['performer']) ? $data['performer'] : null;
 
-        $this->title = isset($data['title']) ? $data['title'] : null;
+        $this->title     = isset($data['title']) ? $data['title'] : null;
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get duration
+     *
+     * @return mixed|null
+     */
     public function getDuration()
     {
-         return $this->duration;
+        return $this->duration;
     }
 
+    /**
+     * Get performer
+     *
+     * @return mixed|null
+     */
     public function getPerformer()
     {
         return $this->performer;
     }
 
+    /**
+     * Get title
+     *
+     * @return mixed|null
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Get mime type
+     *
+     * @return mixed|null
+     */
     public function getMimeType()
     {
-         return $this->mime_type;
+        return $this->mime_type;
     }
 
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
-         return $this->file_size;
+        return $this->file_size;
     }
 }

@@ -12,11 +12,16 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
 class ForceReply extends Entity
 {
+    /**
+     * @var bool
+     */
     protected $force_reply;
+
+    /**
+     * @var bool|mixed
+     */
     protected $selective;
 
     /**
@@ -27,6 +32,6 @@ class ForceReply extends Entity
     public function __construct(array $data = null)
     {
         $this->force_reply = true;
-        $this->selective = isset($data['selective']) ? $data['selective'] : false;
+        $this->selective   = isset($data['selective']) ? $data['selective'] : false;
     }
 }

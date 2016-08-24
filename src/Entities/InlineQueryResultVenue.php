@@ -14,19 +14,51 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultVenue extends InlineQueryResult
 {
+    /**
+     * @var mixed|null
+     */
     protected $latitude;
+
+    /**
+     * @var mixed|null
+     */
     protected $longitude;
+
+    /**
+     * @var mixed|null
+     */
     protected $title;
+
+    /**
+     * @var mixed|null
+     */
     protected $address;
+
+    /**
+     * @var mixed|null
+     */
     protected $foursquare_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $thumb_url;
+
+    /**
+     * @var mixed|null
+     */
     protected $thumb_width;
+
+    /**
+     * @var mixed|null
+     */
     protected $thumb_height;
 
     /**
      * InlineQueryResultVenue constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -56,46 +88,86 @@ class InlineQueryResultVenue extends InlineQueryResult
 
         $this->foursquare_id = isset($data['foursquare_id']) ? $data['foursquare_id'] : null;
 
-        $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
-        $this->thumb_width = isset($data['thumb_width']) ? $data['thumb_width'] : null;
+        $this->thumb_url    = isset($data['thumb_url']) ? $data['thumb_url'] : null;
+        $this->thumb_width  = isset($data['thumb_width']) ? $data['thumb_width'] : null;
         $this->thumb_height = isset($data['thumb_height']) ? $data['thumb_height'] : null;
     }
 
+    /**
+     * Get latitude
+     *
+     * @return mixed|null
+     */
     public function getLatitude()
     {
         return $this->latitude;
     }
 
+    /**
+     * Get longitude
+     *
+     * @return mixed|null
+     */
     public function getLongitude()
     {
         return $this->longitude;
     }
 
+    /**
+     * Get title
+     *
+     * @return mixed|null
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Get address
+     *
+     * @return mixed|null
+     */
     public function getAddress()
     {
         return $this->address;
     }
 
+    /**
+     * Get forsquare id
+     *
+     * @return mixed|null
+     */
     public function getFoursquareId()
     {
         return $this->foursquare_id;
     }
 
+    /**
+     * Get thumb url
+     *
+     * @return mixed|null
+     */
     public function getThumbUrl()
     {
         return $this->thumb_url;
     }
 
+    /**
+     * Get thumb width
+     *
+     * @return mixed|null
+     */
     public function getThumbWidth()
     {
         return $this->thumb_width;
     }
 
+    /**
+     * Get thumb height
+     *
+     * @return mixed|null
+     */
     public function getThumbHeight()
     {
         return $this->thumb_height;

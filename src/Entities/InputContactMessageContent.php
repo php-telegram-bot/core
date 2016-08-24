@@ -14,14 +14,26 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InputContactMessageContent extends InputMessageContent
 {
+    /**
+     * @var mixed|null
+     */
     protected $phone_number;
+
+    /**
+     * @var mixed|null
+     */
     protected $first_name;
+
+    /**
+     * @var mixed|null
+     */
     protected $last_name;
 
     /**
      * InputContactMessageContent constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {

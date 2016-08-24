@@ -14,18 +14,24 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Location extends Entity
 {
-
+    /**
+     * @var mixed|null
+     */
     protected $longitude;
+
+    /**
+     * @var mixed|null
+     */
     protected $latitude;
 
     /**
      * Location constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
-
         $this->longitude = isset($data['longitude']) ? $data['longitude'] : null;
         if (empty($this->longitude)) {
             throw new TelegramException('longitude is empty!');
@@ -37,11 +43,21 @@ class Location extends Entity
         }
     }
 
+    /**
+     * Get longitude
+     *
+     * @return mixed|null
+     */
     public function getLongitude()
     {
         return $this->longitude;
     }
 
+    /**
+     * Get latitude
+     *
+     * @return mixed|null
+     */
     public function getLatitude()
     {
         return $this->latitude;

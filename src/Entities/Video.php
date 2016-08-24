@@ -14,18 +14,46 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Video extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $width;
+
+    /**
+     * @var mixed|null
+     */
     protected $height;
+
+    /**
+     * @var mixed|null
+     */
     protected $duration;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\PhotoSize
+     */
     protected $thumb;
+
+    /**
+     * @var mixed|null
+     */
     protected $mime_type;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
 
     /**
      * Video constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -58,34 +86,73 @@ class Video extends Entity
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get width
+     *
+     * @return mixed|null
+     */
     public function getWidth()
     {
-         return $this->width;
+        return $this->width;
     }
 
+    /**
+     * Get height
+     *
+     * @return mixed|null
+     */
     public function getHeight()
     {
-         return $this->height;
+        return $this->height;
     }
+
+    /**
+     * Get duration
+     *
+     * @return mixed|null
+     */
     public function getDuration()
     {
-         return $this->duration;
+        return $this->duration;
     }
+
+    /**
+     * Get thumb
+     *
+     * @return \Longman\TelegramBot\Entities\PhotoSize
+     */
     public function getThumb()
     {
-         return $this->thumb;
+        return $this->thumb;
     }
+
+    /**
+     * Get mime type
+     *
+     * @return mixed|null
+     */
     public function getMimeType()
     {
-         return $this->mime_type;
+        return $this->mime_type;
     }
+
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
-         return $this->file_size;
+        return $this->file_size;
     }
 }

@@ -14,16 +14,36 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQuery extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $id;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\User
+     */
     protected $from;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\Location
+     */
     protected $location;
+
+    /**
+     * @var mixed|null
+     */
     protected $query;
+
+    /**
+     * @var mixed|null
+     */
     protected $offset;
 
     /**
      * InlineQuery constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -43,30 +63,55 @@ class InlineQuery extends Entity
             $this->location = new Location($this->location);
         }
 
-        $this->query = isset($data['query']) ? $data['query'] : null;
+        $this->query  = isset($data['query']) ? $data['query'] : null;
         $this->offset = isset($data['offset']) ? $data['offset'] : null;
     }
 
+    /**
+     * Get id
+     *
+     * @return mixed|null
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Get from
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getFrom()
     {
         return $this->from;
     }
 
+    /**
+     * Get location
+     *
+     * @return \Longman\TelegramBot\Entities\Location
+     */
     public function getLocation()
     {
         return $this->location;
     }
 
+    /**
+     * Get query
+     *
+     * @return mixed|null
+     */
     public function getQuery()
     {
         return $this->query;
     }
 
+    /**
+     * Get offset
+     *
+     * @return mixed|null
+     */
     public function getOffset()
     {
         return $this->offset;
