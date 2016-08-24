@@ -12,9 +12,6 @@ namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Request;
 
-/**
- * Abstract System Command Class
- */
 abstract class SystemCommand extends Command
 {
     /**
@@ -23,7 +20,7 @@ abstract class SystemCommand extends Command
      * Although system commands should just work and return a successful ServerResponse,
      * each system command can override this method to add custom functionality.
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function execute()
     {

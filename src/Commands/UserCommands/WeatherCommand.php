@@ -21,14 +21,25 @@ use Longman\TelegramBot\Request;
  */
 class WeatherCommand extends UserCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'weather';
+
+    /**
+     * @var string
+     */
     protected $description = 'Show weather by location';
+
+    /**
+     * @var string
+     */
     protected $usage = '/weather <location>';
+
+    /**
+     * @var string
+     */
     protected $version = '1.1.0';
-    /**#@-*/
 
     /**
      * Base URI for OpenWeatherMap API
@@ -43,12 +54,13 @@ class WeatherCommand extends UserCommand
      * @param string $location
      *
      * @return string
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function getWeatherData($location)
     {
         $client = new Client(['base_uri' => $this->owm_api_base_uri]);
-        $path = 'weather';
-        $query = [
+        $path   = 'weather';
+        $query  = [
             'q'     => $location,
             'units' => 'metric',
             'APPID' => trim($this->getConfig('owm_api_key')),
@@ -60,7 +72,7 @@ class WeatherCommand extends UserCommand
             throw new TelegramException($e->getMessage());
         }
 
-        return (string) $response->getBody();
+        return (string)$response->getBody();
     }
 
     /**
@@ -78,7 +90,7 @@ class WeatherCommand extends UserCommand
             }
 
             //http://openweathermap.org/weather-conditions
-            $conditions = [
+            $conditions     = [
                 'clear'        => ' ☀️',
                 'clouds'       => ' ☁️',
                 'rain'         => ' ☔',
@@ -103,13 +115,15 @@ class WeatherCommand extends UserCommand
     }
 
     /**
-     * {@inheritdoc}
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $text = '';
+        $text    = '';
 
         if (trim($this->getConfig('owm_api_key'))) {
             if ($location = trim($message->getText(true))) {

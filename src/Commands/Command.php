@@ -15,9 +15,6 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Entities\Update;
 
-/**
- * Abstract Command Class
- */
 abstract class Command
 {
     /**
@@ -93,7 +90,7 @@ abstract class Command
     /**
      * Constructor
      *
-     * @param Telegram        $telegram
+     * @param Telegram                             $telegram
      * @param \Longman\TelegramBot\Entities\Update $update
      */
     public function __construct(Telegram $telegram, Update $update = null)
@@ -112,7 +109,7 @@ abstract class Command
     public function setUpdate(Update $update = null)
     {
         if (!empty($update)) {
-            $this->update = $update;
+            $this->update  = $update;
             $this->message = $this->update->getMessage();
         }
         return $this;

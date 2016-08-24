@@ -21,14 +21,25 @@ use Longman\TelegramBot\Request;
  */
 class DateCommand extends UserCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'date';
+
+    /**
+     * @var string
+     */
     protected $description = 'Show date/time by location';
+
+    /**
+     * @var string
+     */
     protected $usage = '/date <location>';
+
+    /**
+     * @var string
+     */
     protected $version = '1.3.0';
-    /**#@-*/
 
     /**
      * Guzzle Client object
@@ -64,10 +75,11 @@ class DateCommand extends UserCommand
      * @param string $location
      *
      * @return array|boolean
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function getCoordinates($location)
     {
-        $path = 'geocode/json';
+        $path  = 'geocode/json';
         $query = ['address' => urlencode($location)];
 
         if ($this->google_api_key !== null) {
@@ -85,10 +97,10 @@ class DateCommand extends UserCommand
         }
 
         $result = $result['results'][0];
-        $lat = $result['geometry']['location']['lat'];
-        $lng = $result['geometry']['location']['lng'];
-        $acc = $result['geometry']['location_type'];
-        $types = $result['types'];
+        $lat    = $result['geometry']['location']['lat'];
+        $lng    = $result['geometry']['location']['lng'];
+        $acc    = $result['geometry']['location_type'];
+        $types  = $result['types'];
 
         return [$lat, $lng, $acc, $types];
     }
@@ -100,12 +112,13 @@ class DateCommand extends UserCommand
      * @param string $lng
      *
      * @return array|boolean
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function getDate($lat, $lng)
     {
         $path = 'timezone/json';
 
-        $date_utc = new \DateTime(null, new \DateTimeZone('UTC'));
+        $date_utc  = new \DateTime(null, new \DateTimeZone('UTC'));
         $timestamp = $date_utc->format('U');
 
         $query = [
@@ -184,7 +197,9 @@ class DateCommand extends UserCommand
     }
 
     /**
-     * {@inheritdoc}
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
@@ -196,7 +211,7 @@ class DateCommand extends UserCommand
 
         $message = $this->getMessage();
 
-        $chat_id = $message->getChat()->getId();
+        $chat_id  = $message->getChat()->getId();
         $location = $message->getText(true);
 
         if (empty($location)) {

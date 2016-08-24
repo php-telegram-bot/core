@@ -22,18 +22,35 @@ use Longman\TelegramBot\Request;
  */
 class WhoisCommand extends AdminCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'whois';
-    protected $description = 'Lookup user or group info';
-    protected $usage = '/whois <id> or /whois <search string>';
-    protected $version = '1.1.0';
-    protected $need_mysql = true;
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Lookup user or group info';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/whois <id> or /whois <search string>';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
@@ -41,9 +58,9 @@ class WhoisCommand extends AdminCommand
 
         $chat_id = $message->getChat()->getId();
         $command = $message->getCommand();
-        $text = trim($message->getText(true));
+        $text    = trim($message->getText(true));
 
-        $data = [ 'chat_id' => $chat_id ];
+        $data = ['chat_id' => $chat_id];
 
         //No point in replying to messages in private chats
         if (!$message->getChat()->isPrivateChat()) {
@@ -93,12 +110,12 @@ class WhoisCommand extends AdminCommand
 
             if (is_array($result)) {
                 $result['id'] = $result['chat_id'];
-                $chat = new Chat($result);
+                $chat         = new Chat($result);
 
-                $user_id = $result['id'];
+                $user_id    = $result['id'];
                 $created_at = $result['chat_created_at'];
                 $updated_at = $result['chat_updated_at'];
-                $old_id = $result['old_id'];
+                $old_id     = $result['old_id'];
             }
 
             if ($chat != null) {
@@ -114,33 +131,33 @@ class WhoisCommand extends AdminCommand
                     $text .= 'Last activity: ' . $updated_at . "\n";
 
                     //Code from Whoami command
-                    $limit = 10;
-                    $offset = null;
+                    $limit          = 10;
+                    $offset         = null;
                     $ServerResponse = Request::getUserProfilePhotos([
-                        'user_id' => $user_id ,
-                        'limit'   => $limit,
-                        'offset'  => $offset,
-                    ]);
+                                                                        'user_id' => $user_id,
+                                                                        'limit'   => $limit,
+                                                                        'offset'  => $offset,
+                                                                    ]);
 
                     if ($ServerResponse->isOk()) {
                         $UserProfilePhoto = $ServerResponse->getResult();
-                        $totalcount = $UserProfilePhoto->getTotalCount();
+                        $totalcount       = $UserProfilePhoto->getTotalCount();
                     } else {
                         $totalcount = 0;
                     }
 
                     if ($totalcount > 0) {
-                        $photos = $UserProfilePhoto->getPhotos();
-                        $photo = $photos[0][2];
+                        $photos  = $UserProfilePhoto->getPhotos();
+                        $photo   = $photos[0][2];
                         $file_id = $photo->getFileId();
 
-                        $data['photo'] = $file_id;
+                        $data['photo']   = $file_id;
                         $data['caption'] = $text;
 
                         return Request::sendPhoto($data);
                     }
                 } elseif ($chat->isGroupChat()) {
-                    $text = 'Chat ID: ' . $user_id . (!empty($old_id) ? ' (previously: '.$old_id.')' : ''). "\n";
+                    $text = 'Chat ID: ' . $user_id . (!empty($old_id) ? ' (previously: ' . $old_id . ')' : '') . "\n";
                     $text .= 'Type: ' . ucfirst($chat->getType()) . "\n";
                     $text .= 'Title: ' . $chat->getTitle() . "\n";
                     $text .= 'First time added to group: ' . $created_at . "\n";

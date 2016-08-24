@@ -18,15 +18,30 @@ use Longman\TelegramBot\Request;
  */
 class SendtoallCommand extends AdminCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'sendtoall';
+
+    /**
+     * @var string
+     */
     protected $description = 'Send the message to all the user\'s bot';
+
+    /**
+     * @var string
+     */
     protected $usage = '/sendtoall <message to send>';
+
+    /**
+     * @var string
+     */
     protected $version = '1.2.1';
+
+    /**
+     * @var bool
+     */
     protected $need_mysql = true;
-    /**#@-*/
 
     /**
      * Execute command
@@ -38,7 +53,7 @@ class SendtoallCommand extends AdminCommand
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
+        $text    = $message->getText(true);
 
         if ($text === '') {
             $text = 'Write the message to send: /sendtoall <message>';
@@ -53,18 +68,18 @@ class SendtoallCommand extends AdminCommand
                 null  //'yyyy-mm-dd hh:mm:ss' date range to
             );
 
-            $tot = 0;
+            $tot  = 0;
             $fail = 0;
 
             $text = 'Message sent to:' . "\n";
             foreach ($results as $result) {
                 $status = '';
-                $type = '';
+                $type   = '';
                 if ($result->isOk()) {
                     $status = '✔️';
 
                     $ServerResponse = $result->getResult();
-                    $chat = $ServerResponse->getChat();
+                    $chat           = $ServerResponse->getChat();
                     if ($chat->isPrivateChat()) {
                         $name = $chat->getFirstName();
                         $type = 'user';

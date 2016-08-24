@@ -18,17 +18,30 @@ use Longman\TelegramBot\Request;
  */
 class HelpCommand extends UserCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'help';
-    protected $description = 'Show bot commands help';
-    protected $usage = '/help or /help <command>';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Show bot commands help';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/help or /help <command>';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
@@ -36,7 +49,7 @@ class HelpCommand extends UserCommand
         $chat_id = $message->getChat()->getId();
 
         $message_id = $message->getMessageId();
-        $command = trim($message->getText(true));
+        $command    = trim($message->getText(true));
 
         //Only get enabled Admin and User commands
         $commands = array_filter($this->telegram->getCommandsList(), function ($command) {
@@ -56,7 +69,7 @@ class HelpCommand extends UserCommand
             $command = str_replace('/', '', $command);
             if (isset($commands[$command])) {
                 $command = $commands[$command];
-                $text = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
+                $text    = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
                 $text .= 'Description: ' . $command->getDescription() . "\n";
                 $text .= 'Usage: ' . $command->getUsage();
             } else {

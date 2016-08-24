@@ -15,30 +15,44 @@ use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Request;
 
-/**
- * Admin "/chats" command
- */
 class ChatsCommand extends AdminCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'chats';
-    protected $description = 'List or search all chats stored by the bot';
-    protected $usage = '/chats, /chats * or /chats <search string>';
-    protected $version = '1.0.2';
-    protected $need_mysql = true;
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'List or search all chats stored by the bot';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/chats, /chats * or /chats <search string>';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.2';
+
+    /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
      */
     public function execute()
     {
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text = trim($message->getText(true));
+        $text    = trim($message->getText(true));
 
         $results = DB::selectChats(
             true, //Select groups (group chat)
@@ -50,8 +64,8 @@ class ChatsCommand extends AdminCommand
             ($text === '' || $text == '*') ? null : $text //Text to search in user/group name
         );
 
-        $user_chats = 0;
-        $group_chats = 0;
+        $user_chats        = 0;
+        $group_chats       = 0;
         $super_group_chats = 0;
 
         if ($text === '') {
@@ -65,11 +79,12 @@ class ChatsCommand extends AdminCommand
         foreach ($results as $result) {
             //Initialize a chat object
             $result['id'] = $result['chat_id'];
-            $chat = new Chat($result);
+            $chat         = new Chat($result);
 
             $whois = $chat->getId();
             if ($this->telegram->getCommandObject('whois')) {
-                $whois = '/whois' . str_replace('-', 'g', $chat->getId()); //We can't use '-' in command because part of it will become unclickable
+                $whois = '/whois' . str_replace('-', 'g',
+                                                $chat->getId()); //We can't use '-' in command because part of it will become unclickable
             }
 
             if ($chat->isPrivateChat()) {
@@ -102,7 +117,7 @@ class ChatsCommand extends AdminCommand
             $text_back .= "\n" . 'Total: ' . ($user_chats + $group_chats + $super_group_chats);
 
             if ($text === '') {
-                $text_back .= "\n\n" . 'List all chats: /' . $this->name .' *' . "\n" . 'Search for chats: /' . $this->name .' <search string>';
+                $text_back .= "\n\n" . 'List all chats: /' . $this->name . ' *' . "\n" . 'Search for chats: /' . $this->name . ' <search string>';
             }
         }
 
