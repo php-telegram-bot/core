@@ -195,7 +195,7 @@ class Botan
         if (!filter_var($response, FILTER_VALIDATE_URL) === false) {
             BotanDB::insertShortUrl($user_id, $url, $response);
         } else {
-            // @FIXME: Add telegram log
+            // @TODO: Add telegram log
             error_log('Botan.io API replied with error: ' . $response);
             return $url;
         }
