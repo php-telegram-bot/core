@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 sudo: required
 language: php
 
@@ -41,7 +41,9 @@ before_script:
 
 script:
   - ./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/ --report-width=150
-  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - if [ "$TRAVIS_PHP_VERSION" == "7.0" ]; then ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml;
+    else ./vendor/bin/phpunit;
+    fi
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
