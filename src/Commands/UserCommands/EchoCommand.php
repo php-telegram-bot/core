@@ -36,12 +36,13 @@ class EchoCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {

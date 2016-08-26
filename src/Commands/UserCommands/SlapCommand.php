@@ -36,20 +36,20 @@ class SlapCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
         $message = $this->getMessage();
 
-        $chat_id    = $message->getChat()->getId();
-        $message_id = $message->getMessageId();
-        $text       = $message->getText(true);
+        $chat_id = $message->getChat()->getId();
+        $text    = $message->getText(true);
 
         $sender = '@' . $message->getFrom()->getUsername();
 

@@ -10,6 +10,7 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 
@@ -36,12 +37,13 @@ class HelpCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -52,26 +54,43 @@ class HelpCommand extends UserCommand
         $command    = trim($message->getText(true));
 
         //Only get enabled Admin and User commands
-        $commands = array_filter($this->telegram->getCommandsList(), function ($command) {
-            return (!$command->isSystemCommand() && $command->isEnabled());
+        /** @var Command[] $command_objs */
+        $command_objs = array_filter($this->telegram->getCommandsList(), function ($command_obj) {
+            /** @var Command $command_obj */
+            return !$command_obj->isSystemCommand() && $command_obj->isEnabled();
         });
 
         //If no command parameter is passed, show the list
         if ($command === '') {
-            $text = $this->telegram->getBotName() . ' v. ' . $this->telegram->getVersion() . "\n\n";
-            $text .= 'Commands List:' . "\n";
-            foreach ($commands as $command) {
-                $text .= '/' . $command->getName() . ' - ' . $command->getDescription() . "\n";
+            $text = sprintf(
+                '%s v. %s' . PHP_EOL . PHP_EOL . 'Commands List:' . PHP_EOL,
+                $this->telegram->getBotName(),
+                $this->telegram->getVersion()
+            );
+
+            foreach ($command_objs as $command) {
+                $text .= sprintf(
+                    '/%s - %s' . PHP_EOL,
+                    $command->getName(),
+                    $command->getDescription()
+                );
             }
 
-            $text .= "\n" . 'For exact command help type: /help <command>';
+            $text .= PHP_EOL . 'For exact command help type: /help <command>';
         } else {
             $command = str_replace('/', '', $command);
-            if (isset($commands[$command])) {
-                $command = $commands[$command];
-                $text    = 'Command: ' . $command->getName() . ' v' . $command->getVersion() . "\n";
-                $text .= 'Description: ' . $command->getDescription() . "\n";
-                $text .= 'Usage: ' . $command->getUsage();
+            if (isset($command_objs[$command])) {
+                /** @var Command $command_obj */
+                $command_obj = $command_objs[$command];
+                $text = sprintf(
+                    'Command: %s v%s' . PHP_EOL .
+                    'Description: %s' . PHP_EOL .
+                    'Usage: %s',
+                    $command_obj->getName(),
+                    $command_obj->getVersion(),
+                    $command_obj->getDescription(),
+                    $command_obj->getUsage()
+                );
             } else {
                 $text = 'No help available: Command /' . $command . ' not found';
             }
