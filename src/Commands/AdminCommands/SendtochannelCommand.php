@@ -346,8 +346,10 @@ class SendtochannelCommand extends AdminCommand
         if ($text !== '') {
             $channels      = (array)$this->getConfig('your_channel');
             $first_channel = $channels[0];
-            $data['text']  = $this->publish(new Message($message->reflect(), $this->telegram->getBotName()),
-                $first_channel);
+            $data['text']  = $this->publish(
+                new Message($message->reflect(), $this->telegram->getBotName()),
+                $first_channel
+            );
         }
 
         return Request::sendMessage($data);
