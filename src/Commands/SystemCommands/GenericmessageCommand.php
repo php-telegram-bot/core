@@ -32,7 +32,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.2';
+    protected $version = '1.1.0';
 
     /**
      * @var bool
@@ -54,6 +54,7 @@ class GenericmessageCommand extends SystemCommand
      * Execute command
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -64,7 +65,7 @@ class GenericmessageCommand extends SystemCommand
         );
         //Fetch conversation command if it exists and execute it
         if ($conversation->exists() && ($command = $conversation->getCommand())) {
-            return $this->telegram->executeCommand($command, $this->update);
+            return $this->telegram->executeCommand($command);
         }
 
         return Request::emptyResponse();

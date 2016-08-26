@@ -30,11 +30,19 @@ class GroupchatcreatedCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
-    /*public function execute()
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$group_chat_created = $message->getGroupChatCreated();
-    }*/
+
+        return parent::execute();
+    }
 }

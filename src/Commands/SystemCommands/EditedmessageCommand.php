@@ -30,11 +30,19 @@ class EditedmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
-    /*public function execute()
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
-        $update = $this->getUpdate();
-        $edited_message = $update->getEditedMessage();
-    }*/
+        //$update = $this->getUpdate();
+        //$edited_message = $update->getEditedMessage();
+
+        return parent::execute();
+    }
 }
