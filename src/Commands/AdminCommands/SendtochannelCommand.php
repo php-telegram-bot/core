@@ -340,7 +340,7 @@ class SendtochannelCommand extends AdminCommand
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => 'Usage: ' . $this->usage,
+            'text'    => 'Usage: ' . $this->getUsage(),
         ];
 
         if ($text !== '') {

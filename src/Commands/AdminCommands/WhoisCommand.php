@@ -141,9 +141,9 @@ class WhoisCommand extends AdminCommand
                     $text .= 'Last activity: ' . $updated_at . PHP_EOL;
 
                     //Code from Whoami command
-                    $limit          = 10;
-                    $offset         = null;
-                    $ServerResponse = Request::getUserProfilePhotos(
+                    $limit    = 10;
+                    $offset   = null;
+                    $response = Request::getUserProfilePhotos(
                         [
                             'user_id' => $user_id,
                             'limit'   => $limit,
@@ -151,12 +151,12 @@ class WhoisCommand extends AdminCommand
                         ]
                     );
 
-                    if ($ServerResponse->isOk()) {
-                        /** @var UserProfilePhotos $UserProfilePhoto */
-                        $UserProfilePhoto = $ServerResponse->getResult();
+                    if ($response->isOk()) {
+                        /** @var UserProfilePhotos $user_profile_photos */
+                        $user_profile_photos = $response->getResult();
 
-                        if ($UserProfilePhoto->getTotalCount() > 0) {
-                            $photos = $UserProfilePhoto->getPhotos();
+                        if ($user_profile_photos->getTotalCount() > 0) {
+                            $photos = $user_profile_photos->getPhotos();
 
                             /** @var PhotoSize $photo */
                             $photo   = $photos[0][2];
