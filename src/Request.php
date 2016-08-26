@@ -87,6 +87,7 @@ class Request
      * Initialize
      *
      * @param \Longman\TelegramBot\Telegram $telegram
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function initialize(Telegram $telegram)
@@ -120,6 +121,7 @@ class Request
         }
 
         TelegramLog::update(self::$input);
+
         return self::$input;
     }
 
@@ -140,7 +142,7 @@ class Request
 
         $fake_response = ['ok' => true]; // :)
 
-        if (!isset($data)) {
+        if ($data === null) {
             $fake_response['result'] = true;
         }
 
@@ -176,7 +178,7 @@ class Request
 
         //Fix so that the keyboard markup is a string, not an object
         if (isset($data['reply_markup']) && !is_string($data['reply_markup'])) {
-            $data['reply_markup'] = (string) $data['reply_markup'];
+            $data['reply_markup'] = (string)$data['reply_markup'];
         }
 
         $request_params = ['debug' => $debug_handle];
@@ -193,25 +195,24 @@ class Request
         //Reformat data array in multipart way
         if ($contains_resource) {
             foreach ($data as $key => $item) {
-                $request_params['multipart'][] = array('name' => $key, 'contents' => $item);
+                $request_params['multipart'][] = ['name' => $key, 'contents' => $item];
             }
         } else {
             $request_params['form_params'] = $data;
         }
 
+        $result = '';
         try {
-            $response = self::$client->post(
+            $result = (string)self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
-            );
+            )->getBody();
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
         }
-
-        $result = $response->getBody();
 
         //Logging getUpdates Update
         if ($action === 'getUpdates') {
@@ -224,7 +225,7 @@ class Request
     /**
      * Download file
      *
-     * @param Entities\File $file
+     * @param \Longman\TelegramBot\Entities\File $file
      *
      * @return boolean
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -244,7 +245,7 @@ class Request
         $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
-            $response = self::$client->get(
+            self::$client->get(
                 '/file/bot' . self::$telegram->getApiKey() . '/' . $path,
                 ['debug' => $debug_handle, 'sink' => $loc_path]
             );
@@ -272,6 +273,7 @@ class Request
         if ($fp === false) {
             throw new TelegramException('Cannot open ' . $file . ' for reading');
         }
+
         return $fp;
     }
 
@@ -294,6 +296,7 @@ class Request
 
         if (defined('PHPUNIT_TESTSUITE')) {
             $fake_response = self::generateGeneralFakeServerResponse($data);
+
             return new ServerResponse($fake_response, $bot_name);
         }
 
@@ -301,8 +304,8 @@ class Request
 
         $response = json_decode(self::execute($action, $data), true);
 
-        if (is_null($response)) {
-            throw new TelegramException('Telegram returned an invalid response! Please your bot name and api token.');
+        if (null === $response) {
+            throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
         }
 
         return new ServerResponse($response, $bot_name);
@@ -356,6 +359,7 @@ class Request
      * Get me
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getMe()
     {
@@ -573,6 +577,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getUpdates(array $data)
     {
@@ -586,6 +591,7 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function setWebhook($url = '', $file = null)
     {
@@ -779,7 +785,8 @@ class Request
      * No request to telegram are sent, this function is used in commands that
      * don't need to fire a message after execution
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function emptyResponse()
     {
@@ -817,9 +824,11 @@ class Request
         $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
 
         $results = [];
-        foreach ($chats as $row) {
-            $data['chat_id'] = $row['chat_id'];
-            $results[]       = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+        if (is_array($chats)) {
+            foreach ($chats as $row) {
+                $data['chat_id'] = $row['chat_id'];
+                $results[]       = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+            }
         }
 
         return $results;
