@@ -25,7 +25,7 @@ class ImageCommand extends UserCommand
     protected $name = 'image';
     protected $description = 'Send Image';
     protected $usage = '/image';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**
@@ -35,20 +35,28 @@ class ImageCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
+        $text    = $message->getText(true);
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['caption'] = $text;
+        $data = [
+            'chat_id' => $chat_id,
+            'caption' => $text,
+        ];
 
-        //return Request::sendPhoto($data, $this->telegram->getUploadPath().'/'.'image.jpg');
+        //Return a random picture from the telegram->getUploadPath().
         return Request::sendPhoto($data, $this->ShowRandomImage($this->telegram->getUploadPath()));
     }
-    //return random picture from the telegram->getUploadPath();
-    
-    private function ShowRandomImage($dir) {
-		$image_list = scandir($dir);
-		return $dir . "/" . $image_list[mt_rand(2, count($image_list) - 1)];
-	}
 
+    /**
+     * Return the path to a random image in the passed directory.
+     *
+     * @param string $dir
+     *
+     * @return string
+     */
+    private function ShowRandomImage($dir)
+    {
+        $image_list = scandir($dir);
+
+        return $dir . '/' . $image_list[mt_rand(2, count($image_list) - 1)];
+    }
 }
