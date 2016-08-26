@@ -288,9 +288,7 @@ class Request
      */
     public static function send($action, array $data = null)
     {
-        if (!in_array($action, self::$actions)) {
-            throw new TelegramException('The action ' . $action . ' doesn\'t exist!');
-        }
+        self::ensureValidAction($action);
 
         $bot_name = self::$telegram->getBotName();
 
@@ -299,6 +297,8 @@ class Request
             return new ServerResponse($fake_response, $bot_name);
         }
 
+        self::ensureNonEmptyData($data);
+
         $response = json_decode(self::execute($action, $data), true);
 
         if (is_null($response)) {
@@ -306,6 +306,50 @@ class Request
         }
 
         return new ServerResponse($response, $bot_name);
+    }
+
+    /**
+     * Make sure the data isn't empty, else throw an exception
+     *
+     * @param array $data
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function ensureNonEmptyData(array $data)
+    {
+        if (empty($data)) {
+            throw new TelegramException('Data is empty!');
+        }
+    }
+
+    /**
+     * Make sure the action is valid, else throw an exception
+     *
+     * @param string $action
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function ensureValidAction($action)
+    {
+        if (!in_array($action, self::$actions, true)) {
+            throw new TelegramException('The action " . $action . " doesn\'t exist!');
+        }
+    }
+
+    /**
+     * Assign an encoded file to a data array
+     *
+     * @param array  $data
+     * @param string $field
+     * @param string $file
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function assignEncodedFile(&$data, $field, $file)
+    {
+        if ($file !== null && $file !== '') {
+            $data[$field] = self::encodeFile($file);
+        }
     }
 
     /**
@@ -332,17 +376,16 @@ class Request
      */
     public static function sendMessage(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
         $text            = $data['text'];
         $string_len_utf8 = mb_strlen($text, 'UTF-8');
         if ($string_len_utf8 > 4096) {
             $data['text'] = mb_substr($text, 0, 4096);
             self::send('sendMessage', $data);
             $data['text'] = mb_substr($text, 4096, $string_len_utf8);
+
             return self::sendMessage($data);
         }
+
         return self::send('sendMessage', $data);
     }
 
@@ -356,10 +399,6 @@ class Request
      */
     public static function forwardMessage(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('forwardMessage', $data);
     }
 
@@ -374,13 +413,7 @@ class Request
      */
     public static function sendPhoto(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['photo'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'photo', $file);
 
         return self::send('sendPhoto', $data);
     }
@@ -396,13 +429,7 @@ class Request
      */
     public static function sendAudio(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['audio'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'audio', $file);
 
         return self::send('sendAudio', $data);
     }
@@ -418,13 +445,7 @@ class Request
      */
     public static function sendDocument(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['document'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'document', $file);
 
         return self::send('sendDocument', $data);
     }
@@ -440,13 +461,7 @@ class Request
      */
     public static function sendSticker(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['sticker'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'sticker', $file);
 
         return self::send('sendSticker', $data);
     }
@@ -462,13 +477,7 @@ class Request
      */
     public static function sendVideo(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['video'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'video', $file);
 
         return self::send('sendVideo', $data);
     }
@@ -484,13 +493,7 @@ class Request
      */
     public static function sendVoice(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['voice'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'voice', $file);
 
         return self::send('sendVoice', $data);
     }
@@ -505,10 +508,6 @@ class Request
      */
     public static function sendLocation(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendLocation', $data);
     }
 
@@ -522,10 +521,6 @@ class Request
      */
     public static function sendVenue(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendVenue', $data);
     }
 
@@ -539,10 +534,6 @@ class Request
      */
     public static function sendContact(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendContact', $data);
     }
 
@@ -556,10 +547,6 @@ class Request
      */
     public static function sendChatAction(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendChatAction', $data);
     }
 
@@ -573,10 +560,6 @@ class Request
      */
     public static function getUserProfilePhotos(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         if (!isset($data['user_id'])) {
             throw new TelegramException('User id is empty!');
         }
@@ -608,9 +591,7 @@ class Request
     {
         $data = ['url' => $url];
 
-        if (!is_null($file)) {
-            $data['certificate'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'certificate', $file);
 
         return self::send('setWebhook', $data);
     }
@@ -625,10 +606,6 @@ class Request
      */
     public static function getFile(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getFile', $data);
     }
 
@@ -642,10 +619,6 @@ class Request
      */
     public static function kickChatMember(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('kickChatMember', $data);
     }
 
@@ -659,10 +632,6 @@ class Request
      */
     public static function leaveChat(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('leaveChat', $data);
     }
 
@@ -676,10 +645,6 @@ class Request
      */
     public static function unbanChatMember(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('unbanChatMember', $data);
     }
 
@@ -695,10 +660,6 @@ class Request
      */
     public static function getChat(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChat', $data);
     }
 
@@ -714,10 +675,6 @@ class Request
      */
     public static function getChatAdministrators(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChatAdministrators', $data);
     }
 
@@ -733,10 +690,6 @@ class Request
      */
     public static function getChatMembersCount(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChatMembersCount', $data);
     }
 
@@ -752,10 +705,6 @@ class Request
      */
     public static function getChatMember(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChatMember', $data);
     }
 
@@ -769,10 +718,6 @@ class Request
      */
     public static function answerCallbackQuery(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('answerCallbackQuery', $data);
     }
 
@@ -786,10 +731,6 @@ class Request
      */
     public static function answerInlineQuery(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('answerInlineQuery', $data);
     }
 
@@ -803,10 +744,6 @@ class Request
      */
     public static function editMessageText(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('editMessageText', $data);
     }
 
@@ -820,10 +757,6 @@ class Request
      */
     public static function editMessageCaption(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('editMessageCaption', $data);
     }
 
@@ -837,10 +770,6 @@ class Request
      */
     public static function editMessageReplyMarkup(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('editMessageReplyMarkup', $data);
     }
 
