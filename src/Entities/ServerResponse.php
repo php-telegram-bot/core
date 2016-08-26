@@ -35,10 +35,12 @@ class ServerResponse extends Entity
      *
      * @param array $data
      * @param       $bot_name
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data, $bot_name)
     {
-        if (isset($data['ok']) && isset($data['result'])) {
+        if (isset($data['ok'], $data['result'])) {
             if (is_array($data['result'])) {
                 if ($data['ok'] && !$this->isAssoc($data['result']) && !isset($data['result'][0]['user'])) {
                     //Get Update
@@ -49,7 +51,7 @@ class ServerResponse extends Entity
                     //Response from getChatAdministrators
                     $this->result = [];
                     foreach ($data['result'] as $user) {
-                        array_push($this->result, new ChatMember($user));
+                        $this->result[] = new ChatMember($user);
                     }
                 } elseif ($data['ok'] && $this->isAssoc($data['result'])) {
                     if (isset($data['result']['total_count'])) {
@@ -79,15 +81,10 @@ class ServerResponse extends Entity
             } else {
                 if ($data['ok'] && $data['result'] === true) {
                     //Response from setWebhook set
-                    $this->ok         = $data['ok'];
-                    $this->result     = true;
-                    $this->error_code = null;
-
-                    if (isset($data['description'])) {
-                        $this->description = $data['description'];
-                    } else {
-                        $this->description = '';
-                    }
+                    $this->ok          = $data['ok'];
+                    $this->result      = true;
+                    $this->error_code  = null;
+                    $this->description = isset($data['description']) ? $data['description'] : '';
                 } elseif (is_numeric($data['result'])) {
                     //Response from getChatMembersCount
                     $this->result = $data['result'];
@@ -100,25 +97,10 @@ class ServerResponse extends Entity
             }
         } else {
             //webHook not set
-            $this->ok = false;
-
-            if (isset($data['result'])) {
-                $this->result = $data['result'];
-            } else {
-                $this->result = null;
-            }
-
-            if (isset($data['error_code'])) {
-                $this->error_code = $data['error_code'];
-            } else {
-                $this->error_code = null;
-            }
-
-            if (isset($data['description'])) {
-                $this->description = $data['description'];
-            } else {
-                $this->description = null;
-            }
+            $this->ok          = false;
+            $this->result      = isset($data['result']) ? $data['result'] : null;
+            $this->error_code  = isset($data['error_code']) ? $data['error_code'] : null;
+            $this->description = isset($data['description']) ? $data['description'] : null;
 
             //throw new TelegramException('ok(variable) is not set!');
         }
