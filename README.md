@@ -3,13 +3,13 @@
 [![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
+[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
 
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/feature%2Fimprove-code.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=feature%2Fimprove-code)
-[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot/feature%2Fimprove-code.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=feature%2Fimprove-code)
 
 
 A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
