@@ -268,7 +268,7 @@ class DB
         $callback_query_id,
         $edited_message_id
     ) {
-        if (is_null($message_id) && is_null($inline_query_id) && is_null($chosen_inline_result_id) && is_null($callback_query_id) && is_null($edited_message_id)) {
+        if ($message_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $edited_message_id === null) {
             throw new TelegramException('message_id, inline_query_id, chosen_inline_result_id, callback_query_id, edited_message_id are all null');
         }
 
@@ -277,28 +277,22 @@ class DB
         }
 
         try {
-            $sth_insert_telegram_update = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
-                (
-                `id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `edited_message_id`
-                )
-                VALUES (
-                :id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id
-                )
-                ');
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
+                (`id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `edited_message_id`)
+                VALUES
+                (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id)
+            ');
 
-            $sth_insert_telegram_update->bindParam(':id', $id, PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(
-                ':chosen_inline_result_id',
-                $chosen_inline_result_id,
-                PDO::PARAM_INT
-            );
-            $sth_insert_telegram_update->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
-            $sth_insert_telegram_update->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':id', $id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
+            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
+            $sth->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, PDO::PARAM_INT);
+            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
+            $sth->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_INT);
 
-            return $sth_insert_telegram_update->execute();
+            return $sth->execute();
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
