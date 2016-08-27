@@ -232,15 +232,16 @@ class DB
     /**
      * Convert from unix timestamp to timestamp
      *
-     * @param int $time Unix timestamp
+     * @param int $time Unix timestamp (if null, current timestamp is used)
      *
-     * @return null|string Timestamp if a time has been passed, else null
+     * @return string
      */
     protected static function getTimestamp($time = null)
     {
-        if (is_null($time)) {
-            return date('Y-m-d H:i:s', time());
+        if ($time === null) {
+            $time = time();
         }
+
         return date('Y-m-d H:i:s', $time);
     }
 
