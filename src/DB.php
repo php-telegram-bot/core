@@ -87,7 +87,7 @@ class DB
         self::$mysql_credentials = $credentials;
         self::$table_prefix      = $table_prefix;
 
-        self::defineTable();
+        self::defineTables();
 
         return self::$pdo;
     }
@@ -115,7 +115,7 @@ class DB
         self::$mysql_credentials = null;
         self::$table_prefix      = $table_prefix;
 
-        self::defineTable();
+        self::defineTables();
 
         return self::$pdo;
     }
@@ -123,34 +123,24 @@ class DB
     /**
      * Define all the table with the proper prefix
      */
-    protected static function defineTable()
+    protected static function defineTables()
     {
-        if (!defined('TB_TELEGRAM_UPDATE')) {
-            define('TB_TELEGRAM_UPDATE', self::$table_prefix . 'telegram_update');
-        }
-        if (!defined('TB_MESSAGE')) {
-            define('TB_MESSAGE', self::$table_prefix . 'message');
-        }
-        if (!defined('TB_EDITED_MESSAGE')) {
-            define('TB_EDITED_MESSAGE', self::$table_prefix . 'edited_message');
-        }
-        if (!defined('TB_INLINE_QUERY')) {
-            define('TB_INLINE_QUERY', self::$table_prefix . 'inline_query');
-        }
-        if (!defined('TB_CHOSEN_INLINE_RESULT')) {
-            define('TB_CHOSEN_INLINE_RESULT', self::$table_prefix . 'chosen_inline_result');
-        }
-        if (!defined('TB_CALLBACK_QUERY')) {
-            define('TB_CALLBACK_QUERY', self::$table_prefix . 'callback_query');
-        }
-        if (!defined('TB_USER')) {
-            define('TB_USER', self::$table_prefix . 'user');
-        }
-        if (!defined('TB_CHAT')) {
-            define('TB_CHAT', self::$table_prefix . 'chat');
-        }
-        if (!defined('TB_USER_CHAT')) {
-            define('TB_USER_CHAT', self::$table_prefix . 'user_chat');
+        $tables = [
+            'callback_query',
+            'chat',
+            'chosen_inline_result',
+            'edited_message',
+            'inline_query',
+            'message',
+            'telegram_update',
+            'user',
+            'user_chat',
+        ];
+        foreach ($tables as $table) {
+            $table_name = 'TB_' . strtoupper($table);
+            if (!defined($table_name)) {
+                define($table_name, self::$table_prefix . $table);
+            }
         }
     }
 
