@@ -538,16 +538,20 @@ class Telegram
     public function isAdmin($user_id = null)
     {
         if ($user_id === null && $this->update !== null) {
-            if (($message = $this->update->getMessage()) && ($from = $message->getFrom())) {
-                $user_id = $from->getId();
-            } elseif (($inline_query = $this->update->getInlineQuery()) && ($from = $inline_query->getFrom())) {
-                $user_id = $from->getId();
-            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
-                $user_id = $from->getId();
-            } elseif (($callback_query = $this->update->getCallbackQuery()) && ($from = $callback_query->getFrom())) {
-                $user_id = $from->getId();
-            } elseif (($edited_message = $this->update->getEditedMessage()) && ($from = $edited_message->getFrom())) {
-                $user_id = $from->getId();
+            //Try to figure out if the user is an admin
+            $update_methods = [
+                'getMessage',
+                'getInlineQuery',
+                'getChosenInlineResult',
+                'getCallbackQuery',
+                'getEditedMessage',
+            ];
+            foreach ($update_methods as $update_method) {
+                $object = call_user_func([$this->update, $update_method]);
+                if ($object !== null && $from = $object->getFrom()) {
+                    $user_id = $from->getId();
+                    break;
+                }
             }
         }
 
