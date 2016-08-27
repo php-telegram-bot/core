@@ -105,9 +105,12 @@ class DB
      * @return PDO PDO database object
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function externalInitialize($external_pdo_connection, Telegram $telegram, $table_prefix = null)
-    {
-        if (empty($external_pdo_connection)) {
+    public static function externalInitialize(
+        $external_pdo_connection,
+        Telegram $telegram,
+        $table_prefix = null
+    ) {
+        if ($external_pdo_connection === null) {
             throw new TelegramException('MySQL external connection not provided!');
         }
 
@@ -122,7 +125,7 @@ class DB
     }
 
     /**
-     * Define all the table with the proper prefix
+     * Define all the tables with the proper prefix
      */
     protected static function defineTables()
     {
@@ -152,11 +155,7 @@ class DB
      */
     public static function isDbConnected()
     {
-        if (empty(self::$pdo)) {
-            return false;
-        } else {
-            return true;
-        }
+        return self::$pdo !== null;
     }
 
     /**
@@ -185,10 +184,10 @@ class DB
             }
 
             $sth = self::$pdo->prepare($sql);
-            $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
+            $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
             $sth->execute();
 
-            return $sth->fetchAll(\PDO::FETCH_ASSOC);
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -248,6 +247,8 @@ class DB
 
     /**
      * Convert array of Entity items to a JSON array
+     *
+     * @todo Find a better way, as json_* functions are very heavy
      *
      * @param array $entities
      * @param mixed $default
@@ -631,8 +632,8 @@ class DB
         }
 
         try {
-            $sth = self::$pdo->prepare(
-                'INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
                 (`id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`)
                 VALUES
                 (:callback_query_id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at)
@@ -736,11 +737,11 @@ class DB
         }
 
         //New and left chat member
-        if ($new_chat_member) {
+        if ($new_chat_member instanceof User) {
             //Insert the new chat user
             self::insertUser($new_chat_member, $date, $chat);
             $new_chat_member = $new_chat_member->getId();
-        } elseif ($left_chat_member) {
+        } elseif ($left_chat_member instanceof User) {
             //Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
             $left_chat_member = $left_chat_member->getId();
@@ -807,12 +808,12 @@ class DB
             $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, PDO::PARAM_STR);
 
-            $reply_chat_id = null;
+            $reply_to_chat_id = null;
             if ($reply_to_message_id) {
-                $reply_chat_id = $chat_id;
+                $reply_to_chat_id = $chat_id;
             }
 
-            $sth->bindParam(':reply_to_chat', $reply_chat_id, PDO::PARAM_INT);
+            $sth->bindParam(':reply_to_chat', $reply_to_chat_id, PDO::PARAM_INT);
             $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_INT);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
