@@ -132,7 +132,7 @@ class Request
      *
      * @return array Fake response data
      */
-    public static function generateGeneralFakeServerResponse(array $data = null)
+    public static function generateGeneralFakeServerResponse(array $data = [])
     {
         //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
         //Maybe this is not the best possible implementation
@@ -142,7 +142,7 @@ class Request
 
         $fake_response = ['ok' => true]; // :)
 
-        if ($data === null) {
+        if ($data === []) {
             $fake_response['result'] = true;
         }
 
@@ -164,25 +164,14 @@ class Request
     }
 
     /**
-     * Execute HTTP Request
+     * Properly set up the request params
      *
-     * @param string     $action Action to execute
-     * @param array|null $data   Data to attach to the execution
+     * @param array $data
      *
-     * @return mixed Result of the HTTP Request
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return array
      */
-    public static function execute($action, array $data = null)
+    private static function setUpRequestParams(array $data)
     {
-        $debug_handle = TelegramLog::getDebugLogTempStream();
-
-        //Fix so that the keyboard markup is a string, not an object
-        if (isset($data['reply_markup']) && !is_string($data['reply_markup'])) {
-            $data['reply_markup'] = (string)$data['reply_markup'];
-        }
-
-        $request_params = ['debug' => $debug_handle];
-
         //Check for resources in data
         $contains_resource = false;
         foreach ($data as $item) {
@@ -192,6 +181,7 @@ class Request
             }
         }
 
+        $request_params = [];
         //Reformat data array in multipart way
         if ($contains_resource) {
             foreach ($data as $key => $item) {
@@ -201,25 +191,49 @@ class Request
             $request_params['form_params'] = $data;
         }
 
-        $result = '';
+        return $request_params;
+    }
+
+    /**
+     * Execute HTTP Request
+     *
+     * @param string $action Action to execute
+     * @param array  $data   Data to attach to the execution
+     *
+     * @return mixed Result of the HTTP Request
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function execute($action, array $data = [])
+    {
+        //Fix so that the keyboard markup is a string, not an object
+        if (isset($data['reply_markup'])) {
+            $data['reply_markup'] = (string)$data['reply_markup'];
+        }
+
+        $request_params = self::setUpRequestParams($data);
+
+        $debug_handle            = TelegramLog::getDebugLogTempStream();
+        $request_params['debug'] = $debug_handle;
+
         try {
-            $result = (string)self::$client->post(
+            $response = self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
-            )->getBody();
+            );
+            $result   = (string)$response->getBody();
+
+            //Logging getUpdates Update
+            if ($action === 'getUpdates') {
+                TelegramLog::update($result);
+            }
+
+            return $result;
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
         }
-
-        //Logging getUpdates Update
-        if ($action === 'getUpdates') {
-            TelegramLog::update($result);
-        }
-
-        return $result;
     }
 
     /**
@@ -282,13 +296,13 @@ class Request
      *
      * @todo Fake response doesn't need json encoding?
      *
-     * @param string     $action
-     * @param array|null $data
+     * @param string $action
+     * @param array  $data
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function send($action, array $data = null)
+    public static function send($action, array $data = [])
     {
         self::ensureValidAction($action);
 
