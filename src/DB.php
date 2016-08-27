@@ -958,77 +958,68 @@ class DB
         }
 
         try {
-            $query = 'SELECT * ,
+            $query = '
+                SELECT * ,
                 ' . TB_CHAT . '.`id` AS `chat_id`,
                 ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
                 ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`
-                ' .
-                (($select_users) ? ', ' . TB_USER . '.`id` AS `user_id` FROM `' . TB_CHAT . '` LEFT JOIN `' . TB_USER . '`
-                ON ' . TB_CHAT . '.`id`=' . TB_USER . '.`id`' : 'FROM `' . TB_CHAT . '`');
+            ';
+            if ($select_users) {
+                $query .= '
+                    , ' . TB_USER . '.`id` AS `user_id`
+                    FROM `' . TB_CHAT . '`
+                    LEFT JOIN `' . TB_USER . '`
+                    ON ' . TB_CHAT . '.`id`=' . TB_USER . '.`id`
+                ';
+            } else {
+                $query .= 'FROM `' . TB_CHAT . '`';
+            }
 
             //Building parts of query
             $where  = [];
             $tokens = [];
 
             if (!$select_groups || !$select_users || !$select_super_groups) {
-                $chat_or_user = '';
+                $chat_or_user = [];
 
-                if ($select_groups) {
-                    $chat_or_user .= TB_CHAT . '.`type` = "group"';
-                }
+                $select_groups && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
+                $select_super_groups && $chat_or_user[] = TB_CHAT . '.`type` = "supergroup"';
+                $select_users && $chat_or_user[] = TB_CHAT . '.`type` = "private"';
 
-                if ($select_super_groups) {
-                    if (!empty($chat_or_user)) {
-                        $chat_or_user .= ' OR ';
-                    }
-
-                    $chat_or_user .= TB_CHAT . '.`type` = "supergroup"';
-                }
-
-                if ($select_users) {
-                    if (!empty($chat_or_user)) {
-                        $chat_or_user .= ' OR ';
-                    }
-
-                    $chat_or_user .= TB_CHAT . '.`type` = "private"';
-                }
-
-                $where[] = '(' . $chat_or_user . ')';
+                $where[] = '(' . implode(' OR ', $chat_or_user) . ')';
             }
 
-            if (!is_null($date_from)) {
+            if (null !== $date_from) {
                 $where[]              = TB_CHAT . '.`updated_at` >= :date_from';
                 $tokens[':date_from'] = $date_from;
             }
 
-            if (!is_null($date_to)) {
+            if (null !== $date_to) {
                 $where[]            = TB_CHAT . '.`updated_at` <= :date_to';
                 $tokens[':date_to'] = $date_to;
             }
 
-            if (!is_null($chat_id)) {
+            if (null !== $chat_id) {
                 $where[]            = TB_CHAT . '.`id` = :chat_id';
                 $tokens[':chat_id'] = $chat_id;
             }
 
-            if (!is_null($text)) {
+            if (null !== $text) {
                 if ($select_users) {
-                    $where[] = '(LOWER(' . TB_CHAT . '.`title`) LIKE :text OR LOWER(' . TB_USER . '.`first_name`) LIKE :text OR LOWER(' . TB_USER . '.`last_name`) LIKE :text OR LOWER(' . TB_USER . '.`username`) LIKE :text)';
+                    $where[] = '(
+                        LOWER(' . TB_CHAT . '.`title`) LIKE :text
+                        OR LOWER(' . TB_USER . '.`first_name`) LIKE :text
+                        OR LOWER(' . TB_USER . '.`last_name`) LIKE :text
+                        OR LOWER(' . TB_USER . '.`username`) LIKE :text
+                    )';
                 } else {
                     $where[] = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
                 }
-
                 $tokens[':text'] = '%' . strtolower($text) . '%';
             }
 
-            $a = 0;
-            foreach ($where as $part) {
-                if ($a) {
-                    $query .= ' AND ' . $part;
-                } else {
-                    $query .= ' WHERE ' . $part;
-                    ++$a;
-                }
+            if ($where) {
+                $query .= ' WHERE ' . implode(' AND ', $where);
             }
 
             $query .= ' ORDER BY ' . TB_CHAT . '.`updated_at` ASC';
@@ -1036,11 +1027,9 @@ class DB
             $sth = self::$pdo->prepare($query);
             $sth->execute($tokens);
 
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
-
-        return $result;
     }
 }
