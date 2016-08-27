@@ -247,6 +247,29 @@ class DB
     }
 
     /**
+     * Convert array of Entity items to a JSON array
+     *
+     * @param array $entities
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public static function entitiesArrayToJson($entities, $default = null)
+    {
+        if (!is_array($entities)) {
+            return $default;
+        }
+
+        //Convert each Entity item into an object based on its JSON reflection
+        $json_entities = array_map(function ($entity) {
+            return json_decode($entity, true);
+        }, $entities);
+
+        return json_encode($json_entities);
+    }
+
+
+    /**
      * Insert entry to telegram_update table
      *
      * @param int $id
@@ -686,10 +709,10 @@ class DB
 
         $forward_from       = $message->getForwardFrom();
         $forward_from_chat  = $message->getForwardFromChat();
-        $photo              = $message->getPhoto();
-        $entities           = $message->getEntities();
+        $photo              = self::entitiesArrayToJson($message->getPhoto(), '');
+        $entities           = self::entitiesArrayToJson($message->getEntities(), null);
         $new_chat_member    = $message->getNewChatMember();
-        $new_chat_photo     = $message->getNewChatPhoto();
+        $new_chat_photo     = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
         $left_chat_member   = $message->getLeftChatMember();
         $migrate_to_chat_id = $message->getMigrateToChatId();
 
@@ -789,35 +812,12 @@ class DB
                 $reply_chat_id = $chat_id;
             }
 
-            $var = [];
-            if (is_array($entities)) {
-                foreach ($entities as $elm) {
-                    $var[] = json_decode($elm, true);
-                }
-
-                $entities = json_encode($var);
-            } else {
-                $entities = null;
-            }
-
             $sth->bindParam(':reply_to_chat', $reply_chat_id, PDO::PARAM_INT);
             $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_INT);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, PDO::PARAM_STR);
             $sth->bindParam(':document', $document, PDO::PARAM_STR);
-
-            $var = [];
-            if (is_array($photo)) {
-                foreach ($photo as $elm) {
-                    $var[] = json_decode($elm, true);
-                }
-
-                $photo = json_encode($var);
-            } else {
-                $photo = '';
-            }
-
             $sth->bindParam(':photo', $photo, PDO::PARAM_STR);
             $sth->bindParam(':sticker', $sticker, PDO::PARAM_STR);
             $sth->bindParam(':video', $video, PDO::PARAM_STR);
@@ -829,19 +829,6 @@ class DB
             $sth->bindParam(':new_chat_member', $new_chat_member, PDO::PARAM_INT);
             $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_INT);
             $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
-
-            //Array of PhotoSize
-            $var = [];
-            if (is_array($new_chat_photo)) {
-                foreach ($new_chat_photo as $elm) {
-                    $var[] = json_decode($elm, true);
-                }
-
-                $new_chat_photo = json_encode($var);
-            } else {
-                $new_chat_photo = '';
-            }
-
             $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);
             $sth->bindParam(':delete_chat_photo', $delete_chat_photo, PDO::PARAM_STR);
             $sth->bindParam(':group_chat_created', $group_chat_created, PDO::PARAM_STR);
@@ -878,7 +865,7 @@ class DB
 
         $edit_date = self::getTimestamp($edited_message->getEditDate());
 
-        $entities = $edited_message->getEntities();
+        $entities = self::entitiesArrayToJson($edited_message->getEntities(), null);
 
         //Insert chat
         self::insertChat($chat, $edit_date);
@@ -904,18 +891,6 @@ class DB
             $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, PDO::PARAM_INT);
             $sth->bindParam(':date', $edit_date, PDO::PARAM_STR);
-
-            $var = [];
-            if (is_array($entities)) {
-                foreach ($entities as $elm) {
-                    $var[] = json_decode($elm, true);
-                }
-
-                $entities = json_encode($var);
-            } else {
-                $entities = null;
-            }
-
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
             $sth->bindParam(':caption', $caption, PDO::PARAM_STR);
