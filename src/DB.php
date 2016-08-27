@@ -320,44 +320,44 @@ class DB
         $last_name  = $user->getLastName();
 
         try {
-            $sth1 = self::$pdo->prepare('INSERT INTO `' . TB_USER . '`
-                (
-                `id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`
-                )
-                VALUES (
-                :id, :username, :first_name, :last_name, :date, :date
-                )
-                ON DUPLICATE KEY UPDATE `username`=:username, `first_name`=:first_name,
-                `last_name`=:last_name, `updated_at`=:date
-                ');
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_USER . '`
+                (`id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`)
+                VALUES
+                (:id, :username, :first_name, :last_name, :date, :date)
+                ON DUPLICATE KEY UPDATE
+                    `username`   = :username,
+                    `first_name` = :first_name,
+                    `last_name`  = :last_name,
+                    `updated_at` = :date
+            ');
 
-            $sth1->bindParam(':id', $user_id, PDO::PARAM_INT);
-            $sth1->bindParam(':username', $username, PDO::PARAM_STR, 255);
-            $sth1->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
-            $sth1->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
-            $sth1->bindParam(':date', $date, PDO::PARAM_STR);
+            $sth->bindParam(':id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
+            $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
+            $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
+            $sth->bindParam(':date', $date, PDO::PARAM_STR);
 
-            $status = $sth1->execute();
+            $status = $sth->execute();
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
 
         //insert also the relationship to the chat into user_chat table
-        if (!is_null($chat)) {
+        if ($chat instanceof Chat) {
             $chat_id = $chat->getId();
             try {
-                $sth3 = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_USER_CHAT . '`
-                    (
-                    `user_id`, `chat_id`
-                    )
-                    VALUES (
-                    :user_id, :chat_id
-                    )');
+                $sth = self::$pdo->prepare('
+                    INSERT IGNORE INTO `' . TB_USER_CHAT . '`
+                    (`user_id`, `chat_id`)
+                    VALUES
+                    (:user_id, :chat_id)
+                ');
 
-                $sth3->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                $sth3->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+                $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
 
-                $status = $sth3->execute();
+                $status = $sth->execute();
             } catch (PDOException $e) {
                 throw new TelegramException($e->getMessage());
             }
