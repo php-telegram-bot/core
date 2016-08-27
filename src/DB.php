@@ -173,22 +173,24 @@ class DB
         }
 
         try {
-            $query = 'SELECT `id` FROM `' . TB_TELEGRAM_UPDATE . '` ';
-            $query .= 'ORDER BY `id` DESC';
+            $sql = '
+                SELECT `id`
+                FROM `' . TB_TELEGRAM_UPDATE . '`
+                ORDER BY `id` DESC
+            ';
 
-            if (!is_null($limit)) {
-                $query .= ' LIMIT :limit ';
+            if ($limit !== null) {
+                $sql .= 'LIMIT :limit';
             }
 
-            $sth_select_telegram_update = self::$pdo->prepare($query);
-            $sth_select_telegram_update->bindParam(':limit', $limit, PDO::PARAM_INT);
-            $sth_select_telegram_update->execute();
-            $results = $sth_select_telegram_update->fetchAll(PDO::FETCH_ASSOC);
+            $sth = self::$pdo->prepare($sql);
+            $sth->bindParam(':limit', $limit, \PDO::PARAM_INT);
+            $sth->execute();
+
+            return $sth->fetchAll(\PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
-
-        return $results;
     }
 
     /**
