@@ -166,32 +166,28 @@ class Request
     /**
      * Properly set up the request params
      *
+     * If any item of the array is a resource, reformat it to a multipart request.
+     * Else, just return the passed data as form params.
+     *
      * @param array $data
      *
      * @return array
      */
     private static function setUpRequestParams(array $data)
     {
-        //Check for resources in data
-        $contains_resource = false;
-        foreach ($data as $item) {
-            if (is_resource($item)) {
-                $contains_resource = true;
-                break;
-            }
+        $has_resource = false;
+        $multipart    = [];
+
+        //Reformat data array in multipart way if it contains a resource
+        foreach ($data as $key => $item) {
+            $has_resource |= is_resource($item);
+            $multipart[] = ['name' => $key, 'contents' => $item];
+        }
+        if ($has_resource) {
+            return ['multipart' => $multipart];
         }
 
-        $request_params = [];
-        //Reformat data array in multipart way
-        if ($contains_resource) {
-            foreach ($data as $key => $item) {
-                $request_params['multipart'][] = ['name' => $key, 'contents' => $item];
-            }
-        } else {
-            $request_params['form_params'] = $data;
-        }
-
-        return $request_params;
+        return ['form_params' => $data];
     }
 
     /**
