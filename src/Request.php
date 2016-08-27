@@ -381,8 +381,6 @@ class Request
     /**
      * Send message
      *
-     * @todo Could do with some cleaner recursion
-     *
      * @param array $data
      *
      * @return mixed
@@ -390,17 +388,18 @@ class Request
      */
     public static function sendMessage(array $data)
     {
-        $text            = $data['text'];
-        $string_len_utf8 = mb_strlen($text, 'UTF-8');
-        if ($string_len_utf8 > 4096) {
+        $text = $data['text'];
+
+        do {
+            //Chop off and send the first message
             $data['text'] = mb_substr($text, 0, 4096);
-            self::send('sendMessage', $data);
-            $data['text'] = mb_substr($text, 4096, $string_len_utf8);
+            $response = self::send('sendMessage', $data);
 
-            return self::sendMessage($data);
-        }
+            //Prepare the next message
+            $text = mb_substr($text, 4096);
+        } while (mb_strlen($text, 'UTF-8') > 0);
 
-        return self::send('sendMessage', $data);
+        return $response;
     }
 
     /**
