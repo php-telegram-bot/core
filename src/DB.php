@@ -250,8 +250,8 @@ class DB
      *
      * @todo Find a better way, as json_* functions are very heavy
      *
-     * @param array $entities
-     * @param mixed $default
+     * @param array|null $entities
+     * @param mixed      $default
      *
      * @return mixed
      */
@@ -268,7 +268,6 @@ class DB
 
         return json_encode($json_entities);
     }
-
 
     /**
      * Insert entry to telegram_update table
@@ -994,7 +993,7 @@ class DB
                 $tokens[':text'] = '%' . strtolower($text) . '%';
             }
 
-            if ($where) {
+            if (!empty($where)) {
                 $query .= ' WHERE ' . implode(' AND ', $where);
             }
 
