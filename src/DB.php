@@ -16,6 +16,7 @@ use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\ReplyToMessage;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -699,13 +700,13 @@ class DB
         self::insertUser($from, $date, $chat);
 
         //Insert the forwarded message user in users table
-        if (is_object($forward_from)) {
+        if ($forward_from instanceof User) {
             $forward_date = self::getTimestamp($message->getForwardDate());
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
         }
 
-        if (is_object($forward_from_chat)) {
+        if ($forward_from_chat instanceof Chat) {
             $forward_date = self::getTimestamp($message->getForwardDate());
             self::insertChat($forward_from_chat, $forward_date);
             $forward_from_chat = $forward_from_chat->getId();
@@ -723,33 +724,33 @@ class DB
         }
 
         try {
-            $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_MESSAGE . '`
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`,
-                `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
-                `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
-                `location`, `venue`, `new_chat_member`, `left_chat_member`,
-                `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
-                `supergroup_chat_created`, `channel_chat_created`,
-                `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
+                    `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`,
+                    `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
+                    `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
+                    `location`, `venue`, `new_chat_member`, `left_chat_member`,
+                    `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
+                    `supergroup_chat_created`, `channel_chat_created`,
+                    `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
+                ) VALUES (
+                    :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat,
+                    :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
+                    :photo, :sticker, :video, :voice, :caption, :contact,
+                    :location, :venue, :new_chat_member, :left_chat_member,
+                    :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
+                    :supergroup_chat_created, :channel_chat_created,
+                    :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
                 )
-                VALUES (
-                :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat,
-                :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
-                :photo, :sticker, :video, :voice, :caption, :contact,
-                :location, :venue, :new_chat_member, :left_chat_member,
-                :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
-                :supergroup_chat_created, :channel_chat_created,
-                :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
-                )
-                ');
+            ');
 
             $message_id = $message->getMessageId();
             $from_id    = $from->getId();
 
             $reply_to_message    = $message->getReplyToMessage();
             $reply_to_message_id = null;
-            if (is_object($reply_to_message)) {
+            if ($reply_to_message instanceof ReplyToMessage) {
                 $reply_to_message_id = $reply_to_message->getMessageId();
                 // please notice that, as explained in the documentation, reply_to_message don't contain other
                 // reply_to_message field so recursion deep is 1
