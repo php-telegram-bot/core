@@ -511,21 +511,18 @@ class DB
         }
 
         try {
-            $mysql_query = 'INSERT IGNORE INTO `' . TB_INLINE_QUERY . '`
-                (
-                `id`, `user_id`, `location`, `query`, `offset`, `created_at`
-                )
-                VALUES (
-                :inline_query_id, :user_id, :location, :query, :param_offset, :created_at
-                )';
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_INLINE_QUERY . '`
+                (`id`, `user_id`, `location`, `query`, `offset`, `created_at`)
+                VALUES
+                (:inline_query_id, :user_id, :location, :query, :param_offset, :created_at)
+            ');
 
-            $sth_insert_inline_query = self::$pdo->prepare($mysql_query);
-
-            $date            = self::getTimestamp(time());
+            $date            = self::getTimestamp();
             $inline_query_id = $inline_query->getId();
             $from            = $inline_query->getFrom();
             $user_id         = null;
-            if (is_object($from)) {
+            if ($from instanceof User) {
                 $user_id = $from->getId();
                 self::insertUser($from, $date);
             }
@@ -534,14 +531,14 @@ class DB
             $query    = $inline_query->getQuery();
             $offset   = $inline_query->getOffset();
 
-            $sth_insert_inline_query->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth_insert_inline_query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth_insert_inline_query->bindParam(':location', $location, PDO::PARAM_STR);
-            $sth_insert_inline_query->bindParam(':query', $query, PDO::PARAM_STR);
-            $sth_insert_inline_query->bindParam(':param_offset', $offset, PDO::PARAM_STR);
-            $sth_insert_inline_query->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':location', $location, PDO::PARAM_STR);
+            $sth->bindParam(':query', $query, PDO::PARAM_STR);
+            $sth->bindParam(':param_offset', $offset, PDO::PARAM_STR);
+            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
 
-            return $sth_insert_inline_query->execute();
+            return $sth->execute();
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
