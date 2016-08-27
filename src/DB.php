@@ -384,34 +384,35 @@ class DB
 
         $chat_id    = $chat->getId();
         $chat_title = $chat->getTitle();
-        $type       = $chat->getType();
+        $chat_type  = $chat->getType();
 
         try {
-            $sth2 = self::$pdo->prepare('INSERT INTO `' . TB_CHAT . '`
-                (
-                `id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`
-                )
-                VALUES (
-                :id, :type, :title, :date, :date, :oldid
-                )
-                ON DUPLICATE KEY UPDATE `type`=:type, `title`=:title, `updated_at`=:date
-                ');
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_CHAT . '`
+                (`id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`)
+                VALUES
+                (:id, :type, :title, :date, :date, :oldid)
+                ON DUPLICATE KEY UPDATE
+                    `type`       = :type,
+                    `title`      = :title,
+                    `updated_at` = :date
+            ');
 
             if ($migrate_to_chat_id) {
-                $type = 'supergroup';
+                $chat_type = 'supergroup';
 
-                $sth2->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_INT);
-                $sth2->bindParam(':oldid', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':oldid', $chat_id, PDO::PARAM_INT);
             } else {
-                $sth2->bindParam(':id', $chat_id, PDO::PARAM_INT);
-                $sth2->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_INT);
             }
 
-            $sth2->bindParam(':type', $type, PDO::PARAM_INT);
-            $sth2->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
-            $sth2->bindParam(':date', $date, PDO::PARAM_STR);
+            $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
+            $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
+            $sth->bindParam(':date', $date, PDO::PARAM_STR);
 
-            return $sth2->execute();
+            return $sth->execute();
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
