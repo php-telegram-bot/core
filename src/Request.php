@@ -196,7 +196,7 @@ class Request
      * @param string $action Action to execute
      * @param array  $data   Data to attach to the execution
      *
-     * @return mixed Result of the HTTP Request
+     * @return string Result of the HTTP Request
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function execute($action, array $data = [])

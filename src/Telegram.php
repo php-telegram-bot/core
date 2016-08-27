@@ -179,13 +179,16 @@ class Telegram
      * @param PDO    $external_pdo_connection PDO database object
      * @param string $table_prefix
      *
+     * @return \Longman\TelegramBot\Telegram
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function enableExternalMysql($external_pdo_connection, $table_prefix = null)
+    public function enableExternalMySql($external_pdo_connection, $table_prefix = null)
     {
         $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
         ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
+
+        return $this;
     }
 
     /**
