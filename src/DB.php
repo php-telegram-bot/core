@@ -559,21 +559,18 @@ class DB
         }
 
         try {
-            $mysql_query = 'INSERT INTO `' . TB_CHOSEN_INLINE_RESULT . '`
-                    (
-                    `result_id`, `user_id`, `location`, `inline_message_id`, `query`, `created_at`
-                    )
-                    VALUES (
-                    :result_id, :user_id, :location, :inline_message_id, :query, :created_at
-                    )';
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_CHOSEN_INLINE_RESULT . '`
+                (`result_id`, `user_id`, `location`, `inline_message_id`, `query`, `created_at`)
+                VALUES
+                (:result_id, :user_id, :location, :inline_message_id, :query, :created_at)
+            ');
 
-            $sth_insert_chosen_inline_result = self::$pdo->prepare($mysql_query);
-
-            $date      = self::getTimestamp(time());
+            $date      = self::getTimestamp();
             $result_id = $chosen_inline_result->getResultId();
             $from      = $chosen_inline_result->getFrom();
             $user_id   = null;
-            if (is_object($from)) {
+            if ($from instanceof User) {
                 $user_id = $from->getId();
                 self::insertUser($from, $date);
             }
@@ -582,14 +579,14 @@ class DB
             $inline_message_id = $chosen_inline_result->getInlineMessageId();
             $query             = $chosen_inline_result->getQuery();
 
-            $sth_insert_chosen_inline_result->bindParam(':result_id', $result_id, PDO::PARAM_STR);
-            $sth_insert_chosen_inline_result->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth_insert_chosen_inline_result->bindParam(':location', $location, PDO::PARAM_INT);
-            $sth_insert_chosen_inline_result->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
-            $sth_insert_chosen_inline_result->bindParam(':query', $query, PDO::PARAM_STR);
-            $sth_insert_chosen_inline_result->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindParam(':result_id', $result_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':location', $location, PDO::PARAM_INT);
+            $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
+            $sth->bindParam(':query', $query, PDO::PARAM_STR);
+            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
 
-            return $sth_insert_chosen_inline_result->execute();
+            return $sth->execute();
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
