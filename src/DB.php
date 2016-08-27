@@ -208,24 +208,25 @@ class DB
         }
 
         try {
-            //message table
-            $query = 'SELECT * FROM `' . TB_MESSAGE . '` ';
-            $query .= 'WHERE ' . TB_MESSAGE . '.`update_id` != 0 ';
-            $query .= 'ORDER BY ' . TB_MESSAGE . '.`message_id` DESC';
+            $sql = '
+                SELECT *
+                FROM `' . TB_MESSAGE . '`
+                WHERE `update_id` != 0
+                ORDER BY `message_id` DESC
+            ';
 
-            if (!is_null($limit)) {
-                $query .= ' LIMIT :limit ';
+            if ($limit !== null) {
+                $sql .= 'LIMIT :limit';
             }
 
-            $sth = self::$pdo->prepare($query);
+            $sth = self::$pdo->prepare($sql);
             $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
             $sth->execute();
-            $results = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
-
-        return $results;
     }
 
     /**
