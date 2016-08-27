@@ -887,13 +887,12 @@ class DB
         self::insertUser($from, $edit_date, $chat);
 
         try {
-            $sth = self::$pdo->prepare('INSERT INTO `' . TB_EDITED_MESSAGE . '`
-                (
-                `chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`
-                )
-                VALUES (
-                :chat_id, :message_id, :user_id, :date, :text, :entities, :caption
-                )');
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_EDITED_MESSAGE . '`
+                (`chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`)
+                VALUES
+                (:chat_id, :message_id, :user_id, :date, :text, :entities, :caption)
+            ');
 
             $message_id = $edited_message->getMessageId();
             $from_id    = $from->getId();
