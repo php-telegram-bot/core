@@ -10,7 +10,10 @@
 
 namespace Longman\TelegramBot\Entities;
 
-class InputMessageContent extends Entity
+/**
+ * {@inheritdoc}
+ */
+class EditedMessage extends Message
 {
 
 }

@@ -10,99 +10,32 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class User
+ *
+ * @link https://core.telegram.org/bots/api#user
+ *
+ * @property int    $id         Unique identifier for this user or bot
+ * @property string $first_name User's or bot’s first name
+ * @property string $last_name  Optional. User's or bot’s last name
+ * @property string $username   Optional. User's or bot’s username
+ *
+ * @method int    getId()        Unique identifier for this user or bot
+ * @method string getFirstName() User's or bot’s first name
+ * @method string getLastName()  Optional. User's or bot’s last name
+ * @method string getUsername()  Optional. User's or bot’s username
+ */
 class User extends Entity
 {
     /**
-     * @var mixed|null
-     */
-    protected $id;
-
-    /**
-     * @var mixed|null
-     */
-    protected $first_name;
-
-    /**
-     * @var mixed|null
-     */
-    protected $last_name;
-
-    /**
-     * @var mixed|null
-     */
-    protected $username;
-
-    /**
-     * User constructor.
+     * Try mention
      *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
-    {
-
-        $this->id = isset($data['id']) ? $data['id'] : null;
-        if (empty($this->id)) {
-            throw new TelegramException('id is empty!');
-        }
-
-        $this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
-
-        $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
-        $this->username  = isset($data['username']) ? $data['username'] : null;
-    }
-
-    /**
-     * Get id
-     *
-     * @return mixed|null
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get first name
-     *
-     * @return mixed|null
-     */
-    public function getFirstName()
-    {
-        return $this->first_name;
-    }
-
-    /**
-     * Get last name
-     *
-     * @return mixed|null
-     */
-    public function getLastName()
-    {
-        return $this->last_name;
-    }
-
-    /**
-     * Get username
-     *
-     * @return mixed|null
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Try nebtion
-     *
-     * @return mixed|null|string
+     * @return string|null
      */
     public function tryMention()
     {
-        if (is_null($this->username)) {
-            if (!is_null($this->last_name)) {
+        if ($this->username === null) {
+            if ($this->last_name !== null) {
                 return $this->first_name . ' ' . $this->last_name;
             }
             return $this->first_name;

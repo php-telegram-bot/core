@@ -10,69 +10,46 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class UserProfilePhotos
+ *
+ * @link https://core.telegram.org/bots/api#userprofilephotos
+ *
+ * @method int getTotalCount() Total number of profile pictures the target user has
+ */
 class UserProfilePhotos extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $total_count;
-
-    /**
-     * @var array
-     */
-    protected $photos;
-
-    /**
-     * UserProfilePhotos constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
+    protected function subEntities()
     {
-
-        $this->total_count = isset($data['total_count']) ? $data['total_count'] : null;
-        if ($this->total_count === null || !is_numeric($this->total_count)) {
-            throw new TelegramException('total_count is empty!');
-        }
-        $this->photos = isset($data['photos']) ? $data['photos'] : null;
-        if ($this->photos === null || !is_array($data['photos'])) {
-            throw new TelegramException('photos is empty!');
-        }
-
-        $photos = [];
-        foreach ($this->photos as $key => $photo) {
-            if (is_array($photo)) {
-                foreach ($photo as $photo_size) {
-                    $photos[$key][] = new PhotoSize($photo_size);
-                }
-            } else {
-                throw new TelegramException('photo is not an array!');
-            }
-        }
-
-        $this->photos = $photos;
+        return [
+            'photos' => PhotoSize::class,
+        ];
     }
 
     /**
-     * Get total count
+     * Requested profile pictures (in up to 4 sizes each)
      *
-     * @return mixed|null
-     */
-    public function getTotalCount()
-    {
-        return $this->total_count;
-    }
-
-    /**
-     * Get photos
+     * This method overrides the default getPhotos method and returns a nice array
      *
      * @return array
      */
     public function getPhotos()
     {
-        return $this->photos;
+        $all_photos = [];
+
+        if ($these_photos = $this->getProperty('photos')) {
+            foreach ($these_photos as $photos) {
+                $new_photos = [];
+                foreach ($photos as $photo) {
+                    $new_photos[] = new PhotoSize($photo);
+                }
+                $all_photos[] = $new_photos;
+            }
+        }
+
+        return $all_photos;
     }
 }

@@ -10,198 +10,98 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class Chat
+ *
+ * @link https://core.telegram.org/bots/api#chat
+ *
+ * @property int    $id            Unique identifier for this chat. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
+ * @property string $type          Type of chat, can be either "private", "group", "supergroup" or "channel"
+ * @property string $title         Optional. Title, for channels and group chats
+ * @property string $username      Optional. Username, for private chats, supergroups and channels if available
+ * @property string $first_name    Optional. First name of the other party in a private chat
+ * @property string $last_name     Optional. Last name of the other party in a private chat
+ * @method   int    getId()        Unique identifier for this chat. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
+ * @method   string getType()      Type of chat, can be either "private ", "group", "supergroup" or "channel"
+ * @method   string getTitle()     Optional. Title, for channels and group chats
+ * @method   string getUsername()  Optional. Username, for private chats, supergroups and channels if available
+ * @method   string getFirstName() Optional. First name of the other party in a private chat
+ * @method   string getLastName()  Optional. Last name of the other party in a private chat
+ */
 class Chat extends Entity
 {
-    /**
-     * @var mixed|null
-     */
-    protected $id;
-    /**
-     * @var null
-     */
-    protected $type;
-
-    /**
-     * @var mixed|null
-     */
-    protected $title;
-
-    /**
-     * @var mixed|null
-     */
-    protected $username;
-
-    /**
-     * @var mixed|null
-     */
-    protected $first_name;
-
-    /**
-     * @var mixed|null
-     */
-    protected $last_name;
-
-    /**
-     * Chat constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
+    public function __construct($data)
     {
-        $this->id = isset($data['id']) ? $data['id'] : null;
-        if (empty($this->id)) {
-            throw new TelegramException('id is empty!');
-        }
+        parent::__construct($data);
 
-        if (isset($data['type'])) {
-            $this->type = $data['type'];
-        } else {
-            if ($this->id > 0) {
+        if (!$this->getType()) {
+            if ($this->getId() > 0) {
                 $this->type = 'private';
-            } elseif ($this->id < 0) {
+            } elseif ($this->getId() < 0) {
                 $this->type = 'group';
-            } else {
-                $this->type = null;
             }
         }
-
-        $this->title      = isset($data['title']) ? $data['title'] : null;
-        $this->first_name = isset($data['first_name']) ? $data['first_name'] : null;
-        $this->last_name  = isset($data['last_name']) ? $data['last_name'] : null;
-        $this->username   = isset($data['username']) ? $data['username'] : null;
-    }
-
-    /**
-     * Check if is group chat
-     *
-     * @return bool
-     */
-    public function isGroupChat()
-    {
-        if ($this->type == 'group' || $this->id < 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check if is private chat
-     *
-     * @return bool
-     */
-    public function isPrivateChat()
-    {
-        if ($this->type == 'private') {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check if is super group
-     *
-     * @return bool
-     */
-    public function isSuperGroup()
-    {
-        if ($this->type == 'supergroup') {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check if is channel
-     *
-     * @return bool
-     */
-    public function isChannel()
-    {
-        if ($this->type == 'channel') {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Get id
-     *
-     * @return mixed|null
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get type
-     *
-     * @return null
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Get title
-     *
-     * @return mixed|null
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Get first name
-     *
-     * @return mixed|null
-     */
-    public function getFirstName()
-    {
-        return $this->first_name;
-    }
-
-    /**
-     * Get last name
-     *
-     * @return mixed|null
-     */
-    public function getLastName()
-    {
-        return $this->last_name;
-    }
-
-    /**
-     * Get username
-     *
-     * @return mixed|null
-     */
-    public function getUsername()
-    {
-        return $this->username;
     }
 
     /**
      * Try mention
      *
-     * @return mixed|null|string
+     * @return string|null
      */
     public function tryMention()
     {
         if ($this->isPrivateChat()) {
-            if (is_null($this->username)) {
-                if (!is_null($this->last_name)) {
+            if ($this->username === null) {
+                if ($this->last_name !== null) {
                     return $this->first_name . ' ' . $this->last_name;
                 }
+
                 return $this->first_name;
             }
+
             return '@' . $this->username;
         }
+
         return $this->getTitle();
+    }
+
+    /**
+     * Check if this is a group chat
+     *
+     * @return bool
+     */
+    public function isGroupChat()
+    {
+        return $this->type === 'group' || $this->id < 0;
+    }
+
+    /**
+     * Check if this is a private chat
+     *
+     * @return bool
+     */
+    public function isPrivateChat()
+    {
+        return $this->type === 'private';
+    }
+
+    /**
+     * Check if this is a super group
+     *
+     * @return bool
+     */
+    public function isSuperGroup()
+    {
+        return $this->type === 'supergroup';
+    }
+
+    /**
+     * Check if this is a channel
+     *
+     * @return bool
+     */
+    public function isChannel()
+    {
+        return $this->type === 'channel';
     }
 }

@@ -12,6 +12,11 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
+/**
+ * Class InlineKeyboardMarkup
+ *
+ * @link https://core.telegram.org/bots/api#inlinekeyboardmarkup
+ */
 class InlineKeyboardMarkup extends Entity
 {
     /**

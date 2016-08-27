@@ -10,110 +10,27 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class ChosenInlineResult
+ *
+ * @link https://core.telegram.org/bots/api#choseninlineresult
+ *
+ * @method string   getResultId()        The unique identifier for the result that was chosen
+ * @method User     getFrom()            The user that chose the result
+ * @method Location getLocation()        Optional. Sender location, only for bots that require user location
+ * @method string   getInlineMessageId() Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will be also received in callback queries and can be used to edit the message.
+ * @method string   getQuery()           The query that was used to obtain the result
+ */
 class ChosenInlineResult extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $result_id;
-
-    /**
-     * @var \Longman\TelegramBot\Entities\User
-     */
-    protected $from;
-
-    /**
-     * @var \Longman\TelegramBot\Entities\Location
-     */
-    protected $location;
-
-    /**
-     * @var mixed|null
-     */
-    protected $inline_message_id;
-
-    /**
-     * @var mixed|null
-     */
-    protected $query;
-
-    /**
-     * ChosenInlineResult constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
+    protected function subEntities()
     {
-        $this->result_id = isset($data['result_id']) ? $data['result_id'] : null;
-        if (empty($this->result_id)) {
-            throw new TelegramException('result_id is empty!');
-        }
-
-        $this->from = isset($data['from']) ? $data['from'] : null;
-        if (empty($this->from)) {
-            throw new TelegramException('from is empty!');
-        }
-        $this->from = new User($this->from);
-
-        $this->location = isset($data['location']) ? $data['location'] : null;
-        if (!empty($this->location)) {
-            $this->location = new Location($this->location);
-        }
-
-        $this->inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
-        $this->query             = isset($data['query']) ? $data['query'] : null;
-    }
-
-    /**
-     * Ger result id
-     *
-     * @return mixed|null
-     */
-    public function getResultId()
-    {
-        return $this->result_id;
-    }
-
-    /**
-     * Get from
-     *
-     * @return \Longman\TelegramBot\Entities\User
-     */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     * Get location
-     *
-     * @return \Longman\TelegramBot\Entities\Location
-     */
-    public function getLocation()
-    {
-        return $this->location;
-    }
-
-    /**
-     * Get inline message id
-     *
-     * @return mixed|null
-     */
-    public function getInlineMessageId()
-    {
-        return $this->inline_message_id;
-    }
-
-    /**
-     * Get query
-     *
-     * @return mixed|null
-     */
-    public function getQuery()
-    {
-        return $this->query;
+        return [
+            'from'     => User::class,
+            'location' => Location::class,
+        ];
     }
 }

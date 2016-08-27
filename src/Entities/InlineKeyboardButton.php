@@ -12,45 +12,26 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
+/**
+ * Class InlineKeyboardButton
+ *
+ * @link https://core.telegram.org/bots/api#inlinekeyboardbutton
+ *
+ * @method string getText()              Label text on the button
+ * @method string getUrl()               Optional. HTTP url to be opened when button is pressed
+ * @method string getCallbackData()      Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
+ * @method string getSwitchInlineQuery() Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
+ */
 class InlineKeyboardButton extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $text;
-
-    /**
-     * @var string
-     */
-    protected $url;
-
-    /**
-     * @var mixed
-     */
-    protected $callback_data;
-
-    /**
-     * @var mixed
-     */
-    protected $switch_inline_query;
-
-    /**
-     * InlineKeyboardButton constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data = [])
+    protected function validate()
     {
-        $this->text = isset($data['text']) ? $data['text'] : null;
-        if (empty($this->text)) {
-            throw new TelegramException('text is empty!');
-        }
-
         $num_params = 0;
         foreach (['url', 'callback_data', 'switch_inline_query'] as $param) {
-            if (!empty($data[$param])) {
-                $this->$param = $data[$param];
+            if (!empty($this->getProperty($param))) {
                 $num_params++;
             }
         }

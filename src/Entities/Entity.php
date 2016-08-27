@@ -10,8 +10,14 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Exception;
 use ReflectionObject;
 
+/**
+ * Class Entity
+ *
+ * This is the base class for all entities.
+ */
 class Entity
 {
     /**
@@ -30,27 +36,42 @@ class Entity
     }
 
     /**
+     * Entity constructor.
+     *
+     * @todo Get rid of the $bot_name, it shouldn't be here!
+     *
+     * @param        $data
+     * @param string $bot_name
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function __construct($data, $bot_name = '')
+    {
+        $this->assignMemberVariables($data);
+        $this->validate();
+        $this->bot_name = $bot_name;
+    }
+
+    /**
      * Perform to json
      *
      * @return string
      */
     public function toJson()
     {
-        $fields = $this->reflect($this);
-        $json   = json_encode($fields);
-
-        return $json;
+        return json_encode($this->reflect($this));
     }
 
     /**
      * Reflect
      *
      * @param null $object
+     *
      * @return array
      */
     public function reflect($object = null)
     {
-        if ($object == null) {
+        if ($object === null) {
             $object = $this;
         }
 
@@ -61,7 +82,7 @@ class Entity
 
         foreach ($properties as $property) {
             $name = $property->getName();
-            if ($name == 'bot_name') {
+            if ($name === 'bot_name') {
                 continue;
             }
 
@@ -107,13 +128,14 @@ class Entity
                 } else {
                     $property->setAccessible(true);
                     $value = $property->getValue($object);
-                    if (is_null($value)) {
+                    if (null === $value) {
                         continue;
                     }
                     $fields[$name] = $value;
                 }
             }
         }
+
         return $fields;
     }
 
@@ -125,5 +147,114 @@ class Entity
     public function __toString()
     {
         return $this->toJson();
+    }
+
+    /**
+     * Helper to set member variables
+     *
+     * @param array $data
+     */
+    protected function assignMemberVariables(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * Get the list of the properties that are themselves Entities
+     *
+     * @return array
+     */
+    protected function subEntities()
+    {
+        return [];
+    }
+
+    /**
+     * Perform any special entity validation
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function validate()
+    {
+    }
+
+    /**
+     * Get a property from the current Entity
+     *
+     * @param mixed $property
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getProperty($property, $default = null)
+    {
+        if (isset($this->$property)) {
+            return $this->$property;
+        }
+
+        return $default;
+    }
+
+    /**
+     * Return the variable for the called getter
+     *
+     * @param $method
+     * @param $args
+     *
+     * @return mixed|null
+     */
+    public function __call($method, $args)
+    {
+        $action = substr($method, 0, 3);
+        if ($action === 'get') {
+            //Convert method to snake_case (which is the name of the property)
+            $property_name = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', substr($method, 3))), '_');
+            $property      = $this->getProperty($property_name);
+
+            if ($property !== null) {
+                //Get all sub-Entities of the current Entity
+                $sub_entities = $this->subEntities();
+
+                if (isset($sub_entities[$property_name])) {
+                    return new $sub_entities[$property_name]($property);
+                }
+
+                return $property;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return an array of nice objects from an array of object arrays
+     *
+     * This method is used to generate pretty object arrays
+     * mainly for PhotoSize and Entities object arrays.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return array
+     */
+    protected function makePrettyObjectArray($class, $property)
+    {
+        $new_objects = [];
+
+        try {
+            if ($objects = $this->getProperty($property)) {
+                foreach ($objects as $object) {
+                    if (!empty($object)) {
+                        $new_objects[] = new $class($object);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $new_objects = [];
+        }
+
+        return $new_objects;
     }
 }

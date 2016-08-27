@@ -19,7 +19,7 @@ class ReplyToMessage extends Message
      * @param array  $data
      * @param string $bot_name
      */
-    public function __construct(array $data, $bot_name)
+    public function __construct(array $data, $bot_name = '')
     {
 
         //As explained in the documentation
