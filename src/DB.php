@@ -607,22 +607,18 @@ class DB
         }
 
         try {
-            $mysql_query = 'INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
-                (
-                `id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`
-                )
-                VALUES (
-                :callback_query_id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at
-                )';
+            $sth = self::$pdo->prepare(
+                'INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
+                (`id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`)
+                VALUES
+                (:callback_query_id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at)
+            ');
 
-            $sth_insert_callback_query = self::$pdo->prepare($mysql_query);
-
-            $date = self::getTimestamp(time());
-
+            $date              = self::getTimestamp();
             $callback_query_id = $callback_query->getId();
             $from              = $callback_query->getFrom();
             $user_id           = null;
-            if (is_object($from)) {
+            if ($from instanceof User) {
                 $user_id = $from->getId();
                 self::insertUser($from, $date);
             }
@@ -630,15 +626,19 @@ class DB
             $message    = $callback_query->getMessage();
             $chat_id    = null;
             $message_id = null;
-            if ($message) {
+            if ($message instanceof Message) {
                 $chat_id    = $message->getChat()->getId();
                 $message_id = $message->getMessageId();
 
-                $sth = self::$pdo->prepare('SELECT * FROM `' . TB_MESSAGE . '`
-                    WHERE `id` = ' . $message_id . ' AND `chat_id` = ' . $chat_id . ' LIMIT 1');
-                $sth->execute();
+                $is_message = self::$pdo->query('
+                    SELECT *
+                    FROM `' . TB_MESSAGE . '`
+                    WHERE `id` = ' . $message_id . '
+                      AND `chat_id` = ' . $chat_id . '
+                    LIMIT 1
+                ')->rowCount();
 
-                if ($sth->rowCount() > 0) {
+                if ($is_message) {
                     self::insertEditedMessageRequest($message);
                 } else {
                     self::insertMessageRequest($message);
@@ -648,15 +648,15 @@ class DB
             $inline_message_id = $callback_query->getInlineMessageId();
             $data              = $callback_query->getData();
 
-            $sth_insert_callback_query->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
-            $sth_insert_callback_query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth_insert_callback_query->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth_insert_callback_query->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth_insert_callback_query->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
-            $sth_insert_callback_query->bindParam(':data', $data, PDO::PARAM_STR);
-            $sth_insert_callback_query->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
+            $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
+            $sth->bindParam(':data', $data, PDO::PARAM_STR);
+            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
 
-            return $sth_insert_callback_query->execute();
+            return $sth->execute();
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
