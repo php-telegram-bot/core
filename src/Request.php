@@ -242,31 +242,31 @@ class Request
      */
     public static function downloadFile(File $file)
     {
-        $path = $file->getFilePath();
+        $tg_file_path = $file->getFilePath();
+        $file_path    = self::$telegram->getDownloadPath() . '/' . $tg_file_path;
 
-        //Create the directory
-        $loc_path = self::$telegram->getDownloadPath() . '/' . $path;
-
-        $dirname = dirname($loc_path);
-        if (!is_dir($dirname) && !mkdir($dirname, 0755, true)) {
-            throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
+        $file_dir = dirname($file_path);
+        //For safety reasons, first try to create the directory, then check that it exists.
+        //This is in case some other process has created the folder in the meantime.
+        if (!@mkdir($file_dir, 0755, true) && !is_dir($file_dir)) {
+            throw new TelegramException('Directory ' . $file_dir . ' can\'t be created');
         }
 
         $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
             self::$client->get(
-                '/file/bot' . self::$telegram->getApiKey() . '/' . $path,
-                ['debug' => $debug_handle, 'sink' => $loc_path]
+                '/file/bot' . self::$telegram->getApiKey() . '/' . $tg_file_path,
+                ['debug' => $debug_handle, 'sink' => $file_path]
             );
+
+            return filesize($file_path) > 0;
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
         }
-
-        return (filesize($loc_path) > 0);
     }
 
     /**
@@ -330,7 +330,7 @@ class Request
      */
     private static function ensureNonEmptyData(array $data)
     {
-        if (empty($data)) {
+        if (count($data) === 0) {
             throw new TelegramException('Data is empty!');
         }
     }
