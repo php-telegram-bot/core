@@ -895,7 +895,7 @@ class DB
         self::insertUser($from, $edit_date, $chat);
 
         try {
-            $sth = self::$pdo->prepare('INSERT INTO `' . TB_EDITED_MESSAGE . '`
+            $sth = self::$pdo->prepare('INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
                 (
                 `chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`
                 )
