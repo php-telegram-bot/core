@@ -10,6 +10,37 @@
 
 namespace Longman\TelegramBot\Entities\InlineQuery;
 
+use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
+use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
+
+/**
+ * Class InlineQueryResultCachedVoice
+ *
+ * @link https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
+ *
+ * <code>
+ * $data = [
+ *   'id'                    => '',
+ *   'voice_file_id'         => '',
+ *   'title'                 => '',
+ *   'reply_markup'          => <InlineKeyboardMarkup>,
+ *   'input_message_content' => <InputMessageContent>,
+ * ];
+ * </code>
+ *
+ * @method string               getType()                Type of the result, must be voice
+ * @method string               getId()                  Unique identifier for this result, 1-64 bytes
+ * @method string               getVoiceFileId()         A valid file identifier for the voice message
+ * @method string               getTitle()               Voice message title
+ * @method InlineKeyboardMarkup getReplyMarkup()         Optional. An Inline keyboard attached to the message
+ * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the voice message
+ *
+ * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
+ * @method $this setVoiceFileId(string $voice_file_id)                              A valid file identifier for the voice message
+ * @method $this setTitle(string $title)                                            Voice message title
+ * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. An Inline keyboard attached to the message
+ * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the voice message
+ */
 class InlineQueryResultCachedVoice extends InlineEntity
 {
     /**

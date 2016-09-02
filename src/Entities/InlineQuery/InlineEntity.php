@@ -29,8 +29,10 @@ abstract class InlineEntity extends Entity
             //Convert method to snake_case (which is the name of the property)
             $property_name        = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', substr($method, 3))), '_');
             $this->$property_name = $args[0];
+
+            return $this;
         }
 
-        return $this;
+        return parent::__call($method, $args);
     }
 }

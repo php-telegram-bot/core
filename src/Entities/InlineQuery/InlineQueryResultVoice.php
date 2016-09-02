@@ -10,6 +10,40 @@
 
 namespace Longman\TelegramBot\Entities\InlineQuery;
 
+use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
+use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
+
+/**
+ * Class InlineQueryResultVoice
+ *
+ * @link https://core.telegram.org/bots/api#inlinequeryresultvoice
+ *
+ * <code>
+ * $data = [
+ *   'id'                    => '',
+ *   'voice_url'             => '',
+ *   'title'                 => '',
+ *   'voice_duration'        => 123,
+ *   'reply_markup'          => <InlineKeyboardMarkup>,
+ *   'input_message_content' => <InputMessageContent>,
+ * ];
+ * </code>
+ *
+ * @method string               getType()                Type of the result, must be voice
+ * @method string               getId()                  Unique identifier for this result, 1-64 bytes
+ * @method string               getVoiceUrl()            A valid URL for the voice recording
+ * @method string               getTitle()               Recording title
+ * @method int                  getVoiceDuration()       Optional. Recording duration in seconds
+ * @method InlineKeyboardMarkup getReplyMarkup()         Optional. Inline keyboard attached to the message
+ * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the voice recording
+ *
+ * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
+ * @method $this setVoiceUrl(string $voice_url)                                     A valid URL for the voice recording
+ * @method $this setTitle(string $title)                                            Recording title
+ * @method $this setVoiceDuration(int $voice_duration)                              Optional. Recording duration in seconds
+ * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
+ * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the voice recording
+ */
 class InlineQueryResultVoice extends InlineEntity
 {
     /**

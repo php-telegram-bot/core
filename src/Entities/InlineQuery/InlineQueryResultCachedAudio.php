@@ -35,8 +35,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
  * @method $this setAudioFileId(string $audio_file_id)                              A valid file identifier for the audio file
- * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
- * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the photo
+ * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. An Inline keyboard attached to the message
+ * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the audio
  */
 class InlineQueryResultCachedAudio extends InlineEntity
 {

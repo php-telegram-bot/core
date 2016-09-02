@@ -45,7 +45,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setPerformer(string $performer)                                    Optional. Performer
  * @method $this setAudioDuration(int $audio_duration)                              Optional. Audio duration in seconds
  * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
- * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the photo
+ * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the audio
  */
 class InlineQueryResultAudio extends InlineEntity
 {

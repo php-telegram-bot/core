@@ -18,7 +18,7 @@ use ReflectionObject;
  *
  * This is the base class for all entities.
  */
-class Entity
+abstract class Entity
 {
     /**
      * @var string

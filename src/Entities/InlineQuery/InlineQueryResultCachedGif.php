@@ -41,8 +41,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setGifFileId(string $gif_file_id)                                  A valid file identifier for the GIF file
  * @method $this setTitle(string $title)                                            Optional. Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the GIF file to be sent, 0-200 characters
- * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
- * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the photo
+ * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. An Inline keyboard attached to the message
+ * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the GIF animation
  */
 class InlineQueryResultCachedGif extends InlineEntity
 {
