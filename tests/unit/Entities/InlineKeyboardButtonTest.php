@@ -23,7 +23,7 @@ class InlineKeyboardButtonTest extends TestCase
 {
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage text is empty!
+     * @expectedExceptionMessage You must use only one of these fields: url, callback_data, switch_inline_query!
      */
     public function testInlineKeyboardButtonNoTextFail()
     {

@@ -12,6 +12,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
+use Longman\TelegramBot\Entities\Message;
 use \Longman\TelegramBot\Entities\ServerResponse;
 use \Longman\TelegramBot\Request;
 
@@ -57,10 +58,10 @@ class ServerResponseTest extends TestCase
         $this->assertEquals('1234', $server_result->getMessageId());
         $this->assertEquals('123456789', $server_result->getFrom()->getId());
         $this->assertEquals('botname', $server_result->getFrom()->getFirstName());
-        $this->assertEquals('namebot', $server_result->getFrom()->getUserName());
+        $this->assertEquals('namebot', $server_result->getFrom()->getUsername());
         $this->assertEquals('123456789', $server_result->getChat()->getId());
         $this->assertEquals('john', $server_result->getChat()->getFirstName());
-        $this->assertEquals('Mjohn', $server_result->getChat()->getUserName());
+        $this->assertEquals('Mjohn', $server_result->getChat()->getUsername());
         $this->assertEquals('1441378360', $server_result->getDate());
         $this->assertEquals('hello', $server_result->getText());
         //... they are not finished...
@@ -221,9 +222,11 @@ class ServerResponseTest extends TestCase
         $result = $this->getUserProfilePhotos();
         $this->server = new ServerResponse(json_decode($result, true), 'testbot');
         $server_result = $this->server->getResult();
+
         $photos = $server_result->getPhotos();
 
         //Photo count
+        $this->assertEquals(3, $server_result->getTotalCount());
         $this->assertCount(3, $photos);
         //Photo size count
         $this->assertCount(3, $photos[0]);
@@ -252,7 +255,8 @@ class ServerResponseTest extends TestCase
         $this->assertInstanceOf('\Longman\TelegramBot\Entities\File', $this->server->getResult());
     }
 
-    public function testSetGeneralTestFakeResponse() {
+    public function testSetGeneralTestFakeResponse()
+    {
         //setWebhook ok
         $fake_response = Request::generateGeneralFakeServerResponse();
 
@@ -267,6 +271,8 @@ class ServerResponseTest extends TestCase
         $fake_response = Request::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
 
         $this->server =  new ServerResponse($fake_response, 'testbot');
+
+        /** @var Message $server_result */
         $server_result = $this->server->getResult();
 
         $this->assertTrue($this->server->isOk());
@@ -278,14 +284,16 @@ class ServerResponseTest extends TestCase
         $this->assertEquals('1234', $server_result->getMessageId());
         $this->assertEquals('1441378360', $server_result->getDate());
         $this->assertEquals('hello', $server_result->getText());
+
         //Message //User
         $this->assertEquals('123456789', $server_result->getFrom()->getId());
         $this->assertEquals('botname', $server_result->getFrom()->getFirstName());
-        $this->assertEquals('namebot', $server_result->getFrom()->getUserName());
+        $this->assertEquals('namebot', $server_result->getFrom()->getUsername());
+
         //Message //Chat
         $this->assertEquals('123456789', $server_result->getChat()->getId());
         $this->assertEquals('', $server_result->getChat()->getFirstName());
-        $this->assertEquals('', $server_result->getChat()->getUserName());
+        $this->assertEquals('', $server_result->getChat()->getUsername());
 
         //... they are not finished...
     }

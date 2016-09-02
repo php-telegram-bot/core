@@ -21,11 +21,6 @@ use \Longman\TelegramBot\Entities\Update;
  */
 class UpdateTest extends TestCase
 {
-    /**
-    * @var \Longman\TelegramBot\Entities\Update
-    */
-    private $update;
-
     public function testUpdateCast()
     {
         $json = '
