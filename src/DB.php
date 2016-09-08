@@ -875,7 +875,7 @@ class DB
 
         try {
             $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_EDITED_MESSAGE . '`
+                INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
                 (`chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`)
                 VALUES
                 (:chat_id, :message_id, :user_id, :date, :text, :entities, :caption)
