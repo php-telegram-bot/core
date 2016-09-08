@@ -42,7 +42,7 @@ class CancelCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '0.1.1';
+    protected $version = '0.2.0';
 
     /**
      * @var bool
@@ -53,6 +53,7 @@ class CancelCommand extends UserCommand
      * Command execute method
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -73,21 +74,12 @@ class CancelCommand extends UserCommand
     }
 
     /**
-     * Execute no db
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     */
-    public function executeNoDb()
-    {
-        return $this->hideKeyboard('Nothing to cancel.');
-    }
-
-    /**
      * Hide the keyboard and output a text
      *
      * @param string $text
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function hideKeyboard($text)
     {
@@ -98,5 +90,16 @@ class CancelCommand extends UserCommand
                 'text'         => $text,
             ]
         );
+    }
+
+    /**
+     * Execute no db
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function executeNoDb()
+    {
+        return $this->hideKeyboard('Nothing to cancel.');
     }
 }

@@ -35,7 +35,7 @@ class KeyboardButton extends Entity
      * @param array $data
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct($data = array())
+    public function __construct(array $data = [])
     {
         $this->text = isset($data['text']) ? $data['text'] : null;
         if (empty($this->text)) {

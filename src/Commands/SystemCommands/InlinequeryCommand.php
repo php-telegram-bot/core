@@ -33,12 +33,13 @@ class InlinequeryCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.2';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -55,19 +56,19 @@ class InlinequeryCommand extends SystemCommand
                     'id'                    => '001',
                     'title'                 => 'https://core.telegram.org/bots/api#answerinlinequery',
                     'description'           => 'you enter: ' . $query,
-                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])
+                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query]),
                 ],
                 [
                     'id'                    => '002',
                     'title'                 => 'https://core.telegram.org/bots/api#answerinlinequery',
                     'description'           => 'you enter: ' . $query,
-                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])
+                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query]),
                 ],
                 [
                     'id'                    => '003',
                     'title'                 => 'https://core.telegram.org/bots/api#answerinlinequery',
                     'description'           => 'you enter: ' . $query,
-                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query])
+                    'input_message_content' => new InputTextMessageContent(['message_text' => ' ' . $query]),
                 ],
             ];
 

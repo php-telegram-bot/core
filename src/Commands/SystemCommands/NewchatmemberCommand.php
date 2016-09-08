@@ -31,10 +31,13 @@ class NewchatmemberCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
     /**
+     * Command execute method
+     *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -42,10 +45,9 @@ class NewchatmemberCommand extends SystemCommand
 
         $chat_id = $message->getChat()->getId();
         $member  = $message->getNewChatMember();
+        $text    = 'Hi there!';
 
-        if ($message->botAddedInChat()) {
-            $text = 'Hi there!';
-        } else {
+        if (!$message->botAddedInChat()) {
             $text = 'Hi ' . $member->tryMention() . '!';
         }
 

@@ -20,7 +20,7 @@ abstract class Command
     /**
      * Telegram object
      *
-     * @var Telegram
+     * @var \Longman\TelegramBot\Telegram
      */
     protected $telegram;
 
@@ -90,7 +90,7 @@ abstract class Command
     /**
      * Constructor
      *
-     * @param Telegram                             $telegram
+     * @param \Longman\TelegramBot\Telegram        $telegram
      * @param \Longman\TelegramBot\Entities\Update $update
      */
     public function __construct(Telegram $telegram, Update $update = null)
@@ -104,14 +104,16 @@ abstract class Command
      * Set update object
      *
      * @param \Longman\TelegramBot\Entities\Update $update
-     * @return Command
+     *
+     * @return \Longman\TelegramBot\Commands\Command
      */
     public function setUpdate(Update $update = null)
     {
-        if (!empty($update)) {
+        if ($update !== null) {
             $this->update  = $update;
             $this->message = $this->update->getMessage();
         }
+
         return $this;
     }
 
@@ -119,12 +121,14 @@ abstract class Command
      * Pre-execute command
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function preExecute()
     {
         if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
             return $this->executeNoDb();
         }
+
         return $this->execute();
     }
 
@@ -132,6 +136,7 @@ abstract class Command
      * Execute command
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     abstract public function execute();
 
@@ -139,6 +144,7 @@ abstract class Command
      * Execution if MySQL is required but not available
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function executeNoDb()
     {
@@ -182,7 +188,7 @@ abstract class Command
      *
      * @param string|null $name
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getConfig($name = null)
     {
@@ -192,13 +198,14 @@ abstract class Command
         if (isset($this->config[$name])) {
             return $this->config[$name];
         }
+
         return null;
     }
 
     /**
      * Get telegram object
      *
-     * @return Telegram
+     * @return \Longman\TelegramBot\Telegram
      */
     public function getTelegram()
     {
@@ -248,7 +255,7 @@ abstract class Command
     /**
      * Check if command is enabled
      *
-     * @return boolean
+     * @return bool
      */
     public function isEnabled()
     {

@@ -36,19 +36,20 @@ class StartCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text    = 'Hi there!' . "\n" . 'Type /help to see all commands!';
+        $text    = 'Hi there!' . PHP_EOL . 'Type /help to see all commands!';
 
         $data = [
             'chat_id' => $chat_id,
