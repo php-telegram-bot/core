@@ -26,7 +26,7 @@ class InlinekeyboardCommand extends UserCommand
     protected $name = 'Inlinekeyboard';
     protected $description = 'Show inline keyboard';
     protected $usage = '/inlinekeyboard';
-    protected $version = '0.0.1';
+    protected $version = '0.0.2';
     /**#@-*/
 
     /**
@@ -37,13 +37,13 @@ class InlinekeyboardCommand extends UserCommand
         $message = $this->getMessage();
 
         $inline_keyboard = [
-            new InlineKeyboardButton(['text' => 'inline', 'switch_inline_query' => 'true']),        
-            new InlineKeyboardButton(['text' => 'callback', 'callback_data' => 'identifier']),        
+            new InlineKeyboardButton(['text' => 'inline', 'switch_inline_query' => 'true']),
+            new InlineKeyboardButton(['text' => 'callback', 'callback_data' => 'identifier']),
             new InlineKeyboardButton(['text' => 'open url', 'url' => 'https://github.com/akalongman/php-telegram-bot']),
         ];
-        $data = [
-            'chat_id' => $message->getChat()->getId(),
-            'text'    => 'inline keyboard',
+        $data            = [
+            'chat_id'      => $message->getChat()->getId(),
+            'text'         => 'inline keyboard',
             'reply_markup' => new InlineKeyboardMarkup(['inline_keyboard' => [$inline_keyboard]]),
         ];
 

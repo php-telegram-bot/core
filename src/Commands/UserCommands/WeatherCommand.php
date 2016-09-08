@@ -10,11 +10,12 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\TelegramLog;
 
 /**
  * User "/weather" command
@@ -39,7 +40,7 @@ class WeatherCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
 
     /**
      * Base URI for OpenWeatherMap API
@@ -54,7 +55,6 @@ class WeatherCommand extends UserCommand
      * @param string $location
      *
      * @return string
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function getWeatherData($location)
     {
@@ -69,7 +69,9 @@ class WeatherCommand extends UserCommand
         try {
             $response = $client->get($path, ['query' => $query]);
         } catch (RequestException $e) {
-            throw new TelegramException($e->getMessage());
+            TelegramLog::error($e->getMessage());
+
+            return '';
         }
 
         return (string)$response->getBody();
@@ -80,13 +82,13 @@ class WeatherCommand extends UserCommand
      *
      * @param array $data
      *
-     * @return bool|string
+     * @return string
      */
     private function getWeatherString(array $data)
     {
         try {
-            if (empty($data) || $data['cod'] !== 200) {
-                return false;
+            if (!(isset($data['cod']) && $data['cod'] === 200)) {
+                return '';
             }
 
             //http://openweathermap.org/weather-conditions
@@ -101,16 +103,18 @@ class WeatherCommand extends UserCommand
             $conditions_now = strtolower($data['weather'][0]['main']);
 
             return sprintf(
-                'The temperature in %1$s (%2$s) is %3$s°C' . "\n" .
-                'Current conditions are: %4$s%5$s',
+                'The temperature in %s (%s) is %s°C' . "\n" .
+                'Current conditions are: %s%s',
                 $data['name'], //city
                 $data['sys']['country'], //country
                 $data['main']['temp'], //temperature
                 $data['weather'][0]['description'], //description of weather
-                (isset($conditions[$conditions_now])) ? $conditions[$conditions_now] : ''
+                isset($conditions[$conditions_now]) ? $conditions[$conditions_now] : ''
             );
-        } catch (\Exception $e) {
-            return false;
+        } catch (Exception $e) {
+            TelegramLog::error($e->getMessage());
+
+            return '';
         }
     }
 
@@ -118,6 +122,7 @@ class WeatherCommand extends UserCommand
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -126,11 +131,12 @@ class WeatherCommand extends UserCommand
         $text    = '';
 
         if (trim($this->getConfig('owm_api_key'))) {
-            if ($location = trim($message->getText(true))) {
+            $location = trim($message->getText(true));
+            if ($location !== '') {
                 if ($weather_data = json_decode($this->getWeatherData($location), true)) {
                     $text = $this->getWeatherString($weather_data);
                 }
-                if (!$text) {
+                if ($text === '') {
                     $text = 'Cannot find weather for location: ' . $location;
                 }
             } else {

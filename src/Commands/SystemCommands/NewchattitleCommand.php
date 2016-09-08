@@ -30,11 +30,19 @@ class NewchattitleCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
-    /*public function execute()
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$new_chat_title = $message->getNewChatTitle();
-    }*/
+
+        return parent::execute();
+    }
 }

@@ -25,7 +25,7 @@ class MarkdownCommand extends UserCommand
     protected $name = 'markdown';
     protected $description = 'Print Markdown tesxt';
     protected $usage = '/markdown';
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
     /**#@-*/
 
     /**
@@ -35,17 +35,18 @@ class MarkdownCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['parse_mode'] = 'MARKDOWN';
-        $data['text'] = "*bold* _italic_ `inline fixed width code` ```preformatted code block
+        $data = [
+            'chat_id'    => $chat_id,
+            'parse_mode' => 'MARKDOWN',
+            'text'       => '*bold* _italic_ `inline fixed width code`
+```
+preformatted code block
 code block
 ```
 [Best Telegram bot api!!](https://github.com/akalongman/php-telegram-bot)
-
-";
+',
+        ];
 
         return Request::sendMessage($data);
     }

@@ -30,11 +30,19 @@ class MigratetochatidCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
-    /*public function execute()
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$migrate_to_chat_id = $message->getMigrateToChatId();
-    }*/
+
+        return parent::execute();
+    }
 }

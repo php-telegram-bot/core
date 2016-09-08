@@ -31,12 +31,13 @@ class GenericCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -47,8 +48,9 @@ class GenericCommand extends SystemCommand
         $user_id = $message->getFrom()->getId();
         $command = $message->getCommand();
 
-        if (in_array($user_id, $this->telegram->getAdminList()) && strtolower(substr($command, 0, 5)) == 'whois') {
-            return $this->telegram->executeCommand('whois', $this->update);
+        //If the user is and admin and the command is in the format "/whoisXYZ", call the /whois command
+        if (stripos($command, 'whois') === 0 && $this->telegram->isAdmin($user_id)) {
+            return $this->telegram->executeCommand('whois');
         }
 
         $data = [

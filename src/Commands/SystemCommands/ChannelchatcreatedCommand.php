@@ -20,7 +20,7 @@ class ChannelchatcreatedCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name        = 'Channelchatcreated';
+    protected $name = 'Channelchatcreated';
 
     /**
      * @var string
@@ -30,11 +30,19 @@ class ChannelchatcreatedCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version     = '1.0.1';
+    protected $version = '1.1.0';
 
-    /*public function execute()
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$channel_chat_created = $message->getChannelChatCreated();
-    }*/
+
+        return parent::execute();
+    }
 }

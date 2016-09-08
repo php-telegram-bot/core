@@ -31,12 +31,13 @@ class CallbackqueryCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -45,15 +46,11 @@ class CallbackqueryCommand extends SystemCommand
         $callback_query_id = $callback_query->getId();
         $callback_data     = $callback_query->getData();
 
-        $data['callback_query_id'] = $callback_query_id;
-
-        if ($callback_data == 'thumb up') {
-            $data['text']       = 'Hello World!';
-            $data['show_alert'] = true;
-        } else {
-            $data['text']       = 'Hello World!';
-            $data['show_alert'] = false;
-        }
+        $data = [
+            'callback_query_id' => $callback_query_id,
+            'text'              => 'Hello World!',
+            'show_alert'        => $callback_data === 'thumb up',
+        ];
 
         return Request::answerCallbackQuery($data);
     }

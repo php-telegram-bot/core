@@ -30,13 +30,21 @@ class ChoseninlineresultCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.1';
+    protected $version = '1.1.0';
 
-    /*public function execute()
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //Information about chosen result is returned
         //$update = $this->getUpdate();
         //$inline_query = $update->getChosenInlineResult();
         //$query = $inline_query->getQuery();
-    }*/
+
+        return parent::execute();
+    }
 }
