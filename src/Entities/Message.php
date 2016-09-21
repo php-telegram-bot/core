@@ -103,11 +103,13 @@ class Message extends Entity
      * This method overrides the default getPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return array
+     * @return null|array
      */
     public function getPhoto()
     {
-        return $this->makePrettyObjectArray(PhotoSize::class, 'photo');
+        $pretty_array = $this->makePrettyObjectArray(PhotoSize::class, 'photo');
+
+        return empty($pretty_array) ? null : $pretty_array;
     }
 
     /**
@@ -116,11 +118,13 @@ class Message extends Entity
      * This method overrides the default getNewChatPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return array
+     * @return null|array
      */
     public function getNewChatPhoto()
     {
-        return $this->makePrettyObjectArray(PhotoSize::class, 'new_chat_photo');
+        $pretty_array = $this->makePrettyObjectArray(PhotoSize::class, 'new_chat_photo');
+
+        return empty($pretty_array) ? null : $pretty_array;
     }
 
     /**
@@ -129,11 +133,13 @@ class Message extends Entity
      * This method overrides the default getEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return array
+     * @return null|array
      */
     public function getEntities()
     {
-        return $this->makePrettyObjectArray(MessageEntity::class, 'entities');
+        $pretty_array = $this->makePrettyObjectArray(MessageEntity::class, 'entities');
+
+        return empty($pretty_array) ? null : $pretty_array;
     }
 
     /**
