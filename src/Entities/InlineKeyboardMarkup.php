@@ -16,35 +16,40 @@ use Longman\TelegramBot\Exception\TelegramException;
  * Class InlineKeyboardMarkup
  *
  * @link https://core.telegram.org/bots/api#inlinekeyboardmarkup
+ *
+ * @method InlineKeyboardButton[][] getInlineKeyboard() Array of button rows, each represented by an Array of InlineKeyboardButton objects
  */
 class InlineKeyboardMarkup extends Entity
 {
     /**
-     * @var array
+     * {@inheritdoc}
      */
-    protected $inline_keyboard;
+    protected function subEntities()
+    {
+        return [
+            'inline_keyboard' => InlineKeyboardButton::class,
+        ];
+    }
 
     /**
-     * InlineKeyboardMarkup constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * {@inheritdoc}
      */
-    public function __construct($data = array())
+    protected function validate()
     {
-        if (isset($data['inline_keyboard'])) {
-            if (is_array($data['inline_keyboard'])) {
-                foreach ($data['inline_keyboard'] as $item) {
-                    if (!is_array($item)) {
-                        throw new TelegramException('Inline Keyboard subfield is not an array!');
-                    }
-                }
-                $this->inline_keyboard = $data['inline_keyboard'];
-            } else {
-                throw new TelegramException('Inline Keyboard field is not an array!');
-            }
-        } else {
+        $inline_keyboard = $this->getProperty('inline_keyboard');
+
+        if ($inline_keyboard === null) {
             throw new TelegramException('Inline Keyboard field is empty!');
+        }
+
+        if (!is_array($inline_keyboard)) {
+            throw new TelegramException('Inline Keyboard field is not an array!');
+        }
+
+        foreach ($inline_keyboard as $item) {
+            if (!is_array($item)) {
+                throw new TelegramException('Inline Keyboard subfield is not an array!');
+            }
         }
     }
 }

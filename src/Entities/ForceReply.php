@@ -12,26 +12,26 @@
 
 namespace Longman\TelegramBot\Entities;
 
+/**
+ * Class ForceReply
+ *
+ * @link https://core.telegram.org/bots/api#forcereply
+ *
+ * @method bool getForceReply() Shows reply interface to the user, as if they manually selected the bot‘s message and tapped 'Reply'
+ * @method bool getSelective()  Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
+ */
 class ForceReply extends Entity
 {
     /**
-     * @var bool
-     */
-    protected $force_reply;
-
-    /**
-     * @var bool|mixed
-     */
-    protected $selective;
-
-    /**
      * ForceReply constructor.
      *
-     * @param array|null $data
+     * @param array $data
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->force_reply = true;
-        $this->selective   = isset($data['selective']) ? $data['selective'] : false;
+        $data['force_reply'] = true;
+        parent::__construct($data);
     }
 }

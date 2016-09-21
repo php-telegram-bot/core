@@ -30,11 +30,13 @@ class InlineKeyboardButton extends Entity
     protected function validate()
     {
         $num_params = 0;
+
         foreach (['url', 'callback_data', 'switch_inline_query'] as $param) {
             if (!empty($this->getProperty($param))) {
                 $num_params++;
             }
         }
+
         if ($num_params !== 1) {
             throw new TelegramException('You must use only one of these fields: url, callback_data, switch_inline_query!');
         }

@@ -12,37 +12,24 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
 
+/**
+ * Class KeyboardButton
+ *
+ * @link https://core.telegram.org/bots/api#keyboardbutton
+ *
+ * @method string getText()            Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
+ * @method bool   getRequestContact()  Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
+ * @method bool   getRequestLocation() Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
+ */
 class KeyboardButton extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $text;
-
-    /**
-     * @var mixed|null
-     */
-    protected $request_contact;
-
-    /**
-     * @var mixed|null
-     */
-    protected $request_location;
-
-    /**
-     * KeyboardButton constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data = [])
+    protected function validate()
     {
-        $this->text = isset($data['text']) ? $data['text'] : null;
-        if (empty($this->text)) {
-            throw new TelegramException('text is empty!');
+        if ($this->getRequestContact() && $this->getRequestLocation()) {
+            throw new TelegramException('You must use only one of these fields: request_contact, request_location!');
         }
-
-        $this->request_contact  = isset($data['request_contact']) ? $data['request_contact'] : null;
-        $this->request_location = isset($data['request_location']) ? $data['request_location'] : null;
     }
 }
