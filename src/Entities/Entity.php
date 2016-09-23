@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot\Entities;
 
 use Exception;
+use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
 use ReflectionObject;
 
 /**
@@ -198,7 +199,7 @@ abstract class Entity
     }
 
     /**
-     * Return the variable for the called getter
+     * Return the variable for the called getter or magically set properties dynamically.
      *
      * @param $method
      * @param $args
@@ -207,11 +208,12 @@ abstract class Entity
      */
     public function __call($method, $args)
     {
+        //Convert method to snake_case (which is the name of the property)
+        $property_name = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', substr($method, 3))), '_');
+
         $action = substr($method, 0, 3);
         if ($action === 'get') {
-            //Convert method to snake_case (which is the name of the property)
-            $property_name = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', substr($method, 3))), '_');
-            $property      = $this->getProperty($property_name);
+            $property = $this->getProperty($property_name);
 
             if ($property !== null) {
                 //Get all sub-Entities of the current Entity
@@ -222,6 +224,13 @@ abstract class Entity
                 }
 
                 return $property;
+            }
+        } elseif ($action === 'set') {
+            // Limit setters to specific classes.
+            if ($this instanceof InlineEntity || $this instanceof Keyboard || $this instanceof KeyboardButton) {
+                $this->$property_name = $args[0];
+
+                return $this;
             }
         }
 

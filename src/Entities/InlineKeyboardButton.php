@@ -21,9 +21,31 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method string getUrl()               Optional. HTTP url to be opened when button is pressed
  * @method string getCallbackData()      Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
  * @method string getSwitchInlineQuery() Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
+ *
+ * @method $this setText(string $text)                             Label text on the button
+ * @method $this setUrl(string $url)                               Optional. HTTP url to be opened when button is pressed
+ * @method $this setCallbackData(string $callback_data)            Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
+ * @method $this setSwitchInlineQuery(string $switch_inline_query) Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
  */
-class InlineKeyboardButton extends Entity
+class InlineKeyboardButton extends KeyboardButton
 {
+    /**
+     * Check if the passed data array could be an InlineKeyboardButton.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public static function couldBe($data)
+    {
+        return is_array($data) &&
+            array_key_exists('text', $data) && (
+                   array_key_exists('url', $data) ||
+                   array_key_exists('callback_data', $data) ||
+                   array_key_exists('switch_inline_query', $data)
+            );
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,5 +62,18 @@ class InlineKeyboardButton extends Entity
         if ($num_params !== 1) {
             throw new TelegramException('You must use only one of these fields: url, callback_data, switch_inline_query!');
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __call($method, $args)
+    {
+        // Only 1 of these can be set, so clear the others when setting a new one.
+        if (in_array($method, ['setUrl', 'setCallbackData', 'setSwitchInlineQuery'], true)) {
+            unset($this->url, $this->callback_data, $this->switch_inline_query);
+        }
+
+        return parent::__call($method, $args);
     }
 }
