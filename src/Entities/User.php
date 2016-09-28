@@ -28,18 +28,59 @@ namespace Longman\TelegramBot\Entities;
 class User extends Entity
 {
     /**
-     * Try mention
+     * tryMention
      *
-     * @return string|null
+     * @param bool $markdown
+     *
+     * @return string
      */
-    public function tryMention()
+    public function tryMention($markdown = false)
     {
-        if ($this->username === null) {
-            if ($this->last_name !== null) {
-                return $this->first_name . ' ' . $this->last_name;
+        if (isset($this->username)) {
+            if ($markdown) {
+                //Escaping md special characters
+                //Please notice that just the _ is allowed in the username ` * [ are not allowed
+                return $this->prependAt($this->stripMarkDown($this->username));
             }
-            return $this->first_name;
+            return $this->prependAt($this->username);
         }
-        return '@' . $this->username;
+
+        $name = $this->first_name;
+        if (isset($this->last_name)) {
+            $name .= ' ' . $this->last_name;
+        }
+        
+        if ($markdown) {
+            //Escaping md special characters
+            return $this->stripMarkDown($name);
+        }
+        return $name;
+    }
+
+    /**
+     * stripMarkDown
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public function stripMarkDown($string)
+    {
+        $string = str_replace('[', '\[', $string);
+        $string = str_replace('`', '\`', $string);
+        $string = str_replace('*', '\*', $string);
+        return str_replace('_', '\_', $string);
+    }
+
+    /**
+     * prepend@
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public function prependAt($string)
+    {
+        return '@' . $string;
     }
 }
