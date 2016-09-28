@@ -21,6 +21,7 @@
         "php": ">=5.5.0",
         "ext-pdo": "*",
         "ext-curl": "*",
+        "ext-mbstring": "*",
         "monolog/monolog": "^1.19",
         "guzzlehttp/guzzle": "~6.0"
     },
