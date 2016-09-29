@@ -28,18 +28,37 @@ namespace Longman\TelegramBot\Entities;
 class User extends Entity
 {
     /**
-     * Try mention
+     * tryMention
      *
-     * @return string|null
+     * Mention the user with the username otherwise print first and last name
+     * if the $markdown arguments is true special characters are escaped from the output
+     *
+     * @param bool $markdown
+     *
+     * @return string
      */
-    public function tryMention()
+    public function tryMention($markdown = false)
     {
-        if ($this->username === null) {
-            if ($this->last_name !== null) {
-                return $this->first_name . ' ' . $this->last_name;
+        $username = $this->getProperty('username');
+        if ($username !== null) {
+            if ($markdown) {
+                //Escaping md special characters
+                //Please notice that just the _ is allowed in the username ` * [ are not allowed
+                return '@' . $this->stripMarkDown($this->username);
             }
-            return $this->first_name;
+            return '@' . $this->username;
         }
-        return '@' . $this->username;
+
+        $name = $this->getProperty('first_name');
+        $last_name = $this->getProperty('last_name');
+        if ($last_name !== null) {
+            $name .= ' ' . $last_name;
+        }
+        
+        if ($markdown) {
+            //Escaping md special characters
+            return $this->stripMarkDown($name);
+        }
+        return $name;
     }
 }
