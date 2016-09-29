@@ -49,7 +49,7 @@ class AudioTest extends TestCase
     *
     * @expectedException Longman\TelegramBot\Exception\TelegramException
     */
-    public function testBaseStageWithoutDutarion()
+    public function testBaseStageWithoutDuration()
     {
         $this->record['duration'] = null;
         new Audio($this->record);
