@@ -174,6 +174,24 @@ class TestHelpers
             'text'       => 'dummy',
         ], 'testbot');
     }
+    /**
+    * Get fake recorded audio track
+    *
+    * @return array
+    */
+    public static function getFakeRecordedAudio()
+    {
+        $mime_type = ['audio/ogg', 'audio/mpeg', 'audio/vnd.wave', 'audio/x-ms-wma', 'audio/basic'];
+        $data = [
+            'file_id'   => mt_rand(1, 999),
+            'duration'  => (string)mt_rand(1, 99) . ':' . mt_rand(1, 60),
+            'performer' => 'phpunit',
+            'title'     => 'track from phpunit',
+            'mime_type' => $mime_type[array_rand($mime_type, 1)],
+            'file_size' => mt_rand(1, 99999)
+        ];
+        return $data;
+    }
 
     /**
      * Start a fake conversation for the passed command and return the randomly generated ids.
