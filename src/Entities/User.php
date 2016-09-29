@@ -30,24 +30,29 @@ class User extends Entity
     /**
      * tryMention
      *
+     * Mention the user with the username otherwise print first and last name
+     * if the $markdown arguments is true special characters are escaped from the output
+     *
      * @param bool $markdown
      *
      * @return string
      */
     public function tryMention($markdown = false)
     {
-        if (isset($this->username)) {
+        $username = $this->getProperty('username');
+        if ($username !== null) {
             if ($markdown) {
                 //Escaping md special characters
                 //Please notice that just the _ is allowed in the username ` * [ are not allowed
-                return $this->prependAt($this->stripMarkDown($this->username));
+                return '@' . $this->stripMarkDown($this->username);
             }
-            return $this->prependAt($this->username);
+            return '@' . $this->username;
         }
 
-        $name = $this->first_name;
-        if (isset($this->last_name)) {
-            $name .= ' ' . $this->last_name;
+        $name = $this->getProperty('first_name');
+        $last_name = $this->getProperty('last_name');
+        if ($last_name !== null) {
+            $name .= ' ' . $last_name;
         }
         
         if ($markdown) {
@@ -55,32 +60,5 @@ class User extends Entity
             return $this->stripMarkDown($name);
         }
         return $name;
-    }
-
-    /**
-     * stripMarkDown
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    public function stripMarkDown($string)
-    {
-        $string = str_replace('[', '\[', $string);
-        $string = str_replace('`', '\`', $string);
-        $string = str_replace('*', '\*', $string);
-        return str_replace('_', '\_', $string);
-    }
-
-    /**
-     * prepend@
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    public function prependAt($string)
-    {
-        return '@' . $string;
     }
 }

@@ -50,12 +50,6 @@ class UserTest extends TestCase
         $this->assertEquals('\`\[\*\_', $this->user->stripMarkDown('`[*_'));
     }
 
-    public function testPrependAt()
-    {
-        $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor']);
-        $this->assertEquals('@string', $this->user->prependAt('string'));
-    }
-
     public function testUsernameMarkdown()
     {
         $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'j_taylor']);

@@ -266,4 +266,21 @@ abstract class Entity
 
         return $new_objects;
     }
+
+    /**
+     * stripMarkDown
+     * Gived a  string escape special charactes used in Markdown
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public function stripMarkDown($string)
+    {
+        return str_replace(
+            ['[', '`', '*', '_',],
+            ['\[', '\`', '\*', '\_',],
+            $string
+        );
+    }
 }
