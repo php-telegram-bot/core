@@ -14,14 +14,26 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class File extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_path;
 
     /**
      * File constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -35,16 +47,31 @@ class File extends Entity
         $this->file_path = isset($data['file_path']) ? $data['file_path'] : null;
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
         return $this->file_size;
     }
 
+    /**
+     * Get file path
+     *
+     * @return mixed|null
+     */
     public function getFilePath()
     {
         return $this->file_path;

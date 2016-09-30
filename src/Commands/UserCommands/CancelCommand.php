@@ -24,18 +24,36 @@ use Longman\TelegramBot\Request;
  */
 class CancelCommand extends UserCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'cancel';
-    protected $description = 'Cancel the currently active conversation';
-    protected $usage = '/cancel';
-    protected $version = '0.1.1';
-    protected $need_mysql = true;
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'Cancel the currently active conversation';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/cancel';
+
+    /**
+     * @var string
+     */
+    protected $version = '0.2.0';
+
+    /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
+     * Command execute method
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -56,26 +74,32 @@ class CancelCommand extends UserCommand
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function executeNoDb()
-    {
-        return $this->hideKeyboard('Nothing to cancel.');
-    }
-
-    /**
      * Hide the keyboard and output a text
      *
      * @param string $text
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function hideKeyboard($text)
     {
-        return Request::sendMessage([
-            'reply_markup' => new ReplyKeyboardHide(['selective' => true]),
-            'chat_id'      => $this->getMessage()->getChat()->getId(),
-            'text'         => $text,
-        ]);
+        return Request::sendMessage(
+            [
+                'reply_markup' => new ReplyKeyboardHide(['selective' => true]),
+                'chat_id'      => $this->getMessage()->getChat()->getId(),
+                'text'         => $text,
+            ]
+        );
+    }
+
+    /**
+     * Execute no db
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function executeNoDb()
+    {
+        return $this->hideKeyboard('Nothing to cancel.');
     }
 }

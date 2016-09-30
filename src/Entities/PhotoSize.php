@@ -14,15 +14,31 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class PhotoSize extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $width;
+
+    /**
+     * @var mixed|null
+     */
     protected $height;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
-    
+
     /**
      * PhotoSize constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -43,26 +59,45 @@ class PhotoSize extends Entity
         }
 
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get width
+     *
+     * @return mixed|null
+     */
     public function getWidth()
     {
-         return $this->width;
+        return $this->width;
     }
 
+    /**
+     * Get height
+     *
+     * @return mixed|null
+     */
     public function getHeight()
     {
-         return $this->height;
+        return $this->height;
     }
 
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
-         return $this->file_size;
+        return $this->file_size;
     }
 }

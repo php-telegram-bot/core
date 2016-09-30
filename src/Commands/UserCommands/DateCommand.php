@@ -10,25 +10,38 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use DateTime;
+use DateTimeZone;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\TelegramLog;
 
 /**
  * User "/date" command
  */
 class DateCommand extends UserCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'date';
+
+    /**
+     * @var string
+     */
     protected $description = 'Show date/time by location';
+
+    /**
+     * @var string
+     */
     protected $usage = '/date <location>';
-    protected $version = '1.3.0';
-    /**#@-*/
+
+    /**
+     * @var string
+     */
+    protected $version = '1.4.0';
 
     /**
      * Guzzle Client object
@@ -63,11 +76,11 @@ class DateCommand extends UserCommand
      *
      * @param string $location
      *
-     * @return array|boolean
+     * @return array
      */
     private function getCoordinates($location)
     {
-        $path = 'geocode/json';
+        $path  = 'geocode/json';
         $query = ['address' => urlencode($location)];
 
         if ($this->google_api_key !== null) {
@@ -77,18 +90,20 @@ class DateCommand extends UserCommand
         try {
             $response = $this->client->get($path, ['query' => $query]);
         } catch (RequestException $e) {
-            throw new TelegramException($e->getMessage());
+            TelegramLog::error($e->getMessage());
+
+            return [];
         }
 
-        if (!($result = $this->validateResponseData($response->getBody()))) {
-            return false;
+        if (!($data = $this->validateResponseData($response->getBody()))) {
+            return [];
         }
 
-        $result = $result['results'][0];
-        $lat = $result['geometry']['location']['lat'];
-        $lng = $result['geometry']['location']['lng'];
-        $acc = $result['geometry']['location_type'];
-        $types = $result['types'];
+        $result = $data['results'][0];
+        $lat    = $result['geometry']['location']['lat'];
+        $lng    = $result['geometry']['location']['lng'];
+        $acc    = $result['geometry']['location_type'];
+        $types  = $result['types'];
 
         return [$lat, $lng, $acc, $types];
     }
@@ -99,18 +114,18 @@ class DateCommand extends UserCommand
      * @param string $lat
      * @param string $lng
      *
-     * @return array|boolean
+     * @return array
      */
     private function getDate($lat, $lng)
     {
         $path = 'timezone/json';
 
-        $date_utc = new \DateTime(null, new \DateTimeZone('UTC'));
+        $date_utc  = new \DateTime(null, new \DateTimeZone('UTC'));
         $timestamp = $date_utc->format('U');
 
         $query = [
             'location'  => urlencode($lat) . ',' . urlencode($lng),
-            'timestamp' => urlencode($timestamp)
+            'timestamp' => urlencode($timestamp),
         ];
 
         if ($this->google_api_key !== null) {
@@ -120,16 +135,18 @@ class DateCommand extends UserCommand
         try {
             $response = $this->client->get($path, ['query' => $query]);
         } catch (RequestException $e) {
-            throw new TelegramException($e->getMessage());
+            TelegramLog::error($e->getMessage());
+
+            return [];
         }
 
-        if (!($result = $this->validateResponseData($response->getBody()))) {
-            return false;
+        if (!($data = $this->validateResponseData($response->getBody()))) {
+            return [];
         }
 
-        $local_time = $timestamp + $result['rawOffset'] + $result['dstOffset'];
+        $local_time = $timestamp + $data['rawOffset'] + $data['dstOffset'];
 
-        return [$local_time, $result['timeZoneId']];
+        return [$local_time, $data['timeZoneId']];
     }
 
     /**
@@ -137,54 +154,57 @@ class DateCommand extends UserCommand
      *
      * @param string $data
      *
-     * @return bool|array
+     * @return array
      */
     private function validateResponseData($data)
     {
         if (empty($data)) {
-            return false;
+            return [];
         }
 
         $data = json_decode($data, true);
         if (empty($data)) {
-            return false;
+            return [];
         }
 
         if (isset($data['status']) && $data['status'] !== 'OK') {
-            return false;
+            return [];
         }
 
         return $data;
     }
 
     /**
-     * Get formatted date
+     * Get formatted date at the passed location
      *
      * @param string $location
      *
      * @return string
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function getFormattedDate($location)
     {
-        if (empty($location)) {
+        if ($location === null || $location === '') {
             return 'The time in nowhere is never';
         }
 
-        list($lat, $lng, $acc, $types) = $this->getCoordinates($location);
-
+        list($lat, $lng) = $this->getCoordinates($location);
         if (empty($lat) || empty($lng)) {
             return 'It seems that in "' . $location . '" they do not have a concept of time.';
         }
 
         list($local_time, $timezone_id) = $this->getDate($lat, $lng);
 
-        $date_utc = new \DateTime(gmdate('Y-m-d H:i:s', $local_time), new \DateTimeZone($timezone_id));
+        $date_utc = new DateTime(gmdate('Y-m-d H:i:s', $local_time), new DateTimeZone($timezone_id));
 
         return 'The local time in ' . $timezone_id . ' is: ' . $date_utc->format($this->date_format);
     }
 
     /**
-     * {@inheritdoc}
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -196,12 +216,12 @@ class DateCommand extends UserCommand
 
         $message = $this->getMessage();
 
-        $chat_id = $message->getChat()->getId();
+        $chat_id  = $message->getChat()->getId();
         $location = $message->getText(true);
 
-        if (empty($location)) {
-            $text = 'You must specify location in format: /date <city>';
-        } else {
+        $text = 'You must specify location in format: /date <city>';
+
+        if ($location !== '') {
             $text = $this->getFormattedDate($location);
         }
 

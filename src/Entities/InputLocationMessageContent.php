@@ -14,13 +14,21 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InputLocationMessageContent extends InputMessageContent
 {
+    /**
+     * @var mixed|null
+     */
     protected $latitude;
+
+    /**
+     * @var mixed|null
+     */
     protected $longitude;
 
     /**
      * InputLocationMessageContent constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {

@@ -16,35 +16,53 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class ReplyKeyboardMarkup extends Entity
 {
+    /**
+     * @var array
+     */
     protected $keyboard;
+
+    /**
+     * @var bool
+     */
     protected $resize_keyboard;
+
+    /**
+     * @var bool
+     */
     protected $one_time_keyboard;
+
+    /**
+     * @var bool
+     */
     protected $selective;
 
     /**
      * ReplyKeyboardMarkup constructor.
      *
      * @param array $data
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct($data = array())
+    public function __construct(array $data = [])
     {
-        if (isset($data['keyboard'])) {
-            if (is_array($data['keyboard'])) {
-                foreach ($data['keyboard'] as $item) {
-                    if (!is_array($item)) {
-                        throw new TelegramException('Keyboard subfield is not an array!');
-                    }
-                }
-                $this->keyboard = $data['keyboard'];
-            } else {
-                throw new TelegramException('Keyboard field is not an array!');
-            }
-        } else {
+        if (!isset($data['keyboard'])) {
             throw new TelegramException('Keyboard field is empty!');
         }
 
-        $this->resize_keyboard = isset($data['resize_keyboard']) ? $data['resize_keyboard'] : false;
-        $this->one_time_keyboard = isset($data['one_time_keyboard']) ? $data['one_time_keyboard'] : false;
-        $this->selective = isset($data['selective']) ? $data['selective'] : false;
+        if (!is_array($data['keyboard'])) {
+            throw new TelegramException('Keyboard field is not an array!');
+        }
+
+        foreach ($data['keyboard'] as $item) {
+            if (!is_array($item)) {
+                throw new TelegramException('Keyboard subfield is not an array!');
+            }
+        }
+        $this->keyboard = $data['keyboard'];
+
+        //Set the object members from the passed data params
+        foreach (['resize_keyboard', 'one_time_keyboard', 'selective'] as $param) {
+            $this->$param = isset($data[$param]) ? (bool)$data[$param] : false;
+        }
     }
 }

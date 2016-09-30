@@ -17,22 +17,34 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class ChoseninlineresultCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
-    protected $name        = 'choseninlineresult';
-    protected $description = 'Chosen result query';
-    protected $version     = '1.0.1';
-    /**#@-*/
+    protected $name = 'choseninlineresult';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    /*public function execute()
+    protected $description = 'Chosen result query';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //Information about chosen result is returned
         //$update = $this->getUpdate();
         //$inline_query = $update->getChosenInlineResult();
         //$query = $inline_query->getQuery();
-    }*/
+
+        return parent::execute();
+    }
 }

@@ -15,9 +15,6 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Longman\TelegramBot\Exception\TelegramLogException;
 
-/**
- * Class TelegramLog.
- */
 class TelegramLog
 {
     /**
@@ -25,42 +22,42 @@ class TelegramLog
      *
      * @var \Monolog\Logger
      */
-    static protected $monolog = null;
+    static protected $monolog;
 
     /**
      * Monolog instance for update
      *
      * @var \Monolog\Logger
      */
-    static protected $monolog_update = null;
+    static protected $monolog_update;
 
     /**
      * Path for error log
      *
      * @var string
      */
-    static protected $error_log_path = null;
+    static protected $error_log_path;
 
     /**
      * Path for debug log
      *
      * @var string
      */
-    static protected $debug_log_path = null;
+    static protected $debug_log_path;
 
     /**
      * Path for update log
      *
      * @var string
      */
-    static protected $update_log_path = null;
+    static protected $update_log_path;
 
     /**
      * Temporary stream handle for debug log
      *
      * @var null
      */
-    static protected $debug_log_temp_stream_handle = null;
+    static protected $debug_log_temp_stream_handle;
 
     /**
      * Initialize
@@ -79,10 +76,10 @@ class TelegramLog
                 self::$monolog = $external_monolog;
 
                 foreach (self::$monolog->getHandlers() as $handler) {
-                    if ($handler->getLevel() == 400) {
+                    if ($handler->getLevel() === 400) {
                         self::$error_log_path = true;
                     }
-                    if ($handler->getLevel() == 100) {
+                    if ($handler->getLevel() === 100) {
                         self::$debug_log_path = true;
                     }
                 }
@@ -90,6 +87,7 @@ class TelegramLog
                 self::$monolog = new Logger('bot_log');
             }
         }
+
         return self::$monolog;
     }
 
@@ -99,6 +97,9 @@ class TelegramLog
      * @param string $path
      *
      * @return \Monolog\Logger
+     * @throws \Longman\TelegramBot\Exception\TelegramLogException
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public static function initErrorLog($path)
     {
@@ -120,6 +121,9 @@ class TelegramLog
      * @param string $path
      *
      * @return \Monolog\Logger
+     * @throws \Longman\TelegramBot\Exception\TelegramLogException
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public static function initDebugLog($path)
     {
@@ -149,6 +153,7 @@ class TelegramLog
                 return false;
             }
         }
+
         return self::$debug_log_temp_stream_handle;
     }
 
@@ -161,10 +166,12 @@ class TelegramLog
     {
         if (self::$debug_log_temp_stream_handle !== null) {
             rewind(self::$debug_log_temp_stream_handle);
-            self::debug(sprintf(
-                $message,
-                stream_get_contents(self::$debug_log_temp_stream_handle)
-            ));
+            self::debug(
+                sprintf(
+                    $message,
+                    stream_get_contents(self::$debug_log_temp_stream_handle)
+                )
+            );
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }
@@ -179,6 +186,9 @@ class TelegramLog
      * @param string $path
      *
      * @return \Monolog\Logger
+     * @throws \Longman\TelegramBot\Exception\TelegramLogException
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public static function initUpdateLog($path)
     {
@@ -189,7 +199,7 @@ class TelegramLog
         if (self::$monolog_update === null) {
             self::$monolog_update = new Logger('bot_update_log');
             // Create a formatter
-            $output = "%message%\n";
+            $output    = "%message%\n";
             $formatter = new LineFormatter($output);
 
             // Update handler
@@ -198,6 +208,7 @@ class TelegramLog
 
             self::$monolog_update->pushHandler($update_handler);
         }
+
         return self::$monolog;
     }
 

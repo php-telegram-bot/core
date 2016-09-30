@@ -23,9 +23,9 @@ class KeyboardCommand extends UserCommand
      * {@inheritdoc}
      */
     protected $name = 'keyboard';
-    protected $description = 'Show a custom keybord with reply markup';
+    protected $description = 'Show a custom keyboard with reply markup';
     protected $usage = '/keyboard';
-    protected $version = '0.0.6';
+    protected $version = '0.1.0';
     /**#@-*/
 
     /**
@@ -35,70 +35,67 @@ class KeyboardCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $text = $message->getText(true);
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = 'Press a Button:';
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => 'Press a Button:',
+        ];
 
         //Keyboard examples
         $keyboards = [];
 
-        //0
-        $keyboard[] = ['7','8','9'];
-        $keyboard[] = ['4','5','6'];
-        $keyboard[] = ['1','2','3'];
-        $keyboard[] = [' ','0',' '];
-
+        //Example 0
+        $keyboard    = [];
+        $keyboard[]  = ['7', '8', '9'];
+        $keyboard[]  = ['4', '5', '6'];
+        $keyboard[]  = ['1', '2', '3'];
+        $keyboard[]  = [' ', '0', ' '];
         $keyboards[] = $keyboard;
-        unset($keyboard);
 
-        //1
-        $keyboard[] = ['7','8','9','+'];
-        $keyboard[] = ['4','5','6','-'];
-        $keyboard[] = ['1','2','3','*'];
-        $keyboard[] = [' ','0',' ','/'];
-
+        //Example 1
+        $keyboard    = [];
+        $keyboard[]  = ['7', '8', '9', '+'];
+        $keyboard[]  = ['4', '5', '6', '-'];
+        $keyboard[]  = ['1', '2', '3', '*'];
+        $keyboard[]  = [' ', '0', ' ', '/'];
         $keyboards[] = $keyboard;
-        unset($keyboard);
 
-        //2
-        $keyboard[] = ['A'];
-        $keyboard[] = ['B'];
-        $keyboard[] = ['C'];
-
+        //Example 2
+        $keyboard    = [];
+        $keyboard[]  = ['A'];
+        $keyboard[]  = ['B'];
+        $keyboard[]  = ['C'];
         $keyboards[] = $keyboard;
-        unset($keyboard);
 
-        //3
-        $keyboard[] = ['A'];
-        $keyboard[] = ['B'];
-        $keyboard[] = ['C','D'];
-
+        //Example 3
+        $keyboard    = [];
+        $keyboard[]  = ['A'];
+        $keyboard[]  = ['B'];
+        $keyboard[]  = ['C', 'D'];
         $keyboards[] = $keyboard;
-        unset($keyboard);
 
-        //4  (bots 2.0)
-        $keyboard[] = [
+        //Example 4 (bots version 2.0)
+        $keyboard    = [];
+        $keyboard[]  = [
             [
-                'text' => 'request_contact',
-                'request_contact' => true
+                'text'            => 'Send my contact',
+                'request_contact' => true,
             ],
             [
-                'text' => 'request_location',
-                'request_location' => true
-            ]
+                'text'             => 'Send my location',
+                'request_location' => true,
+            ],
         ];
-
         $keyboards[] = $keyboard;
-        unset($keyboard);
 
+        //Return a random keyboard.
+        $keyboard             = $keyboards[mt_rand(0, count($keyboards) - 1)];
         $data['reply_markup'] = new ReplyKeyboardMarkup(
             [
-                'keyboard' => $keyboards[1] ,
-                'resize_keyboard' => true,
+                'keyboard'          => $keyboard,
+                'resize_keyboard'   => true,
                 'one_time_keyboard' => false,
-                'selective' => false
+                'selective'         => false,
             ]
         );
 

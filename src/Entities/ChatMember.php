@@ -10,15 +10,25 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Exception\TelegramException;
+
 class ChatMember extends Entity
 {
+    /**
+     * @var \Longman\TelegramBot\Entities\User
+     */
     protected $user;
+
+    /**
+     * @var mixed|null
+     */
     protected $status;
 
     /**
      * ChatMember constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -34,11 +44,21 @@ class ChatMember extends Entity
         }
     }
 
+    /**
+     * Get user
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * Get status
+     *
+     * @return mixed|null
+     */
     public function getStatus()
     {
         return $this->status;

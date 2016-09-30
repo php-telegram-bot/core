@@ -14,14 +14,26 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InputTextMessageContent extends InputMessageContent
 {
+    /**
+     * @var mixed|null
+     */
     protected $message_text;
+
+    /**
+     * @var mixed|null
+     */
     protected $parse_mode;
+
+    /**
+     * @var mixed|null
+     */
     protected $disable_web_page_preview;
 
     /**
      * InputTextMessageContent constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -30,7 +42,7 @@ class InputTextMessageContent extends InputMessageContent
             throw new TelegramException('message_text is empty!');
         }
 
-        $this->parse_mode = isset($data['parse_mode']) ? $data['parse_mode'] : null;
+        $this->parse_mode               = isset($data['parse_mode']) ? $data['parse_mode'] : null;
         $this->disable_web_page_preview = isset($data['disable_web_page_preview']) ? $data['disable_web_page_preview'] : null;
     }
 }

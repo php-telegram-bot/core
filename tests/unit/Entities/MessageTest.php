@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit;
-
-use Tests\TestHelpers;
+namespace Longman\TelegramBot\Tests\Unit;
 
 /**
  * @package         TelegramTest

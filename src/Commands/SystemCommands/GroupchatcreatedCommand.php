@@ -17,20 +17,32 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class GroupchatcreatedCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Groupchatcreated';
-    protected $description = 'Group chat created';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    /*public function execute()
+    protected $description = 'Group chat created';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$group_chat_created = $message->getGroupChatCreated();
-    }*/
+
+        return parent::execute();
+    }
 }

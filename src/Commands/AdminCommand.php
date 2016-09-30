@@ -10,9 +10,6 @@
 
 namespace Longman\TelegramBot\Commands;
 
-/**
- * Abstract Admin Command Class
- */
 abstract class AdminCommand extends Command
 {
 

@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit\Commands;
+namespace Longman\TelegramBot\Tests\Unit\Commands;
 
-use Tests\Unit\TestCase;
+use Longman\TelegramBot\Tests\Unit\TestCase;
 use Longman\TelegramBot\Telegram;
 
 /**

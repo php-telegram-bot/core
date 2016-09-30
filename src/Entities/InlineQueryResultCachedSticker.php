@@ -14,12 +14,16 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultCachedSticker extends InlineQueryResult
 {
+    /**
+     * @var mixed|null
+     */
     protected $sticker_file_id;
 
     /**
      * InlineQueryResultCachedSticker constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -33,6 +37,11 @@ class InlineQueryResultCachedSticker extends InlineQueryResult
         }
     }
 
+    /**
+     * Get sticker file id
+     *
+     * @return mixed|null
+     */
     public function getStickerFileId()
     {
         return $this->sticker_file_id;

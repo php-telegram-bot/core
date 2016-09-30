@@ -14,19 +14,51 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultArticle extends InlineQueryResult
 {
+    /**
+     * @var mixed|null
+     */
     protected $title;
+
+    /**
+     * @var mixed|null
+     */
     protected $input_message_content;
+
+    /**
+     * @var mixed|null
+     */
     protected $url;
+
+    /**
+     * @var mixed|null
+     */
     protected $hide_url;
+
+    /**
+     * @var mixed|null
+     */
     protected $description;
+
+    /**
+     * @var mixed|null
+     */
     protected $thumb_url;
+
+    /**
+     * @var mixed|null
+     */
     protected $thumb_width;
+
+    /**
+     * @var mixed|null
+     */
     protected $thumb_height;
 
     /**
      * InlineQueryResultArticle constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -44,49 +76,89 @@ class InlineQueryResultArticle extends InlineQueryResult
             throw new TelegramException('input_message_content is empty!');
         }
 
-        $this->url = isset($data['url']) ? $data['url'] : null;
-        $this->hide_url = isset($data['hide_url']) ? $data['hide_url'] : null;
-        $this->description = isset($data['description']) ? $data['description'] : null;
-        $this->thumb_url = isset($data['thumb_url']) ? $data['thumb_url'] : null;
-        $this->thumb_width = isset($data['thumb_width']) ? $data['thumb_width'] : null;
+        $this->url          = isset($data['url']) ? $data['url'] : null;
+        $this->hide_url     = isset($data['hide_url']) ? $data['hide_url'] : null;
+        $this->description  = isset($data['description']) ? $data['description'] : null;
+        $this->thumb_url    = isset($data['thumb_url']) ? $data['thumb_url'] : null;
+        $this->thumb_width  = isset($data['thumb_width']) ? $data['thumb_width'] : null;
         $this->thumb_height = isset($data['thumb_height']) ? $data['thumb_height'] : null;
     }
 
+    /**
+     * Get title
+     *
+     * @return mixed|null
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Get input message content
+     *
+     * @return mixed|null
+     */
     public function getInputMessageContent()
     {
         return $this->input_message_content;
     }
 
+    /**
+     * Get url
+     *
+     * @return mixed|null
+     */
     public function getUrl()
     {
         return $this->url;
     }
 
+    /**
+     * Get hide url
+     *
+     * @return mixed|null
+     */
     public function getHideUrl()
     {
         return $this->hide_url;
     }
 
+    /**
+     * Get description
+     *
+     * @return mixed|null
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
+    /**
+     * Get thumb url
+     *
+     * @return mixed|null
+     */
     public function getThumbUrl()
     {
         return $this->thumb_url;
     }
 
+    /**
+     * Get thumb width
+     *
+     * @return mixed|null
+     */
     public function getThumbWidth()
     {
         return $this->thumb_width;
     }
 
+    /**
+     * Get thumb height
+     *
+     * @return mixed|null
+     */
     public function getThumbHeight()
     {
         return $this->thumb_height;

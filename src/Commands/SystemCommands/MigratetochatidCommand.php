@@ -17,20 +17,32 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class MigratetochatidCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Migratetochatid';
-    protected $description = 'Migrate to chat id';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    /*public function execute()
+    protected $description = 'Migrate to chat id';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$migrate_to_chat_id = $message->getMigrateToChatId();
-    }*/
+
+        return parent::execute();
+    }
 }

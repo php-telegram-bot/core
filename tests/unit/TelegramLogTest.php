@@ -8,13 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit;
+namespace Longman\TelegramBot\Tests\Unit;
 
-use Longman\TelegramBot\Exception\TelegramLogException;
 use Longman\TelegramBot\TelegramLog;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Tests\TestHelpers;
 
 /**
  * @package         TelegramTest

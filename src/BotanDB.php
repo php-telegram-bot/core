@@ -10,7 +10,9 @@
 
 namespace Longman\TelegramBot;
 
+use Exception;
 use Longman\TelegramBot\Exception\TelegramException;
+use PDO;
 
 /**
  * Class BotanDB
@@ -33,9 +35,8 @@ class BotanDB extends DB
      * @param  $user_id
      * @param  $url
      *
-     * @throws TelegramException
-     *
-     * @return bool|string
+     * @return array|bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function selectShortUrl($user_id, $url)
     {
@@ -46,30 +47,27 @@ class BotanDB extends DB
         try {
             $sth = self::$pdo->prepare('SELECT * FROM `' . TB_BOTAN_SHORTENER . '`
                 WHERE `user_id` = :user_id AND `url` = :url
-                ');
+            ');
 
-            $sth->bindParam(':user_id', $user_id, \PDO::PARAM_INT);
-            $sth->bindParam(':url', $url, \PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':url', $url, PDO::PARAM_INT);
             $sth->execute();
 
-            $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
-
-        return $results;
     }
 
     /**
      * Insert shortened URL into the database
      *
-     * @param  $user_id
-     * @param  $url
-     * @param  $short_url
-     *
-     * @throws TelegramException
+     * @param $user_id
+     * @param $url
+     * @param $short_url
      *
      * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function insertShortUrl($user_id, $url, $short_url)
     {
@@ -85,7 +83,7 @@ class BotanDB extends DB
                 VALUES (
                 :user_id, :url, :short_url, :date
                 )
-                ');
+            ');
 
             $created_at = self::getTimestamp();
 
@@ -94,11 +92,9 @@ class BotanDB extends DB
             $sth->bindParam(':short_url', $short_url);
             $sth->bindParam(':date', $created_at);
 
-            $status = $sth->execute();
-        } catch (\Exception $e) {
+            return $sth->execute();
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
-
-        return $status;
     }
 }

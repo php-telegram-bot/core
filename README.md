@@ -3,10 +3,14 @@
 [![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
+[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.5.0-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
+
 
 
 A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
@@ -71,11 +75,11 @@ The Bot can:
 - supports supergroups.
 - handle commands in chat with other bots.
 - manage Channel from the bot admin interface.
-- full support for **inline bots**. 
+- full support for **inline bots**.
 - inline keyboard.
 - Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
 - *Botan.io* integration and database cache system. (**new!**)
-- Conversation feature  
+- Conversation feature
 
 -----
 This code is available on
@@ -479,7 +483,7 @@ $telegram->setCommandConfig('weather', ['owm_api_key' => 'your_owm_api_key_here'
 Enabling this feature, the admin bot can perform some super user commands like:
 - Send message to all chats */sendtoall*
 - List all the chats started with the bot */chats*
-- Post any content to your channels */sendtochannel* 
+- Post any content to your channels */sendtochannel*
 - inspect a user or a chat with */whois* (new!)
 
 #### Set Admins
@@ -537,7 +541,7 @@ If you like living on the edge, please report any bugs you find on the
 
 ## Contributing
 
-See [CONTRIBUTING](CONTRIBUTING.md) for more information.
+See [CONTRIBUTING](.github/CONTRIBUTING.md) for more information.
 
 ## License
 

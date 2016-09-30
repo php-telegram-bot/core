@@ -25,7 +25,7 @@ class ForceReplyCommand extends UserCommand
     protected $name = 'forcereply';
     protected $description = 'Force reply with reply markup';
     protected $usage = '/forcereply';
-    protected $version = '0.0.5';
+    protected $version = '0.0.6';
     /**#@-*/
 
     /**
@@ -36,10 +36,11 @@ class ForceReplyCommand extends UserCommand
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['text'] = 'Write something:';
-        $data['reply_markup'] = new ForceReply(['selective' => false]);
+        $data = [
+            'chat_id'      => $chat_id,
+            'text'         => 'Write something:',
+            'reply_markup' => new ForceReply(['selective' => false]),
+        ];
 
         return Request::sendMessage($data);
     }

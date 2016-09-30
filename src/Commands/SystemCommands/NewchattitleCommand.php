@@ -17,20 +17,32 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class NewchattitleCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Newchattitle';
-    protected $description = 'New chat Title';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    /*public function execute()
+    protected $description = 'New chat Title';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$new_chat_title = $message->getNewChatTitle();
-    }*/
+
+        return parent::execute();
+    }
 }

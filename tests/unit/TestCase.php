@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit;
+namespace Longman\TelegramBot\Tests\Unit;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {

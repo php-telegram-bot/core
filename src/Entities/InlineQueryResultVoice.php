@@ -14,14 +14,26 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultVoice extends InlineQueryResult
 {
+    /**
+     * @var mixed|null
+     */
     protected $voice_url;
+
+    /**
+     * @var mixed|null
+     */
     protected $title;
+
+    /**
+     * @var mixed|null
+     */
     protected $voice_duration;
 
     /**
      * InlineQueryResultVoice constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -42,16 +54,31 @@ class InlineQueryResultVoice extends InlineQueryResult
         $this->voice_duration = isset($data['voice_duration']) ? $data['voice_duration'] : null;
     }
 
+    /**
+     * Get voice url
+     *
+     * @return mixed|null
+     */
     public function getVoiceUrl()
     {
         return $this->voice_url;
     }
 
+    /**
+     * Get title
+     *
+     * @return mixed|null
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Get voice duration
+     *
+     * @return mixed|null
+     */
     public function getVoiceDuration()
     {
         return $this->voice_duration;

@@ -14,32 +14,48 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineKeyboardButton extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $text;
-    protected $url;
-    protected $callback_data;
-    protected $switch_inline_query;
 
+    /**
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * @var mixed
+     */
+    protected $callback_data;
+
+    /**
+     * @var mixed
+     */
+    protected $switch_inline_query;
 
     /**
      * InlineKeyboardButton constructor.
      *
-     * @todo check if only one of 'url, callback_data, switch_inline_query' fields is set, documentation states that only one of these can be used
-     *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct($data = array())
+    public function __construct(array $data = [])
     {
         $this->text = isset($data['text']) ? $data['text'] : null;
         if (empty($this->text)) {
             throw new TelegramException('text is empty!');
         }
 
-        $this->url = isset($data['url']) ? $data['url'] : null;
-        $this->callback_data = isset($data['callback_data']) ? $data['callback_data'] : null;
-        $this->switch_inline_query = isset($data['switch_inline_query']) ? $data['switch_inline_query'] : null;
-
-        if ($this->url === '' && $this->callback_data === '' && $this->switch_inline_query === '') {
-            throw new TelegramException('You must use at least one of these fields: url, callback_data, switch_inline_query!');
+        $num_params = 0;
+        foreach (['url', 'callback_data', 'switch_inline_query'] as $param) {
+            if (!empty($data[$param])) {
+                $this->$param = $data[$param];
+                $num_params++;
+            }
+        }
+        if ($num_params !== 1) {
+            throw new TelegramException('You must use only one of these fields: url, callback_data, switch_inline_query!');
         }
     }
 }

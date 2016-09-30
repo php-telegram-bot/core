@@ -17,20 +17,32 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class DeletechatphotoCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Deletechatphoto';
-    protected $description = 'Delete chat photo';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    /*public function execute()
+    protected $description = 'Delete chat photo';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
         //$message = $this->getMessage();
         //$delete_chat_photo = $message->getDeleteChatPhoto();
-    }*/
+
+        return parent::execute();
+    }
 }

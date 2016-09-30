@@ -87,9 +87,9 @@ class Conversation
      */
     protected function clear()
     {
-        $this->conversation = null;
+        $this->conversation    = null;
         $this->protected_notes = null;
-        $this->notes = null;
+        $this->notes           = null;
 
         return true;
     }
@@ -118,7 +118,7 @@ class Conversation
 
             //Load the conversation notes
             $this->protected_notes = json_decode($this->conversation['notes'], true);
-            $this->notes = $this->protected_notes;
+            $this->notes           = $this->protected_notes;
         }
 
         return $this->exists();
@@ -146,7 +146,8 @@ class Conversation
                 $this->user_id,
                 $this->chat_id,
                 $this->command
-            )) {
+            )
+            ) {
                 return $this->load();
             }
         }
@@ -188,7 +189,7 @@ class Conversation
         if ($this->exists()) {
             $fields = ['status' => $status];
             $where  = [
-                'id'  => $this->conversation['id'],
+                'id'      => $this->conversation['id'],
                 'status'  => 'active',
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
@@ -211,7 +212,7 @@ class Conversation
         if ($this->exists()) {
             $fields = ['notes' => json_encode($this->notes)];
             //I can update a conversation whatever the state is
-            $where = ['id'  => $this->conversation['id']];
+            $where = ['id' => $this->conversation['id']];
             if (ConversationDB::updateConversation($fields, $where)) {
                 return true;
             }

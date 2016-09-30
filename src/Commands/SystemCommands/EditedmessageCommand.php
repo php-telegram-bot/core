@@ -17,20 +17,32 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class EditedmessageCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'editedmessage';
-    protected $description = 'User edited message';
-    protected $version = '1.0.0';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    /*public function execute()
+    protected $description = 'User edited message';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
     {
-        $update = $this->getUpdate();
-        $edited_message = $update->getEditedMessage();
-    }*/
+        //$update = $this->getUpdate();
+        //$edited_message = $update->getEditedMessage();
+
+        return parent::execute();
+    }
 }

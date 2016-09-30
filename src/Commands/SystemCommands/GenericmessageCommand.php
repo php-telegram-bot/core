@@ -19,19 +19,30 @@ use Longman\TelegramBot\Commands\SystemCommand;
  */
 class GenericmessageCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Genericmessage';
+
+    /**
+     * @var string
+     */
     protected $description = 'Handle generic message';
-    protected $version = '1.0.2';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * @var bool
+     */
     protected $need_mysql = true;
-    /**#@-*/
 
     /**
      * Execution if MySQL is required but not available
      *
-     * @return boolean
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function executeNoDb()
     {
@@ -42,7 +53,8 @@ class GenericmessageCommand extends SystemCommand
     /**
      * Execute command
      *
-     * @return boolean
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -53,7 +65,7 @@ class GenericmessageCommand extends SystemCommand
         );
         //Fetch conversation command if it exists and execute it
         if ($conversation->exists() && ($command = $conversation->getCommand())) {
-            return $this->telegram->executeCommand($command, $this->update);
+            return $this->telegram->executeCommand($command);
         }
 
         return Request::emptyResponse();

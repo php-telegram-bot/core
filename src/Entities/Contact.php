@@ -14,15 +14,31 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Contact extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $phone_number;
+
+    /**
+     * @var mixed|null
+     */
     protected $first_name;
+
+    /**
+     * @var mixed|null
+     */
     protected $last_name;
+
+    /**
+     * @var mixed|null
+     */
     protected $user_id;
 
     /**
      * Contact constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -37,24 +53,44 @@ class Contact extends Entity
         }
 
         $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
-        $this->user_id = isset($data['user_id']) ? $data['user_id'] : null;
+        $this->user_id   = isset($data['user_id']) ? $data['user_id'] : null;
     }
 
+    /**
+     * Get phone number
+     *
+     * @return mixed|null
+     */
     public function getPhoneNumber()
     {
         return $this->phone_number;
     }
 
+    /**
+     * Get first name
+     *
+     * @return mixed|null
+     */
     public function getFirstName()
     {
         return $this->first_name;
     }
 
+    /**
+     * Get last name
+     *
+     * @return mixed|null
+     */
     public function getLastName()
     {
         return $this->last_name;
     }
 
+    /**
+     * Get user id
+     *
+     * @return mixed|null
+     */
     public function getUserId()
     {
         return $this->user_id;

@@ -14,16 +14,36 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class CallbackQuery extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $id;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\User
+     */
     protected $from;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\Message
+     */
     protected $message;
+
+    /**
+     * @var mixed|null
+     */
     protected $inline_message_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $data;
 
     /**
      * CallbackQuery constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -51,26 +71,51 @@ class CallbackQuery extends Entity
         }
     }
 
+    /**
+     * Get id
+     *
+     * @return mixed|null
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Get from
+     *
+     * @return \Longman\TelegramBot\Entities\User
+     */
     public function getFrom()
     {
         return $this->from;
     }
 
+    /**
+     * Get message
+     *
+     * @return \Longman\TelegramBot\Entities\Message
+     */
     public function getMessage()
     {
         return $this->message;
     }
 
+    /**
+     * Get inline message id
+     *
+     * @return mixed|null
+     */
     public function getInlineMessageId()
     {
         return $this->inline_message_id;
     }
 
+    /**
+     * Get data
+     *
+     * @return mixed|null
+     */
     public function getData()
     {
         return $this->data;

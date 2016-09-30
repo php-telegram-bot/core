@@ -21,7 +21,7 @@ class Request
     /**
      * Telegram object
      *
-     * @var Telegram
+     * @var \Longman\TelegramBot\Telegram
      */
     private static $telegram;
 
@@ -86,13 +86,15 @@ class Request
     /**
      * Initialize
      *
-     * @param Telegram $telegram
+     * @param \Longman\TelegramBot\Telegram $telegram
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function initialize(Telegram $telegram)
     {
         if (is_object($telegram)) {
             self::$telegram = $telegram;
-            self::$client = new Client(['base_uri' => self::$api_base_uri]);
+            self::$client   = new Client(['base_uri' => self::$api_base_uri]);
         } else {
             throw new TelegramException('Telegram pointer is empty!');
         }
@@ -102,6 +104,7 @@ class Request
      * Set input from custom input or stdin and return it
      *
      * @return string
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getInput()
     {
@@ -118,6 +121,7 @@ class Request
         }
 
         TelegramLog::update(self::$input);
+
         return self::$input;
     }
 
@@ -128,7 +132,7 @@ class Request
      *
      * @return array Fake response data
      */
-    public static function generateGeneralFakeServerResponse(array $data = null)
+    public static function generateGeneralFakeServerResponse(array $data = [])
     {
         //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
         //Maybe this is not the best possible implementation
@@ -138,20 +142,20 @@ class Request
 
         $fake_response = ['ok' => true]; // :)
 
-        if (!isset($data)) {
+        if ($data === []) {
             $fake_response['result'] = true;
         }
 
         //some data to let iniatilize the class method SendMessage
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
-            $data['date'] = '1441378360';
-            $data['from'] = [
+            $data['date']       = '1441378360';
+            $data['from']       = [
                 'id'         => 123456789,
                 'first_name' => 'botname',
                 'username'   => 'namebot',
             ];
-            $data['chat'] = ['id' => $data['chat_id']];
+            $data['chat']       = ['id' => $data['chat_id']];
 
             $fake_response['result'] = $data;
         }
@@ -160,98 +164,109 @@ class Request
     }
 
     /**
+     * Properly set up the request params
+     *
+     * If any item of the array is a resource, reformat it to a multipart request.
+     * Else, just return the passed data as form params.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private static function setUpRequestParams(array $data)
+    {
+        $has_resource = false;
+        $multipart    = [];
+
+        //Reformat data array in multipart way if it contains a resource
+        foreach ($data as $key => $item) {
+            $has_resource |= is_resource($item);
+            $multipart[] = ['name' => $key, 'contents' => $item];
+        }
+        if ($has_resource) {
+            return ['multipart' => $multipart];
+        }
+
+        return ['form_params' => $data];
+    }
+
+    /**
      * Execute HTTP Request
      *
-     * @param string     $action Action to execute
-     * @param array|null $data   Data to attach to the execution
+     * @param string $action Action to execute
+     * @param array  $data   Data to attach to the execution
      *
-     * @return mixed Result of the HTTP Request
+     * @return string Result of the HTTP Request
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function execute($action, array $data = null)
+    public static function execute($action, array $data = [])
     {
-        $debug_handle = TelegramLog::getDebugLogTempStream();
-
         //Fix so that the keyboard markup is a string, not an object
-        if (isset($data['reply_markup']) && !is_string($data['reply_markup'])) {
+        if (isset($data['reply_markup'])) {
             $data['reply_markup'] = (string)$data['reply_markup'];
         }
 
-        $request_params = ['debug' => $debug_handle];
+        $request_params = self::setUpRequestParams($data);
 
-        //Check for resources in data
-        $contains_resource = false;
-        foreach ($data as $item) {
-            if (is_resource($item)) {
-                $contains_resource = true;
-                break;
-            }
-        }
-
-        //Reformat data array in multipart way
-        if ($contains_resource) {
-            foreach ($data as $key => $item) {
-                $request_params['multipart'][] = array('name' => $key, 'contents' => $item);
-            }
-        } else {
-            $request_params['form_params'] = $data;
-        }
+        $debug_handle            = TelegramLog::getDebugLogTempStream();
+        $request_params['debug'] = $debug_handle;
 
         try {
             $response = self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
             );
+            $result   = (string)$response->getBody();
+
+            //Logging getUpdates Update
+            if ($action === 'getUpdates') {
+                TelegramLog::update($result);
+            }
+
+            return $result;
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
         }
-
-        $result = $response->getBody();
-
-        //Logging getUpdates Update
-        if ($action === 'getUpdates') {
-            TelegramLog::update($result);
-        }
-
-        return $result;
     }
 
     /**
      * Download file
      *
-     * @param Entities\File $file
+     * @param \Longman\TelegramBot\Entities\File $file
      *
      * @return boolean
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function downloadFile(File $file)
     {
-        $path = $file->getFilePath();
+        $tg_file_path = $file->getFilePath();
+        $file_path    = self::$telegram->getDownloadPath() . '/' . $tg_file_path;
 
-        //Create the directory
-        $loc_path = self::$telegram->getDownloadPath() . '/' . $path;
-
-        $dirname = dirname($loc_path);
-        if (!is_dir($dirname) && !mkdir($dirname, 0755, true)) {
-            throw new TelegramException('Directory ' . $dirname . ' can\'t be created');
+        $file_dir = dirname($file_path);
+        //For safety reasons, first try to create the directory, then check that it exists.
+        //This is in case some other process has created the folder in the meantime.
+        if (!@mkdir($file_dir, 0755, true) && !is_dir($file_dir)) {
+            throw new TelegramException('Directory ' . $file_dir . ' can\'t be created');
         }
 
         $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
-            $response = self::$client->get(
-                '/file/bot' . self::$telegram->getApiKey() . '/' . $path,
-                ['debug' => $debug_handle, 'sink' => $loc_path]
+            self::$client->get(
+                '/file/bot' . self::$telegram->getApiKey() . '/' . $tg_file_path,
+                ['debug' => $debug_handle, 'sink' => $file_path]
             );
+
+            return filesize($file_path) > 0;
         } catch (RequestException $e) {
             throw new TelegramException($e->getMessage());
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
         }
-
-        return (filesize($loc_path) > 0);
     }
 
     /**
@@ -260,6 +275,7 @@ class Request
      * @param string $file
      *
      * @return resource
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected static function encodeFile($file)
     {
@@ -267,6 +283,7 @@ class Request
         if ($fp === false) {
             throw new TelegramException('Cannot open ' . $file . ' for reading');
         }
+
         return $fp;
     }
 
@@ -275,37 +292,84 @@ class Request
      *
      * @todo Fake response doesn't need json encoding?
      *
-     * @param string     $action
-     * @param array|null $data
+     * @param string $action
+     * @param array  $data
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function send($action, array $data = null)
+    public static function send($action, array $data = [])
     {
-        if (!in_array($action, self::$actions)) {
-            throw new TelegramException('The action ' . $action . ' doesn\'t exist!');
-        }
+        self::ensureValidAction($action);
 
         $bot_name = self::$telegram->getBotName();
 
         if (defined('PHPUNIT_TESTSUITE')) {
             $fake_response = self::generateGeneralFakeServerResponse($data);
+
             return new ServerResponse($fake_response, $bot_name);
         }
 
+        self::ensureNonEmptyData($data);
+
         $response = json_decode(self::execute($action, $data), true);
 
-        if (is_null($response)) {
-            throw new TelegramException('Telegram returned an invalid response! Please your bot name and api token.');
+        if (null === $response) {
+            throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
         }
 
         return new ServerResponse($response, $bot_name);
     }
 
     /**
+     * Make sure the data isn't empty, else throw an exception
+     *
+     * @param array $data
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function ensureNonEmptyData(array $data)
+    {
+        if (count($data) === 0) {
+            throw new TelegramException('Data is empty!');
+        }
+    }
+
+    /**
+     * Make sure the action is valid, else throw an exception
+     *
+     * @param string $action
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function ensureValidAction($action)
+    {
+        if (!in_array($action, self::$actions, true)) {
+            throw new TelegramException('The action " . $action . " doesn\'t exist!');
+        }
+    }
+
+    /**
+     * Assign an encoded file to a data array
+     *
+     * @param array  $data
+     * @param string $field
+     * @param string $file
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function assignEncodedFile(&$data, $field, $file)
+    {
+        if ($file !== null && $file !== '') {
+            $data[$field] = self::encodeFile($file);
+        }
+    }
+
+    /**
      * Get me
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getMe()
     {
@@ -317,26 +381,25 @@ class Request
     /**
      * Send message
      *
-     * @todo Could do with some cleaner recursion
-     *
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendMessage(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
         $text = $data['text'];
-        $string_len_utf8 = mb_strlen($text, 'UTF-8');
-        if ($string_len_utf8 > 4096) {
+
+        do {
+            //Chop off and send the first message
             $data['text'] = mb_substr($text, 0, 4096);
-            self::send('sendMessage', $data);
-            $data['text'] = mb_substr($text, 4096, $string_len_utf8);
-            return self::sendMessage($data);
-        }
-        return self::send('sendMessage', $data);
+            $response = self::send('sendMessage', $data);
+
+            //Prepare the next message
+            $text = mb_substr($text, 4096);
+        } while (mb_strlen($text, 'UTF-8') > 0);
+
+        return $response;
     }
 
     /**
@@ -345,33 +408,25 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function forwardMessage(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('forwardMessage', $data);
     }
 
     /**
      * Send photo
      *
-     * @param array $data
+     * @param array  $data
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendPhoto(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['photo'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'photo', $file);
 
         return self::send('sendPhoto', $data);
     }
@@ -383,16 +438,11 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendAudio(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['audio'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'audio', $file);
 
         return self::send('sendAudio', $data);
     }
@@ -404,16 +454,11 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendDocument(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['document'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'document', $file);
 
         return self::send('sendDocument', $data);
     }
@@ -425,16 +470,11 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendSticker(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['sticker'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'sticker', $file);
 
         return self::send('sendSticker', $data);
     }
@@ -446,16 +486,11 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVideo(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['video'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'video', $file);
 
         return self::send('sendVideo', $data);
     }
@@ -467,16 +502,11 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVoice(array $data, $file = null)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
-        if (!is_null($file)) {
-            $data['voice'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'voice', $file);
 
         return self::send('sendVoice', $data);
     }
@@ -487,13 +517,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendLocation(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendLocation', $data);
     }
 
@@ -503,13 +530,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVenue(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendVenue', $data);
     }
 
@@ -519,13 +543,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendContact(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendContact', $data);
     }
 
@@ -535,13 +556,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendChatAction(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('sendChatAction', $data);
     }
 
@@ -551,13 +569,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getUserProfilePhotos(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         if (!isset($data['user_id'])) {
             throw new TelegramException('User id is empty!');
         }
@@ -571,6 +586,7 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getUpdates(array $data)
     {
@@ -584,14 +600,13 @@ class Request
      * @param string $file
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function setWebhook($url = '', $file = null)
     {
         $data = ['url' => $url];
 
-        if (!is_null($file)) {
-            $data['certificate'] = self::encodeFile($file);
-        }
+        self::assignEncodedFile($data, 'certificate', $file);
 
         return self::send('setWebhook', $data);
     }
@@ -602,13 +617,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getFile(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getFile', $data);
     }
 
@@ -618,13 +630,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function kickChatMember(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('kickChatMember', $data);
     }
 
@@ -634,13 +643,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function leaveChat(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('leaveChat', $data);
     }
 
@@ -650,13 +656,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function unbanChatMember(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('unbanChatMember', $data);
     }
 
@@ -668,13 +671,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChat(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChat', $data);
     }
 
@@ -686,13 +686,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChatAdministrators(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChatAdministrators', $data);
     }
 
@@ -704,13 +701,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChatMembersCount(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChatMembersCount', $data);
     }
 
@@ -722,13 +716,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getChatMember(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('getChatMember', $data);
     }
 
@@ -738,13 +729,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function answerCallbackQuery(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('answerCallbackQuery', $data);
     }
 
@@ -754,13 +742,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function answerInlineQuery(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('answerInlineQuery', $data);
     }
 
@@ -770,13 +755,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageText(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('editMessageText', $data);
     }
 
@@ -786,13 +768,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageCaption(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('editMessageCaption', $data);
     }
 
@@ -802,13 +781,10 @@ class Request
      * @param array $data
      *
      * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageReplyMarkup(array $data)
     {
-        if (empty($data)) {
-            throw new TelegramException('Data is empty!');
-        }
-
         return self::send('editMessageReplyMarkup', $data);
     }
 
@@ -818,7 +794,8 @@ class Request
      * No request to telegram are sent, this function is used in commands that
      * don't need to fire a message after execution
      *
-     * @return Entities\ServerResponse
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function emptyResponse()
     {
@@ -837,6 +814,7 @@ class Request
      * @param string  $date_to
      *
      * @return array
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendToActiveChats(
         $callback_function,
@@ -855,9 +833,11 @@ class Request
         $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
 
         $results = [];
-        foreach ($chats as $row) {
-            $data['chat_id'] = $row['chat_id'];
-            $results[] = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+        if (is_array($chats)) {
+            foreach ($chats as $row) {
+                $data['chat_id'] = $row['chat_id'];
+                $results[]       = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+            }
         }
 
         return $results;

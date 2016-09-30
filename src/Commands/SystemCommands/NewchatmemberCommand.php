@@ -18,27 +18,36 @@ use Longman\TelegramBot\Request;
  */
 class NewchatmemberCommand extends SystemCommand
 {
-    /**#@+
-     * {@inheritdoc}
+    /**
+     * @var string
      */
     protected $name = 'Newchatmember';
-    protected $description = 'New Chat Member';
-    protected $version = '1.0.1';
-    /**#@-*/
 
     /**
-     * {@inheritdoc}
+     * @var string
+     */
+    protected $description = 'New Chat Member';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $member = $message->getNewChatMember();
+        $member  = $message->getNewChatMember();
+        $text    = 'Hi there!';
 
-        if ($message->botAddedInChat()) {
-            $text = 'Hi there!';
-        } else {
+        if (!$message->botAddedInChat()) {
             $text = 'Hi ' . $member->tryMention() . '!';
         }
 

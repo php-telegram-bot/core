@@ -14,16 +14,36 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class Document extends Entity
 {
+    /**
+     * @var mixed|null
+     */
     protected $file_id;
+
+    /**
+     * @var \Longman\TelegramBot\Entities\PhotoSize
+     */
     protected $thumb;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_name;
+
+    /**
+     * @var mixed|null
+     */
     protected $mime_type;
+
+    /**
+     * @var mixed|null
+     */
     protected $file_size;
 
     /**
      * Document constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -42,26 +62,51 @@ class Document extends Entity
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
+    /**
+     * Get file id
+     *
+     * @return mixed|null
+     */
     public function getFileId()
     {
         return $this->file_id;
     }
 
+    /**
+     * Get thumb
+     *
+     * @return \Longman\TelegramBot\Entities\PhotoSize
+     */
     public function getThumb()
     {
         return $this->thumb;
     }
 
+    /**
+     * Get file name
+     *
+     * @return mixed|null
+     */
     public function getFileName()
     {
         return $this->file_name;
     }
 
+    /**
+     * Get mime type
+     *
+     * @return mixed|null
+     */
     public function getMimeType()
     {
         return $this->mime_type;
     }
 
+    /**
+     * Get file size
+     *
+     * @return mixed|null
+     */
     public function getFileSize()
     {
         return $this->file_size;

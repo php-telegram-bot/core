@@ -14,14 +14,26 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 class InlineQueryResultCachedMpeg4Gif extends InlineQueryResult
 {
+    /**
+     * @var mixed|null
+     */
     protected $mpeg4_file_id;
+
+    /**
+     * @var mixed|null
+     */
     protected $title;
+
+    /**
+     * @var mixed|null
+     */
     protected $caption;
 
     /**
      * InlineQueryResultCachedMpeg4Gif constructor.
      *
      * @param array $data
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data)
     {
@@ -34,20 +46,35 @@ class InlineQueryResultCachedMpeg4Gif extends InlineQueryResult
             throw new TelegramException('mpeg4_file_id is empty!');
         }
 
-        $this->title = isset($data['title']) ? $data['title'] : null;
+        $this->title   = isset($data['title']) ? $data['title'] : null;
         $this->caption = isset($data['caption']) ? $data['caption'] : null;
     }
 
+    /**
+     * Get mp4 file id
+     *
+     * @return mixed|null
+     */
     public function getMpeg4FileId()
     {
         return $this->mpeg4_file_id;
     }
 
+    /**
+     * Get title
+     *
+     * @return mixed|null
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Get caption
+     *
+     * @return mixed|null
+     */
     public function getCaption()
     {
         return $this->caption;
