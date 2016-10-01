@@ -80,10 +80,16 @@ class Keyboard extends Entity
         $keyboard_type = $this->getKeyboardType();
 
         // If the inline_keyboard isn't set directly, try to create one from the arguments.
-        $data = func_get_arg(0);
-        if (!array_key_exists($keyboard_type, $data)) {
+        $args = func_get_args();
+        $data = reset($args);
+
+        // Force button parameters into a single row.
+        if (!is_array($data)) {
+            $args = [$args];
+        }
+        if (!array_key_exists($keyboard_type, (array) $data)) {
             $new_keyboard = [];
-            foreach (func_get_args() as $row) {
+            foreach ($args as $row) {
                 if (is_array($row)) {
                     $new_row = [];
                     if ($button_class::couldBe($row)) {
@@ -119,7 +125,7 @@ class Keyboard extends Entity
     public function addRow()
     {
         $keyboard_type          = $this->getKeyboardType();
-        $this->$keyboard_type[] = func_get_args();
+        $this->{$keyboard_type}[] = func_get_args();
 
         return $this;
     }

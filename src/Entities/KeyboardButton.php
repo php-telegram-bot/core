@@ -59,6 +59,10 @@ class KeyboardButton extends Entity
      */
     protected function validate()
     {
+        if ($this->getProperty('text', '') === '') {
+            throw new TelegramException('You must add some text to the button!');
+        }
+
         if ($this->getRequestContact() && $this->getRequestLocation()) {
             throw new TelegramException('You must use only one of these fields: request_contact, request_location!');
         }

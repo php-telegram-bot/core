@@ -51,6 +51,10 @@ class InlineKeyboardButton extends KeyboardButton
      */
     protected function validate()
     {
+        if ($this->getProperty('text', '') === '') {
+            throw new TelegramException('You must add some text to the button!');
+        }
+
         $num_params = 0;
 
         foreach (['url', 'callback_data', 'switch_inline_query'] as $param) {
