@@ -56,13 +56,13 @@ class AudioTest extends TestCase
     }
 
    /**
-    * Test base stage without duration property
+    * Test base stage without file_id property
     *
     * @expectedException Longman\TelegramBot\Exception\TelegramException
     */
     public function testBaseStageWithoutFileId()
     {
-        $this->record['duration'] = null;
+        $this->record['file_id'] = null;
         new Audio($this->record);
     } 
 
