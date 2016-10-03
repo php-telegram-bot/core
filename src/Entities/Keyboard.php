@@ -88,7 +88,7 @@ class Keyboard extends Entity
 
         $data = reset($args);
 
-        if (!array_key_exists($keyboard_type, $data)) {
+        if (!array_key_exists($keyboard_type, (array)$data)) {
             $new_keyboard = [];
             foreach ($args as $row) {
                 if (is_array($row)) {
@@ -105,7 +105,11 @@ class Keyboard extends Entity
                         }
                     }
                 } else {
-                    $new_row = [new $button_class($row)];
+                    $button = $row;
+                    if (!($button instanceof $button_class)) {
+                        $button = new $button_class($button);
+                    }
+                    $new_row = [$button];
                 }
                 $new_keyboard[] = $new_row;
             }

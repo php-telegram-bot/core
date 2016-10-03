@@ -43,20 +43,20 @@ class KeyboardTest extends TestCase
         self::assertSame('Button Text 3', $keyboard[2][0]->getText());
 
         $keyboard = (new Keyboard(
-            ['Button Text 1'],
-            ['Button Text 2'],
-            ['Button Text 3']
+            ['Button Text 4'],
+            ['Button Text 5'],
+            ['Button Text 6']
         ))->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[2][0]->getText());
+        self::assertSame('Button Text 4', $keyboard[0][0]->getText());
+        self::assertSame('Button Text 5', $keyboard[1][0]->getText());
+        self::assertSame('Button Text 6', $keyboard[2][0]->getText());
     }
 
     public function testKeyboardMultipleButtonsSingleRow()
     {
-        $keyboard = (new Keyboard(['Button Text 3', 'Button Text 4']))->getProperty('keyboard');
-        self::assertSame('Button Text 3', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 4', $keyboard[0][1]->getText());
+        $keyboard = (new Keyboard(['Button Text 1', 'Button Text 2']))->getProperty('keyboard');
+        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        self::assertSame('Button Text 2', $keyboard[0][1]->getText());
     }
 
     public function testKeyboardMultipleButtonsMultipleRows()
