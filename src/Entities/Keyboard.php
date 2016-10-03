@@ -51,7 +51,7 @@ class Keyboard extends Entity
     /**
      * Get the proper keyboard button class for this keyboard.
      *
-     * @return mixed
+     * @return KeyboardButton|InlineKeyboardButton
      */
     public function getKeyboardButtonClass()
     {
@@ -75,19 +75,20 @@ class Keyboard extends Entity
      */
     protected function createFromParams()
     {
-        /** @var KeyboardButton|InlineKeyboardButton $button_class */
         $button_class  = $this->getKeyboardButtonClass();
         $keyboard_type = $this->getKeyboardType();
 
-        // If the inline_keyboard isn't set directly, try to create one from the arguments.
         $args = func_get_args();
+
+        // Force button parameters into individual rows.
+        foreach ($args as &$arg) {
+            !is_array($arg) && $arg = [$arg];
+        }
+        unset($arg);
+
         $data = reset($args);
 
-        // Force button parameters into a single row.
-        if (!is_array($data)) {
-            $args = [$args];
-        }
-        if (!array_key_exists($keyboard_type, (array) $data)) {
+        if (!array_key_exists($keyboard_type, $data)) {
             $new_keyboard = [];
             foreach ($args as $row) {
                 if (is_array($row)) {
@@ -124,7 +125,7 @@ class Keyboard extends Entity
      */
     public function addRow()
     {
-        $keyboard_type          = $this->getKeyboardType();
+        $keyboard_type            = $this->getKeyboardType();
         $this->{$keyboard_type}[] = func_get_args();
 
         return $this;

@@ -34,6 +34,15 @@ class KeyboardTest extends TestCase
     public function testKeyboardSingleButtonMultipleRows()
     {
         $keyboard = (new Keyboard(
+            'Button Text 1',
+            'Button Text 2',
+            'Button Text 3'
+        ))->getProperty('keyboard');
+        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
+        self::assertSame('Button Text 3', $keyboard[2][0]->getText());
+
+        $keyboard = (new Keyboard(
             ['Button Text 1'],
             ['Button Text 2'],
             ['Button Text 3']
@@ -45,39 +54,22 @@ class KeyboardTest extends TestCase
 
     public function testKeyboardMultipleButtonsSingleRow()
     {
-        /** @var KeyboardButton $keyboard_button_1 */
-        /** @var KeyboardButton $keyboard_button_2 */
-
-        $keyboard = (new Keyboard('Button Text 1', 'Button Text 2'))->getProperty('keyboard');
-        list($keyboard_button_1, $keyboard_button_2) = $keyboard[0]; // Row 1.
-        self::assertSame('Button Text 1', $keyboard_button_1->getText());
-        self::assertSame('Button Text 2', $keyboard_button_2->getText());
-
         $keyboard = (new Keyboard(['Button Text 3', 'Button Text 4']))->getProperty('keyboard');
-        list($keyboard_button_1, $keyboard_button_2) = $keyboard[0]; // Row 1.
-        self::assertSame('Button Text 3', $keyboard_button_1->getText());
-        self::assertSame('Button Text 4', $keyboard_button_2->getText());
+        self::assertSame('Button Text 3', $keyboard[0][0]->getText());
+        self::assertSame('Button Text 4', $keyboard[0][1]->getText());
     }
 
     public function testKeyboardMultipleButtonsMultipleRows()
     {
-        /** @var KeyboardButton $keyboard_button_1 */
-        /** @var KeyboardButton $keyboard_button_2 */
-        /** @var KeyboardButton $keyboard_button_3 */
-        /** @var KeyboardButton $keyboard_button_4 */
-
         $keyboard = (new Keyboard(
             ['Button Text 1', 'Button Text 2'],
             ['Button Text 3', 'Button Text 4']
         ))->getProperty('keyboard');
 
-        list($keyboard_button_1, $keyboard_button_2) = $keyboard[0]; // Row 1.
-        list($keyboard_button_3, $keyboard_button_4) = $keyboard[1]; // Row 2.
-
-        self::assertSame('Button Text 1', $keyboard_button_1->getText());
-        self::assertSame('Button Text 2', $keyboard_button_2->getText());
-        self::assertSame('Button Text 3', $keyboard_button_3->getText());
-        self::assertSame('Button Text 4', $keyboard_button_4->getText());
+        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        self::assertSame('Button Text 2', $keyboard[0][1]->getText());
+        self::assertSame('Button Text 3', $keyboard[1][0]->getText());
+        self::assertSame('Button Text 4', $keyboard[1][1]->getText());
     }
 
     public function testKeyboardWithButtonObjects()
@@ -92,7 +84,7 @@ class KeyboardTest extends TestCase
             new KeyboardButton('Button Text 3')
         ))->getProperty('keyboard');
         self::assertSame('Button Text 2', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[0][1]->getText());
+        self::assertSame('Button Text 3', $keyboard[1][0]->getText());
 
         $keyboard = (new Keyboard(
             [new KeyboardButton('Button Text 4')],
@@ -102,30 +94,4 @@ class KeyboardTest extends TestCase
         self::assertSame('Button Text 5', $keyboard[1][0]->getText());
         self::assertSame('Button Text 6', $keyboard[1][1]->getText());
     }
-
-
-    /*public function testKeyboardWithData()
-    {
-        $keyboard = (new Keyboard(
-            ['Button Text 1', 'Button Text 2'],
-            ['Button Text 3', 'Button Text 4']
-        ))->getProperty('keyboard');
-
-    }*/
-
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage You must use only one of these fields: request_contact, request_location!
-     */
-    /*public function testKeyboardTooManyParametersFail()
-    {
-        new Keyboard(['text' => 'message', 'request_contact' => true, 'request_location' => true]);
-    }*/
-
-    /*public function testKeyboardSuccess()
-    {
-        new Keyboard(['text' => 'message']);
-        new Keyboard(['text' => 'message', 'request_contact' => true]);
-        new Keyboard(['text' => 'message', 'request_location' => true]);
-    }*/
 }
