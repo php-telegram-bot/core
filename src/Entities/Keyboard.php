@@ -91,25 +91,17 @@ class Keyboard extends Entity
         if (!array_key_exists($keyboard_type, (array)$data)) {
             $new_keyboard = [];
             foreach ($args as $row) {
-                if (is_array($row)) {
-                    $new_row = [];
-                    if ($button_class::couldBe($row)) {
-                        $new_row[] = new $button_class($row);
-                    } else {
-                        foreach ($row as $button) {
-                            if ($button instanceof $button_class) {
-                                $new_row[] = $button;
-                            } elseif (!$this->isInlineKeyboard() || $button_class::couldBe($button)) {
-                                $new_row[] = new $button_class($button);
-                            }
+                $new_row = [];
+                if ($button_class::couldBe($row)) {
+                    $new_row[] = new $button_class($row);
+                } else {
+                    foreach ($row as $button) {
+                        if ($button instanceof $button_class) {
+                            $new_row[] = $button;
+                        } elseif (!$this->isInlineKeyboard() || $button_class::couldBe($button)) {
+                            $new_row[] = new $button_class($button);
                         }
                     }
-                } else {
-                    $button = $row;
-                    if (!($button instanceof $button_class)) {
-                        $button = new $button_class($button);
-                    }
-                    $new_row = [$button];
                 }
                 $new_keyboard[] = $new_row;
             }
