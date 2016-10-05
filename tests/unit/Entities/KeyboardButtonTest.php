@@ -45,4 +45,25 @@ class KeyboardButtonTest extends TestCase
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
     }
+
+    public function testInlineKeyboardButtonCouldBe()
+    {
+        self::assertTrue(KeyboardButton::couldBe(['text' => 'message']));
+        self::assertFalse(KeyboardButton::couldBe(['no_text' => 'message']));
+    }
+
+    public function testKeyboardButtonParameterSetting()
+    {
+        $button = new KeyboardButton('message');
+        self::assertEmpty($button->getRequestContact());
+        self::assertEmpty($button->getRequestLocation());
+
+        $button->setRequestContact(true);
+        self::assertTrue($button->getRequestContact());
+        self::assertEmpty($button->getRequestLocation());
+
+        $button->setRequestLocation(true);
+        self::assertEmpty($button->getRequestContact());
+        self::assertTrue($button->getRequestLocation());
+    }
 }

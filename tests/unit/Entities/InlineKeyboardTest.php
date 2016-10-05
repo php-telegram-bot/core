@@ -34,11 +34,25 @@ class InlineKeyboardTest extends TestCase
         return new InlineKeyboardButton($data);
     }
 
-    public function testNothing(){
-
+    /**
+     * @expectedException \Longman\TelegramBot\Exception\TelegramException
+     * @expectedExceptionMessage Inline Keyboard field is not an array!
+     */
+    public function testInlineKeyboardDataMalformedField()
+    {
+        new InlineKeyboard(['inline_keyboard' => 'wrong']);
     }
 
-    public function testInlineKeyboardSingleButtonSinleRow()
+    /**
+     * @expectedException \Longman\TelegramBot\Exception\TelegramException
+     * @expectedExceptionMessage Inline Keyboard subfield is not an array!
+     */
+    public function testInlineKeyboardDataMalformedSubfield()
+    {
+        new InlineKeyboard(['inline_keyboard' => ['wrong']]);
+    }
+
+    public function testInlineKeyboardSingleButtonSingleRow()
     {
         $inline_keyboard = (new InlineKeyboard(
             $this->getRandomButton('Button Text 1')
@@ -99,5 +113,26 @@ class InlineKeyboardTest extends TestCase
         self::assertSame('Button Text 2', $keyboard[0][1]->getText());
         self::assertSame('Button Text 3', $keyboard[1][0]->getText());
         self::assertSame('Button Text 4', $keyboard[1][1]->getText());
+    }
+
+    public function testInlineKeyboardAddRows()
+    {
+        $keyboard_obj = new InlineKeyboard([]);
+
+        $keyboard_obj->addRow($this->getRandomButton('Button Text 1'));
+        $keyboard = $keyboard_obj->getProperty('inline_keyboard');
+        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+
+        $keyboard_obj->addRow(
+            $this->getRandomButton('Button Text 2'),
+            $this->getRandomButton('Button Text 3')
+        );
+        $keyboard = $keyboard_obj->getProperty('inline_keyboard');
+        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
+        self::assertSame('Button Text 3', $keyboard[1][1]->getText());
+
+        $keyboard_obj->addRow($this->getRandomButton('Button Text 4'));
+        $keyboard = $keyboard_obj->getProperty('inline_keyboard');
+        self::assertSame('Button Text 4', $keyboard[2][0]->getText());
     }
 }

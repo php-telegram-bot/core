@@ -47,11 +47,7 @@ class KeyboardButton extends Entity
      */
     public static function couldBe($data)
     {
-        return is_array($data) &&
-            array_key_exists('text', $data) && (
-                array_key_exists('request_contact', $data) ||
-                array_key_exists('request_location', $data)
-            );
+        return is_array($data) && array_key_exists('text', $data);
     }
 
     /**

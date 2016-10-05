@@ -36,6 +36,9 @@ class Keyboard extends Entity
     {
         $data = call_user_func_array([$this, 'createFromParams'], func_get_args());
         parent::__construct($data);
+
+        // Remove any empty buttons.
+        $this->{$this->getKeyboardType()} = array_filter($this->{$this->getKeyboardType()});
     }
 
     /**
@@ -75,7 +78,6 @@ class Keyboard extends Entity
      */
     protected function createFromParams()
     {
-        $button_class  = $this->getKeyboardButtonClass();
         $keyboard_type = $this->getKeyboardType();
 
         $args = func_get_args();
@@ -88,27 +90,25 @@ class Keyboard extends Entity
 
         $data = reset($args);
 
-        if (!array_key_exists($keyboard_type, (array)$data)) {
-            $new_keyboard = [];
-            foreach ($args as $row) {
-                $new_row = [];
-                if ($button_class::couldBe($row)) {
-                    $new_row[] = new $button_class($row);
-                } else {
-                    foreach ($row as $button) {
-                        if ($button instanceof $button_class) {
-                            $new_row[] = $button;
-                        } elseif (!$this->isInlineKeyboard() || $button_class::couldBe($button)) {
-                            $new_row[] = new $button_class($button);
-                        }
-                    }
-                }
-                $new_keyboard[] = $new_row;
-            }
+        if ($from_data = array_key_exists($keyboard_type, (array)$data)) {
+            $args = $data[$keyboard_type];
 
-            if (!empty($new_keyboard)) {
-                $data = [$keyboard_type => $new_keyboard];
+            // Make sure we're working with a proper row.
+            if (!is_array($args)) {
+                $args = [];
             }
+        }
+
+        $new_keyboard = [];
+        foreach ($args as $row) {
+            $new_keyboard[] = $this->parseRow($row);
+        }
+
+        if (!empty($new_keyboard)) {
+            if (!$from_data) {
+                $data = [];
+            }
+            $data[$keyboard_type] = $new_keyboard;
         }
 
         return $data;
@@ -121,10 +121,56 @@ class Keyboard extends Entity
      */
     public function addRow()
     {
-        $keyboard_type            = $this->getKeyboardType();
-        $this->{$keyboard_type}[] = func_get_args();
+        if (($new_row = $this->parseRow(func_get_args())) !== null) {
+            $this->{$this->getKeyboardType()}[] = $new_row;
+        }
 
         return $this;
+    }
+
+    /**
+     * Parse a given row to the correct array format.
+     *
+     * @param array $row
+     *
+     * @return array
+     */
+    protected function parseRow($row)
+    {
+        if (!is_array($row)) {
+            return null;
+        }
+
+        $new_row = [];
+        foreach ($row as $button) {
+            if (($new_button = $this->parseButton($button)) !== null) {
+                $new_row[] = $new_button;
+            }
+        }
+
+        return $new_row;
+    }
+
+    /**
+     * Parse a given button to the correct KeyboardButton object type.
+     *
+     * @param array|string|\Longman\TelegramBot\Entities\KeyboardButton $button
+     *
+     * @return \Longman\TelegramBot\Entities\KeyboardButton|null
+     */
+    protected function parseButton($button)
+    {
+        $button_class = $this->getKeyboardButtonClass();
+
+        if ($button instanceof $button_class) {
+            return $button;
+        }
+
+        if (!$this->isInlineKeyboard() || $button_class::couldBe($button)) {
+            return new $button_class($button);
+        }
+
+        return null;
     }
 
     /**
@@ -159,7 +205,7 @@ class Keyboard extends Entity
      */
     public static function hide(array $data = [])
     {
-        return new static(array_merge(['keyboard' => null, 'hide_keyboard' => true, 'selective' => false], $data));
+        return new static(array_merge(['keyboard' => [], 'hide_keyboard' => true, 'selective' => false], $data));
     }
 
     /**
@@ -174,6 +220,6 @@ class Keyboard extends Entity
      */
     public static function forceReply(array $data = [])
     {
-        return new static(array_merge(['keyboard' => null, 'force_reply' => true, 'selective' => false], $data));
+        return new static(array_merge(['keyboard' => [], 'force_reply' => true, 'selective' => false], $data));
     }
 }
