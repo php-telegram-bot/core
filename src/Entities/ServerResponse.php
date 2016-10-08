@@ -54,12 +54,15 @@ class ServerResponse extends Entity
                     } elseif (isset($data['result']['user'])) {
                         //Response from getChatMember
                         $this->result = new ChatMember($data['result']);
+                    } elseif (isset($data['result']['has_custom_certificate'])) {
+                        //Response from getWebhookInfo
+                        $this->result = new WebhookInfo($data['result']);
                     } else {
                         //Response from sendMessage
                         $this->result = new Message($data['result'], $bot_name);
                     }
                 }
-    
+
                 $this->ok = $data['ok'];
                 $this->error_code = null;
                 $this->description = null;
