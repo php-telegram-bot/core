@@ -22,11 +22,11 @@ class WebhookInfo extends Entity
 
     public function __construct(array $data)
     {
-        $this->url                    = isset($data['url'])                     ? $data['url']                      : null;
-        $this->has_custom_certificate = isset($data['has_custom_certificate'])  ? $data['has_custom_certificate']   : null;
-        $this->pending_update_count   = isset($data['pending_update_count'])    ? $data['pending_update_count']     : null;
-        $this->last_error_date        = isset($data['last_error_date'])         ? $data['last_error_date']          : null;
-        $this->last_error_message     = isset($data['last_error_message'])      ? $data['last_error_message']       : null;
+        $this->url                    = isset($data['url']) ? $data['url'] : null;
+        $this->has_custom_certificate = isset($data['has_custom_certificate']) ? $data['has_custom_certificate'] : null;
+        $this->pending_update_count   = isset($data['pending_update_count']) ? $data['pending_update_count'] : null;
+        $this->last_error_date        = isset($data['last_error_date']) ? $data['last_error_date'] : null;
+        $this->last_error_message     = isset($data['last_error_message']) ? $data['last_error_message'] : null;
     }
 
     /**
