@@ -34,32 +34,25 @@ class Chat extends Entity
     {
         parent::__construct($data);
 
-        if (!$this->getType()) {
-            if ($this->getId() > 0) {
-                $this->type = 'private';
-            } elseif ($this->getId() < 0) {
-                $this->type = 'group';
-            }
+        $id   = $this->getId();
+        $type = $this->getType();
+        if (!$type && $id !== 0) {
+            $id > 0 && $this->type = 'private';
+            $id < 0 && $this->type = 'group';
         }
     }
 
     /**
-     * Try mention
+     * Try to mention the user of this chat, else return the title
+     *
+     * @param bool $escape_markdown
      *
      * @return string|null
      */
-    public function tryMention()
+    public function tryMention($escape_markdown = false)
     {
         if ($this->isPrivateChat()) {
-            if ($this->username === null) {
-                if ($this->last_name !== null) {
-                    return $this->first_name . ' ' . $this->last_name;
-                }
-
-                return $this->first_name;
-            }
-
-            return '@' . $this->username;
+            return $this->tryMention($escape_markdown);
         }
 
         return $this->getTitle();
@@ -72,7 +65,7 @@ class Chat extends Entity
      */
     public function isGroupChat()
     {
-        return $this->type === 'group' || $this->id < 0;
+        return $this->getType() === 'group' || $this->getId() < 0;
     }
 
     /**
@@ -82,7 +75,7 @@ class Chat extends Entity
      */
     public function isPrivateChat()
     {
-        return $this->type === 'private';
+        return $this->getType() === 'private';
     }
 
     /**
@@ -92,7 +85,7 @@ class Chat extends Entity
      */
     public function isSuperGroup()
     {
-        return $this->type === 'supergroup';
+        return $this->getType() === 'supergroup';
     }
 
     /**
@@ -102,6 +95,6 @@ class Chat extends Entity
      */
     public function isChannel()
     {
-        return $this->type === 'channel';
+        return $this->getType() === 'channel';
     }
 }

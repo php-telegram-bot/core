@@ -268,19 +268,59 @@ abstract class Entity
     }
 
     /**
-     * stripMarkDown
-     * Gived a  string escape special charactes used in Markdown
+     * Escape markdown special characters
      *
      * @param string $string
      *
      * @return string
      */
-    public function stripMarkDown($string)
+    public function escapeMarkdown($string)
     {
         return str_replace(
             ['[', '`', '*', '_',],
             ['\[', '\`', '\*', '\_',],
             $string
         );
+    }
+
+    /**
+     * Try to mention the user
+     *
+     * Mention the user with the username otherwise print first and last name
+     * if the $escape_markdown argument is true special characters are escaped from the output
+     *
+     * @param bool $escape_markdown
+     *
+     * @return string|null
+     */
+    public function tryMention($escape_markdown = false)
+    {
+        //TryMention only makes sense for the User and Chat entity.
+        if (!($this instanceof User || $this instanceof Chat)) {
+            return null;
+        }
+
+        //Try with the username first...
+        $username = $this->getProperty('username');
+        if ($username !== null) {
+            if ($escape_markdown) {
+                $username = $this->escapeMarkdown($username);
+            }
+
+            return '@' . $username;
+        }
+
+        //...otherwise try with the names
+        $name      = $this->getProperty('first_name');
+        $last_name = $this->getProperty('last_name');
+        if ($last_name !== null) {
+            $name .= ' ' . $last_name;
+        }
+
+        if ($escape_markdown) {
+            $name = $this->escapeMarkdown($name);
+        }
+
+        return $name;
     }
 }
