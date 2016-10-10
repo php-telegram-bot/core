@@ -301,26 +301,22 @@ abstract class Entity
         }
 
         //Try with the username first...
-        $username = $this->getProperty('username');
-        if ($username !== null) {
-            if ($escape_markdown) {
-                $username = $this->escapeMarkdown($username);
+        $name = $this->getProperty('username');
+        $is_username = $name !== null;
+
+        if ($name === null) {
+            //...otherwise try with the names.
+            $name      = $this->getProperty('first_name');
+            $last_name = $this->getProperty('last_name');
+            if ($last_name !== null) {
+                $name .= ' ' . $last_name;
             }
-
-            return '@' . $username;
-        }
-
-        //...otherwise try with the names
-        $name      = $this->getProperty('first_name');
-        $last_name = $this->getProperty('last_name');
-        if ($last_name !== null) {
-            $name .= ' ' . $last_name;
         }
 
         if ($escape_markdown) {
             $name = $this->escapeMarkdown($name);
         }
 
-        return $name;
+        return ($is_username ? '@' : '') . $name;
     }
 }
