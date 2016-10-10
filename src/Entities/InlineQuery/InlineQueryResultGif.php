@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Entities\InlineQuery;
 
-use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
+use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
 
 /**
@@ -27,7 +27,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'thumb_url'             => '',
  *   'title'                 => '',
  *   'caption'               => '',
- *   'reply_markup'          => <InlineKeyboardMarkup>,
+ *   'reply_markup'          => <InlineKeyboard>,
  *   'input_message_content' => <InputMessageContent>,
  * ];
  * </code>
@@ -40,7 +40,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getThumbUrl()            URL of the static thumbnail for the result (jpeg or gif)
  * @method string               getTitle()               Optional. Title for the result
  * @method string               getCaption()             Optional. Caption of the GIF file to be sent, 0-200 characters
- * @method InlineKeyboardMarkup getReplyMarkup()         Optional. Inline keyboard attached to the message
+ * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the GIF animation
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
@@ -50,7 +50,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setThumbUrl(string $thumb_url)                                     URL of the static thumbnail for the result (jpeg or gif)
  * @method $this setTitle(string $title)                                            Optional. Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the GIF file to be sent, 0-200 characters
- * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
+ * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the GIF animation
  */
 class InlineQueryResultGif extends InlineEntity

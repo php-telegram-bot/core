@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Entities\InlineQuery;
 
-use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
+use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
 
 /**
@@ -25,7 +25,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'title'                 => '',
  *   'performer'             => '',
  *   'audio_duration'        => 123,
- *   'reply_markup'          => <InlineKeyboardMarkup>,
+ *   'reply_markup'          => <InlineKeyboard>,
  *   'input_message_content' => <InputMessageContent>,
  * ];
  * </code>
@@ -36,7 +36,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getTitle()               Title
  * @method string               getPerformer()           Optional. Performer
  * @method int                  getAudioDuration()       Optional. Audio duration in seconds
- * @method InlineKeyboardMarkup getReplyMarkup()         Optional. Inline keyboard attached to the message
+ * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the audio
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
@@ -44,7 +44,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setTitle(string $title)                                            Title
  * @method $this setPerformer(string $performer)                                    Optional. Performer
  * @method $this setAudioDuration(int $audio_duration)                              Optional. Audio duration in seconds
- * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
+ * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the audio
  */
 class InlineQueryResultAudio extends InlineEntity

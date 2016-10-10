@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Entities\InlineQuery;
 
-use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
+use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
 
 /**
@@ -24,7 +24,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'voice_url'             => '',
  *   'title'                 => '',
  *   'voice_duration'        => 123,
- *   'reply_markup'          => <InlineKeyboardMarkup>,
+ *   'reply_markup'          => <InlineKeyboard>,
  *   'input_message_content' => <InputMessageContent>,
  * ];
  * </code>
@@ -34,14 +34,14 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getVoiceUrl()            A valid URL for the voice recording
  * @method string               getTitle()               Recording title
  * @method int                  getVoiceDuration()       Optional. Recording duration in seconds
- * @method InlineKeyboardMarkup getReplyMarkup()         Optional. Inline keyboard attached to the message
+ * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the voice recording
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
  * @method $this setVoiceUrl(string $voice_url)                                     A valid URL for the voice recording
  * @method $this setTitle(string $title)                                            Recording title
  * @method $this setVoiceDuration(int $voice_duration)                              Optional. Recording duration in seconds
- * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
+ * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the voice recording
  */
 class InlineQueryResultVoice extends InlineEntity

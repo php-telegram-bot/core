@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Entities\InlineQuery;
 
-use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
+use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
 
 /**
@@ -30,7 +30,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'video_height'          => 30,
  *   'video_duration'        => 123,
  *   'description'           => '',
- *   'reply_markup'          => <InlineKeyboardMarkup>,
+ *   'reply_markup'          => <InlineKeyboard>,
  *   'input_message_content' => <InputMessageContent>,
  * ];
  * </code>
@@ -46,7 +46,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method int                  getVideoHeight()         Optional. Video height
  * @method int                  getVideoDuration()       Optional. Video duration in seconds
  * @method string               getDescription()         Optional. Short description of the result
- * @method InlineKeyboardMarkup getReplyMarkup()         Optional. Inline keyboard attached to the message
+ * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the video
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
@@ -59,7 +59,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setVideoHeight(int $video_height)                                  Optional. Video height
  * @method $this setVideoDuration(int $video_duration)                              Optional. Video duration in seconds
  * @method $this setDescription(string $description)                                Optional. Short description of the result
- * @method $this setReplyMarkup(InlineKeyboardMarkup $reply_markup)                 Optional. Inline keyboard attached to the message
+ * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the video
  */
 class InlineQueryResultVideo extends InlineEntity
