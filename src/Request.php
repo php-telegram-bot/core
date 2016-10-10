@@ -81,6 +81,7 @@ class Request
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup',
+        'getWebhookInfo',
     ];
 
     /**
@@ -841,5 +842,15 @@ class Request
         }
 
         return $results;
+    }
+
+    /**
+     * Use this method to get current webhook status.
+     *
+     * @return Entities\ServerResponse
+     */
+    public static function getWebhookInfo()
+    {
+        return self::send('getWebhookInfo', []);
     }
 }
