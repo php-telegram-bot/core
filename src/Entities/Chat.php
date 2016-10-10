@@ -52,7 +52,7 @@ class Chat extends Entity
     public function tryMention($escape_markdown = false)
     {
         if ($this->isPrivateChat()) {
-            return $this->tryMention($escape_markdown);
+            return parent::tryMention($escape_markdown);
         }
 
         return $this->getTitle();
