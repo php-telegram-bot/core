@@ -34,7 +34,7 @@ class UserProfilePhotos extends Entity
      *
      * This method overrides the default getPhotos method and returns a nice array
      *
-     * @return array
+     * @return PhotoSize[]
      */
     public function getPhotos()
     {

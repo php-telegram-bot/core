@@ -103,7 +103,7 @@ class Message extends Entity
      * This method overrides the default getPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|array
+     * @return null|PhotoSize[]
      */
     public function getPhoto()
     {
@@ -118,7 +118,7 @@ class Message extends Entity
      * This method overrides the default getNewChatPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|array
+     * @return null|PhotoSize[]
      */
     public function getNewChatPhoto()
     {
@@ -133,7 +133,7 @@ class Message extends Entity
      * This method overrides the default getEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return null|array
+     * @return null|MessageEntity[]
      */
     public function getEntities()
     {
