@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
-use \Longman\TelegramBot\Entities\User;
+use Longman\TelegramBot\Entities\User;
 
 /**
  * @package         TelegramTest
@@ -21,53 +21,67 @@ use \Longman\TelegramBot\Entities\User;
  */
 class UserTest extends TestCase
 {
-    /**
-    * @var \Longman\TelegramBot\Entities\User
-    */
-    private $user;
-
-    public function testUsername()
+    public function testInstance()
     {
-        $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'jtaylor']);
-        $this->assertEquals('@jtaylor', $this->user->tryMention());
+        $user = new User(['id' => 1]);
+        self::assertInstanceOf('Longman\TelegramBot\Entities\User', $user);
     }
 
-    public function testFirstName()
+    public function testGetId()
     {
-        $this->user = new User(['id' => 1, 'first_name' => 'John']);
-        $this->assertEquals('John', $this->user->tryMention());
+        $user = new User(['id' => 123]);
+        self::assertEquals(123, $user->getId());
     }
 
-    public function testLastName()
+    public function testTryMention()
     {
-        $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor']);
-        $this->assertEquals('John Taylor', $this->user->tryMention());
+        // Username
+        $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'jtaylor']);
+        self::assertEquals('@jtaylor', $user->tryMention());
+
+        // First name.
+        $user = new User(['id' => 1, 'first_name' => 'John']);
+        self::assertEquals('John', $user->tryMention());
+
+        // First and Last name.
+        $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor']);
+        self::assertEquals('John Taylor', $user->tryMention());
     }
 
     public function testStripMarkDown()
     {
-        $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor']);
-        $this->assertEquals('\`\[\*\_', $this->user->stripMarkDown('`[*_'));
+        // Plain stripMarkDown functionality.
+        $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor']);
+        self::assertEquals('\`\[\*\_', $user->stripMarkDown('`[*_'));
+
+        // Username.
+        $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'j_taylor']);
+        self::assertEquals('@j_taylor', $user->tryMention());
+        self::assertEquals('@j\_taylor', $user->tryMention(true));
+
+        // First name.
+        $user = new User(['id' => 1, 'first_name' => 'John[']);
+        self::assertEquals('John[', $user->tryMention());
+        self::assertEquals('John\[', $user->tryMention(true));
+
+        // First and Last name.
+        $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => '`Taylor`']);
+        self::assertEquals('John `Taylor`', $user->tryMention());
+        self::assertEquals('John \`Taylor\`', $user->tryMention(true));
     }
 
-    public function testUsernameMarkdown()
+    public function testGetProperties()
     {
-        $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'j_taylor']);
-        $this->assertEquals('@j_taylor', $this->user->tryMention());
-        $this->assertEquals('@j\_taylor', $this->user->tryMention(true));
-    }
+        // Username.
+        $user = new User(['id' => 1, 'username' => 'name_phpunit']);
+        self::assertEquals('name_phpunit', $user->getUsername());
 
-    public function testFirstNameMarkdown()
-    {
-        $this->user = new User(['id' => 1, 'first_name' => 'John[']);
-        $this->assertEquals('John[', $this->user->tryMention());
-        $this->assertEquals('John\[', $this->user->tryMention(true));
-    }
+        // First name.
+        $user = new User(['id' => 1, 'first_name' => 'name_phpunit']);
+        self::assertEquals('name_phpunit', $user->getFirstName());
 
-    public function testLastNameMarkdown()
-    {
-        $this->user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => '`Taylor`']);
-        $this->assertEquals('John `Taylor`', $this->user->tryMention());
-        $this->assertEquals('John \`Taylor\`', $this->user->tryMention(true));
+        // Last name.
+        $user = new User(['id' => 1, 'last_name' => 'name_phpunit']);
+        self::assertEquals('name_phpunit', $user->getLastName());
     }
 }
