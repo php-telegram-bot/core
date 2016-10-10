@@ -33,8 +33,6 @@ class KeyboardCommand extends UserCommand
      */
     public function execute()
     {
-        $chat_id = $this->getMessage()->getChat()->getId();
-
         //Keyboard examples
         /** @var Keyboard[] $keyboards */
         $keyboards = [];
@@ -77,6 +75,7 @@ class KeyboardCommand extends UserCommand
             ->setOneTimeKeyboard(true)
             ->setSelective(false);
 
+        $chat_id = $this->getMessage()->getChat()->getId();
         $data = [
             'chat_id'      => $chat_id,
             'text'         => 'Press a Button:',

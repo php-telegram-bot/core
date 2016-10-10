@@ -149,19 +149,16 @@ class Message extends Entity
      */
     public function getFullCommand()
     {
-        if (strpos($this->text, '/') === 0) {
-            $no_EOL   = strtok($this->text, PHP_EOL);
-            $no_space = strtok($this->text, ' ');
+        $text = $this->getProperty('text');
+        if (strpos($text, '/') === 0) {
+            $no_EOL   = strtok($text, PHP_EOL);
+            $no_space = strtok($text, ' ');
 
             //try to understand which separator \n or space divide /command from text
-            if (strlen($no_space) < strlen($no_EOL)) {
-                return $no_space;
-            } else {
-                return $no_EOL;
-            }
-        } else {
-            return null;
+            return strlen($no_space) < strlen($no_EOL) ? $no_space : $no_EOL;
         }
+
+        return null;
     }
 
     /**
@@ -171,8 +168,9 @@ class Message extends Entity
      */
     public function getCommand()
     {
-        if (!empty($this->command)) {
-            return $this->command;
+        $command = $this->getProperty('command');
+        if (!empty($command)) {
+            return $command;
         }
 
         $cmd = $this->getFullCommand();
@@ -185,11 +183,11 @@ class Message extends Entity
             if (isset($split_cmd[1])) {
                 //command is followed by name check if is addressed to me
                 if (strtolower($split_cmd[1]) === strtolower($this->bot_name)) {
-                    return $this->command = $split_cmd[0];
+                    return $split_cmd[0];
                 }
             } else {
                 //command is not followed by name
-                return $this->command = $cmd;
+                return $cmd;
             }
         }
 
@@ -205,7 +203,7 @@ class Message extends Entity
      */
     public function getText($without_cmd = false)
     {
-        $text = $this->text;
+        $text = $this->getProperty('text');
 
         if ($without_cmd && $command = $this->getFullCommand()) {
             if (strlen($command) + 1 < strlen($text)) {
@@ -225,13 +223,9 @@ class Message extends Entity
      */
     public function botAddedInChat()
     {
-        if (!empty($this->new_chat_member)) {
-            if ($this->new_chat_member->getUsername() === $this->getBotName()) {
-                return true;
-            }
-        }
+        $member = $this->getNewChatMember();
 
-        return false;
+        return $member !== null && $member->getUsername() === $this->getBotName();
     }
 
     /**

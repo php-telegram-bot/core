@@ -15,7 +15,7 @@ namespace Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
- * Class ReplyKeyboardMarkup
+ * Class Keyboard
  *
  * @link https://core.telegram.org/bots/api#replykeyboardmarkup
  *

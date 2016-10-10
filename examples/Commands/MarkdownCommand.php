@@ -23,7 +23,7 @@ class MarkdownCommand extends UserCommand
      * {@inheritdoc}
      */
     protected $name = 'markdown';
-    protected $description = 'Print Markdown tesxt';
+    protected $description = 'Print Markdown text';
     protected $usage = '/markdown';
     protected $version = '1.0.1';
     /**#@-*/
