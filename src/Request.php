@@ -848,9 +848,10 @@ class Request
      * Use this method to get current webhook status.
      *
      * @return Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getWebhookInfo()
     {
-        return self::send('getWebhookInfo', []);
+        return self::send('getWebhookInfo', ['info']);
     }
 }
