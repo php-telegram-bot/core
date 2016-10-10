@@ -10,12 +10,11 @@
 
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\ReplyKeyboardHide;
-use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
 use Longman\TelegramBot\Exception\TelegramException;
 
 class SendtochannelCommand extends AdminCommand
@@ -67,7 +66,7 @@ class SendtochannelCommand extends AdminCommand
         $type = $message->getType();
         // 'Cast' the command type into message to protect the machine state
         // if the commmad is recalled when the conversation is already started
-        $type = ($type === 'command') ? 'Message' : $type;
+        in_array($type, ['command', 'text'], true) && $type = 'message';
 
         $text           = trim($message->getText(true));
         $text_yes_or_no = ($text === 'Yes' || $text === 'No');
@@ -78,7 +77,9 @@ class SendtochannelCommand extends AdminCommand
 
         // Conversation
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
-        $notes              = &$this->conversation->notes;
+
+        $notes = &$this->conversation->notes;
+        !is_array($notes) && $notes = [];
 
         $channels = (array)$this->getConfig('your_channel');
         if (isset($notes['state'])) {
@@ -91,12 +92,12 @@ class SendtochannelCommand extends AdminCommand
         switch ($state) {
             case -1:
                 // getConfig has not been configured asking for channel to administer
-                if ($type !== 'Message' || $text === '') {
+                if ($type !== 'message' || $text === '') {
                     $notes['state'] = -1;
                     $this->conversation->update();
 
                     $data['text']         = 'Insert the channel name: (@yourchannel)';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
                     $result               = Request::sendMessage($data);
 
                     break;
@@ -110,7 +111,7 @@ class SendtochannelCommand extends AdminCommand
             default:
             case 0:
                 // getConfig has been configured choose channel
-                if ($type !== 'Message' || !in_array($text, $channels, true)) {
+                if ($type !== 'message' || !in_array($text, $channels, true)) {
                     $notes['state'] = 0;
                     $this->conversation->update();
 
@@ -118,7 +119,7 @@ class SendtochannelCommand extends AdminCommand
                     foreach ($channels as $channel) {
                         $keyboard[] = [$channel];
                     }
-                    $data['reply_markup'] = new ReplyKeyboardMarkup(
+                    $data['reply_markup'] = new Keyboard(
                         [
                             'keyboard'          => $keyboard,
                             'resize_keyboard'   => true,
@@ -137,11 +138,11 @@ class SendtochannelCommand extends AdminCommand
             // no break
             case 1:
                 insert:
-                if (($type === 'Message' && $text === '') || $notes['last_message_id'] === $message->getMessageId()) {
+                if (($type === 'message' && $text === '') || $notes['last_message_id'] === $message->getMessageId()) {
                     $notes['state'] = 1;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
                     $data['text']         = 'Insert the content you want to share: text, photo, audio...';
                     $result               = Request::sendMessage($data);
                     break;
@@ -156,8 +157,8 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->update();
 
                     // Execute this just with object that allow caption
-                    if ($notes['message_type'] === 'Video' || $notes['message_type'] === 'Photo') {
-                        $data['reply_markup'] = new ReplyKeyboardMarkup(
+                    if (in_array($notes['message_type'], ['video', 'photo'], true)) {
+                        $data['reply_markup'] = new Keyboard(
                             [
                                 'keyboard'          => [['Yes', 'No']],
                                 'resize_keyboard'   => true,
@@ -178,12 +179,12 @@ class SendtochannelCommand extends AdminCommand
                 $notes['last_message_id'] = $message->getMessageId();
             // no break
             case 3:
-                if ($notes['set_caption'] && ($notes['last_message_id'] === $message->getMessageId() || $type !== 'Message')) {
+                if ($notes['set_caption'] && ($notes['last_message_id'] === $message->getMessageId() || $type !== 'message')) {
                     $notes['state'] = 3;
                     $this->conversation->update();
 
                     $data['text']         = 'Insert caption:';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
                     $result               = Request::sendMessage($data);
                     break;
                 }
@@ -204,7 +205,7 @@ class SendtochannelCommand extends AdminCommand
                         }
                         $this->sendBack(new Message($notes['message'], $this->telegram->getBotName()), $data);
 
-                        $data['reply_markup'] = new ReplyKeyboardMarkup(
+                        $data['reply_markup'] = new Keyboard(
                             [
                                 'keyboard'          => [['Yes', 'No']],
                                 'resize_keyboard'   => true,
@@ -226,7 +227,7 @@ class SendtochannelCommand extends AdminCommand
                 $notes['last_message_id'] = $message->getMessageId();
             // no break
             case 5:
-                $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                $data['reply_markup'] = Keyboard::hide(['selective' => true]);
 
                 if ($notes['post_message']) {
                     $data['text'] = $this->publish(
@@ -265,35 +266,37 @@ class SendtochannelCommand extends AdminCommand
     protected function sendBack(Message $message, array $data)
     {
         $type = $message->getType();
-        $type = ($type === 'command') ? 'Message' : $type;
-        if ($type === 'Message') {
+        in_array($type, ['command', 'text'], true) && $type = 'message';
+
+        if ($type === 'message') {
             $data['text'] = $message->getText(true);
-        } elseif ($type === 'Audio') {
+        } elseif ($type === 'audio') {
             $data['audio']     = $message->getAudio()->getFileId();
             $data['duration']  = $message->getAudio()->getDuration();
             $data['performer'] = $message->getAudio()->getPerformer();
             $data['title']     = $message->getAudio()->getTitle();
-        } elseif ($type === 'Document') {
+        } elseif ($type === 'document') {
             $data['document'] = $message->getDocument()->getFileId();
-        } elseif ($type === 'Photo') {
+        } elseif ($type === 'photo') {
             $data['photo'] = $message->getPhoto()[0]->getFileId();
-        } elseif ($type === 'Sticker') {
+        } elseif ($type === 'sticker') {
             $data['sticker'] = $message->getSticker()->getFileId();
-        } elseif ($type === 'Video') {
+        } elseif ($type === 'video') {
             $data['video'] = $message->getVideo()->getFileId();
-        } elseif ($type === 'Voice') {
+        } elseif ($type === 'voice') {
             $data['voice'] = $message->getVoice()->getFileId();
-        } elseif ($type === 'Location') {
+        } elseif ($type === 'location') {
             $data['latitude']  = $message->getLocation()->getLatitude();
             $data['longitude'] = $message->getLocation()->getLongitude();
         }
+
         $callback_path     = 'Longman\TelegramBot\Request';
-        $callback_function = 'send' . $type;
+        $callback_function = 'send' . ucfirst($type);
         if (!method_exists($callback_path, $callback_function)) {
             throw new TelegramException('Methods: ' . $callback_function . ' not found in class Request.');
         }
 
-        return call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+        return $callback_path::$callback_function($data);
     }
 
     /**
