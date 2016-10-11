@@ -37,7 +37,15 @@ abstract class Entity
      */
     public function __construct($data, $bot_name = '')
     {
-        $data['raw_data'] = $data;
+        //Make sure we're not raw_data inception-ing
+        if (array_key_exists('raw_data', $data)) {
+            if ($data['raw_data'] === null) {
+                unset($data['raw_data']);
+            }
+        } else {
+            $data['raw_data'] = $data;
+        }
+
         $data['bot_name'] = $bot_name;
         $this->assignMemberVariables($data);
         $this->validate();
