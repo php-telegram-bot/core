@@ -11,12 +11,14 @@ namespace Longman\TelegramBot\Entities;
 /**
  * Class ServerResponse
  *
+ * @link https://core.telegram.org/bots/api#making-requests
+ *
  * @method bool   getOk()          If the request was successful
  * @method mixed  getResult()      The result of the query
  * @method int    getErrorCode()   Error code of the unsuccessful request
  * @method string getDescription() Human-readable description of the result / unsuccessful request
  *
- * @method_todo ResponseParameters getParameters()  Field which can help to automatically handle the error
+ * @todo method ResponseParameters getParameters()  Field which can help to automatically handle the error
  */
 class ServerResponse extends Entity
 {
@@ -30,37 +32,19 @@ class ServerResponse extends Entity
      */
     public function __construct(array $data, $bot_name)
     {
-        // Make sure we don't double-save the raw_data.
+        // Make sure we don't double-save the raw_data
         unset($data['raw_data']);
         $data['raw_data'] = $data;
 
         $is_ok  = isset($data['ok']) ? (bool)$data['ok'] : false;
         $result = isset($data['result']) ? $data['result'] : null;
 
-        if ($is_ok && $result !== null) {
-            $data['ok'] = true;
-
-            if (is_array($result)) {
-                if ($this->isAssoc($result)) {
-                    $data['result'] = $this->createResultObject($result, $bot_name);
-                } else {
-                    $data['result'] = $this->createResultObjects($result, $bot_name);
-                }
-
-                unset($data['error_code'], $data['description']);
+        if ($is_ok && is_array($result)) {
+            if ($this->isAssoc($result)) {
+                $data['result'] = $this->createResultObject($result, $bot_name);
             } else {
-                $data['result'] = $result;
-                if ($result === true) {
-                    //Response from setWebhook set
-                    unset($data['error_code']);
-                } elseif (!is_numeric($result)) { //Not response from getChatMembersCount
-                    $data['ok'] = false;
-                    unset($data['result']);
-                }
+                $data['result'] = $this->createResultObjects($result, $bot_name);
             }
-        } else {
-            //webHook not set
-            $data['ok'] = false;
         }
 
         parent::__construct($data, $bot_name);
@@ -69,13 +53,15 @@ class ServerResponse extends Entity
     /**
      * Check if array is associative
      *
+     * @link https://stackoverflow.com/a/4254008
+     *
      * @param array $array
      *
      * @return bool
      */
     protected function isAssoc(array $array)
     {
-        return (bool)count(array_filter(array_keys($array), 'is_string'));
+        return count(array_filter(array_keys($array), 'is_string')) > 0;
     }
 
     /**

@@ -187,7 +187,7 @@ class ServerResponseTest extends TestCase
         $result = $this->getUpdatesEmpty();
         $this->server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertNull($this->server->getResult());
+        $this->assertEmpty($this->server->getResult());
     }
 
     public function getUserProfilePhotos()

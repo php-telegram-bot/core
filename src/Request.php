@@ -367,9 +367,11 @@ class Request
     }
 
     /**
-     * Get me
+     * Returns basic information about the bot in form of a User object
      *
-     * @return mixed
+     * @link https://core.telegram.org/bots/api#getme
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getMe()
@@ -380,11 +382,13 @@ class Request
     }
 
     /**
-     * Send message
+     * Use this method to send text messages. On success, the sent Message is returned
+     *
+     * @link https://core.telegram.org/bots/api#sendmessage
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendMessage(array $data)
@@ -404,11 +408,13 @@ class Request
     }
 
     /**
-     * Forward message
+     * Use this method to forward messages of any kind. On success, the sent Message is returned
+     *
+     * @link https://core.telegram.org/bots/api#forwardmessage
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function forwardMessage(array $data)
@@ -417,12 +423,14 @@ class Request
     }
 
     /**
-     * Send photo
+     * Use this method to send photos. On success, the sent Message is returned
+     *
+     * @link https://core.telegram.org/bots/api#sendphoto
      *
      * @param array  $data
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendPhoto(array $data, $file = null)
@@ -433,12 +441,18 @@ class Request
     }
 
     /**
-     * Send audio
+     * Use this method to send audio files
+     *
+     * Your audio must be in the .mp3 format. On success, the sent Message is returned.
+     * Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
+     * For sending voice messages, use the sendVoice method instead.
+     *
+     * @link https://core.telegram.org/bots/api#sendaudio
      *
      * @param array  $data
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendAudio(array $data, $file = null)
@@ -449,12 +463,16 @@ class Request
     }
 
     /**
-     * Send document
+     * Use this method to send general files. On success, the sent Message is returned.
+     *
+     * Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * @link https://core.telegram.org/bots/api#senddocument
      *
      * @param array  $data
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendDocument(array $data, $file = null)
@@ -465,12 +483,14 @@ class Request
     }
 
     /**
-     * Send sticker
+     * Use this method to send .webp stickers. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendsticker
      *
      * @param array  $data
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendSticker(array $data, $file = null)
@@ -481,12 +501,17 @@ class Request
     }
 
     /**
-     * Send video
+     * Use this method to send video files. On success, the sent Message is returned.
+     *
+     * Telegram clients support mp4 videos (other formats may be sent as Document).
+     * Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * @link https://core.telegram.org/bots/api#sendvideo
      *
      * @param array  $data
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVideo(array $data, $file = null)
@@ -497,12 +522,18 @@ class Request
     }
 
     /**
-     * Send voice
+     * Use this method to send audio files. On success, the sent Message is returned.
+     *
+     * Telegram clients will display the file as a playable voice message.
+     * For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document).
+     * Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * @link https://core.telegram.org/bots/api#sendvoice
      *
      * @param array  $data
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVoice(array $data, $file = null)
@@ -513,11 +544,13 @@ class Request
     }
 
     /**
-     * Send location
+     * Use this method to send point on the map. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendlocation
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendLocation(array $data)
@@ -526,11 +559,13 @@ class Request
     }
 
     /**
-     * Send venue
+     * Use this method to send information about a venue. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendvenue
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendVenue(array $data)
@@ -539,11 +574,13 @@ class Request
     }
 
     /**
-     * Send contact
+     * Use this method to send phone contacts. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendcontact
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendContact(array $data)
@@ -552,11 +589,16 @@ class Request
     }
 
     /**
-     * Send chat action
+     * Use this method when you need to tell the user that something is happening on the bot's side.
+     *
+     * The status is set for 5 seconds or less.
+     * (when a message arrives from your bot, Telegram clients clear its typing status)
+     *
+     * @link https://core.telegram.org/bots/api#sendchataction
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function sendChatAction(array $data)
@@ -565,11 +607,11 @@ class Request
     }
 
     /**
-     * Get user profile photos
+     * Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getUserProfilePhotos(array $data)
@@ -578,11 +620,173 @@ class Request
     }
 
     /**
-     * Get updates
+     * Use this method to get basic info about a file and prepare it for downloading. On success, a File object is returned.
+     *
+     * For the moment, bots can download files of up to 20MB in size.
+     * The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>,
+     * where <file_path> is taken from the response.
+     * It is guaranteed that the link will be valid for at least 1 hour.
+     * When the link expires, a new one can be requested by calling getFile again.
+     *
+     * @link https://core.telegram.org/bots/api#getfile
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function getFile(array $data)
+    {
+        return self::send('getFile', $data);
+    }
+
+    /**
+     * Use this method to kick a user from a group or a supergroup. Returns True on success.
+     *
+     * In the case of supergroups, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first.
+     * The bot must be an administrator in the group for this to work.
+     *
+     * @link https://core.telegram.org/bots/api#kickchatmember
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function kickChatMember(array $data)
+    {
+        return self::send('kickChatMember', $data);
+    }
+
+    /**
+     * Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
+     *
+     * @link https://core.telegram.org/bots/api#leavechat
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function leaveChat(array $data)
+    {
+        return self::send('leaveChat', $data);
+    }
+
+    /**
+     * Use this method to unban a previously kicked user in a supergroup. Returns True on success.
+     *
+     * The user will not return to the group automatically, but will be able to join via link, etc.
+     * The bot must be an administrator in the group for this to work.
+     *
+     * @link https://core.telegram.org/bots/api#unbanchatmember
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function unbanChatMember(array $data)
+    {
+        return self::send('unbanChatMember', $data);
+    }
+
+    /**
+     * Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @link https://core.telegram.org/bots/api#getchat
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function getChat(array $data)
+    {
+        return self::send('getChat', $data);
+    }
+
+    /**
+     * Use this method to get a list of administrators in a chat.
+     *
+     * On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots.
+     * If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @link https://core.telegram.org/bots/api#getchatadministrators
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function getChatAdministrators(array $data)
+    {
+        return self::send('getChatAdministrators', $data);
+    }
+
+    /**
+     * Use this method to get the number of members in a chat. Returns Int on success.
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @link https://core.telegram.org/bots/api#getchatmemberscount
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function getChatMembersCount(array $data)
+    {
+        return self::send('getChatMembersCount', $data);
+    }
+
+    /**
+     * Use this method to get information about a member of a chat. Returns a ChatMember object on success.
+     *
+     * @todo add get response in ServerResponse.php?
+     *
+     * @link https://core.telegram.org/bots/api#getchatmember
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function getChatMember(array $data)
+    {
+        return self::send('getChatMember', $data);
+    }
+
+    /**
+     * Use this method to send answers to callback queries sent from inline keyboards. On success, True is returned.
+     *
+     * The answer will be displayed to the user as a notification at the top of the chat screen or as an alert.
+     *
+     * @link https://core.telegram.org/bots/api#answercallbackquery
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function answerCallbackQuery(array $data)
+    {
+        return self::send('answerCallbackQuery', $data);
+    }
+
+    /**
+     * Get updates
+     *
+     * @link https://core.telegram.org/bots/api#getupdates
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getUpdates(array $data)
@@ -593,10 +797,12 @@ class Request
     /**
      * Set webhook
      *
+     * @link https://core.telegram.org/bots/api#setwebhook
+     *
      * @param string $url
      * @param string $file
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function setWebhook($url = '', $file = null)
@@ -609,149 +815,15 @@ class Request
     }
 
     /**
-     * Get file
+     * Use this method to edit text and game messages sent by the bot or via the bot (for inline bots).
+     *
+     * On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+     *
+     * @link https://core.telegram.org/bots/api#editmessagetext
      *
      * @param array $data
      *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getFile(array $data)
-    {
-        return self::send('getFile', $data);
-    }
-
-    /**
-     * Kick Chat Member
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function kickChatMember(array $data)
-    {
-        return self::send('kickChatMember', $data);
-    }
-
-    /**
-     * Leave Chat
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function leaveChat(array $data)
-    {
-        return self::send('leaveChat', $data);
-    }
-
-    /**
-     * Unban Chat Member
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function unbanChatMember(array $data)
-    {
-        return self::send('unbanChatMember', $data);
-    }
-
-    /**
-     * Get Chat
-     *
-     * @todo add get response in ServerResponse.php?
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getChat(array $data)
-    {
-        return self::send('getChat', $data);
-    }
-
-    /**
-     * Get Chat Administrators
-     *
-     * @todo add get response in ServerResponse.php?
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getChatAdministrators(array $data)
-    {
-        return self::send('getChatAdministrators', $data);
-    }
-
-    /**
-     * Get Chat Members Count
-     *
-     * @todo add get response in ServerResponse.php?
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getChatMembersCount(array $data)
-    {
-        return self::send('getChatMembersCount', $data);
-    }
-
-    /**
-     * Get Chat Member
-     *
-     * @todo add get response in ServerResponse.php?
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getChatMember(array $data)
-    {
-        return self::send('getChatMember', $data);
-    }
-
-    /**
-     * Answer callback query
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function answerCallbackQuery(array $data)
-    {
-        return self::send('answerCallbackQuery', $data);
-    }
-
-    /**
-     * Answer inline query
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function answerInlineQuery(array $data)
-    {
-        return self::send('answerInlineQuery', $data);
-    }
-
-    /**
-     * Edit message text
-     *
-     * @param array $data
-     *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageText(array $data)
@@ -760,11 +832,15 @@ class Request
     }
 
     /**
-     * Edit message caption
+     * Use this method to edit captions of messages sent by the bot or via the bot (for inline bots).
+     *
+     * On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+     *
+     * @link https://core.telegram.org/bots/api#editmessagecaption
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageCaption(array $data)
@@ -773,16 +849,37 @@ class Request
     }
 
     /**
-     * Edit message reply markup
+     * Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots).
+     *
+     * On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+     *
+     * @link https://core.telegram.org/bots/api#editmessagereplymarkup
      *
      * @param array $data
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function editMessageReplyMarkup(array $data)
     {
         return self::send('editMessageReplyMarkup', $data);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. On success, True is returned.
+     *
+     * No more than 50 results per query are allowed.
+     *
+     * @link https://core.telegram.org/bots/api#answerinlinequery
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function answerInlineQuery(array $data)
+    {
+        return self::send('answerInlineQuery', $data);
     }
 
     /**
@@ -843,11 +940,14 @@ class Request
     /**
      * Use this method to get current webhook status.
      *
+     * @link https://core.telegram.org/bots/api#getwebhookinfo
+     *
      * @return Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function getWebhookInfo()
     {
+        // Must send some arbitrary data for this to work for now...
         return self::send('getWebhookInfo', ['info']);
     }
 }
