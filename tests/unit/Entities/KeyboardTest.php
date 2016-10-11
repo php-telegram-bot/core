@@ -25,7 +25,7 @@ class KeyboardTest extends TestCase
 {
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage Keyboard field is not an array!
+     * @expectedExceptionMessage keyboard field is not an array!
      */
     public function testKeyboardDataMalformedField()
     {
@@ -34,7 +34,7 @@ class KeyboardTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage Keyboard subfield is not an array!
+     * @expectedExceptionMessage keyboard subfield is not an array!
      */
     public function testKeyboardDataMalformedSubfield()
     {

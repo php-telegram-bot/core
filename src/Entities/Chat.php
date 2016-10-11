@@ -36,7 +36,7 @@ class Chat extends Entity
 
         $id   = $this->getId();
         $type = $this->getType();
-        if (!$type && $id !== 0) {
+        if (!$type) {
             $id > 0 && $this->type = 'private';
             $id < 0 && $this->type = 'group';
         }

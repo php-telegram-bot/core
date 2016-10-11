@@ -178,16 +178,17 @@ class Keyboard extends Entity
      */
     protected function validate()
     {
-        $keyboard = $this->getProperty('keyboard');
+        $keyboard_type = $this->getKeyboardType();
+        $keyboard = $this->getProperty($keyboard_type);
 
         if ($keyboard !== null) {
             if (!is_array($keyboard)) {
-                throw new TelegramException('Keyboard field is not an array!');
+                throw new TelegramException($keyboard_type . ' field is not an array!');
             }
 
             foreach ($keyboard as $item) {
                 if (!is_array($item)) {
-                    throw new TelegramException('Keyboard subfield is not an array!');
+                    throw new TelegramException($keyboard_type . ' subfield is not an array!');
                 }
             }
         }

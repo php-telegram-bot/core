@@ -36,7 +36,7 @@ class InlineKeyboardTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage Inline Keyboard field is not an array!
+     * @expectedExceptionMessage inline_keyboard field is not an array!
      */
     public function testInlineKeyboardDataMalformedField()
     {
@@ -45,7 +45,7 @@ class InlineKeyboardTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage Inline Keyboard subfield is not an array!
+     * @expectedExceptionMessage inline_keyboard subfield is not an array!
      */
     public function testInlineKeyboardDataMalformedSubfield()
     {
