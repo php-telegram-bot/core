@@ -148,7 +148,7 @@ class SendtochannelCommand extends AdminCommand
                     break;
                 }
                 $notes['last_message_id'] = $message->getMessageId();
-                $notes['message']         = $message->reflect();
+                $notes['message']         = $message->getRawData();
                 $notes['message_type']    = $type;
             // no break
             case 2:
@@ -350,7 +350,7 @@ class SendtochannelCommand extends AdminCommand
             $channels      = (array)$this->getConfig('your_channel');
             $first_channel = $channels[0];
             $data['text']  = $this->publish(
-                new Message($message->reflect(), $this->telegram->getBotName()),
+                new Message($message->getRawData(), $this->telegram->getBotName()),
                 $first_channel
             );
         }

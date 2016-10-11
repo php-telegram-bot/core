@@ -40,7 +40,7 @@ class ServerResponse extends Entity
      */
     public function __construct(array $data, $bot_name)
     {
-        $this->raw_json = isset($data['raw_json']) ? $data['raw_json'] : null;
+        $this->raw_data = $data;
         if (isset($data['ok'], $data['result'])) {
             if (is_array($data['result'])) {
                 if ($data['ok'] && !$this->isAssoc($data['result']) && !isset($data['result'][0]['user'])) {

@@ -313,14 +313,12 @@ class Request
 
         self::ensureNonEmptyData($data);
 
-        $raw_json = self::execute($action, $data);
-        $response = json_decode($raw_json, true);
+        $response = json_decode(self::execute($action, $data), true);
 
         if (null === $response) {
             throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
         }
 
-        $response['raw_json'] = $raw_json;
         return new ServerResponse($response, $bot_name);
     }
 

@@ -18,39 +18,29 @@ use ReflectionObject;
  * Class Entity
  *
  * This is the base class for all entities.
+ *
+ * @link https://core.telegram.org/bots/api#available-types
+ *
+ * @method array getRawData() Get the raw data passed to this entity
  */
 abstract class Entity
 {
-    /**
-     * @var string
-     */
-    protected $bot_name;
-
-    /**
-     * Get bot name
-     *
-     * @return string
-     */
-    public function getBotName()
-    {
-        return $this->bot_name;
-    }
-
     /**
      * Entity constructor.
      *
      * @todo Get rid of the $bot_name, it shouldn't be here!
      *
-     * @param        $data
+     * @param array  $data
      * @param string $bot_name
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($data, $bot_name = '')
     {
+        $data['raw_data'] = $data;
+        $data['bot_name'] = $bot_name;
         $this->assignMemberVariables($data);
         $this->validate();
-        $this->bot_name = $bot_name;
     }
 
     /**
@@ -60,84 +50,7 @@ abstract class Entity
      */
     public function toJson()
     {
-        return json_encode($this->reflect($this));
-    }
-
-    /**
-     * Reflect
-     *
-     * @param null $object
-     *
-     * @return array
-     */
-    public function reflect($object = null)
-    {
-        if ($object === null) {
-            $object = $this;
-        }
-
-        $reflection = new ReflectionObject($object);
-        $properties = $reflection->getProperties();
-
-        $fields = [];
-
-        foreach ($properties as $property) {
-            $name = $property->getName();
-            if ($name === 'bot_name') {
-                continue;
-            }
-
-            if (!$property->isPrivate()) {
-                $array_of_obj       = false;
-                $array_of_array_obj = false;
-                if (is_array($object->$name)) {
-                    $array_of_obj       = true;
-                    $array_of_array_obj = true;
-                    foreach ($object->$name as $elm) {
-                        if (!is_object($elm)) {
-                            //echo $name . " not array of object \n";
-                            $array_of_obj = false;
-                            //break;
-                        }
-                        if (is_array($elm)) {
-                            foreach ($elm as $more_net) {
-                                if (!is_object($more_net)) {
-                                    $array_of_array_obj = false;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (is_object($object->$name)) {
-                    $fields[$name] = $this->reflect($object->$name);
-                } elseif ($array_of_obj) {
-                    foreach ($object->$name as $elm) {
-                        $fields[$name][] = $this->reflect($elm);
-                    }
-                } elseif ($array_of_array_obj) {
-                    foreach ($object->$name as $elm) {
-                        $temp = null;
-                        if (!is_array($elm) && !is_object($elm)) {
-                            continue;
-                        }
-                        foreach ($elm as $obj) {
-                            $temp[] = $this->reflect($obj);
-                        }
-                        $fields[$name][] = $temp;
-                    }
-                } else {
-                    $property->setAccessible(true);
-                    $value = $property->getValue($object);
-                    if (null === $value) {
-                        continue;
-                    }
-                    $fields[$name] = $value;
-                }
-            }
-        }
-
-        return $fields;
+        return json_encode($this->getRawData());
     }
 
     /**
