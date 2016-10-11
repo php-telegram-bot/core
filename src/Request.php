@@ -223,14 +223,14 @@ class Request
             if ($action === 'getUpdates') {
                 TelegramLog::update($result);
             }
-
-            return $result;
         } catch (RequestException $e) {
-            throw new TelegramException($e->getMessage());
+            $result = (string)$e->getResponse()->getBody();
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
         }
+
+        return $result;
     }
 
     /**
@@ -263,7 +263,7 @@ class Request
 
             return filesize($file_path) > 0;
         } catch (RequestException $e) {
-            throw new TelegramException($e->getMessage());
+            return (string)$e->getResponse()->getBody();
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
@@ -313,12 +313,14 @@ class Request
 
         self::ensureNonEmptyData($data);
 
-        $response = json_decode(self::execute($action, $data), true);
+        $raw_json = self::execute($action, $data);
+        $response = json_decode($raw_json, true);
 
         if (null === $response) {
             throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
         }
 
+        $response['raw_json'] = $raw_json;
         return new ServerResponse($response, $bot_name);
     }
 
@@ -574,10 +576,6 @@ class Request
      */
     public static function getUserProfilePhotos(array $data)
     {
-        if (!isset($data['user_id'])) {
-            throw new TelegramException('User id is empty!');
-        }
-
         return self::send('getUserProfilePhotos', $data);
     }
 
