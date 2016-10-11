@@ -90,7 +90,7 @@ class InlineKeyboardTest extends TestCase
     {
         $keyboard = (new InlineKeyboard([
             $this->getRandomButton('Button Text 1'),
-            $this->getRandomButton('Button Text 2')
+            $this->getRandomButton('Button Text 2'),
         ]))->getProperty('inline_keyboard');
         self::assertSame('Button Text 1', $keyboard[0][0]->getText());
         self::assertSame('Button Text 2', $keyboard[0][1]->getText());
@@ -101,11 +101,11 @@ class InlineKeyboardTest extends TestCase
         $keyboard = (new InlineKeyboard(
             [
                 $this->getRandomButton('Button Text 1'),
-                $this->getRandomButton('Button Text 2')
+                $this->getRandomButton('Button Text 2'),
             ],
             [
                 $this->getRandomButton('Button Text 3'),
-                $this->getRandomButton('Button Text 4')
+                $this->getRandomButton('Button Text 4'),
             ]
         ))->getProperty('inline_keyboard');
 

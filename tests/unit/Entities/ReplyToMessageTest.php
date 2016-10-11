@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
-use \Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\Update;
 
 /**
  * @package         TelegramTest
@@ -21,29 +21,16 @@ use \Longman\TelegramBot\Entities\Update;
  */
 class ReplyToMessageTest extends TestCase
 {
-    /**
-     * @var \Longman\TelegramBot\Entities\Message
-     */
-    private $reply_to_message;
-
-    /**
-     * @var \Longman\TelegramBot\Entities\Message
-     */
-    private $message;
-
     public function testChatType()
     {
         $json = '
 {"update_id":137809335,
 "message":{"message_id":4479,"from":{"id":123,"first_name":"John","username":"MJohn"},"chat":{"id":-123,"title":"MyChat","type":"group"},"date":1449092987,"reply_to_message":{"message_id":11,"from":{"id":121,"first_name":"Myname","username":"mybot"},"chat":{"id":-123,"title":"MyChat","type":"group"},"date":1449092984,"text":"type some text"},"text":"some text"}}
 ';
-        $struct = json_decode($json, true);
-        $update = new Update($struct, 'mybot');
 
-        $this->message = $update->getMessage();
-        $this->reply_to_message = $this->message->getReplyToMessage();
+        $update           = new Update(json_decode($json, true), 'mybot');
+        $reply_to_message = $update->getMessage()->getReplyToMessage();
 
-        $this->assertNull($this->reply_to_message->getReplyToMessage());
-
+        self::assertNull($reply_to_message->getReplyToMessage());
     }
 }

@@ -12,7 +12,6 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\KeyboardButton;
-use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @package         TelegramTest
