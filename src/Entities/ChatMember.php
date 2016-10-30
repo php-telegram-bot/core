@@ -31,6 +31,7 @@ class ChatMember extends Entity
      * @throws \Longman\TelegramBot\Exception\TelegramException
      *
      * @todo refactor this, class User need dependency inversion
+     *
      */
     public function __construct(array $data)
     {
