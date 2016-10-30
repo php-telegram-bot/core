@@ -94,12 +94,12 @@ class LocationTest extends TestCase
 
    /**
     *
-    * Testing getLongitude without longitude
+    * Testing without longitude
     *
     * @expectedException Longman\TelegramBot\Exception\TelegramException
     * 
     */
-    public function testGetLongitudeWithoutLongitude()
+    public function testCreateInstanceWithoutLongitude()
     {
         unset($this->coordinates['longitude']);
         new Location($this->coordinates);
@@ -107,12 +107,12 @@ class LocationTest extends TestCase
 
    /**
     *
-    * Testing getLongitude without latitude
+    * Testing without latitude
     *
     * @expectedException Longman\TelegramBot\Exception\TelegramException
     * 
     */
-    public function testGetLongitudeWithoutLatitude()
+    public function testCreateInstanceWithoutLatitude()
     {
         unset($this->coordinates['latitude']);
         new Location($this->coordinates);
