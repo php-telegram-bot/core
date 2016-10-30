@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\WebhookInfo;
-use Longman\TelegramBot\Tests\Unit\TestHelpers;
 
 /**
  * @package         TelegramTest

@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Location;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Tests\Unit\TestHelpers;
 
 /**
  * @package         TelegramTest
