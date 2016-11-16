@@ -181,7 +181,7 @@ class Request
         //Check for resources in data
         $contains_resource = false;
         foreach ($data as $item) {
-            if (is_resource($item)) {
+            if ((is_resource($item)) || ($item instanceof \GuzzleHttp\Psr7\Stream)) {
                 $contains_resource = true;
                 break;
             }
