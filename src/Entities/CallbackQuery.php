@@ -44,6 +44,9 @@ class CallbackQuery extends Entity
      *
      * @param array $data
      * @throws \Longman\TelegramBot\Exception\TelegramException
+     *
+     * @todo This need refactor. Not support SOLID - "D" (need dependency inversion class User as argument)
+     *
      */
     public function __construct(array $data)
     {
