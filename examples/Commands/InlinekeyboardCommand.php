@@ -11,9 +11,8 @@
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Entities\InlineKeyboardMarkup;
-use Longman\TelegramBot\Entities\InlineKeyboardButton;
 
 /**
  * User "/inlinekeyboard" command
@@ -23,10 +22,10 @@ class InlinekeyboardCommand extends UserCommand
     /**#@+
      * {@inheritdoc}
      */
-    protected $name = 'Inlinekeyboard';
+    protected $name = 'inlinekeyboard';
     protected $description = 'Show inline keyboard';
     protected $usage = '/inlinekeyboard';
-    protected $version = '0.0.2';
+    protected $version = '0.1.0';
     /**#@-*/
 
     /**
@@ -34,17 +33,18 @@ class InlinekeyboardCommand extends UserCommand
      */
     public function execute()
     {
-        $message = $this->getMessage();
+        $chat_id = $this->getMessage()->getChat()->getId();
 
-        $inline_keyboard = [
-            new InlineKeyboardButton(['text' => 'inline', 'switch_inline_query' => 'true']),
-            new InlineKeyboardButton(['text' => 'callback', 'callback_data' => 'identifier']),
-            new InlineKeyboardButton(['text' => 'open url', 'url' => 'https://github.com/akalongman/php-telegram-bot']),
-        ];
-        $data            = [
-            'chat_id'      => $message->getChat()->getId(),
+        $inline_keyboard = new InlineKeyboard([
+            ['text' => 'inline', 'switch_inline_query' => 'true'],
+            ['text' => 'callback', 'callback_data' => 'identifier'],
+            ['text' => 'open url', 'url' => 'https://github.com/akalongman/php-telegram-bot'],
+        ]);
+
+        $data = [
+            'chat_id'      => $chat_id,
             'text'         => 'inline keyboard',
-            'reply_markup' => new InlineKeyboardMarkup(['inline_keyboard' => [$inline_keyboard]]),
+            'reply_markup' => $inline_keyboard,
         ];
 
         return Request::sendMessage($data);

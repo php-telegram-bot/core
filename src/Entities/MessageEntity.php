@@ -10,111 +10,26 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class MessageEntity
+ *
+ * @link https://core.telegram.org/bots/api#messageentity
+ *
+ * @method string getType()   Type of the entity. Can be mention (@username), hashtag, bot_command, url, email, bold (bold text), italic (italic text), code (monowidth string), pre (monowidth block), text_link (for clickable text URLs), text_mention (for users without usernames)
+ * @method int    getOffset() Offset in UTF-16 code units to the start of the entity
+ * @method int    getLength() Length of the entity in UTF-16 code units
+ * @method string getUrl()    Optional. For "text_link" only, url that will be opened after user taps on the text
+ * @method User   getUser()   Optional. For "text_mention" only, the mentioned user
+ */
 class MessageEntity extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $type;
-
-    /**
-     * @var mixed|null
-     */
-    protected $offset;
-
-    /**
-     * @var mixed|null
-     */
-    protected $length;
-
-    /**
-     * @var mixed|null
-     */
-    protected $url;
-
-    /**
-     * @var \Longman\TelegramBot\Entities\User|null
-     */
-    protected $user;
-
-    /**
-     * MessageEntity constructor.
-     *
-     * @TODO check for type value from this list: https://core.telegram.org/bots/api#messageentity
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
+    protected function subEntities()
     {
-        $this->type = isset($data['type']) ? $data['type'] : null;
-        if (empty($this->type)) {
-            throw new TelegramException('type is empty!');
-        }
-
-        $this->offset = isset($data['offset']) ? $data['offset'] : null;
-        if ($this->offset === '') {
-            throw new TelegramException('offset is empty!');
-        }
-
-        $this->length = isset($data['length']) ? $data['length'] : null;
-        if ($this->length === '') {
-            throw new TelegramException('length is empty!');
-        }
-
-        $this->url  = isset($data['url']) ? $data['url'] : null;
-        $this->user = isset($data['user']) ? new User($data['user']) : null;
-    }
-
-    /**
-     * Get type
-     *
-     * @return mixed|null
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Get offset
-     *
-     * @return mixed|null
-     */
-    public function getOffset()
-    {
-        return $this->offset;
-    }
-
-    /**
-     * Get length
-     *
-     * @return mixed|null
-     */
-    public function getLength()
-    {
-        return $this->length;
-    }
-
-    /**
-     * Get url
-     *
-     * @return mixed|null
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Longman\TelegramBot\Entities\User|null
-     */
-    public function getUser()
-    {
-        return $this->user;
+        return [
+            'user' => User::class,
+        ];
     }
 }

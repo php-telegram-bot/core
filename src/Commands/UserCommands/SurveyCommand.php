@@ -10,13 +10,12 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Entities\KeyboardButton;
 use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Entities\ForceReply;
-use Longman\TelegramBot\Entities\ReplyKeyboardHide;
-use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
 
 /**
  * User "/survery" command
@@ -68,7 +67,6 @@ class SurveyCommand extends UserCommand
         $chat = $message->getChat();
         $user = $message->getFrom();
         $text = trim($message->getText(true));
-
         $chat_id = $chat->getId();
         $user_id = $user->getId();
 
@@ -80,12 +78,14 @@ class SurveyCommand extends UserCommand
         if ($chat->isGroupChat() || $chat->isSuperGroup()) {
             //reply to message id is applied by default
             //Force reply is applied by default so it can work with privacy on
-            $data['reply_markup'] = new ForceReply(['selective' => true]);
+            $data['reply_markup'] = Keyboard::forceReply(['selective' => true]);
         }
 
         //Conversation start
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
-        $notes              = &$this->conversation->notes;
+
+        $notes = &$this->conversation->notes;
+        !is_array($notes) && $notes = [];
 
         //cache data from the tracking session if any
         $state = 0;
@@ -105,7 +105,7 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
 
                     $data['text']         = 'Type your name:';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
 
                     $result = Request::sendMessage($data);
                     break;
@@ -149,18 +149,14 @@ class SurveyCommand extends UserCommand
 
             // no break
             case 3:
-                if ($text === '' || !($text === 'M' || $text === 'F')) {
+                if ($text === '' || !in_array($text, ['M', 'F'], true)) {
                     $notes['state'] = 3;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = new ReplyKeyboardMarkup(
-                        [
-                            'keyboard'          => [['M', 'F']],
-                            'resize_keyboard'   => true,
-                            'one_time_keyboard' => true,
-                            'selective'         => true,
-                        ]
-                    );
+                    $data['reply_markup'] = (new Keyboard(['M', 'F']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
 
                     $data['text'] = 'Select your gender:';
                     if ($text !== '') {
@@ -170,6 +166,7 @@ class SurveyCommand extends UserCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
+
                 $notes['gender'] = $text;
 
             // no break
@@ -178,21 +175,12 @@ class SurveyCommand extends UserCommand
                     $notes['state'] = 4;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = new ReplyKeyboardMarkup(
-                        [
-                            'keyboard'          => [
-                                [
-                                    [
-                                        'text'             => 'Share Location',
-                                        'request_location' => true,
-                                    ],
-                                ],
-                            ],
-                            'resize_keyboard'   => true,
-                            'one_time_keyboard' => true,
-                            'selective'         => true,
-                        ]
-                    );
+                    $data['reply_markup'] = (new Keyboard(
+                        (new KeyboardButton('Share Location'))->setRequestLocation(true)
+                    ))
+                        ->setOneTimeKeyboard(true)
+                        ->setResizeKeyboard(true)
+                        ->setSelective(true);
 
                     $data['text'] = 'Share your location:';
 
@@ -225,21 +213,12 @@ class SurveyCommand extends UserCommand
                     $notes['state'] = 6;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = new ReplyKeyboardMarkup(
-                        [
-                            'keyboard'          => [
-                                [
-                                    [
-                                        'text'            => 'Share Contact',
-                                        'request_contact' => true,
-                                    ],
-                                ],
-                            ],
-                            'resize_keyboard'   => true,
-                            'one_time_keyboard' => true,
-                            'selective'         => true,
-                        ]
-                    );
+                    $data['reply_markup'] = (new Keyboard(
+                        (new KeyboardButton('Share Contact'))->setRequestContact(true)
+                    ))
+                        ->setOneTimeKeyboard(true)
+                        ->setResizeKeyboard(true)
+                        ->setSelective(true);
 
                     $data['text'] = 'Share your contact information:';
 
@@ -259,7 +238,7 @@ class SurveyCommand extends UserCommand
                 }
 
                 $data['photo']        = $notes['photo_id'];
-                $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                $data['reply_markup'] = Keyboard::hide(['selective' => true]);
                 $data['caption']      = $out_text;
                 $this->conversation->stop();
 

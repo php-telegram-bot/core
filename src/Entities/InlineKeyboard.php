@@ -10,7 +10,11 @@
 
 namespace Longman\TelegramBot\Entities;
 
-class InputMessageContent extends Entity
+/**
+ * Class InlineKeyboard
+ *
+ * @link https://core.telegram.org/bots/api#inlinekeyboardmarkup
+ */
+class InlineKeyboard extends Keyboard
 {
-
 }

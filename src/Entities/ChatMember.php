@@ -10,60 +10,23 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class ChatMember
+ *
+ * @link https://core.telegram.org/bots/api#chatmember
+ *
+ * @method User   getUser()   Information about the user.
+ * @method string getStatus() The member's status in the chat. Can be "creator", "administrator", "member", "left" or "kicked"
+ */
 class ChatMember extends Entity
 {
     /**
-     * @var \Longman\TelegramBot\Entities\User
+     * {@inheritdoc}
      */
-    protected $user;
-
-    /**
-     * @var mixed|null
-     */
-    protected $status;
-
-    /**
-     * ChatMember constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     *
-     * @todo refactor this, class User need dependency inversion
-     *
-     */
-    public function __construct(array $data)
+    public function subEntities()
     {
-        $this->user = isset($data['user']) ? $data['user'] : null;
-        if (empty($this->user)) {
-            throw new TelegramException('user is empty!');
-        }
-        $this->user = new User($data['user']);
-
-        $this->status = isset($data['status']) ? $data['status'] : null;
-        if ($this->status === '') {
-            throw new TelegramException('status is empty!');
-        }
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Longman\TelegramBot\Entities\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Get status
-     *
-     * @return mixed|null
-     */
-    public function getStatus()
-    {
-        return $this->status;
+        return [
+            'user' => User::class,
+        ];
     }
 }

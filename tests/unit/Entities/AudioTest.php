@@ -11,8 +11,6 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Audio;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Tests\Unit\TestHelpers;
 
 /**
  * @package         TelegramTest
@@ -24,103 +22,32 @@ use Longman\TelegramBot\Tests\Unit\TestHelpers;
 class AudioTest extends TestCase
 {
     /**
-    * @var array
-    */
+     * @var array
+     */
     private $record;
+
     /**
-    * Set Up
-    */
+     * Set Up
+     */
     public function setUp()
     {
         $this->record = TestHelpers::getFakeRecordedAudio();
     }
-    /**
-    * Testing base stage with data object creating
-    */
 
-    public function testBaseStageAudio()
+    public function testInstance()
     {
         $audio = new Audio($this->record);
-        $this->assertInstanceOf('Longman\TelegramBot\Entities\Audio', $audio);
-    }
-    
-    /**
-    * Test base stage without duration property
-    *
-    * @expectedException Longman\TelegramBot\Exception\TelegramException
-    */
-    public function testBaseStageWithoutDuration()
-    {
-        $this->record['duration'] = null;
-        new Audio($this->record);
+        self::assertInstanceOf('Longman\TelegramBot\Entities\Audio', $audio);
     }
 
-   /**
-    * Test base stage without file_id property
-    *
-    * @expectedException Longman\TelegramBot\Exception\TelegramException
-    */
-    public function testBaseStageWithoutFileId()
-    {
-        $this->record['file_id'] = null;
-        new Audio($this->record);
-    } 
-
-    /**
-    * Test get file id
-    */
-    public function testGetFileId()
+    public function testGetProperties()
     {
         $audio = new Audio($this->record);
-        $file_id = $audio->getFileId();
-        $this->assertEquals($this->record['file_id'], $file_id);
-    }
-
-    /**
-    * Test get duration track
-    */
-    public function testGetDuration()
-    {
-        $audio = new Audio($this->record);
-        $duration = $audio->getDuration();
-        $this->assertEquals($this->record['duration'], $duration);
-    }
-
-    /**
-    * Test get performer track
-    */
-    public function testGetPerformer()
-    {
-        $audio = new Audio($this->record);
-        $performer = $audio->getPerformer();
-        $this->assertEquals($this->record['performer'], $performer);
-    }
-
-    /**
-    * Test get title track
-    */
-    public function testGetTitle()
-    {
-        $audio = new Audio($this->record);
-        $title = $audio->getTitle();
-        $this->assertEquals($this->record['title'], $title);
-    }
-    /**
-    * Test get mime type file
-    */
-    public function testGetMimeType()
-    {
-        $audio = new Audio($this->record);
-        $mime_type = $audio->getMimeType();
-        $this->assertEquals($this->record['mime_type'], $mime_type);
-    }
-    /**
-    * Test get file size 
-    */
-    public function testGetFileSize()
-    {
-        $audio = new Audio($this->record);
-        $file_size = $audio->getFileSize();
-        $this->assertEquals($this->record['file_size'], $file_size);
+        self::assertEquals($this->record['file_id'], $audio->getFileId());
+        self::assertEquals($this->record['duration'], $audio->getDuration());
+        self::assertEquals($this->record['performer'], $audio->getPerformer());
+        self::assertEquals($this->record['title'], $audio->getTitle());
+        self::assertEquals($this->record['mime_type'], $audio->getMimeType());
+        self::assertEquals($this->record['file_size'], $audio->getFileSize());
     }
 }

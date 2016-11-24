@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Entities\ReplyKeyboardHide;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Request;
 
 /**
@@ -85,7 +85,7 @@ class CancelCommand extends UserCommand
     {
         return Request::sendMessage(
             [
-                'reply_markup' => new ReplyKeyboardHide(['selective' => true]),
+                'reply_markup' => Keyboard::hide(['selective' => true]),
                 'chat_id'      => $this->getMessage()->getChat()->getId(),
                 'text'         => $text,
             ]

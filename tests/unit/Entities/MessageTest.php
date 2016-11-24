@@ -19,66 +19,74 @@ namespace Longman\TelegramBot\Tests\Unit;
  */
 class MessageTest extends TestCase
 {
-    /**
-     * @var \Longman\TelegramBot\Entities\Message
-     */
-    private $message;
-
-    public function testTextAndCommandRecognise() {
+    public function testTextAndCommandRecognise()
+    {
         // /command
-        $this->message = TestHelpers::getFakeMessageObject(['text' => '/help']);
-        $this->assertEquals('/help', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals('/help', $this->message->getText());
-        $this->assertEquals('', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => '/help']);
+        self::assertEquals('/help', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals('/help', $message->getText());
+        self::assertEquals('', $message->getText(true));
 
         // text
-        $this->message = TestHelpers::getFakeMessageObject(['text' => 'some text']);
-        $this->assertEquals('', $this->message->getFullCommand());
-        $this->assertEquals('', $this->message->getCommand());
-        $this->assertEquals('some text', $this->message->getText());
-        $this->assertEquals('some text', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => 'some text']);
+        self::assertEquals('', $message->getFullCommand());
+        self::assertEquals('', $message->getCommand());
+        self::assertEquals('some text', $message->getText());
+        self::assertEquals('some text', $message->getText(true));
 
         // /command@bot
-        $this->message = TestHelpers::getFakeMessageObject(['text' => '/help@testbot']);
-        $this->assertEquals('/help@testbot', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals('/help@testbot', $this->message->getText());
-        $this->assertEquals('', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => '/help@testbot']);
+        self::assertEquals('/help@testbot', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals('/help@testbot', $message->getText());
+        self::assertEquals('', $message->getText(true));
 
         // /commmad text
-        $this->message = TestHelpers::getFakeMessageObject(['text' => '/help some text']);
-        $this->assertEquals('/help', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals('/help some text', $this->message->getText());
-        $this->assertEquals('some text', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => '/help some text']);
+        self::assertEquals('/help', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals('/help some text', $message->getText());
+        self::assertEquals('some text', $message->getText(true));
 
         // /command@bot some text
-        $this->message = TestHelpers::getFakeMessageObject(['text' => '/help@testbot some text']);
-        $this->assertEquals('/help@testbot', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals('/help@testbot some text', $this->message->getText());
-        $this->assertEquals('some text', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => '/help@testbot some text']);
+        self::assertEquals('/help@testbot', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals('/help@testbot some text', $message->getText());
+        self::assertEquals('some text', $message->getText(true));
 
         // /commmad\n text
-        $this->message = TestHelpers::getFakeMessageObject(['text' => "/help\n some text"]);
-        $this->assertEquals('/help', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals("/help\n some text", $this->message->getText());
-        $this->assertEquals(' some text', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => "/help\n some text"]);
+        self::assertEquals('/help', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals("/help\n some text", $message->getText());
+        self::assertEquals(' some text', $message->getText(true));
 
         // /command@bot\nsome text
-        $this->message = TestHelpers::getFakeMessageObject(['text' => "/help@testbot\nsome text"]);
-        $this->assertEquals('/help@testbot', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals("/help@testbot\nsome text", $this->message->getText());
-        $this->assertEquals('some text', $this->message->getText(true));
+        $message = TestHelpers::getFakeMessageObject(['text' => "/help@testbot\nsome text"]);
+        self::assertEquals('/help@testbot', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals("/help@testbot\nsome text", $message->getText());
+        self::assertEquals('some text', $message->getText(true));
 
         // /command@bot \nsome text
-        $this->message = TestHelpers::getFakeMessageObject(['text' => "/help@testbot \nsome text"]);
-        $this->assertEquals('/help@testbot', $this->message->getFullCommand());
-        $this->assertEquals('help', $this->message->getCommand());
-        $this->assertEquals("/help@testbot \nsome text", $this->message->getText());
-        $this->assertEquals("\nsome text", $this->message->getText(true));
-     }
+        $message = TestHelpers::getFakeMessageObject(['text' => "/help@testbot \nsome text"]);
+        self::assertEquals('/help@testbot', $message->getFullCommand());
+        self::assertEquals('help', $message->getCommand());
+        self::assertEquals("/help@testbot \nsome text", $message->getText());
+        self::assertEquals("\nsome text", $message->getText(true));
+    }
+
+    public function testGetType()
+    {
+        $message = TestHelpers::getFakeMessageObject(['text' => null]);
+        self::assertSame('message', $message->getType());
+
+        $message = TestHelpers::getFakeMessageObject(['text' => '/help']);
+        self::assertSame('command', $message->getType());
+
+        $message = TestHelpers::getFakeMessageObject(['text' => 'some text']);
+        self::assertSame('text', $message->getType());
+    }
 }

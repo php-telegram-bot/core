@@ -12,8 +12,9 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
-use \Longman\TelegramBot\Entities\ServerResponse;
-use \Longman\TelegramBot\Request;
+use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Request;
 
 /**
  * @package         TelegramTest
@@ -24,11 +25,6 @@ use \Longman\TelegramBot\Request;
  */
 class ServerResponseTest extends TestCase
 {
-    /**
-    * @var \Longman\TelegramBot\Entities\ServerResponse
-    */
-    private $server;
-
     public function sendMessageOk()
     {
         return '{
@@ -43,26 +39,27 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testSendMessageOk() {
-        $result = $this->sendMessageOk();
-        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
-        $server_result = $this->server->getResult();
+    public function testSendMessageOk()
+    {
+        $result        = $this->sendMessageOk();
+        $server        = new ServerResponse(json_decode($result, true), 'testbot');
+        $server_result = $server->getResult();
 
-        $this->assertTrue($this->server->isOk());
-        $this->assertNull($this->server->getErrorCode());
-        $this->assertNull($this->server->getDescription());
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
+        self::assertTrue($server->isOk());
+        self::assertNull($server->getErrorCode());
+        self::assertNull($server->getDescription());
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
 
         //Message
-        $this->assertEquals('1234', $server_result->getMessageId());
-        $this->assertEquals('123456789', $server_result->getFrom()->getId());
-        $this->assertEquals('botname', $server_result->getFrom()->getFirstName());
-        $this->assertEquals('namebot', $server_result->getFrom()->getUserName());
-        $this->assertEquals('123456789', $server_result->getChat()->getId());
-        $this->assertEquals('john', $server_result->getChat()->getFirstName());
-        $this->assertEquals('Mjohn', $server_result->getChat()->getUserName());
-        $this->assertEquals('1441378360', $server_result->getDate());
-        $this->assertEquals('hello', $server_result->getText());
+        self::assertEquals('1234', $server_result->getMessageId());
+        self::assertEquals('123456789', $server_result->getFrom()->getId());
+        self::assertEquals('botname', $server_result->getFrom()->getFirstName());
+        self::assertEquals('namebot', $server_result->getFrom()->getUsername());
+        self::assertEquals('123456789', $server_result->getChat()->getId());
+        self::assertEquals('john', $server_result->getChat()->getFirstName());
+        self::assertEquals('Mjohn', $server_result->getChat()->getUsername());
+        self::assertEquals('1441378360', $server_result->getDate());
+        self::assertEquals('hello', $server_result->getText());
         //... they are not finished...
 
     }
@@ -76,29 +73,31 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testSendMessageFail() {
+    public function testSendMessageFail()
+    {
         $result = $this->sendMessageFail();
-        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertFalse($this->server->isOk());
-        $this->assertNull($this->server->getResult());
-        $this->assertEquals('400', $this->server->getErrorCode());
-        $this->assertEquals('Error: Bad Request: wrong chat id', $this->server->getDescription());
+        self::assertFalse($server->isOk());
+        self::assertNull($server->getResult());
+        self::assertEquals('400', $server->getErrorCode());
+        self::assertEquals('Error: Bad Request: wrong chat id', $server->getDescription());
     }
 
-   public function setWebhookOk()
+    public function setWebhookOk()
     {
         return '{"ok":true,"result":true,"description":"Webhook was set"}';
     }
 
-    public function testSetWebhookOk() {
+    public function testSetWebhookOk()
+    {
         $result = $this->setWebhookOk();
-        $this->server =  new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertTrue($this->server->isOk());
-        $this->assertTrue($this->server->getResult());
-        $this->assertNull($this->server->getErrorCode());
-        $this->assertEquals('Webhook was set', $this->server->getDescription());
+        self::assertTrue($server->isOk());
+        self::assertTrue($server->getResult());
+        self::assertNull($server->getErrorCode());
+        self::assertEquals('Webhook was set', $server->getDescription());
     }
 
     public function setWebhookFail()
@@ -110,14 +109,15 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testSetWebhookFail() {
+    public function testSetWebhookFail()
+    {
         $result = $this->setWebhookFail();
-        $this->server =  new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertFalse($this->server->isOk());
-        $this->assertNull($this->server->getResult());
-        $this->assertEquals(400, $this->server->getErrorCode());
-        $this->assertEquals("Error: Bad request: htttps://domain.host.org/dir/hook.php", $this->server->getDescription());
+        self::assertFalse($server->isOk());
+        self::assertNull($server->getResult());
+        self::assertEquals(400, $server->getErrorCode());
+        self::assertEquals('Error: Bad request: htttps://domain.host.org/dir/hook.php', $server->getDescription());
     }
 
     public function getUpdatesArray()
@@ -169,12 +169,13 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testGetUpdatesArray() {
+    public function testGetUpdatesArray()
+    {
         $result = $this->getUpdatesArray();
-        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertCount(4, $this->server->getResult());
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\Update', $this->server->getResult()[0]);
+        self::assertCount(4, $server->getResult());
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\Update', $server->getResult()[0]);
     }
 
     public function getUpdatesEmpty()
@@ -182,11 +183,12 @@ class ServerResponseTest extends TestCase
         return '{"ok":true,"result":[]}';
     }
 
-    public function testGetUpdatesEmpty() {
+    public function testGetUpdatesEmpty()
+    {
         $result = $this->getUpdatesEmpty();
-        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertNull($this->server->getResult());
+        self::assertEmpty($server->getResult());
     }
 
     public function getUserProfilePhotos()
@@ -218,18 +220,20 @@ class ServerResponseTest extends TestCase
 
     public function testGetUserProfilePhotos()
     {
-        $result = $this->getUserProfilePhotos();
-        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
-        $server_result = $this->server->getResult();
+        $result        = $this->getUserProfilePhotos();
+        $server        = new ServerResponse(json_decode($result, true), 'testbot');
+        $server_result = $server->getResult();
+
         $photos = $server_result->getPhotos();
 
         //Photo count
-        $this->assertCount(3, $photos);
+        self::assertEquals(3, $server_result->getTotalCount());
+        self::assertCount(3, $photos);
         //Photo size count
-        $this->assertCount(3, $photos[0]);
+        self::assertCount(3, $photos[0]);
 
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\UserProfilePhotos', $server_result);
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $photos[0][0]);
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\UserProfilePhotos', $server_result);
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $photos[0][0]);
     }
 
     public function getFile()
@@ -247,45 +251,50 @@ class ServerResponseTest extends TestCase
     public function testGetFile()
     {
         $result = $this->getFile();
-        $this->server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\File', $this->server->getResult());
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\File', $server->getResult());
     }
 
-    public function testSetGeneralTestFakeResponse() {
+    public function testSetGeneralTestFakeResponse()
+    {
         //setWebhook ok
         $fake_response = Request::generateGeneralFakeServerResponse();
 
-        $this->server =  new ServerResponse($fake_response, 'testbot');
+        $server = new ServerResponse($fake_response, 'testbot');
 
-        $this->assertTrue($this->server->isOk());
-        $this->assertTrue($this->server->getResult());
-        $this->assertNull($this->server->getErrorCode());
-        $this->assertEquals('', $this->server->getDescription());
+        self::assertTrue($server->isOk());
+        self::assertTrue($server->getResult());
+        self::assertNull($server->getErrorCode());
+        self::assertEquals('', $server->getDescription());
 
         //sendMessage ok
         $fake_response = Request::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
 
-        $this->server =  new ServerResponse($fake_response, 'testbot');
-        $server_result = $this->server->getResult();
+        $server = new ServerResponse($fake_response, 'testbot');
 
-        $this->assertTrue($this->server->isOk());
-        $this->assertNull($this->server->getErrorCode());
-        $this->assertNull($this->server->getDescription());
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
+        /** @var Message $server_result */
+        $server_result = $server->getResult();
+
+        self::assertTrue($server->isOk());
+        self::assertNull($server->getErrorCode());
+        self::assertNull($server->getDescription());
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
 
         //Message
-        $this->assertEquals('1234', $server_result->getMessageId());
-        $this->assertEquals('1441378360', $server_result->getDate());
-        $this->assertEquals('hello', $server_result->getText());
+        self::assertEquals('1234', $server_result->getMessageId());
+        self::assertEquals('1441378360', $server_result->getDate());
+        self::assertEquals('hello', $server_result->getText());
+
         //Message //User
-        $this->assertEquals('123456789', $server_result->getFrom()->getId());
-        $this->assertEquals('botname', $server_result->getFrom()->getFirstName());
-        $this->assertEquals('namebot', $server_result->getFrom()->getUserName());
+        self::assertEquals('123456789', $server_result->getFrom()->getId());
+        self::assertEquals('botname', $server_result->getFrom()->getFirstName());
+        self::assertEquals('namebot', $server_result->getFrom()->getUsername());
+
         //Message //Chat
-        $this->assertEquals('123456789', $server_result->getChat()->getId());
-        $this->assertEquals('', $server_result->getChat()->getFirstName());
-        $this->assertEquals('', $server_result->getChat()->getUserName());
+        self::assertEquals('123456789', $server_result->getChat()->getId());
+        self::assertEquals('', $server_result->getChat()->getFirstName());
+        self::assertEquals('', $server_result->getChat()->getUsername());
 
         //... they are not finished...
     }
