@@ -60,12 +60,12 @@ class ServerResponse extends Entity
                     } elseif (isset($data['result']['file_id'])) {
                         //Response from getFile
                         $this->result = new File($data['result']);
+                    } elseif (isset($data['result']['title'])) {
+                        //Response from getChat
+                        $this->result = new Chat($data['result']);
                     } elseif (isset($data['result']['username'])) {
                         //Response from getMe
                         $this->result = new User($data['result']);
-                    } elseif (isset($data['result']['id'])) {
-                        //Response from getChat
-                        $this->result = new Chat($data['result']);
                     } elseif (isset($data['result']['user'])) {
                         //Response from getChatMember
                         $this->result = new ChatMember($data['result']);
