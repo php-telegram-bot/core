@@ -721,7 +721,7 @@ class DB
 
         //Insert user and the relation with the chat
         if (is_object($from)) {
-            self::insertUser($from, $edit_date, $chat);
+            self::insertUser($from, $date, $chat);
         }
 
         //Insert the forwarded message user in users table
