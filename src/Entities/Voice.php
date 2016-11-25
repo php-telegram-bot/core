@@ -10,89 +10,17 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class Voice
+ *
+ * @link https://core.telegram.org/bots/api#voice
+ *
+ * @method string getFileId()   Unique identifier for this file
+ * @method int    getDuration() Duration of the audio in seconds as defined by sender
+ * @method string getMimeType() Optional. MIME type of the file as defined by sender
+ * @method int    getFileSize() Optional. File size
+ */
 class Voice extends Entity
 {
-    /**
-     * @var mixed|null
-     */
-    protected $file_id;
 
-    /**
-     * @var mixed|null
-     */
-    protected $duration;
-
-    /**
-     * @var mixed|null
-     */
-    protected $mime_type;
-
-    /**
-     * @var mixed|null
-     */
-    protected $file_size;
-
-    /**
-     * Voice constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
-    {
-        $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;
-        if (empty($this->file_id)) {
-            throw new TelegramException('file_id is empty!');
-        }
-
-        $this->duration = isset($data['duration']) ? $data['duration'] : null;
-        if ($this->duration === '' || $this->duration === null) {
-            throw new TelegramException('duration is empty!');
-        }
-
-        $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
-        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-    }
-
-    /**
-     * Get file id
-     *
-     * @return mixed|null
-     */
-    public function getFileId()
-    {
-        return $this->file_id;
-    }
-
-    /**
-     * Get duration
-     *
-     * @return mixed|null
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * Get mime type
-     *
-     * @return mixed|null
-     */
-    public function getMimeType()
-    {
-        return $this->mime_type;
-    }
-
-    /**
-     * Get file size
-     *
-     * @return mixed|null
-     */
-    public function getFileSize()
-    {
-        return $this->file_size;
-    }
 }

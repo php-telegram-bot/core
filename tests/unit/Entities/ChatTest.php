@@ -19,20 +19,52 @@ namespace Longman\TelegramBot\Tests\Unit;
  */
 class ChatTest extends TestCase
 {
-    /**
-    * @var \Longman\TelegramBot\Entities\Chat
-    */
-    private $chat;
-
     public function testChatType()
     {
-        $this->chat = TestHelpers::getFakeChatObject();
-        $this->assertEquals('private', $this->chat->getType());
+        $chat = TestHelpers::getFakeChatObject();
+        self::assertEquals('private', $chat->getType());
 
-        $this->chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => null]);
-        $this->assertEquals('group', $this->chat->getType());
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => null]);
+        self::assertEquals('group', $chat->getType());
 
-        $this->chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'channel']);
-        $this->assertEquals('channel', $this->chat->getType());
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'supergroup']);
+        self::assertEquals('supergroup', $chat->getType());
+
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'channel']);
+        self::assertEquals('channel', $chat->getType());
+    }
+
+    public function testIsChatType()
+    {
+        $chat = TestHelpers::getFakeChatObject();
+        self::assertTrue($chat->isPrivateChat());
+
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => null]);
+        self::assertTrue($chat->isGroupChat());
+
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'supergroup']);
+        self::assertTrue($chat->isSuperGroup());
+
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => 'channel']);
+        self::assertTrue($chat->isChannel());
+    }
+
+    public function testTryMention()
+    {
+        // Username.
+        $chat = TestHelpers::getFakeChatObject(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'jtaylor']);
+        self::assertEquals('@jtaylor', $chat->tryMention());
+
+        // First name.
+        $chat = TestHelpers::getFakeChatObject(['id' => 1, 'first_name' => 'John', 'last_name' => null, 'username' => null]);
+        self::assertEquals('John', $chat->tryMention());
+
+        // First and Last name.
+        $chat = TestHelpers::getFakeChatObject(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => null]);
+        self::assertEquals('John Taylor', $chat->tryMention());
+
+        // Non-private chat should return title.
+        $chat = TestHelpers::getFakeChatObject(['id' => -123, 'type' => null, 'title' => 'My group chat']);
+        self::assertSame('My group chat', $chat->tryMention());
     }
 }

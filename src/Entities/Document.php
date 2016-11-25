@@ -10,105 +10,26 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class Document
+ *
+ * @link https://core.telegram.org/bots/api#document
+ *
+ * @method string    getFileId()   Unique file identifier
+ * @method PhotoSize getThumb()    Optional. Document thumbnail as defined by sender
+ * @method string    getFileName() Optional. Original filename as defined by sender
+ * @method string    getMimeType() Optional. MIME type of the file as defined by sender
+ * @method int       getFileSize() Optional. File size
+ */
 class Document extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $file_id;
-
-    /**
-     * @var \Longman\TelegramBot\Entities\PhotoSize
-     */
-    protected $thumb;
-
-    /**
-     * @var mixed|null
-     */
-    protected $file_name;
-
-    /**
-     * @var mixed|null
-     */
-    protected $mime_type;
-
-    /**
-     * @var mixed|null
-     */
-    protected $file_size;
-
-    /**
-     * Document constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
+    protected function subEntities()
     {
-        $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;
-        if (empty($this->file_id)) {
-            throw new TelegramException('file_id is empty!');
-        }
-
-        $this->thumb = isset($data['thumb']) ? $data['thumb'] : null;
-        if (!empty($this->thumb)) {
-            $this->thumb = new PhotoSize($this->thumb);
-        }
-
-        $this->file_name = isset($data['file_name']) ? $data['file_name'] : null;
-        $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
-        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-    }
-
-    /**
-     * Get file id
-     *
-     * @return mixed|null
-     */
-    public function getFileId()
-    {
-        return $this->file_id;
-    }
-
-    /**
-     * Get thumb
-     *
-     * @return \Longman\TelegramBot\Entities\PhotoSize
-     */
-    public function getThumb()
-    {
-        return $this->thumb;
-    }
-
-    /**
-     * Get file name
-     *
-     * @return mixed|null
-     */
-    public function getFileName()
-    {
-        return $this->file_name;
-    }
-
-    /**
-     * Get mime type
-     *
-     * @return mixed|null
-     */
-    public function getMimeType()
-    {
-        return $this->mime_type;
-    }
-
-    /**
-     * Get file size
-     *
-     * @return mixed|null
-     */
-    public function getFileSize()
-    {
-        return $this->file_size;
+        return [
+            'thumb' => PhotoSize::class,
+        ];
     }
 }

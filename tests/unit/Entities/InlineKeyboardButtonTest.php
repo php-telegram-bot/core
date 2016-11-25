@@ -23,7 +23,7 @@ class InlineKeyboardButtonTest extends TestCase
 {
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage text is empty!
+     * @expectedExceptionMessage You must add some text to the button!
      */
     public function testInlineKeyboardButtonNoTextFail()
     {
@@ -45,7 +45,31 @@ class InlineKeyboardButtonTest extends TestCase
      */
     public function testInlineKeyboardButtonTooManyParametersFail()
     {
-        new InlineKeyboardButton(['text' => 'message', 'url' => 'url_value', 'callback_data' => 'callback_data_value']);
+        $test_funcs = [
+            function () {
+                new InlineKeyboardButton([
+                    'text'          => 'message',
+                    'url'           => 'url_value',
+                    'callback_data' => 'callback_data_value',
+                ]);
+            },
+            function () {
+                new InlineKeyboardButton([
+                    'text'                => 'message',
+                    'url'                 => 'url_value',
+                    'switch_inline_query' => 'switch_inline_query_value',
+                ]);
+            },
+            function () {
+                new InlineKeyboardButton([
+                    'text'                => 'message',
+                    'callback_data'       => 'callback_data_value',
+                    'switch_inline_query' => 'switch_inline_query_value',
+                ]);
+            },
+        ];
+
+        $test_funcs[array_rand($test_funcs)]();
     }
 
     public function testInlineKeyboardButtonSuccess()
@@ -53,5 +77,51 @@ class InlineKeyboardButtonTest extends TestCase
         new InlineKeyboardButton(['text' => 'message', 'url' => 'url_value']);
         new InlineKeyboardButton(['text' => 'message', 'callback_data' => 'callback_data_value']);
         new InlineKeyboardButton(['text' => 'message', 'switch_inline_query' => 'switch_inline_query_value']);
+    }
+
+    public function testInlineKeyboardButtonCouldBe()
+    {
+        self::assertTrue(InlineKeyboardButton::couldBe(
+            ['text' => 'message', 'url' => 'url_value']
+        ));
+        self::assertTrue(InlineKeyboardButton::couldBe(
+            ['text' => 'message', 'callback_data' => 'callback_data_value']
+        ));
+        self::assertTrue(InlineKeyboardButton::couldBe(
+            ['text' => 'message', 'switch_inline_query' => 'switch_inline_query_value']
+        ));
+
+        self::assertFalse(InlineKeyboardButton::couldBe(['no_text' => 'message']));
+        self::assertFalse(InlineKeyboardButton::couldBe(['text' => 'message']));
+        self::assertFalse(InlineKeyboardButton::couldBe(['url' => 'url_value']));
+        self::assertFalse(InlineKeyboardButton::couldBe(
+            ['callback_data' => 'callback_data_value']
+        ));
+        self::assertFalse(InlineKeyboardButton::couldBe(
+            ['switch_inline_query' => 'switch_inline_query_value']
+        ));
+        self::assertFalse(InlineKeyboardButton::couldBe([
+            'url'                 => 'url_value',
+            'callback_data'       => 'callback_data_value',
+            'switch_inline_query' => 'switch_inline_query_value',
+        ]));
+    }
+
+    public function testInlineKeyboardButtonParameterSetting()
+    {
+        $button = new InlineKeyboardButton(['text' => 'message', 'url' => 'url_value']);
+        self::assertSame('url_value', $button->getUrl());
+        self::assertEmpty($button->getCallbackData());
+        self::assertEmpty($button->getSwitchInlineQuery());
+
+        $button->setCallbackData('callback_data_value');
+        self::assertEmpty($button->getUrl());
+        self::assertSame('callback_data_value', $button->getCallbackData());
+        self::assertEmpty($button->getSwitchInlineQuery());
+
+        $button->setSwitchInlineQuery('switch_inline_query_value');
+        self::assertEmpty($button->getUrl());
+        self::assertEmpty($button->getCallbackData());
+        self::assertSame('switch_inline_query_value', $button->getSwitchInlineQuery());
     }
 }

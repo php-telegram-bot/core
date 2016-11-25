@@ -10,149 +10,28 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
-
+/**
+ * Class Video
+ *
+ * @link https://core.telegram.org/bots/api#video
+ *
+ * @method string    getFileId()   Unique identifier for this file
+ * @method int       getWidth()    Video width as defined by sender
+ * @method int       getHeight()   Video height as defined by sender
+ * @method int       getDuration() Duration of the video in seconds as defined by sender
+ * @method PhotoSize getThumb()    Optional. Video thumbnail
+ * @method string    getMimeType() Optional. Mime type of a file as defined by sender
+ * @method int       getFileSize() Optional. File size
+ */
 class Video extends Entity
 {
     /**
-     * @var mixed|null
+     * {@inheritdoc}
      */
-    protected $file_id;
-
-    /**
-     * @var mixed|null
-     */
-    protected $width;
-
-    /**
-     * @var mixed|null
-     */
-    protected $height;
-
-    /**
-     * @var mixed|null
-     */
-    protected $duration;
-
-    /**
-     * @var \Longman\TelegramBot\Entities\PhotoSize
-     */
-    protected $thumb;
-
-    /**
-     * @var mixed|null
-     */
-    protected $mime_type;
-
-    /**
-     * @var mixed|null
-     */
-    protected $file_size;
-
-    /**
-     * Video constructor.
-     *
-     * @param array $data
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function __construct(array $data)
+    protected function subEntities()
     {
-
-        $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;
-        if (empty($this->file_id)) {
-            throw new TelegramException('file_id is empty!');
-        }
-
-        $this->width = isset($data['width']) ? $data['width'] : null;
-        if (empty($this->width)) {
-            throw new TelegramException('width is empty!');
-        }
-
-        $this->height = isset($data['height']) ? $data['height'] : null;
-        if (empty($this->height)) {
-            throw new TelegramException('height is empty!');
-        }
-        $this->duration = isset($data['duration']) ? $data['duration'] : null;
-        if ($this->duration === '' || $this->duration === null) {
-            throw new TelegramException('duration is empty!');
-        }
-        $this->thumb = isset($data['thumb']) ? $data['thumb'] : null;
-        if (empty($this->thumb)) {
-            throw new TelegramException('thumb is empty!');
-        }
-        $this->thumb = new PhotoSize($this->thumb);
-
-        $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
-        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-    }
-
-    /**
-     * Get file id
-     *
-     * @return mixed|null
-     */
-    public function getFileId()
-    {
-        return $this->file_id;
-    }
-
-    /**
-     * Get width
-     *
-     * @return mixed|null
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * Get height
-     *
-     * @return mixed|null
-     */
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    /**
-     * Get duration
-     *
-     * @return mixed|null
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * Get thumb
-     *
-     * @return \Longman\TelegramBot\Entities\PhotoSize
-     */
-    public function getThumb()
-    {
-        return $this->thumb;
-    }
-
-    /**
-     * Get mime type
-     *
-     * @return mixed|null
-     */
-    public function getMimeType()
-    {
-        return $this->mime_type;
-    }
-
-    /**
-     * Get file size
-     *
-     * @return mixed|null
-     */
-    public function getFileSize()
-    {
-        return $this->file_size;
+        return [
+            'thumb' => PhotoSize::class,
+        ];
     }
 }
