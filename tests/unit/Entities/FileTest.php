@@ -103,19 +103,6 @@ class FileTest extends TestCase
         $this->assertEquals($this->data['file_path'], $path);
     }
 
-   /**
-    *
-    * Testing without file id
-    *
-    * @expectedException Longman\TelegramBot\Exception\TelegramException
-    * 
-    */
-    public function testCreateInstanceWithoutFileId()
-    {
-        unset($this->data['file_id']);
-        new File($this->data);
-    }
-
     /**
     * 
     * Testing getFileSize without data
