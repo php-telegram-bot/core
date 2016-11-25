@@ -136,8 +136,8 @@ class KeyboardTest extends TestCase
 
     public function testPredefinedKeyboards()
     {
-        $keyboard_hide = Keyboard::hide();
-        self::assertTrue($keyboard_hide->getProperty('hide_keyboard'));
+        $keyboard_remove = Keyboard::remove();
+        self::assertTrue($keyboard_remove->getProperty('remove_keyboard'));
 
         $keyboard_force_reply = Keyboard::forceReply();
         self::assertTrue($keyboard_force_reply->getProperty('force_reply'));
