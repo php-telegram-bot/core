@@ -4,10 +4,7 @@ language: php
 
 addons:
   apt:
-    packages:
-      - mysql-server-5.6
-      - mysql-client-core-5.6
-      - mysql-client-5.6
+    mariadb: '10.0'
 
 cache:
   directories:
