@@ -70,22 +70,22 @@ class CancelCommand extends UserCommand
             $text = 'Conversation "' . $conversation_command . '" cancelled!';
         }
 
-        return $this->hideKeyboard($text);
+        return $this->removeKeyboard($text);
     }
 
     /**
-     * Hide the keyboard and output a text
+     * Remove the keyboard and output a text
      *
      * @param string $text
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    private function hideKeyboard($text)
+    private function removeKeyboard($text)
     {
         return Request::sendMessage(
             [
-                'reply_markup' => Keyboard::hide(['selective' => true]),
+                'reply_markup' => Keyboard::remove(['selective' => true]),
                 'chat_id'      => $this->getMessage()->getChat()->getId(),
                 'text'         => $text,
             ]
@@ -100,6 +100,6 @@ class CancelCommand extends UserCommand
      */
     public function executeNoDb()
     {
-        return $this->hideKeyboard('Nothing to cancel.');
+        return $this->removeKeyboard('Nothing to cancel.');
     }
 }

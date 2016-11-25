@@ -105,7 +105,7 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
 
                     $data['text']         = 'Type your name:';
-                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
                     $result = Request::sendMessage($data);
                     break;
@@ -238,7 +238,7 @@ class SurveyCommand extends UserCommand
                 }
 
                 $data['photo']        = $notes['photo_id'];
-                $data['reply_markup'] = Keyboard::hide(['selective' => true]);
+                $data['reply_markup'] = Keyboard::remove(['selective' => true]);
                 $data['caption']      = $out_text;
                 $this->conversation->stop();
 
