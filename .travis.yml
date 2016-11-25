@@ -3,8 +3,7 @@ sudo: required
 language: php
 
 addons:
-  apt:
-    mariadb: '10.0'
+  mariadb: '10.0'
 
 cache:
   directories:
