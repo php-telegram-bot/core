@@ -89,30 +89,4 @@ class LocationTest extends TestCase
         $this->assertInternalType('float', $lat);
         $this->assertEquals($this->coordinates['latitude'], $lat);
     }
-
-   /**
-    *
-    * Testing without longitude
-    *
-    * @expectedException Longman\TelegramBot\Exception\TelegramException
-    * 
-    */
-    public function testCreateInstanceWithoutLongitude()
-    {
-        unset($this->coordinates['longitude']);
-        new Location($this->coordinates);
-    }
-
-   /**
-    *
-    * Testing without latitude
-    *
-    * @expectedException Longman\TelegramBot\Exception\TelegramException
-    * 
-    */
-    public function testCreateInstanceWithoutLatitude()
-    {
-        unset($this->coordinates['latitude']);
-        new Location($this->coordinates);
-    }
 }

@@ -97,7 +97,7 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->update();
 
                     $data['text']         = 'Insert the channel name: (@yourchannel)';
-                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
                     $result               = Request::sendMessage($data);
 
                     break;
@@ -142,7 +142,7 @@ class SendtochannelCommand extends AdminCommand
                     $notes['state'] = 1;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
                     $data['text']         = 'Insert the content you want to share: text, photo, audio...';
                     $result               = Request::sendMessage($data);
                     break;
@@ -184,7 +184,7 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->update();
 
                     $data['text']         = 'Insert caption:';
-                    $data['reply_markup'] = Keyboard::hide(['selective' => true]);
+                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
                     $result               = Request::sendMessage($data);
                     break;
                 }
@@ -227,7 +227,7 @@ class SendtochannelCommand extends AdminCommand
                 $notes['last_message_id'] = $message->getMessageId();
             // no break
             case 5:
-                $data['reply_markup'] = Keyboard::hide(['selective' => true]);
+                $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
                 if ($notes['post_message']) {
                     $data['text'] = $this->publish(
