@@ -110,6 +110,15 @@ class Botan
                     }
                 }
             }
+        } elseif (isset($obj['edited_message'])) {
+            $data       = $obj['edited_message'];
+            $event_name = 'Edited Message';
+        } elseif (isset($obj['channel_post'])) {
+            $data       = $obj['channel_post'];
+            $event_name = 'Channel Message';
+        } elseif (isset($obj['edited_channel_post'])) {
+            $data       = $obj['edited_channel_post'];
+            $event_name = 'Edited Channel Message';
         } elseif (isset($obj['inline_query'])) {
             $data       = $obj['inline_query'];
             $event_name = 'Inline Query';
