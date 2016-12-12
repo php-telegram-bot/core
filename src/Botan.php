@@ -155,7 +155,7 @@ class Botan
         $responseData = json_decode($response, true);
 
         if ($responseData['status'] !== 'accepted') {
-            error_log('Botan.io API replied with error: ' . $response);
+            TelegramLog::debug('Botan.io API replied with error: ' . $response);
         }
 
         return $responseData;
@@ -204,9 +204,7 @@ class Botan
         if (!filter_var($response, FILTER_VALIDATE_URL) === false) {
             BotanDB::insertShortUrl($user_id, $url, $response);
         } else {
-            // @TODO: Add telegram log
-            error_log('Botan.io API replied with error: ' . $response);
-
+            TelegramLog::debug('Botan.io API replied with error: ' . $response);
             return $url;
         }
 
