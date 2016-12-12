@@ -101,8 +101,8 @@ class ServerResponse extends Entity
         $result_object_types = [
             'total_count' => 'UserProfilePhotos', //Response from getUserProfilePhotos
             'file_id'     => 'File',              //Response from getFile
+            'title'       => 'Chat',              //Response from getChat
             'username'    => 'User',              //Response from getMe
-            'id'          => 'Chat',              //Response from getChat
             'user'        => 'ChatMember',        //Response from getChatMember
             'url'         => 'WebhookInfo',       //Response from getWebhookInfo
         ];

@@ -720,7 +720,9 @@ class DB
         self::insertChat($chat, $date, $migrate_to_chat_id);
 
         //Insert user and the relation with the chat
-        self::insertUser($from, $date, $chat);
+        if (is_object($from)) {
+            self::insertUser($from, $date, $chat);
+        }
 
         //Insert the forwarded message user in users table
         if ($forward_from instanceof User) {
@@ -769,7 +771,12 @@ class DB
             ');
 
             $message_id = $message->getMessageId();
-            $from_id    = $from->getId();
+
+            if (is_object($from)) {
+                $from_id = $from->getId();
+            } else {
+                $from_id = null;
+            }
 
             $reply_to_message    = $message->getReplyToMessage();
             $reply_to_message_id = null;
@@ -871,7 +878,9 @@ class DB
         self::insertChat($chat, $edit_date);
 
         //Insert user and the relation with the chat
-        self::insertUser($from, $edit_date, $chat);
+        if (is_object($from)) {
+            self::insertUser($from, $edit_date, $chat);
+        }
 
         try {
             $sth = self::$pdo->prepare('
@@ -882,7 +891,12 @@ class DB
             ');
 
             $message_id = $edited_message->getMessageId();
-            $from_id    = $from->getId();
+
+            if (is_object($from)) {
+                $from_id = $from->getId();
+            } else {
+                $from_id = null;
+            }
 
             $text    = $edited_message->getText();
             $caption = $edited_message->getCaption();
