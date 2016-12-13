@@ -8,13 +8,13 @@
 - RAW update (if available):
 
 ### Expected behaviour
-> What SHOULD be happening?
+<!-- What SHOULD be happening? -->
 
 ### Actual behaviour
-> What IS happening?
+<!-- What IS happening? -->
 
 ### Steps to reproduce
-> Explain how to reproduce the issue
+<!-- Explain how to reproduce the issue -->
 
 ### Extra details
-> Please post any extra details that might help solve the issue (e.g. logs)
+<!-- Please post any extra details that might help solve the issue (e.g. logs) -->
