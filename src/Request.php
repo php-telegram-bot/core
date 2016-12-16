@@ -800,16 +800,23 @@ class Request
      * @link https://core.telegram.org/bots/api#setwebhook
      *
      * @param string $url
-     * @param string $file
+     * @param array  $data Optional parameters.
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function setWebhook($url = '', $file = null)
+    public static function setWebhook($url = '', array $data = [])
     {
-        $data = ['url' => $url];
+        $data = array_intersect_key($data, array_flip([
+            'certificate',
+            'max_connections',
+            'allowed_updates',
+        ]));
+        $data['url'] = $url;
 
-        self::assignEncodedFile($data, 'certificate', $file);
+        if (isset($data['certificate'])) {
+            self::assignEncodedFile($data, 'certificate', $data['certificate']);
+        }
 
         return self::send('setWebhook', $data);
     }
