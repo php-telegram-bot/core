@@ -204,7 +204,7 @@ class Request
     {
         //Fix so that the keyboard markup is a string, not an object
         if (isset($data['reply_markup'])) {
-            $data['reply_markup'] = (string)$data['reply_markup'];
+            $data['reply_markup'] = json_encode($data['reply_markup']);
         }
 
         $request_params = self::setUpRequestParams($data);
