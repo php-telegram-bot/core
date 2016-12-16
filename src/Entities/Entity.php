@@ -141,7 +141,7 @@ abstract class Entity
                 $sub_entities = $this->subEntities();
 
                 if (isset($sub_entities[$property_name])) {
-                    return new $sub_entities[$property_name]($property);
+                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_name'));
                 }
 
                 return $property;
