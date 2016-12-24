@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Edited channel message command
+ * Edited channel post command
  */
 class EditedchannelpostCommand extends SystemCommand
 {

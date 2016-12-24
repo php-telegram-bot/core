@@ -496,7 +496,7 @@ class DB
             $edited_channel_post = $update->getEditedChannelPost();
 
             if (self::insertEditedMessageRequest($edited_channel_post)) {
-                $chat_id                 = $edited_channel_post->getChat()->getId();
+                $chat_id                      = $edited_channel_post->getChat()->getId();
                 $edited_channel_post_local_id = self::$pdo->lastInsertId();
 
                 return self::insertTelegramUpdate(
