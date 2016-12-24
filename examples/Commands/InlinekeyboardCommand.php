@@ -34,17 +34,23 @@ class InlinekeyboardCommand extends UserCommand
     public function execute()
     {
         $chat_id = $this->getMessage()->getChat()->getId();
+		
+		$switch_element = ['true', 'false'];
+		$switch_element_rand = $switch_element[mt_rand(0, count($switch_element) - 1)];
 
-        $inline_keyboard = new InlineKeyboard([
+		$inline_keyboard = [];
+        $inline_keyboard[] = [
             ['text' => 'inline', 'switch_inline_query' => 'true'],
             ['text' => 'callback', 'callback_data' => 'identifier'],
             ['text' => 'open url', 'url' => 'https://github.com/akalongman/php-telegram-bot'],
-        ]);
+        ];
+		$inline_keyboard[] = [
+		['text' => 'click', 'switch_inline_query_current_chat' => $switch_element_rand]];
 
         $data = [
             'chat_id'      => $chat_id,
             'text'         => 'inline keyboard',
-            'reply_markup' => $inline_keyboard,
+            'reply_markup' => new InlineKeyboard(...$inline_keyboard),
         ];
 
         return Request::sendMessage($data);

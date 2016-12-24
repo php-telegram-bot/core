@@ -42,7 +42,8 @@ class InlineKeyboardButton extends KeyboardButton
             array_key_exists('text', $data) && (
                    array_key_exists('url', $data) ||
                    array_key_exists('callback_data', $data) ||
-                   array_key_exists('switch_inline_query', $data)
+                   array_key_exists('switch_inline_query', $data)||
+				   array_key_exists('switch_inline_query_current_chat', $data)
             );
     }
 
@@ -57,7 +58,7 @@ class InlineKeyboardButton extends KeyboardButton
 
         $num_params = 0;
 
-        foreach (['url', 'callback_data', 'switch_inline_query'] as $param) {
+        foreach (['url', 'callback_data', 'switch_inline_query', 'switch_inline_query_current_chat'] as $param) {
             if (!empty($this->getProperty($param))) {
                 $num_params++;
             }
@@ -74,8 +75,8 @@ class InlineKeyboardButton extends KeyboardButton
     public function __call($method, $args)
     {
         // Only 1 of these can be set, so clear the others when setting a new one.
-        if (in_array($method, ['setUrl', 'setCallbackData', 'setSwitchInlineQuery'], true)) {
-            unset($this->url, $this->callback_data, $this->switch_inline_query);
+        if (in_array($method, ['setUrl', 'setCallbackData', 'setSwitchInlineQuery', 'setSwitchInlineQueryCurrentChat'], true)) {
+            unset($this->url, $this->callback_data, $this->switch_inline_query, $this->switch_inline_query_current_chat);
         }
 
         return parent::__call($method, $args);
