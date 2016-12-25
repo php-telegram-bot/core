@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
   `forward_from` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
   `forward_from_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
+  `forward_from_message_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier of the original message in the channel',
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
