@@ -183,6 +183,7 @@ class Request
         //Reformat data array in multipart way if it contains a resource
         foreach ($data as $key => $item) {
             $has_resource |= is_resource($item);
+            is_array($item) && $item = json_encode($item);
             $multipart[] = ['name' => $key, 'contents' => $item];
         }
         if ($has_resource) {
