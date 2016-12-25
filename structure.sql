@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique user or chat identifier',
   `status` ENUM('active', 'cancelled', 'stopped') NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
   `command` varchar(160) DEFAULT '' COMMENT 'Default command to execute',
-  `notes` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
+  `notes` text DEFAULT NULL COMMENT 'Data stored from command',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
 
