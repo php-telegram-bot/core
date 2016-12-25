@@ -38,7 +38,7 @@ class HidekeyboardCommand extends UserCommand
         $data = [
             'chat_id'      => $chat_id,
             'text'         => 'Keyboard Hidden',
-            'reply_markup' => Keyboard::hide(),
+            'reply_markup' => Keyboard::remove(),
         ];
 
         return Request::sendMessage($data);
