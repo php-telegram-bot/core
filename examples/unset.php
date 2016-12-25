@@ -9,7 +9,7 @@ try {
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
     // Unset webhook
-    $result = $telegram->unsetWebHook();
+    $result = $telegram->unsetWebhook();
 
     if ($result->isOk()) {
         echo $result->getDescription();

@@ -729,19 +729,19 @@ class Telegram
     /**
      * Set Webhook for bot
      *
-     * @param string      $url
-     * @param string|null $path_certificate
+     * @param string $url
+     * @param array  $data Optional parameters.
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function setWebHook($url, $path_certificate = null)
+    public function setWebhook($url, array $data = [])
     {
         if (empty($url)) {
             throw new TelegramException('Hook url is empty!');
         }
 
-        $result = Request::setWebhook($url, $path_certificate);
+        $result = Request::setWebhook($url, $data);
 
         if (!$result->isOk()) {
             throw new TelegramException(
@@ -758,7 +758,7 @@ class Telegram
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function unsetWebHook()
+    public function unsetWebhook()
     {
         $result = Request::setWebhook();
 

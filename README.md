@@ -206,7 +206,7 @@ try {
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
     // Set webhook
-    $result = $telegram->setWebHook($hook_url);
+    $result = $telegram->setWebhook($hook_url);
     if ($result->isOk()) {
         echo $result->getDescription();
     }
@@ -242,7 +242,7 @@ try {
 
 To upload the certificate, add the certificate path as a parameter in *set.php*:
 ```php
-$result = $telegram->setWebHook($hook_url, $certificate_path);
+$result = $telegram->setWebhook($hook_url, ['certificate' => $certificate_path]);
 ```
 
 ### Unset Webhook
