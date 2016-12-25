@@ -54,6 +54,7 @@ class Request
     private static $actions = [
         'getUpdates',
         'setWebhook',
+        'deleteWebhook',
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -282,7 +283,7 @@ class Request
     {
         $fp = fopen($file, 'r');
         if ($fp === false) {
-            throw new TelegramException('Cannot open ' . $file . ' for reading');
+            throw new TelegramException('Cannot open "' . $file . '" for reading');
         }
 
         return $fp;
@@ -346,7 +347,7 @@ class Request
     private static function ensureValidAction($action)
     {
         if (!in_array($action, self::$actions, true)) {
-            throw new TelegramException('The action " . $action . " doesn\'t exist!');
+            throw new TelegramException('The action "' . $action . '" doesn\'t exist!');
         }
     }
 
@@ -398,7 +399,7 @@ class Request
         do {
             //Chop off and send the first message
             $data['text'] = mb_substr($text, 0, 4096);
-            $response = self::send('sendMessage', $data);
+            $response     = self::send('sendMessage', $data);
 
             //Prepare the next message
             $text = mb_substr($text, 4096);
@@ -807,7 +808,7 @@ class Request
      */
     public static function setWebhook($url = '', array $data = [])
     {
-        $data = array_intersect_key($data, array_flip([
+        $data        = array_intersect_key($data, array_flip([
             'certificate',
             'max_connections',
             'allowed_updates',
@@ -819,6 +820,20 @@ class Request
         }
 
         return self::send('setWebhook', $data);
+    }
+
+    /**
+     * Delete webhook
+     *
+     * @link https://core.telegram.org/bots/api#deletewebhook
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function deleteWebhook()
+    {
+        // Must send some arbitrary data for this to work for now...
+        return self::send('deleteWebhook', ['delete']);
     }
 
     /**

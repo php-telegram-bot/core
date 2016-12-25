@@ -8,8 +8,8 @@ try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
-    // Unset webhook
-    $result = $telegram->unsetWebhook();
+    // Delete webhook
+    $result = $telegram->deleteWebhook();
 
     if ($result->isOk()) {
         echo $result->getDescription();

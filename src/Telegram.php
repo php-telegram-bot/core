@@ -753,18 +753,31 @@ class Telegram
     }
 
     /**
-     * Unset Webhook for bot
+     * Deprecated alias for deleteWebhook
+     *
+     * This is kept for backwards compatibility!
      *
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function unsetWebhook()
     {
-        $result = Request::setWebhook();
+        return $this->deleteWebhook();
+    }
+
+    /**
+     * Delete any assigned webhook
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function deleteWebhook()
+    {
+        $result = Request::deleteWebhook();
 
         if (!$result->isOk()) {
             throw new TelegramException(
-                'Webhook was not unset! Error: ' . $result->getErrorCode() . ' ' . $result->getDescription()
+                'Webhook was not deleted! Error: ' . $result->getErrorCode() . ' ' . $result->getDescription()
             );
         }
 
