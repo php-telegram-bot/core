@@ -406,20 +406,22 @@ class DB
             return false;
         }
 
-        $chat_id    = $chat->getId();
-        $chat_title = $chat->getTitle();
-        $chat_type  = $chat->getType();
+        $chat_id                             = $chat->getId();
+        $chat_title                          = $chat->getTitle();
+        $chat_type                           = $chat->getType();
+        $chat_all_members_are_administrators = $chat->getAllMembersAreAdministrators();
 
         try {
             $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`)
+                INSERT IGNORE INTO `' . TB_CHAT . '`
+                (`id`, `type`, `title`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :date, :date, :oldid)
+                (:id, :type, :title, :all_members_are_administrators, :date, :date, :oldid)
                 ON DUPLICATE KEY UPDATE
-                    `type`       = :type,
-                    `title`      = :title,
-                    `updated_at` = :date
+                    `type`                           = :type,
+                    `title`                          = :title,
+                    `all_members_are_administrators` = :all_members_are_administrators,
+                    `updated_at`                     = :date
             ');
 
             if ($migrate_to_chat_id) {
@@ -434,6 +436,7 @@ class DB
 
             $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
+            $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
 
             return $sth->execute();
