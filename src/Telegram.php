@@ -394,7 +394,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, ['inline_query', 'chosen_inline_result', 'callback_query', 'edited_message'], true)) {
+        if (in_array($update_type, ['edited_message', 'channel_post', 'edited_channel_post', 'inline_query', 'chosen_inline_result', 'callback_query'], true)) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();
@@ -544,10 +544,12 @@ class Telegram
             //Try to figure out if the user is an admin
             $update_methods = [
                 'getMessage',
+                'getEditedMessage',
+                'getChannelPost',
+                'getEditedChannelPost',
                 'getInlineQuery',
                 'getChosenInlineResult',
                 'getCallbackQuery',
-                'getEditedMessage',
             ];
             foreach ($update_methods as $update_method) {
                 $object = call_user_func([$this->update, $update_method]);
