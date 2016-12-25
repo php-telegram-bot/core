@@ -23,6 +23,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'id'                    => '',
  *   'audio_url'             => '',
  *   'title'                 => '',
+ *   'caption'               => '',
  *   'performer'             => '',
  *   'audio_duration'        => 123,
  *   'reply_markup'          => <InlineKeyboard>,
@@ -34,6 +35,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getId()                  Unique identifier for this result, 1-64 bytes
  * @method string               getAudioUrl()            A valid URL for the audio file
  * @method string               getTitle()               Title
+ * @method string               getCaption()             Optional. Caption, 0-200 characters
  * @method string               getPerformer()           Optional. Performer
  * @method int                  getAudioDuration()       Optional. Audio duration in seconds
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
@@ -42,6 +44,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
  * @method $this setAudioUrl(string $audio_url)                                     A valid URL for the audio file
  * @method $this setTitle(string $title)                                            Title
+ * @method $this setCaption(string $caption)                                        Optional. Caption, 0-200 characters
  * @method $this setPerformer(string $performer)                                    Optional. Performer
  * @method $this setAudioDuration(int $audio_duration)                              Optional. Audio duration in seconds
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
