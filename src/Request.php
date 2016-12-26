@@ -219,7 +219,7 @@ class Request
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
             );
-            $result   = (string)$response->getBody();
+            $result   = (string) $response->getBody();
 
             //Logging getUpdates Update
             if ($action === 'getUpdates') {

@@ -331,7 +331,7 @@ class Telegram
         if ($response->isOk()) {
             //Process all updates
             /** @var Update $result */
-            foreach ((array)$response->getResult() as $result) {
+            foreach ((array) $response->getResult() as $result) {
                 $this->processUpdate($result);
             }
         }
@@ -420,7 +420,8 @@ class Telegram
                 'new_chat_photo',
                 'new_chat_title',
                 'supergroup_chat_created',
-            ], true)) {
+            ], true)
+            ) {
                 $command = $this->getCommandFromType($type);
             }
         }

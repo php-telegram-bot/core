@@ -81,7 +81,7 @@ class SendtochannelCommand extends AdminCommand
         $notes = &$this->conversation->notes;
         !is_array($notes) && $notes = [];
 
-        $channels = (array)$this->getConfig('your_channel');
+        $channels = (array) $this->getConfig('your_channel');
         if (isset($notes['state'])) {
             $state = $notes['state'];
         } else {
@@ -347,7 +347,7 @@ class SendtochannelCommand extends AdminCommand
         ];
 
         if ($text !== '') {
-            $channels      = (array)$this->getConfig('your_channel');
+            $channels      = (array) $this->getConfig('your_channel');
             $first_channel = $channels[0];
             $data['text']  = $this->publish(
                 new Message($message->getRawData(), $this->telegram->getBotName()),
