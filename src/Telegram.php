@@ -455,7 +455,7 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('Generic');
         } else {
-            //Botan.io integration, make sure only the command user executed is reported
+            //Botan.io integration, make sure only the actual command user executed is reported
             if ($this->botan_enabled) {
                 Botan::lock($command);
             }
@@ -815,14 +815,15 @@ class Telegram
     /**
      * Enable Botan.io integration
      *
-     * @param  $token
+     * @param  string $token
+     * @param  integer $timeout
      *
      * @return \Longman\TelegramBot\Telegram
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function enableBotan($token)
+    public function enableBotan($token, $timeout = 3)
     {
-        Botan::initializeBotan($token);
+        Botan::initializeBotan($token, $timeout);
         $this->botan_enabled = true;
 
         return $this;

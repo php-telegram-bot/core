@@ -47,13 +47,21 @@ class BotanDB extends DB
         try {
             $sth = self::$pdo->prepare('SELECT * FROM `' . TB_BOTAN_SHORTENER . '`
                 WHERE `user_id` = :user_id AND `url` = :url
+                ORDER BY `created_at` DESC
+                LIMIT 1
             ');
 
             $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':url', $url, PDO::PARAM_INT);
+            $sth->bindParam(':url', $url, PDO::PARAM_STR);
             $sth->execute();
 
-            return $sth->fetchAll(PDO::FETCH_ASSOC);
+            $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+            if (isset($result[0]['short_url'])) {
+                return $result[0]['short_url'];
+            }
+
+            return $result;
         } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
