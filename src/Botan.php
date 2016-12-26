@@ -120,7 +120,7 @@ class Botan
         $data = [];
         if ($update->getMessage()) {
             $data       = $update_data['message'];
-            $event_name = 'Generic Message';
+            $event_name = 'Message';
 
             if (!empty($data['entities']) && is_array($data['entities'])) {
                 foreach ($data['entities'] as $entity) {
