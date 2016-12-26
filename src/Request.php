@@ -226,7 +226,7 @@ class Request
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
-            $result = (string)$e->getResponse()->getBody();
+            $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
@@ -265,7 +265,7 @@ class Request
 
             return filesize($file_path) > 0;
         } catch (RequestException $e) {
-            return (string)$e->getResponse()->getBody();
+            return ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
