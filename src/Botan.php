@@ -194,7 +194,12 @@ class Botan
             $responseData = json_decode($response, true);
 
             if ($responseData['status'] !== 'accepted') {
-                TelegramLog::debug("Botan.io API replied with error:\n$response\n\n");
+                if (!empty($response)) {
+                    TelegramLog::debug("Botan.io track post failed, API reply:\n$response\n\n");
+                } else {
+                    TelegramLog::debug("Botan.io track post failed, API returned empty response!\n\n");
+                }
+
                 return false;
             }
 
@@ -245,7 +250,12 @@ class Botan
                 BotanDB::insertShortUrl($user_id, $url, $response);
                 return $response;
             } else {
-                TelegramLog::error("Botan.io URL shortening failed - API replied with error:\n$response\n\n");
+                if (!empty($response)) {
+                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API reply:\n$response\n\n");
+                } else {
+                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API returned empty response!\n\n");
+                }
+
                 return $url;
             }
         }
