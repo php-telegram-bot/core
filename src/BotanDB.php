@@ -32,8 +32,8 @@ class BotanDB extends DB
     /**
      * Select cached shortened URL from the database
      *
-     * @param  $user_id
-     * @param  $url
+     * @param $user_id
+     * @param $url
      *
      * @return array|bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -45,7 +45,8 @@ class BotanDB extends DB
         }
 
         try {
-            $sth = self::$pdo->prepare('SELECT * FROM `' . TB_BOTAN_SHORTENER . '`
+            $sth = self::$pdo->prepare('
+                SELECT `short_url` FROM `' . TB_BOTAN_SHORTENER . '`
                 WHERE `user_id` = :user_id AND `url` = :url
                 ORDER BY `created_at` DESC
                 LIMIT 1
@@ -55,13 +56,7 @@ class BotanDB extends DB
             $sth->bindParam(':url', $url, PDO::PARAM_STR);
             $sth->execute();
 
-            $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-            if (isset($result[0]['short_url'])) {
-                return $result[0]['short_url'];
-            }
-
-            return $result;
+            return $sth->fetchColumn();
         } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
@@ -84,21 +79,19 @@ class BotanDB extends DB
         }
 
         try {
-            $sth = self::$pdo->prepare('INSERT INTO `' . TB_BOTAN_SHORTENER . '`
-                (
-                `user_id`, `url`, `short_url`, `created_at`
-                )
-                VALUES (
-                :user_id, :url, :short_url, :date
-                )
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_BOTAN_SHORTENER . '`
+                (`user_id`, `url`, `short_url`, `created_at`)
+                VALUES
+                (:user_id, :url, :short_url, :date)
             ');
 
             $created_at = self::getTimestamp();
 
-            $sth->bindParam(':user_id', $user_id);
-            $sth->bindParam(':url', $url);
-            $sth->bindParam(':short_url', $short_url);
-            $sth->bindParam(':date', $created_at);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':url', $url, PDO::PARAM_STR);
+            $sth->bindParam(':short_url', $short_url, PDO::PARAM_STR);
+            $sth->bindParam(':date', $created_at, PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (Exception $e) {
