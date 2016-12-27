@@ -48,7 +48,7 @@ class Botan
      *
      *  Set as public to let the developers either:
      *  - block tracking from inside commands by setting the value to non-existent command
-     *  - override which command is tracked when commands call other commands with executedCommand()
+     *  - override which command is tracked when commands call other commands with executeCommand()
      *
      * @var string
      */
@@ -58,22 +58,28 @@ class Botan
      * Initialize Botan
      *
      * @param  string $token
-     * @param  integer $timeout
+     * @param  array  $options
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function initializeBotan($token, $timeout = 3)
+    public static function initializeBotan($token, array $options = [])
     {
         if (empty($token)) {
             throw new TelegramException('Botan token is empty!');
         }
 
-        if (!is_numeric($timeout)) {
+        $options_default = [
+            'timeout' => 3
+        ];
+
+        $options = array_merge($options_default, $options);
+
+        if (!is_numeric($options['timeout'])) {
             throw new TelegramException('Timeout must be a number!');
         }
 
-        self::$token   = $token;
-        self::$client  = new Client(['base_uri' => self::$api_base_uri, 'timeout' => $timeout]);
+        self::$token  = $token;
+        self::$client = new Client(['base_uri' => self::$api_base_uri, 'timeout' => $options['timeout']]);
 
         BotanDB::initializeBotanDb();
     }
@@ -81,7 +87,7 @@ class Botan
     /**
      * Lock function to make sure only the first command is reported (the one user requested)
      *
-     *  This is in case commands are calling other commands with executedCommand()
+     *  This is in case commands are calling other commands with executeCommand()
      *
      * @param string $command
      */
@@ -103,7 +109,9 @@ class Botan
      */
     public static function track(Update $update, $command = '')
     {
-        if (empty(self::$token) || strtolower($command) !== self::$command) {
+        $command = strtolower($command);
+
+        if (empty(self::$token) || $command !== self::$command) {
             return false;
         }
 
@@ -111,69 +119,61 @@ class Botan
             throw new TelegramException('Update object is empty!');
         }
 
-        // Release the lock in case someone runs getUpdates in foreach loop
+        // Release the lock in case this is getUpdates instance in foreach loop
         self::$command = '';
 
-        // For now, this is the only way
-        $update_data = (array) $update;
-
         $data = [];
-        if ($update->getMessage()) {
-            $data       = $update_data['message'];
-            $event_name = 'Message';
+        $update_data = (array) $update; // For now, this is the only way
+        $update_type = $update->getUpdateType();
 
-            if (!empty($data['entities']) && is_array($data['entities'])) {
-                foreach ($data['entities'] as $entity) {
-                    if ($entity['type'] === 'bot_command' && $entity['offset'] === 0) {
-                        if (strtolower($command) === 'generic') {
-                            $command = 'Generic';
-                        } elseif (strtolower($command) === 'genericmessage') {
-                            $command = 'Generic Message';
-                        } else {
-                            $command = '/' . strtolower($command);
+        $update_object_names = [
+            'message' => 'Message',
+            'edited_message' => 'Edited Message',
+            'channel_post' => 'Channel Post',
+            'edited_channel_post' => 'Edited Channel Post',
+            'inline_query' => 'Inline Query',
+            'chosen_inline_result' => 'Chosen Inline Result',
+            'callback_query' => 'Callback Query'
+        ];
+
+        if (in_array($update_type, ['message', 'edited_message', 'channel_post', 'edited_channel_post', 'inline_query', 'chosen_inline_result', 'callback_query'], true)) {
+            $data       = $update_data[$update_type];
+            $event_name = $update_object_names[$update_type];
+
+            if ($update_type === 'message') {
+                if ($update->getMessage()->getEntities()) {
+                    foreach ($update->getMessage()->getEntities() as $entity) {
+                        if ($entity->getType() === 'bot_command' && $entity->getOffset() === 0) {
+                            if ($command === 'generic') {
+                                $command = 'Generic';
+                            } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
+                                $command = 'Generic Message';
+                            } else {
+                                $command = '/' . $command;
+                            }
+
+                            $event_name = 'Command (' . $command . ')';
+                            break;
                         }
-
-                        $event_name = 'Command (' . $command . ')';
-                        break;
                     }
                 }
             }
-        } elseif ($update->getEditedMessage()) {
-            $data       = $update_data['edited_message'];
-            $event_name = 'Edited Message';
-        } elseif ($update->getChannelPost()) {
-            $data       = $update_data['channel_post'];
-            $event_name = 'Channel Post';
-        } elseif ($update->getEditedChannelPost()) {
-            $data       = $update_data['edited_channel_post'];
-            $event_name = 'Edited Channel Post';
-        } elseif ($update->getInlineQuery()) {
-            $data       = $update_data['inline_query'];
-            $event_name = 'Inline Query';
-        } elseif ($update->getChosenInlineResult()) {
-            $data       = $update_data['chosen_inline_result'];
-            $event_name = 'Chosen Inline Result';
-        } elseif ($update->getCallbackQuery()) {
-            $data       = $update_data['callback_query'];
-            $event_name = 'Callback Query';
         }
 
         if (empty($event_name)) {
+            TelegramLog::error("Botan.io stats report failed, no suitable update object found!");
             return false;
         }
 
-        // In case there is no from field (channel posts) assign chat id
+        // In case there is no from field assign id = 0
         if (isset($data['from']['id'])) {
             $uid = $data['from']['id'];
-        } elseif (isset($data['chat']['id'])) {
-            $uid = $data['chat']['id'];
         } else {
-            $uid = 0;   // if that fails too assign id = 0
+            $uid = 0;
         }
 
         try {
-            $response = self::$client->request(
-                'POST',
+            $response = self::$client->post(
                 str_replace(
                     ['#TOKEN', '#UID', '#NAME'],
                     [self::$token, $uid, urlencode($event_name)],
@@ -195,9 +195,9 @@ class Botan
 
             if ($responseData['status'] !== 'accepted') {
                 if (!empty($response)) {
-                    TelegramLog::debug("Botan.io track post failed, API reply:\n$response\n\n");
+                    TelegramLog::debug("Botan.io stats report failed, API reply: $response");
                 } else {
-                    TelegramLog::debug("Botan.io track post failed, API returned empty response!\n\n");
+                    TelegramLog::debug("Botan.io stats report failed, API returned empty response!");
                 }
 
                 return false;
@@ -210,7 +210,7 @@ class Botan
     /**
      * Url Shortener function
      *
-     * @param  string $url
+     * @param  string  $url
      * @param  integer $user_id
      *
      * @return string
@@ -226,15 +226,12 @@ class Botan
             throw new TelegramException('User id is empty!');
         }
 
-        $cached = BotanDB::selectShortUrl($user_id, $url);
-
-        if (!empty($cached)) {
+        if ($cached = BotanDB::selectShortUrl($user_id, $url)) {
             return $cached;
         }
 
         try {
-            $response = self::$client->request(
-                'POST',
+            $response = self::$client->post(
                 str_replace(
                     ['#TOKEN', '#UID', '#URL'],
                     [self::$token, $user_id, urlencode($url)],
@@ -246,14 +243,14 @@ class Botan
         } catch (RequestException $e) {
             $response = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
-            if (!filter_var($response, FILTER_VALIDATE_URL) === false) {
+            if (filter_var($response, FILTER_VALIDATE_URL) !== false) {
                 BotanDB::insertShortUrl($user_id, $url, $response);
                 return $response;
             } else {
                 if (!empty($response)) {
-                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API reply:\n$response\n\n");
+                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API reply: $response");
                 } else {
-                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API returned empty response!\n\n");
+                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API returned empty response!");
                 }
 
                 return $url;

@@ -817,14 +817,14 @@ class Telegram
      * Enable Botan.io integration
      *
      * @param  string $token
-     * @param  integer $timeout
+     * @param  array $options
      *
      * @return \Longman\TelegramBot\Telegram
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function enableBotan($token, $timeout = 3)
+    public function enableBotan($token, array $options = [])
     {
-        Botan::initializeBotan($token, $timeout);
+        Botan::initializeBotan($token, $options);
         $this->botan_enabled = true;
 
         return $this;

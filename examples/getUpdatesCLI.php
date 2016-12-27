@@ -64,7 +64,7 @@ try {
     // Botan.io integration
     // Second argument is optional maximum timeout
     //$telegram->enableBotan('your_token');
-    //$telegram->enableBotan('your_token', 3);
+    //$telegram->enableBotan('your_token', ['timeout' => 3]);
 
     // Handle telegram getUpdates request
     $serverResponse = $telegram->handleGetUpdates();
