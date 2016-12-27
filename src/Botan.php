@@ -136,7 +136,7 @@ class Botan
             'callback_query' => 'Callback Query'
         ];
 
-        if (in_array($update_type, ['message', 'edited_message', 'channel_post', 'edited_channel_post', 'inline_query', 'chosen_inline_result', 'callback_query'], true)) {
+        if (array_key_exists($update_type, $update_object_names)) {
             $data       = $update_data[$update_type];
             $event_name = $update_object_names[$update_type];
 
