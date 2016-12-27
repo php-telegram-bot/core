@@ -21,7 +21,8 @@ use ReflectionObject;
  *
  * @link https://core.telegram.org/bots/api#available-types
  *
- * @method array getRawData() Get the raw data passed to this entity
+ * @method array  getRawData() Get the raw data passed to this entity
+ * @method string getBotName() Return the bot name passed to this entity
  */
 abstract class Entity
 {
