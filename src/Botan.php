@@ -194,11 +194,7 @@ class Botan
             $responseData = json_decode($result, true);
 
             if ($responseData['status'] !== 'accepted') {
-                if (!empty($result)) {
-                    TelegramLog::debug("Botan.io stats report failed: $result\n\n");
-                } else {
-                    TelegramLog::debug("Botan.io stats report failed: empty response!\n\n");
-                }
+                TelegramLog::debug('Botan.io stats report failed: ' . ($result ?: 'empty response') . "\n\n");
 
                 return false;
             }
@@ -247,11 +243,7 @@ class Botan
                 BotanDB::insertShortUrl($user_id, $url, $result);
                 return $result;
             } else {
-                if (!empty($result)) {
-                    TelegramLog::debug("Botan.io URL shortening failed for '$url': $result\n\n");
-                } else {
-                    TelegramLog::debug("Botan.io URL shortening failed for '$url': empty response!\n\n");
-                }
+                TelegramLog::debug('Botan.io URL shortening failed for \'' . $url . '\': ' . ($result ?: 'empty response') . "\n\n");
 
                 return $url;
             }
