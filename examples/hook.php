@@ -61,7 +61,7 @@ try {
     //$telegram->setUploadPath('../Upload');
 
     // Botan.io integration
-    // Second argument is optional maximum timeout
+    // Second argument are options
     //$telegram->enableBotan('your_token');
     //$telegram->enableBotan('your_token', ['timeout' => 3]);
 

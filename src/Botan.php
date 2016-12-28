@@ -187,17 +187,17 @@ class Botan
                 ]
             );
 
-            $response = (string) $response->getBody();
+            $result = (string) $response->getBody();
         } catch (RequestException $e) {
-            $response = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
+            $result = $e->getMessage();
         } finally {
-            $responseData = json_decode($response, true);
+            $responseData = json_decode($result, true);
 
             if ($responseData['status'] !== 'accepted') {
-                if (!empty($response)) {
-                    TelegramLog::debug("Botan.io stats report failed, API reply: $response");
+                if (!empty($result)) {
+                    TelegramLog::debug("Botan.io stats report failed: $result\n\n");
                 } else {
-                    TelegramLog::debug("Botan.io stats report failed, API returned empty response!");
+                    TelegramLog::debug("Botan.io stats report failed: empty response!\n\n");
                 }
 
                 return false;
@@ -239,18 +239,18 @@ class Botan
                 )
             );
 
-            $response = (string) $response->getBody();
+            $result = (string) $response->getBody();
         } catch (RequestException $e) {
-            $response = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
+            $result = $e->getMessage();
         } finally {
-            if (filter_var($response, FILTER_VALIDATE_URL) !== false) {
-                BotanDB::insertShortUrl($user_id, $url, $response);
-                return $response;
+            if (filter_var($result, FILTER_VALIDATE_URL) !== false) {
+                BotanDB::insertShortUrl($user_id, $url, $result);
+                return $result;
             } else {
-                if (!empty($response)) {
-                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API reply: $response");
+                if (!empty($result)) {
+                    TelegramLog::debug("Botan.io URL shortening failed for '$url': $result\n\n");
                 } else {
-                    TelegramLog::debug("Botan.io URL shortening failed for '$url', API returned empty response!");
+                    TelegramLog::debug("Botan.io URL shortening failed for '$url': empty response!\n\n");
                 }
 
                 return $url;
