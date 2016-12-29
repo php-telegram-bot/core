@@ -144,9 +144,9 @@ class Conversation
      */
     protected function start()
     {
-        if ($this->command &&
-            !$this->exists() &&
-            ConversationDB::insertConversation(
+        if ($this->command
+            && !$this->exists()
+            && ConversationDB::insertConversation(
                 $this->user_id,
                 $this->chat_id,
                 $this->command

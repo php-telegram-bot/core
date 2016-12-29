@@ -166,7 +166,9 @@ class Botan
         }
 
         // In case there is no from field assign id = 0
-        $uid = (isset($data['from']['id'])) ? $data['from']['id'] : 0;
+        $uid = isset($data['from']['id']) ? $data['from']['id'] : 0;
+
+        $result = null;
 
         try {
             $response = self::$client->post(
