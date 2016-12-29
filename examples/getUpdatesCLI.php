@@ -62,7 +62,9 @@ try {
     //$telegram->setUploadPath('../Upload');
 
     // Botan.io integration
+    // Second argument are options
     //$telegram->enableBotan('your_token');
+    //$telegram->enableBotan('your_token', ['timeout' => 3]);
 
     // Handle telegram getUpdates request
     $serverResponse = $telegram->handleGetUpdates();

@@ -74,7 +74,7 @@ class WeatherCommand extends UserCommand
             return '';
         }
 
-        return (string)$response->getBody();
+        return (string) $response->getBody();
     }
 
     /**

@@ -483,7 +483,7 @@ class DB
                     $edited_message_local_id
                 );
             }
-        } else if ($update_type === 'channel_post') {
+        } elseif ($update_type === 'channel_post') {
             $channel_post = $update->getChannelPost();
 
             if (self::insertMessageRequest($channel_post)) {

@@ -331,7 +331,7 @@ class Telegram
         if ($response->isOk()) {
             //Process all updates
             /** @var Update $result */
-            foreach ((array)$response->getResult() as $result) {
+            foreach ((array) $response->getResult() as $result) {
                 $this->processUpdate($result);
             }
         }
@@ -420,7 +420,8 @@ class Telegram
                 'new_chat_photo',
                 'new_chat_title',
                 'supergroup_chat_created',
-            ], true)) {
+            ], true)
+            ) {
                 $command = $this->getCommandFromType($type);
             }
         }
@@ -455,7 +456,7 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('Generic');
         } else {
-            //Botan.io integration, make sure only the command user executed is reported
+            //Botan.io integration, make sure only the actual command user executed is reported
             if ($this->botan_enabled) {
                 Botan::lock($command);
             }
@@ -815,14 +816,15 @@ class Telegram
     /**
      * Enable Botan.io integration
      *
-     * @param  $token
+     * @param  string $token
+     * @param  array $options
      *
      * @return \Longman\TelegramBot\Telegram
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function enableBotan($token)
+    public function enableBotan($token, array $options = [])
     {
-        Botan::initializeBotan($token);
+        Botan::initializeBotan($token, $options);
         $this->botan_enabled = true;
 
         return $this;
