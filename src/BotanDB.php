@@ -32,13 +32,13 @@ class BotanDB extends DB
     /**
      * Select cached shortened URL from the database
      *
-     * @param $user_id
-     * @param $url
+     * @param string  $url
+     * @param integer $user_id
      *
      * @return array|bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function selectShortUrl($user_id, $url)
+    public static function selectShortUrl($url, $user_id)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -65,14 +65,14 @@ class BotanDB extends DB
     /**
      * Insert shortened URL into the database
      *
-     * @param $user_id
-     * @param $url
-     * @param $short_url
+     * @param string  $url
+     * @param integer $user_id
+     * @param string  $short_url
      *
      * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function insertShortUrl($user_id, $url, $short_url)
+    public static function insertShortUrl($url, $user_id, $short_url)
     {
         if (!self::isDbConnected()) {
             return false;

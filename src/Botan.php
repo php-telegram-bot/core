@@ -166,11 +166,7 @@ class Botan
         }
 
         // In case there is no from field assign id = 0
-        if (isset($data['from']['id'])) {
-            $uid = $data['from']['id'];
-        } else {
-            $uid = 0;
-        }
+        $uid = (isset($data['from']['id'])) ? $data['from']['id'] : 0;
 
         try {
             $response = self::$client->post(
@@ -222,7 +218,7 @@ class Botan
             throw new TelegramException('User id is empty!');
         }
 
-        if ($cached = BotanDB::selectShortUrl($user_id, $url)) {
+        if ($cached = BotanDB::selectShortUrl($url, $user_id)) {
             return $cached;
         }
 
@@ -240,7 +236,7 @@ class Botan
             $result = $e->getMessage();
         } finally {
             if (filter_var($result, FILTER_VALIDATE_URL) !== false) {
-                BotanDB::insertShortUrl($user_id, $url, $result);
+                BotanDB::insertShortUrl($url, $user_id, $result);
                 return $result;
             } else {
                 TelegramLog::debug('Botan.io URL shortening failed for \'' . $url . '\': ' . ($result ?: 'empty response') . "\n\n");
