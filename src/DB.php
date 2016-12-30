@@ -406,20 +406,22 @@ class DB
             return false;
         }
 
-        $chat_id    = $chat->getId();
-        $chat_title = $chat->getTitle();
-        $chat_type  = $chat->getType();
+        $chat_id                             = $chat->getId();
+        $chat_title                          = $chat->getTitle();
+        $chat_type                           = $chat->getType();
+        $chat_all_members_are_administrators = $chat->getAllMembersAreAdministrators();
 
         try {
             $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `created_at` ,`updated_at`, `old_id`)
+                INSERT IGNORE INTO `' . TB_CHAT . '`
+                (`id`, `type`, `title`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :date, :date, :oldid)
+                (:id, :type, :title, :all_members_are_administrators, :date, :date, :oldid)
                 ON DUPLICATE KEY UPDATE
-                    `type`       = :type,
-                    `title`      = :title,
-                    `updated_at` = :date
+                    `type`                           = :type,
+                    `title`                          = :title,
+                    `all_members_are_administrators` = :all_members_are_administrators,
+                    `updated_at`                     = :date
             ');
 
             if ($migrate_to_chat_id) {
@@ -434,6 +436,7 @@ class DB
 
             $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
+            $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
 
             return $sth->execute();
@@ -733,14 +736,15 @@ class DB
 
         $date = self::getTimestamp($message->getDate());
 
-        $forward_from       = $message->getForwardFrom();
-        $forward_from_chat  = $message->getForwardFromChat();
-        $photo              = self::entitiesArrayToJson($message->getPhoto(), '');
-        $entities           = self::entitiesArrayToJson($message->getEntities(), null);
-        $new_chat_member    = $message->getNewChatMember();
-        $new_chat_photo     = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
-        $left_chat_member   = $message->getLeftChatMember();
-        $migrate_to_chat_id = $message->getMigrateToChatId();
+        $forward_from            = $message->getForwardFrom();
+        $forward_from_chat       = $message->getForwardFromChat();
+        $forward_from_message_id = $message->getForwardFromMessageId();
+        $photo                   = self::entitiesArrayToJson($message->getPhoto(), '');
+        $entities                = self::entitiesArrayToJson($message->getEntities(), null);
+        $new_chat_member         = $message->getNewChatMember();
+        $new_chat_photo          = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
+        $left_chat_member        = $message->getLeftChatMember();
+        $migrate_to_chat_id      = $message->getMigrateToChatId();
 
         //Insert chat, update chat id in case it migrated
         self::insertChat($chat, $date, $migrate_to_chat_id);
@@ -778,7 +782,7 @@ class DB
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                    `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`,
+                    `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
                     `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
                     `location`, `venue`, `new_chat_member`, `left_chat_member`,
@@ -786,7 +790,7 @@ class DB
                     `supergroup_chat_created`, `channel_chat_created`,
                     `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 ) VALUES (
-                    :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat,
+                    :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
                     :photo, :sticker, :video, :voice, :caption, :contact,
                     :location, :venue, :new_chat_member, :left_chat_member,
@@ -838,6 +842,7 @@ class DB
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
             $sth->bindParam(':forward_from', $forward_from, PDO::PARAM_INT);
             $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_INT);
+            $sth->bindParam(':forward_from_message_id', $forward_from_message_id, PDO::PARAM_INT);
             $sth->bindParam(':forward_date', $forward_date, PDO::PARAM_STR);
 
             $reply_to_chat_id = null;

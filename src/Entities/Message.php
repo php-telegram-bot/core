@@ -21,6 +21,7 @@ namespace Longman\TelegramBot\Entities;
  * @method Chat     getChat()                  Conversation the message belongs to
  * @method User     getForwardFrom()           Optional. For forwarded messages, sender of the original message
  * @method Chat     getForwardFromChat()       Optional. For messages forwarded from a channel, information about the original channel
+ * @method int      getForwardFromMessageId()  Optional. For forwarded channel posts, identifier of the original message in the channel
  * @method int      getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
  * @method Message  getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method int      getEditDate()              Optional. Date the message was last edited in Unix time
