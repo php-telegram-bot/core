@@ -116,7 +116,7 @@ class DB
 
         self::$pdo               = $external_pdo_connection;
         self::$telegram          = $telegram;
-        self::$mysql_credentials = null;
+        self::$mysql_credentials = [];
         self::$table_prefix      = $table_prefix;
 
         self::defineTables();

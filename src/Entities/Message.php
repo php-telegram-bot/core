@@ -182,7 +182,7 @@ class Message extends Entity
             $split_cmd = explode('@', $cmd);
             if (isset($split_cmd[1])) {
                 //command is followed by name check if is addressed to me
-                if (strtolower($split_cmd[1]) === strtolower($this->bot_name)) {
+                if (strtolower($split_cmd[1]) === strtolower($this->getBotName())) {
                     return $split_cmd[0];
                 }
             } else {

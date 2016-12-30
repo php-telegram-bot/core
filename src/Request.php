@@ -209,17 +209,16 @@ class Request
             $data['reply_markup'] = json_encode($data['reply_markup']);
         }
 
+        $result = null;
         $request_params = self::setUpRequestParams($data);
-
-        $debug_handle            = TelegramLog::getDebugLogTempStream();
-        $request_params['debug'] = $debug_handle;
+        $request_params['debug'] = TelegramLog::getDebugLogTempStream();
 
         try {
             $response = self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
             );
-            $result   = (string) $response->getBody();
+            $result = (string) $response->getBody();
 
             //Logging getUpdates Update
             if ($action === 'getUpdates') {

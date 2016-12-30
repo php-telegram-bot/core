@@ -10,10 +10,10 @@
 
 namespace Longman\TelegramBot;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\LineFormatter;
 use Longman\TelegramBot\Exception\TelegramLogException;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class TelegramLog
 {
@@ -55,7 +55,7 @@ class TelegramLog
     /**
      * Temporary stream handle for debug log
      *
-     * @var null
+     * @var resource|null
      */
     static protected $debug_log_temp_stream_handle;
 
@@ -77,10 +77,10 @@ class TelegramLog
 
                 foreach (self::$monolog->getHandlers() as $handler) {
                     if ($handler->getLevel() === 400) {
-                        self::$error_log_path = true;
+                        self::$error_log_path = 'true';
                     }
                     if ($handler->getLevel() === 100) {
-                        self::$debug_log_path = true;
+                        self::$debug_log_path = 'true';
                     }
                 }
             } else {
@@ -147,11 +147,10 @@ class TelegramLog
     public static function getDebugLogTempStream()
     {
         if (self::$debug_log_temp_stream_handle === null) {
-            if (self::isDebugLogActive()) {
-                self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+');
-            } else {
+            if (!self::isDebugLogActive()) {
                 return false;
             }
+            self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+b');
         }
 
         return self::$debug_log_temp_stream_handle;
@@ -164,7 +163,7 @@ class TelegramLog
      */
     public static function endDebugLogTempStream($message = '%s')
     {
-        if (self::$debug_log_temp_stream_handle !== null) {
+        if (is_resource(self::$debug_log_temp_stream_handle)) {
             rewind(self::$debug_log_temp_stream_handle);
             self::debug(
                 sprintf(
