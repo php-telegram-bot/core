@@ -228,7 +228,7 @@ class Request
             $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
+            TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
 
         return $result;
@@ -267,7 +267,7 @@ class Request
             return ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
+            TelegramLog::endDebugLogTempStream('Verbose HTTP File Download Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
     }
 
