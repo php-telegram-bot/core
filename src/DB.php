@@ -159,6 +159,16 @@ class DB
     }
 
     /**
+     * Get the PDO object of the connected database
+     *
+     * @return \PDO
+     */
+    public static function getPdo()
+    {
+        return self::$pdo;
+    }
+
+    /**
      * Fetch update(s) from DB
      *
      * @param int $limit Limit the number of updates to fetch
