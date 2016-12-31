@@ -198,7 +198,7 @@ class TelegramLog
         if (self::$monolog_update === null) {
             self::$monolog_update = new Logger('bot_update_log');
             // Create a formatter
-            $output    = "%message%\n";
+            $output = '%message%' . PHP_EOL;
             $formatter = new LineFormatter($output);
 
             // Update handler
