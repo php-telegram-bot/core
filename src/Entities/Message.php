@@ -152,7 +152,7 @@ class Message extends Entity
     {
         $text = $this->getProperty('text');
         if (strpos($text, '/') === 0) {
-            $no_EOL   = strtok($text, PHP_EOL);
+            $no_EOL = strtok($text, PHP_EOL);
             $no_space = strtok($text, ' ');
 
             //try to understand which separator \n or space divide /command from text
@@ -174,13 +174,13 @@ class Message extends Entity
             return $command;
         }
 
-        $cmd = $this->getFullCommand();
+        $full_command = $this->getFullCommand();
 
-        if (strpos($cmd, '/') === 0) {
-            $cmd = substr($cmd, 1);
+        if (strpos($full_command, '/') === 0) {
+            $full_command = substr($full_command, 1);
 
             //check if command is follow by botname
-            $split_cmd = explode('@', $cmd);
+            $split_cmd = explode('@', $full_command);
             if (isset($split_cmd[1])) {
                 //command is followed by name check if is addressed to me
                 if (strtolower($split_cmd[1]) === strtolower($this->getBotName())) {
@@ -188,7 +188,7 @@ class Message extends Entity
                 }
             } else {
                 //command is not followed by name
-                return $cmd;
+                return $full_command;
             }
         }
 
@@ -208,10 +208,10 @@ class Message extends Entity
 
         if ($without_cmd && $command = $this->getFullCommand()) {
             if (strlen($command) + 1 < strlen($text)) {
-                $text = substr($text, strlen($command) + 1);
-            } else {
-                $text = '';
+                return substr($text, strlen($command) + 1);
             }
+
+            return '';
         }
 
         return $text;
