@@ -829,4 +829,14 @@ class Telegram
 
         return $this;
     }
+
+    /**
+     * Enable requests limiter
+     */
+    public function enableLimiter()
+    {
+        Request::setLimiter(true);
+
+        return $this;
+    }
 }

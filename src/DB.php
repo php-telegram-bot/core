@@ -136,6 +136,7 @@ class DB
             'edited_message',
             'inline_query',
             'message',
+            'request_limiter',
             'telegram_update',
             'user',
             'user_chat',
@@ -1049,6 +1050,82 @@ class DB
 
             return $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Get Telegram API request count for current chat / message
+     *
+     * @param integer $chat_id
+     * @param string  $inline_message_id
+     *
+     * @return array|bool (Array containing TOTAL and CURRENT fields or false on invalid arguments)
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function getTelegramRequestCount($chat_id = null, $inline_message_id = null)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('SELECT 
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE ((`chat_id` = :chat_id AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL)) AND `created_at` >= :date) as CURRENT,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :date) as TOTAL
+            ');
+
+            $date = self::getTimestamp();
+
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
+            $sth->bindParam(':date', $date, \PDO::PARAM_STR);
+
+            $sth->execute();
+
+            return $sth->fetch();
+        } catch (\Exception $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Insert Telegram API request in db
+     *
+     * @param string  $method
+     * @param array   $data
+     *
+     * @return bool If the insert was successful
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function insertTelegramRequest($method, $data)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        $chat_id = ((isset($data['chat_id']) && $data['chat_id'] != 0) ? $data['chat_id'] : null);
+        $inline_message_id = (isset($data['inline_message_id']) ? $data['inline_message_id'] : null);
+
+        try {
+            $sth = self::$pdo->prepare('INSERT INTO `' . TB_REQUEST_LIMITER . '`
+                (
+                `method`, `chat_id`, `inline_message_id`, `created_at`
+                )
+                VALUES (
+                :method, :chat_id, :inline_message_id, :date
+                );
+            ');
+
+            $created_at = self::getTimestamp();
+
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
+            $sth->bindParam(':method', $method, \PDO::PARAM_STR);
+            $sth->bindParam(':date', $created_at, \PDO::PARAM_STR);
+
+            return $sth->execute();
+        } catch (\Exception $e) {
             throw new TelegramException($e->getMessage());
         }
     }
