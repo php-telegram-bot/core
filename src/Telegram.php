@@ -419,6 +419,7 @@ class Telegram
                 'new_chat_member',
                 'new_chat_photo',
                 'new_chat_title',
+                'pinned_message',
                 'supergroup_chat_created',
             ], true)
             ) {
