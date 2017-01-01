@@ -830,4 +830,68 @@ class Telegram
 
         return $this;
     }
+
+    /**
+     * Run provided commands
+     *
+     * @param array $commands
+     * @param array $update
+     *
+     * @throws TelegramException
+     */
+    public function runCommands($commands, array $update = [])
+    {
+        if (!isset($commands) || !is_array($commands)) {
+            throw new TelegramException('No command(s) provided!');
+        }
+
+        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
+
+        $result = Request::getMe()->getResult();
+
+        if (!$result) {
+            throw new TelegramException('Received invalid getMe result!');
+        }
+
+        $bot_id   = $result->getId();
+        $bot_name = $result->getFirstName();
+
+        $update_template = [
+            'update_id' => 0,
+            'message' => [
+                'message_id' => 0,
+                'from' => [
+                    'id' => $bot_id,
+                    'first_name' => $bot_name
+                ],
+                'date' => time(),
+                'chat' => [
+                    'id' => $bot_id,
+                    'type' => 'private',
+                ],
+                'text' => ''
+            ]
+        ];
+
+        $update = array_merge($update_template, $update);
+
+        $this->enableAdmin($bot_id);    // Give bot access to admin commands
+        $this->getCommandsList();       // Load full commands list
+
+        foreach ($commands as $command => $parameter) {
+            if (is_numeric($command)) {     // if array/key is not associative $command will be integer and $parameter will be the actual command!
+                $command = $parameter;
+            }
+
+            $temp_update = $update;
+
+            if ($parameter && $parameter != $command) {
+                $temp_update['message']['text'] = $parameter;
+            }
+
+            $this->update = new Update($temp_update);    // this prevents commands throwing exceptions about missing Update objects
+
+            $this->executeCommand($command);
+        }
+    }
 }
