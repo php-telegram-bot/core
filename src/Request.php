@@ -1028,6 +1028,10 @@ class Request
             if ((isset($data['chat_id']) || isset($data['inline_message_id'])) && in_array($action, $limited_methods)) {
                 $timeout = 60;
 
+                if (!is_numeric($data['chat_id'])) {
+                    $data['chat_id'] = 0;
+                }
+
                 while (true) {
                     $requests = DB::getTelegramRequestCount((isset($data['chat_id']) ? $data['chat_id'] : null), (isset($data['inline_message_id']) ? $data['inline_message_id'] : null));
 
