@@ -408,18 +408,20 @@ class DB
 
         $chat_id                             = $chat->getId();
         $chat_title                          = $chat->getTitle();
+        $chat_username                       = $chat->getUsername();
         $chat_type                           = $chat->getType();
         $chat_all_members_are_administrators = $chat->getAllMembersAreAdministrators();
 
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :all_members_are_administrators, :date, :date, :oldid)
+                (:id, :type, :title, :username, :all_members_are_administrators, :date, :date, :oldid)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = :type,
                     `title`                          = :title,
+                    `username`                       = :username,
                     `all_members_are_administrators` = :all_members_are_administrators,
                     `updated_at`                     = :date
             ');
@@ -436,6 +438,7 @@ class DB
 
             $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
+            $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
             $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
 

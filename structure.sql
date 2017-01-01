@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `id` bigint COMMENT 'Unique user or chat identifier',
   `type` ENUM('private', 'group', 'supergroup', 'channel') NOT NULL COMMENT 'Chat type, either private, group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'Chat (group) title, is null if chat type is private',
+  `username` CHAR(255) DEFAULT NULL COMMENT 'Username, for private chats, supergroups and channels if available',
   `all_members_are_administrators` tinyint(1) DEFAULT 0 COMMENT 'True if a all members of this group are admins',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
