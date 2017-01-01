@@ -40,7 +40,7 @@ class ChannelpostCommand extends SystemCommand
      */
     public function execute()
     {
-        //$channel_post = $this->getChannelPost();
+        //$channel_post = $this->getUpdate()->getChannelPost();
 
         return parent::execute();
     }
