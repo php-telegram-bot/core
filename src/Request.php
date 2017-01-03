@@ -1027,6 +1027,7 @@ class Request
 
             if ((isset($data['chat_id']) || isset($data['inline_message_id'])) && in_array($action, $limited_methods)) {
                 $timeout = 60;
+                $tick = 500000; //msec
 
                 if (!is_numeric($data['chat_id'])) {
                     $data['chat_id'] = 0;
@@ -1035,15 +1036,16 @@ class Request
                 while (true) {
                     $requests = DB::getTelegramRequestCount((isset($data['chat_id']) ? $data['chat_id'] : null), (isset($data['inline_message_id']) ? $data['inline_message_id'] : null));
 
-                    if ($requests['CURRENT'] <= 0 && ((isset($data['inline_message_id']) && $requests['TOTAL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] > 0 && $requests['TOTAL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] < 0 && $requests['TOTAL'] < 20))) {
+                    if ($requests['LIMIT_PER_SEC'] <= 0 && ((isset($data['inline_message_id']) && $requests['LIMIT_PER_SEC_ALL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] > 0 && $requests['LIMIT_PER_SEC_ALL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] < 0 && $requests['LIMIT_PER_MINUTE'] < 20))) {
                         break;
                     }
 
-                    sleep(1);
-                    $timeout--;
+                    usleep($tick);
+                    $timeout = $timeout - ($tick / 1000000);
 
                     if ($timeout <= 0) {
-                        throw new TelegramException('Timed out while waiting for a request slot!');
+                        TelegramLog::debug('Timed out while waiting for a request slot, retrying with 10 seconds delay!' . PHP_EOL . 'Request data:' . PHP_EOL . print_r($data, true) . PHP_EOL . PHP_EOL);
+                        $timeout = 10;
                     }
                 }
 
