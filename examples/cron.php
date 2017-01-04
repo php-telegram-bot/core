@@ -65,7 +65,7 @@ try {
     $telegram->runCommands($commands);
 
     // Run user selected commands and modify update array
-    /*$telegram->runCommands($commands, ['message' => ['text' => 'Parameter']]);*/
+    //$telegram->runCommands($commands, ['message' => ['text' => 'Parameter']]);
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // Silence is golden!
     //echo $e;
