@@ -841,7 +841,7 @@ class Telegram
      */
     public function runCommands($commands, array $update = [])
     {
-        if (!isset($commands) || !is_array($commands)) {
+        if (!is_array($commands)) {
             throw new TelegramException('No command(s) provided!');
         }
 
