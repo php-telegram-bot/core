@@ -835,13 +835,12 @@ class Telegram
      * Run provided commands
      *
      * @param array $commands
-     * @param array $update
      *
      * @throws TelegramException
      */
-    public function runCommands($commands, array $update = [])
+    public function runCommands($commands)
     {
-        if (!is_array($commands)) {
+        if (!is_array($commands) || empty($commands)) {
             throw new TelegramException('No command(s) provided!');
         }
 
@@ -849,49 +848,39 @@ class Telegram
 
         $result = Request::getMe()->getResult();
 
-        if (!$result) {
-            throw new TelegramException('Received invalid getMe result!');
+        if (!$result->getId()) {
+            throw new TelegramException('Received empty/invalid getMe result!');
         }
 
-        $bot_id   = $result->getId();
-        $bot_name = $result->getFirstName();
-
-        $update_template = [
-            'update_id' => 0,
-            'message' => [
-                'message_id' => 0,
-                'from' => [
-                    'id' => $bot_id,
-                    'first_name' => $bot_name
-                ],
-                'date' => time(),
-                'chat' => [
-                    'id' => $bot_id,
-                    'type' => 'private',
-                ],
-                'text' => ''
-            ]
-        ];
-
-        $update = array_merge($update_template, $update);
+        $bot_id       = $result->getId();
+        $bot_name     = $result->getFirstName();
+        $bot_username = $result->getUsername();
 
         $this->enableAdmin($bot_id);    // Give bot access to admin commands
         $this->getCommandsList();       // Load full commands list
 
-        foreach ($commands as $command => $parameter) {
-            if (is_numeric($command)) {     // if array/key is not associative $command will be integer and $parameter will be the actual command!
-                $command = $parameter;
-            }
+        foreach ($commands as $command) {
+            $this->update = new Update(
+                [
+                    'update_id' => 0,
+                    'message'   => [
+                        'message_id' => 0,
+                        'from'       => [
+                            'id'         => $bot_id,
+                            'first_name' => $bot_name,
+                            'username'   => $bot_username
+                        ],
+                        'date'       => time(),
+                        'chat'       => [
+                            'id'   => $bot_id,
+                            'type' => 'private',
+                        ],
+                        'text'       => $command
+                    ]
+                ]
+            );
 
-            $temp_update = $update;
-
-            if ($parameter && $parameter != $command) {
-                $temp_update['message']['text'] = $parameter;
-            }
-
-            $this->update = new Update($temp_update);    // this prevents commands throwing exceptions about missing Update objects
-
-            $this->executeCommand($command);
+            $this->executeCommand($this->update->getMessage()->getCommand());
         }
     }
 }

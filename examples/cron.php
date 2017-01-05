@@ -23,9 +23,8 @@ $BOT_NAME = 'username_bot';
 //    'database' => 'dbname',
 //];
 
-// Your command(s) to run, use associative array to pass arguments
-$commands = ['whoami', 'echo'];
-//$commands = ['echo' => 'I\'m a bot!'];
+// Your command(s) to run, pass it just like in a message (arguments supported)
+$commands = ['/whoami', '/echo I\'m a bot!'];
 
 try {
     // Create Telegram API object
@@ -63,9 +62,6 @@ try {
 
     // Run user selected commands
     $telegram->runCommands($commands);
-
-    // Run user selected commands and modify update array
-    //$telegram->runCommands($commands, ['message' => ['text' => 'Parameter']]);
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // Silence is golden!
     //echo $e;
