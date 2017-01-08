@@ -37,7 +37,7 @@ class DebugCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
