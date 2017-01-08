@@ -53,30 +53,30 @@ class DebugCommand extends AdminCommand
 
         $debug_info = [];
 
-        $debug_info[] = sprintf('_TelegramBot version_: `%s`', $this->telegram->getVersion());
-        $debug_info[] = sprintf('_Download path_: `%s`', $this->telegram->getDownloadPath());
-        $debug_info[] = sprintf('_Upload path_: `%s`', $this->telegram->getUploadPath());
+        $debug_info[] = sprintf('*TelegramBot version:* `%s`', $this->telegram->getVersion());
+        $debug_info[] = sprintf('*Download path:* `%s`', $this->telegram->getDownloadPath());
+        $debug_info[] = sprintf('*Upload path:* `%s`', $this->telegram->getUploadPath());
 
         $php_bit = '';
         PHP_INT_SIZE === 4 && $php_bit = ' (32bit)';
         PHP_INT_SIZE === 8 && $php_bit = ' (64bit)';
-        $debug_info[] = sprintf('_PHP version_: `%1$s%2$s; %3$s; %4$s`', PHP_VERSION, $php_bit, PHP_SAPI, PHP_OS);
-        $debug_info[] = sprintf('_Maximum PHP script execution time_: `%d seconds`', ini_get('max_execution_time'));
+        $debug_info[] = sprintf('*PHP version:* `%1$s%2$s; %3$s; %4$s`', PHP_VERSION, $php_bit, PHP_SAPI, PHP_OS);
+        $debug_info[] = sprintf('*Maximum PHP script execution time:* `%d seconds`', ini_get('max_execution_time'));
 
         $mysql_version = $pdo ? $pdo->query('SELECT VERSION() AS version')->fetchColumn() : null;
-        $debug_info[] = sprintf('_MySQL version_: `%s`', $mysql_version ?: 'disabled');
+        $debug_info[] = sprintf('*MySQL version:* `%s`', $mysql_version ?: 'disabled');
 
-        $debug_info[] = sprintf('_Operating System_: `%s`', php_uname());
+        $debug_info[] = sprintf('*Operating System:* `%s`', php_uname());
 
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            $debug_info[] = sprintf('_Web Server_: `%s`', $_SERVER['SERVER_SOFTWARE']);
+            $debug_info[] = sprintf('*Web Server:* `%s`', $_SERVER['SERVER_SOFTWARE']);
         }
         if (function_exists('curl_init')) {
             $curlversion = curl_version();
-            $debug_info[] = sprintf('_curl version_: `%1$s; %2$s`', $curlversion['version'], $curlversion['ssl_version']);
+            $debug_info[] = sprintf('*curl version:* `%1$s; %2$s`', $curlversion['version'], $curlversion['ssl_version']);
         }
 
-        $webhook_info_title = '_Webhook Info_:';
+        $webhook_info_title = '*Webhook Info:*';
         try {
             // Check if we're actually using the Webhook method.
             if (Request::getInput() === '') {
