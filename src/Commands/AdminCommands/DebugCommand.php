@@ -54,6 +54,8 @@ class DebugCommand extends AdminCommand
         $debug_info = [];
 
         $debug_info[] = sprintf('_TelegramBot version_: `%s`', $this->telegram->getVersion());
+        $debug_info[] = sprintf('_Download path_: `%s`', $this->telegram->getDownloadPath());
+        $debug_info[] = sprintf('_Upload path_: `%s`', $this->telegram->getUploadPath());
 
         $php_bit = '';
         PHP_INT_SIZE === 4 && $php_bit = ' (32bit)';
