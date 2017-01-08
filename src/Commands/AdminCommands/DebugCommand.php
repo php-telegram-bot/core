@@ -74,13 +74,22 @@ class DebugCommand extends AdminCommand
             $debug_info[] = sprintf('_curl version_: `%1$s; %2$s`', $curlversion['version'], $curlversion['ssl_version']);
         }
 
-        $debug_info[] = '_Webhook Info_:';
+        $webhook_info_title = '_Webhook Info_:';
         try {
-            $webhook_info = json_encode(json_decode(Request::getWebhookInfo(), true)['result'], JSON_PRETTY_PRINT);
+            // Check if we're actually using the Webhook method.
+            if (Request::getInput() === '') {
+                $debug_info[] = $webhook_info_title . ' `Using getUpdates method, not Webhook.`';
+            } else {
+                $webhook_info_result = json_encode(json_decode(Request::getWebhookInfo(), true)['result'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                $debug_info[] = $webhook_info_title;
+                $debug_info[] = sprintf(
+                    '```' . PHP_EOL . '%s```',
+                    $webhook_info_result
+                );
+            }
         } catch (\Exception $e) {
-            $webhook_info = sprintf('Failed to get webhook info! (%s)', $e->getMessage());
+            $debug_info[] = $webhook_info_title . sprintf(' `Failed to get webhook info! (%s)`', $e->getMessage());
         }
-        $debug_info[] = sprintf("```\n%s\n```", $webhook_info);
 
         $data = [
             'chat_id'    => $chat_id,
