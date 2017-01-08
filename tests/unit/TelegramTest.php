@@ -116,22 +116,30 @@ class TelegramTest extends TestCase
     {
         $tg = $this->telegram;
 
-        $this->assertAttributeCount(1, 'commands_paths', $tg);
+        $this->assertCount(1, $tg->getCommandsPaths());
 
         $tg->addCommandsPath($this->custom_commands_paths[0]);
-        $this->assertAttributeCount(2, 'commands_paths', $tg);
+        $this->assertCount(2, $tg->getCommandsPaths());
+        $this->assertArraySubset(
+            [$this->custom_commands_paths[0]],
+            $tg->getCommandsPaths()
+        );
 
         $tg->addCommandsPath('/invalid/path');
-        $this->assertAttributeCount(2, 'commands_paths', $tg);
+        $this->assertCount(2, $tg->getCommandsPaths());
 
         $tg->addCommandsPaths([
             $this->custom_commands_paths[1],
             $this->custom_commands_paths[2],
         ]);
-        $this->assertAttributeCount(4, 'commands_paths', $tg);
+        $this->assertCount(4, $tg->getCommandsPaths());
+        $this->assertArraySubset(
+            array_reverse($this->custom_commands_paths),
+            $tg->getCommandsPaths()
+        );
 
         $tg->addCommandsPath($this->custom_commands_paths[0]);
-        $this->assertAttributeCount(4, 'commands_paths', $tg);
+        $this->assertCount(4, $tg->getCommandsPaths());
     }
 
     public function testGetCommandsList()
