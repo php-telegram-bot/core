@@ -49,7 +49,16 @@ class DebugCommand extends AdminCommand
     {
         $pdo = DB::getPdo();
         $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
+        $chat = $message->getChat();
+        $text = strtolower($message->getText(true));
+
+        $data = ['chat_id' => $chat->getId()];
+
+        if ($text !== 'glasnost' && !$chat->isPrivateChat()) {
+            $data['text'] = 'Only available in a private chat.';
+
+            return Request::sendMessage($data);
+        }
 
         $debug_info = [];
 
@@ -100,11 +109,8 @@ class DebugCommand extends AdminCommand
             $debug_info[] = $webhook_info_title . sprintf(' `Failed to get webhook info! (%s)`', $e->getMessage());
         }
 
-        $data = [
-            'chat_id'    => $chat_id,
-            'parse_mode' => 'Markdown',
-            'text'       => implode(PHP_EOL, $debug_info),
-        ];
+        $data['parse_mode'] = 'Markdown';
+        $data['text'] = implode(PHP_EOL, $debug_info);
 
         return Request::sendMessage($data);
     }
