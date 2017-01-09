@@ -1079,7 +1079,7 @@ class DB
             $date = self::getTimestamp(time());
             $date_minute = self::getTimestamp(strtotime('-1 minute'));
 
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth->bindParam(':date', $date, \PDO::PARAM_STR);
             $sth->bindParam(':date_minute', $date_minute, \PDO::PARAM_STR);
@@ -1095,8 +1095,8 @@ class DB
     /**
      * Insert Telegram API request in db
      *
-     * @param string  $method
-     * @param array   $data
+     * @param string $method
+     * @param array  $data
      *
      * @return bool If the insert was successful
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -1107,7 +1107,7 @@ class DB
             return false;
         }
 
-        $chat_id = ((isset($data['chat_id']) && $data['chat_id'] != 0) ? $data['chat_id'] : null);
+        $chat_id = ((isset($data['chat_id'])) ? $data['chat_id'] : null);
         $inline_message_id = (isset($data['inline_message_id']) ? $data['inline_message_id'] : null);
 
         try {
@@ -1122,7 +1122,7 @@ class DB
 
             $created_at = self::getTimestamp();
 
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth->bindParam(':method', $method, \PDO::PARAM_STR);
             $sth->bindParam(':date', $created_at, \PDO::PARAM_STR);

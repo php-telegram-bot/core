@@ -1027,11 +1027,7 @@ class Request
 
             if ((isset($data['chat_id']) || isset($data['inline_message_id'])) && in_array($action, $limited_methods)) {
                 $timeout = 60;
-                $tick = 500000; //msec
-
-                if (!is_numeric($data['chat_id'])) {
-                    $data['chat_id'] = 0;
-                }
+                $retry   = false;
 
                 while (true) {
                     $requests = DB::getTelegramRequestCount((isset($data['chat_id']) ? $data['chat_id'] : null), (isset($data['inline_message_id']) ? $data['inline_message_id'] : null));
@@ -1040,12 +1036,18 @@ class Request
                         break;
                     }
 
-                    usleep($tick);
-                    $timeout = $timeout - ($tick / 1000000);
+                    sleep(1);
+                    $timeout = $timeout - 1;
 
                     if ($timeout <= 0) {
-                        TelegramLog::debug('Timed out while waiting for a request slot, retrying with 10 seconds delay!' . PHP_EOL . 'Request data:' . PHP_EOL . print_r($data, true) . PHP_EOL . PHP_EOL);
-                        $timeout = 10;
+                        if ($retry) {
+                            throw new TelegramException('Timed out while waiting for a request slot after 2 tries!');
+                        } else {
+                            $timeout = 60;
+                            $retry   = true;
+
+                            TelegramLog::debug('Timed out while waiting for a request slot, retrying! Request data:' . PHP_EOL . print_r($data, true) . PHP_EOL . PHP_EOL);
+                        }
                     }
                 }
 
