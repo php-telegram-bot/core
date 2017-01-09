@@ -830,4 +830,57 @@ class Telegram
 
         return $this;
     }
+
+    /**
+     * Run provided commands
+     *
+     * @param array $commands
+     *
+     * @throws TelegramException
+     */
+    public function runCommands($commands)
+    {
+        if (!is_array($commands) || empty($commands)) {
+            throw new TelegramException('No command(s) provided!');
+        }
+
+        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
+
+        $result = Request::getMe()->getResult();
+
+        if (!$result->getId()) {
+            throw new TelegramException('Received empty/invalid getMe result!');
+        }
+
+        $bot_id       = $result->getId();
+        $bot_name     = $result->getFirstName();
+        $bot_username = $result->getUsername();
+
+        $this->enableAdmin($bot_id);    // Give bot access to admin commands
+        $this->getCommandsList();       // Load full commands list
+
+        foreach ($commands as $command) {
+            $this->update = new Update(
+                [
+                    'update_id' => 0,
+                    'message'   => [
+                        'message_id' => 0,
+                        'from'       => [
+                            'id'         => $bot_id,
+                            'first_name' => $bot_name,
+                            'username'   => $bot_username
+                        ],
+                        'date'       => time(),
+                        'chat'       => [
+                            'id'   => $bot_id,
+                            'type' => 'private',
+                        ],
+                        'text'       => $command
+                    ]
+                ]
+            );
+
+            $this->executeCommand($this->update->getMessage()->getCommand());
+        }
+    }
 }
