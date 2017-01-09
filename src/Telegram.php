@@ -620,6 +620,16 @@ class Telegram
     }
 
     /**
+     * Return the list of commands paths
+     *
+     * @return array
+     */
+    public function getCommandsPaths()
+    {
+        return $this->commands_paths;
+    }
+
+    /**
      * Set custom upload path
      *
      * @param string $path Custom upload path
