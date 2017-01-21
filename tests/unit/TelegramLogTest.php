@@ -26,7 +26,7 @@ class TelegramLogTest extends TestCase
     /**
      * @var array Dummy logfile paths
      */
-    private $logfiles = [
+    private static $logfiles = [
         'error'    => '/tmp/php-telegram-bot-errorlog.log',
         'debug'    => '/tmp/php-telegram-bot-debuglog.log',
         'update'   => '/tmp/php-telegram-bot-updatelog.log',
@@ -48,7 +48,7 @@ class TelegramLogTest extends TestCase
     protected function tearDown()
     {
         // Make sure no logfiles exist.
-        foreach ($this->logfiles as $file) {
+        foreach (self::$logfiles as $file) {
             file_exists($file) && unlink($file);
         }
     }
@@ -79,37 +79,46 @@ class TelegramLogTest extends TestCase
 
     public function testErrorStream()
     {
-        $file = $this->logfiles['error'];
+        $file = self::$logfiles['error'];
         $this->assertFileNotExists($file);
         TelegramLog::initErrorLog($file);
         TelegramLog::error('my error');
+        TelegramLog::error('my %s error', 'placeholder');
         $this->assertFileExists($file);
-        $this->assertContains('bot_log.ERROR: my error', file_get_contents($file));
+        $error_log = file_get_contents($file);
+        $this->assertContains('bot_log.ERROR: my error', $error_log);
+        $this->assertContains('bot_log.ERROR: my placeholder error', $error_log);
     }
 
     public function testDebugStream()
     {
-        $file = $this->logfiles['debug'];
+        $file = self::$logfiles['debug'];
         $this->assertFileNotExists($file);
         TelegramLog::initDebugLog($file);
         TelegramLog::debug('my debug');
+        TelegramLog::debug('my %s debug', 'placeholder');
         $this->assertFileExists($file);
-        $this->assertContains('bot_log.DEBUG: my debug', file_get_contents($file));
+        $debug_log = file_get_contents($file);
+        $this->assertContains('bot_log.DEBUG: my debug', $debug_log);
+        $this->assertContains('bot_log.DEBUG: my placeholder debug', $debug_log);
     }
 
     public function testUpdateStream()
     {
-        $file = $this->logfiles['update'];
+        $file = self::$logfiles['update'];
         $this->assertFileNotExists($file);
         TelegramLog::initUpdateLog($file);
         TelegramLog::update('my update');
+        TelegramLog::update('my %s update', 'placeholder');
         $this->assertFileExists($file);
-        $this->assertContains('my update', file_get_contents($file));
+        $debug_log = file_get_contents($file);
+        $this->assertContains('my update', $debug_log);
+        $this->assertContains('my placeholder update', $debug_log);
     }
 
     public function testExternalStream()
     {
-        $file = $this->logfiles['external'];
+        $file = self::$logfiles['external'];
         $this->assertFileNotExists($file);
 
         $external_monolog = new Logger('bot_update_log');
@@ -118,11 +127,15 @@ class TelegramLogTest extends TestCase
 
         TelegramLog::initialize($external_monolog);
         TelegramLog::error('my error');
+        TelegramLog::error('my %s error', 'placeholder');
         TelegramLog::debug('my debug');
+        TelegramLog::debug('my %s debug', 'placeholder');
 
         $this->assertFileExists($file);
         $file_contents = file_get_contents($file);
         $this->assertContains('bot_update_log.ERROR: my error', $file_contents);
+        $this->assertContains('bot_update_log.ERROR: my placeholder error', $file_contents);
         $this->assertContains('bot_update_log.DEBUG: my debug', $file_contents);
+        $this->assertContains('bot_update_log.DEBUG: my placeholder debug', $file_contents);
     }
 }

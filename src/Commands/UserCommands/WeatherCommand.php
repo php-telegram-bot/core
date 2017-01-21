@@ -103,7 +103,7 @@ class WeatherCommand extends UserCommand
             $conditions_now = strtolower($data['weather'][0]['main']);
 
             return sprintf(
-                'The temperature in %s (%s) is %s°C' . "\n" .
+                'The temperature in %s (%s) is %s°C' . PHP_EOL .
                 'Current conditions are: %s%s',
                 $data['name'], //city
                 $data['sys']['country'], //country

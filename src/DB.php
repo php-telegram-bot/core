@@ -160,6 +160,16 @@ class DB
     }
 
     /**
+     * Get the PDO object of the connected database
+     *
+     * @return \PDO
+     */
+    public static function getPdo()
+    {
+        return self::$pdo;
+    }
+
+    /**
      * Fetch update(s) from DB
      *
      * @param int $limit Limit the number of updates to fetch
@@ -409,18 +419,20 @@ class DB
 
         $chat_id                             = $chat->getId();
         $chat_title                          = $chat->getTitle();
+        $chat_username                       = $chat->getUsername();
         $chat_type                           = $chat->getType();
         $chat_all_members_are_administrators = $chat->getAllMembersAreAdministrators();
 
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :all_members_are_administrators, :date, :date, :oldid)
+                (:id, :type, :title, :username, :all_members_are_administrators, :date, :date, :oldid)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = :type,
                     `title`                          = :title,
+                    `username`                       = :username,
                     `all_members_are_administrators` = :all_members_are_administrators,
                     `updated_at`                     = :date
             ');
@@ -437,6 +449,7 @@ class DB
 
             $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
+            $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
             $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
 
@@ -635,7 +648,7 @@ class DB
 
             $sth->bindParam(':result_id', $result_id, PDO::PARAM_STR);
             $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':location', $location, PDO::PARAM_INT);
+            $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
             $sth->bindParam(':query', $query, PDO::PARAM_STR);
             $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
@@ -869,13 +882,13 @@ class DB
             $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_INT);
             $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);
-            $sth->bindParam(':delete_chat_photo', $delete_chat_photo, PDO::PARAM_STR);
-            $sth->bindParam(':group_chat_created', $group_chat_created, PDO::PARAM_STR);
+            $sth->bindParam(':delete_chat_photo', $delete_chat_photo, PDO::PARAM_INT);
+            $sth->bindParam(':group_chat_created', $group_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':supergroup_chat_created', $supergroup_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':channel_chat_created', $channel_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, PDO::PARAM_INT);
             $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':pinned_message', $pinned_message, PDO::PARAM_INT);
+            $sth->bindParam(':pinned_message', $pinned_message, PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (PDOException $e) {

@@ -69,7 +69,7 @@ class Botan
         }
 
         $options_default = [
-            'timeout' => 3
+            'timeout' => 3,
         ];
 
         $options = array_merge($options_default, $options);
@@ -78,7 +78,7 @@ class Botan
             throw new TelegramException('Timeout must be a number!');
         }
 
-        self::$token  = $token;
+        self::$token = $token;
         self::$client = new Client(['base_uri' => self::$api_base_uri, 'timeout' => $options['timeout']]);
 
         BotanDB::initializeBotanDb();
@@ -101,8 +101,8 @@ class Botan
     /**
      * Track function
      *
-     * @param  \Longman\TelegramBot\Entities\Update $update
-     * @param  string $command
+     * @param \Longman\TelegramBot\Entities\Update $update
+     * @param string                               $command
      *
      * @return bool|string
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -115,7 +115,7 @@ class Botan
             return false;
         }
 
-        if (empty($update)) {
+        if ($update === null) {
             throw new TelegramException('Update object is empty!');
         }
 
@@ -127,85 +127,83 @@ class Botan
         $update_type = $update->getUpdateType();
 
         $update_object_names = [
-            'message' => 'Message',
-            'edited_message' => 'Edited Message',
-            'channel_post' => 'Channel Post',
-            'edited_channel_post' => 'Edited Channel Post',
-            'inline_query' => 'Inline Query',
+            'message'              => 'Message',
+            'edited_message'       => 'Edited Message',
+            'channel_post'         => 'Channel Post',
+            'edited_channel_post'  => 'Edited Channel Post',
+            'inline_query'         => 'Inline Query',
             'chosen_inline_result' => 'Chosen Inline Result',
-            'callback_query' => 'Callback Query'
+            'callback_query'       => 'Callback Query',
         ];
 
         if (array_key_exists($update_type, $update_object_names)) {
-            $data       = $update_data[$update_type];
+            $data = $update_data[$update_type];
             $event_name = $update_object_names[$update_type];
 
-            if ($update_type === 'message') {
-                if ($update->getMessage()->getEntities()) {
-                    foreach ($update->getMessage()->getEntities() as $entity) {
-                        if ($entity->getType() === 'bot_command' && $entity->getOffset() === 0) {
-                            if ($command === 'generic') {
-                                $command = 'Generic';
-                            } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
-                                $command = 'Generic Message';
-                            } else {
-                                $command = '/' . $command;
-                            }
-
-                            $event_name = 'Command (' . $command . ')';
-                            break;
+            if ($update_type === 'message' && $entities = $update->getMessage()->getEntities()) {
+                foreach ($entities as $entity) {
+                    if ($entity->getType() === 'bot_command' && $entity->getOffset() === 0) {
+                        if ($command === 'generic') {
+                            $command = 'Generic';
+                        } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
+                            $command = 'Generic Message';
+                        } else {
+                            $command = '/' . $command;
                         }
+
+                        $event_name = 'Command (' . $command . ')';
+                        break;
                     }
                 }
             }
         }
 
         if (empty($event_name)) {
-            TelegramLog::error("Botan.io stats report failed, no suitable update object found!");
+            TelegramLog::error('Botan.io stats report failed, no suitable update object found!');
+
             return false;
         }
 
         // In case there is no from field assign id = 0
         $uid = isset($data['from']['id']) ? $data['from']['id'] : 0;
 
-        $result = null;
-
         try {
             $response = self::$client->post(
-                str_replace(
-                    ['#TOKEN', '#UID', '#NAME'],
-                    [self::$token, $uid, urlencode($event_name)],
-                    '/track?token=#TOKEN&uid=#UID&name=#NAME'
+                sprintf(
+                    '/track?token=%1$s&uid=%2$s&name=%3$s',
+                    self::$token,
+                    $uid,
+                    urlencode($event_name)
                 ),
                 [
                     'headers' => [
-                        'Content-Type' => 'application/json'
+                        'Content-Type' => 'application/json',
                     ],
-                    'json' => $data
+                    'json'    => $data,
                 ]
             );
 
             $result = (string) $response->getBody();
         } catch (RequestException $e) {
             $result = $e->getMessage();
-        } finally {
-            $responseData = json_decode($result, true);
-
-            if ($responseData['status'] !== 'accepted') {
-                TelegramLog::debug('Botan.io stats report failed: ' . ($result ?: 'empty response') . "\n\n");
-
-                return false;
-            }
-
-            return $responseData;
         }
+
+        $responseData = json_decode($result, true);
+
+        if (!$responseData || $responseData['status'] !== 'accepted') {
+            TelegramLog::debug('Botan.io stats report failed: %s', $result ?: 'empty response');
+
+            return false;
+        }
+
+        return $responseData;
     }
 
     /**
      * Url Shortener function
      *
-     * @param  string  $url
-     * @param  integer $user_id
+     * @param string  $url
+     * @param integer $user_id
      *
      * @return string
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -226,25 +224,27 @@ class Botan
 
         try {
             $response = self::$client->post(
-                str_replace(
-                    ['#TOKEN', '#UID', '#URL'],
-                    [self::$token, $user_id, urlencode($url)],
-                    '/s/?token=#TOKEN&user_ids=#UID&url=#URL'
+                sprintf(
+                    '/s?token=%1$s&user_ids=%2$s&url=%3$s',
+                    self::$token,
+                    $user_id,
+                    urlencode($url)
                 )
             );
 
             $result = (string) $response->getBody();
         } catch (RequestException $e) {
             $result = $e->getMessage();
-        } finally {
-            if (filter_var($result, FILTER_VALIDATE_URL) !== false) {
-                BotanDB::insertShortUrl($url, $user_id, $result);
-                return $result;
-            } else {
-                TelegramLog::debug('Botan.io URL shortening failed for \'' . $url . '\': ' . ($result ?: 'empty response') . "\n\n");
-
-                return $url;
-            }
         }
+
+        if (filter_var($result, FILTER_VALIDATE_URL) === false) {
+            TelegramLog::debug('Botan.io URL shortening failed for "%s": %s', $url, $result ?: 'empty response');
+
+            return $url;
+        }
+
+        BotanDB::insertShortUrl($url, $user_id, $result);
+
+        return $result;
     }
 }

@@ -185,12 +185,16 @@ class Request
     private static function setUpRequestParams(array $data)
     {
         $has_resource = false;
-        $multipart    = [];
+        $multipart = [];
+
+        // Convert any nested arrays into JSON strings.
+        array_walk($data, function (&$item) {
+            is_array($item) && $item = json_encode($item);
+        });
 
         //Reformat data array in multipart way if it contains a resource
         foreach ($data as $key => $item) {
             $has_resource |= is_resource($item);
-            is_array($item) && $item = json_encode($item);
             $multipart[] = ['name' => $key, 'contents' => $item];
         }
         if ($has_resource) {
@@ -235,7 +239,7 @@ class Request
             $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
+            TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
 
         return $result;
@@ -274,7 +278,7 @@ class Request
             return ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
+            TelegramLog::endDebugLogTempStream('Verbose HTTP File Download Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
     }
 

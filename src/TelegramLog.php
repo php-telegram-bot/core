@@ -165,12 +165,7 @@ class TelegramLog
     {
         if (is_resource(self::$debug_log_temp_stream_handle)) {
             rewind(self::$debug_log_temp_stream_handle);
-            self::debug(
-                sprintf(
-                    $message,
-                    stream_get_contents(self::$debug_log_temp_stream_handle)
-                )
-            );
+            self::debug($message, stream_get_contents(self::$debug_log_temp_stream_handle));
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }
@@ -198,7 +193,7 @@ class TelegramLog
         if (self::$monolog_update === null) {
             self::$monolog_update = new Logger('bot_update_log');
             // Create a formatter
-            $output    = "%message%\n";
+            $output = '%message%' . PHP_EOL;
             $formatter = new LineFormatter($output);
 
             // Update handler
@@ -218,7 +213,7 @@ class TelegramLog
      */
     public static function isErrorLogActive()
     {
-        return (self::$error_log_path !== null);
+        return self::$error_log_path !== null;
     }
 
     /**
@@ -228,7 +223,7 @@ class TelegramLog
      */
     public static function isDebugLogActive()
     {
-        return (self::$debug_log_path !== null);
+        return self::$debug_log_path !== null;
     }
 
     /**
@@ -238,7 +233,7 @@ class TelegramLog
      */
     public static function isUpdateLogActive()
     {
-        return (self::$update_log_path !== null);
+        return self::$update_log_path !== null;
     }
 
     /**
@@ -249,6 +244,7 @@ class TelegramLog
     public static function error($text)
     {
         if (self::isErrorLogActive()) {
+            $text = self::getLogText($text, func_get_args());
             self::$monolog->error($text);
         }
     }
@@ -261,6 +257,7 @@ class TelegramLog
     public static function debug($text)
     {
         if (self::isDebugLogActive()) {
+            $text = self::getLogText($text, func_get_args());
             self::$monolog->debug($text);
         }
     }
@@ -273,7 +270,25 @@ class TelegramLog
     public static function update($text)
     {
         if (self::isUpdateLogActive()) {
+            $text = self::getLogText($text, func_get_args());
             self::$monolog_update->info($text);
         }
+    }
+
+    /**
+     * Applies vsprintf to the text if placeholder replacements are passed along.
+     *
+     * @param string $text
+     * @param array  $args
+     *
+     * @return string
+     */
+    protected static function getLogText($text, array $args = [])
+    {
+        // Pop the $text off the array, as it gets passed via func_get_args().
+        array_shift($args);
+
+        // Suppress warning if placeholders don't match out.
+        return @vsprintf($text, $args) ?: $text;
     }
 }

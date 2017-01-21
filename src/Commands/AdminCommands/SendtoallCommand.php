@@ -74,7 +74,7 @@ class SendtoallCommand extends AdminCommand
             $total  = 0;
             $failed = 0;
 
-            $text = 'Message sent to:' . "\n";
+            $text = 'Message sent to:' . PHP_EOL;
 
             /** @var ServerResponse $result */
             foreach ($results as $result) {
@@ -99,9 +99,9 @@ class SendtoallCommand extends AdminCommand
                 }
                 ++$total;
 
-                $text .= $total . ') ' . $status . ' ' . $type . ' ' . $name . "\n";
+                $text .= $total . ') ' . $status . ' ' . $type . ' ' . $name . PHP_EOL;
             }
-            $text .= 'Delivered: ' . ($total - $failed) . '/' . $total . "\n";
+            $text .= 'Delivered: ' . ($total - $failed) . '/' . $total . PHP_EOL;
 
             if ($total === 0) {
                 $text = 'No users or chats found..';

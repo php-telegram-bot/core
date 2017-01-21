@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.38.1';
+    protected $version = '0.39.0';
 
     /**
      * Telegram API key
@@ -419,6 +419,7 @@ class Telegram
                 'new_chat_member',
                 'new_chat_photo',
                 'new_chat_title',
+                'pinned_message',
                 'supergroup_chat_created',
             ], true)
             ) {
@@ -498,7 +499,7 @@ class Telegram
         if (is_int($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list, true)) {
             $this->admins_list[] = $admin_id;
         } else {
-            TelegramLog::error('Invalid value "' . $admin_id . '" for admin.');
+            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
         }
 
         return $this;
@@ -589,7 +590,7 @@ class Telegram
     public function addCommandsPath($path, $before = true)
     {
         if (!is_dir($path)) {
-            TelegramLog::error('Commands path "' . $path . '" does not exist.');
+            TelegramLog::error('Commands path "%s" does not exist.', $path);
         } elseif (!in_array($path, $this->commands_paths, true)) {
             if ($before) {
                 array_unshift($this->commands_paths, $path);
@@ -616,6 +617,16 @@ class Telegram
         }
 
         return $this;
+    }
+
+    /**
+     * Return the list of commands paths
+     *
+     * @return array
+     */
+    public function getCommandsPaths()
+    {
+        return $this->commands_paths;
     }
 
     /**
@@ -838,5 +849,58 @@ class Telegram
         Request::setLimiter(true);
 
         return $this;
+    }
+    
+    /**
+     * Run provided commands
+     *
+     * @param array $commands
+     *
+     * @throws TelegramException
+     */
+    public function runCommands($commands)
+    {
+        if (!is_array($commands) || empty($commands)) {
+            throw new TelegramException('No command(s) provided!');
+        }
+
+        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
+
+        $result = Request::getMe()->getResult();
+
+        if (!$result->getId()) {
+            throw new TelegramException('Received empty/invalid getMe result!');
+        }
+
+        $bot_id       = $result->getId();
+        $bot_name     = $result->getFirstName();
+        $bot_username = $result->getUsername();
+
+        $this->enableAdmin($bot_id);    // Give bot access to admin commands
+        $this->getCommandsList();       // Load full commands list
+
+        foreach ($commands as $command) {
+            $this->update = new Update(
+                [
+                    'update_id' => 0,
+                    'message'   => [
+                        'message_id' => 0,
+                        'from'       => [
+                            'id'         => $bot_id,
+                            'first_name' => $bot_name,
+                            'username'   => $bot_username
+                        ],
+                        'date'       => time(),
+                        'chat'       => [
+                            'id'   => $bot_id,
+                            'type' => 'private',
+                        ],
+                        'text'       => $command
+                    ]
+                ]
+            );
+
+            $this->executeCommand($this->update->getMessage()->getCommand());
+        }
     }
 }

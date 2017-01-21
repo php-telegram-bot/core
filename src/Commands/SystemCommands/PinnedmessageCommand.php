@@ -13,19 +13,19 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Channel post command
+ * Pinned message command
  */
-class ChannelpostCommand extends SystemCommand
+class PinnedmessageCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Channelpost';
+    protected $name = 'Pinnedmessage';
 
     /**
      * @var string
      */
-    protected $description = 'Handle channel post';
+    protected $description = 'Message was pinned';
 
     /**
      * @var string
@@ -40,7 +40,8 @@ class ChannelpostCommand extends SystemCommand
      */
     public function execute()
     {
-        //$channel_post = $this->getUpdate()->getChannelPost();
+        //$message = $this->getMessage();
+        //$pinned_message = $message->getPinnedMessage();
 
         return parent::execute();
     }

@@ -40,7 +40,7 @@ class EditedchannelpostCommand extends SystemCommand
      */
     public function execute()
     {
-        //$edited_channel_post = $this->getEditedChannelPost();
+        //$edited_channel_post = $this->getUpdate()->getEditedChannelPost();
 
         return parent::execute();
     }
