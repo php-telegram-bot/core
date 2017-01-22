@@ -11,44 +11,36 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Edited channel post command
  */
-class StartCommand extends SystemCommand
+class EditedchannelpostCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'Editedchannelpost';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
+    protected $description = 'Handle edited channel post';
 
     /**
      * @var string
      */
-    protected $usage = '/start';
+    protected $version = '1.0.0';
 
     /**
-     * @var string
-     */
-    protected $version = '1.1.0';
-
-    /**
-     * Command execute method
+     * Execute command
      *
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        //$edited_channel_post = $this->getUpdate()->getEditedChannelPost();
 
         return parent::execute();
     }

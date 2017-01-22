@@ -11,27 +11,21 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Migrate from chat id command
  */
-class StartCommand extends SystemCommand
+class MigratefromchatidCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'Migratefromchatid';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
-
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
+    protected $description = 'Migrate from chat id';
 
     /**
      * @var string
@@ -47,8 +41,7 @@ class StartCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        //$migrate_from_chat_id = $message->getMigrateFromChatId();
 
         return parent::execute();
     }

@@ -11,27 +11,21 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Left chat member command
  */
-class StartCommand extends SystemCommand
+class LeftchatmemberCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'Leftchatmember';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
-
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
+    protected $description = 'Left Chat Member';
 
     /**
      * @var string
@@ -47,8 +41,7 @@ class StartCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        //$member = $message->getLeftChatMember();
 
         return parent::execute();
     }

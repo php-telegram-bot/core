@@ -11,35 +11,29 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Pinned message command
  */
-class StartCommand extends SystemCommand
+class PinnedmessageCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'Pinnedmessage';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
+    protected $description = 'Message was pinned';
 
     /**
      * @var string
      */
-    protected $usage = '/start';
+    protected $version = '1.0.0';
 
     /**
-     * @var string
-     */
-    protected $version = '1.1.0';
-
-    /**
-     * Command execute method
+     * Execute command
      *
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -47,8 +41,7 @@ class StartCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        //$pinned_message = $message->getPinnedMessage();
 
         return parent::execute();
     }

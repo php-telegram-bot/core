@@ -41,18 +41,11 @@ class CallbackqueryCommand extends SystemCommand
      */
     public function execute()
     {
-        $update            = $this->getUpdate();
-        $callback_query    = $update->getCallbackQuery();
-        $callback_query_id = $callback_query->getId();
-        $callback_data     = $callback_query->getData();
+        //$callback_query = $this->getUpdate()->getCallbackQuery();
+        //$user_id        = $callback_query->getFrom()->getId();
+        //$query_id       = $callback_query->getId();
+        //$query_data     = $callback_query->getData();
 
-        $data = [
-            'callback_query_id' => $callback_query_id,
-            'text'              => 'Hello World!',
-            'show_alert'        => $callback_data === 'thumb up',
-            'cache_time'        => 5,
-        ];
-
-        return Request::answerCallbackQuery($data);
+        return Request::answerCallbackQuery(['callback_query_id' => $this->getUpdate()->getCallbackQuery()->getId()]);
     }
 }

@@ -11,27 +11,21 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Chosen inline result command
  */
-class StartCommand extends SystemCommand
+class ChoseninlineresultCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'choseninlineresult';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
-
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
+    protected $description = 'Chosen result query';
 
     /**
      * @var string
@@ -46,9 +40,10 @@ class StartCommand extends SystemCommand
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        //Information about chosen result is returned
+        //$update = $this->getUpdate();
+        //$inline_query = $update->getChosenInlineResult();
+        //$query = $inline_query->getQuery();
 
         return parent::execute();
     }

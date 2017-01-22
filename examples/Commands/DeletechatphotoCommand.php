@@ -11,27 +11,21 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Delete chat photo command
  */
-class StartCommand extends SystemCommand
+class DeletechatphotoCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'Deletechatphoto';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
-
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
+    protected $description = 'Delete chat photo';
 
     /**
      * @var string
@@ -47,8 +41,7 @@ class StartCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        //$delete_chat_photo = $message->getDeleteChatPhoto();
 
         return parent::execute();
     }

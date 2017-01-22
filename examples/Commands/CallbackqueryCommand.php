@@ -14,24 +14,19 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * Callback query command
  */
-class StartCommand extends SystemCommand
+class CallbackqueryCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'callbackquery';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
-
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
+    protected $description = 'Reply to callback query';
 
     /**
      * @var string
@@ -46,10 +41,18 @@ class StartCommand extends SystemCommand
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        $update            = $this->getUpdate();
+        $callback_query    = $update->getCallbackQuery();
+        $callback_query_id = $callback_query->getId();
+        $callback_data     = $callback_query->getData();
 
-        return parent::execute();
+        $data = [
+            'callback_query_id' => $callback_query_id,
+            'text'              => 'Hello World!',
+            'show_alert'        => $callback_data === 'thumb up',
+            'cache_time'        => 5,
+        ];
+
+        return Request::answerCallbackQuery($data);
     }
 }

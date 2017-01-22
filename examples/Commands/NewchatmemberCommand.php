@@ -14,24 +14,19 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * Start command
+ * New chat member command
  */
-class StartCommand extends SystemCommand
+class NewchatmemberCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'start';
+    protected $name = 'Newchatmember';
 
     /**
      * @var string
      */
-    protected $description = 'Start command';
-
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
+    protected $description = 'New Chat Member';
 
     /**
      * @var string
@@ -46,10 +41,21 @@ class StartCommand extends SystemCommand
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
+        $message = $this->getMessage();
 
-        return parent::execute();
+        $chat_id = $message->getChat()->getId();
+        $member  = $message->getNewChatMember();
+        $text    = 'Hi there!';
+
+        if (!$message->botAddedInChat()) {
+            $text = 'Hi ' . $member->tryMention() . '!';
+        }
+
+        $data = [
+            'chat_id' => $chat_id,
+            'text'    => $text,
+        ];
+
+        return Request::sendMessage($data);
     }
 }
