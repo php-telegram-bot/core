@@ -1031,28 +1031,20 @@ class Request
 
             if ((isset($data['chat_id']) || isset($data['inline_message_id'])) && in_array($action, $limited_methods)) {
                 $timeout = 60;
-                $retry   = false;
 
                 while (true) {
+                    if ($timeout <= 0) {
+                        throw new TelegramException('Timed out while waiting for a request slot!');
+                    }
+
                     $requests = DB::getTelegramRequestCount((isset($data['chat_id']) ? $data['chat_id'] : null), (isset($data['inline_message_id']) ? $data['inline_message_id'] : null));
 
                     if ($requests['LIMIT_PER_SEC'] <= 0 && ((isset($data['inline_message_id']) && $requests['LIMIT_PER_SEC_ALL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] > 0 && $requests['LIMIT_PER_SEC_ALL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] < 0 && $requests['LIMIT_PER_MINUTE'] < 20))) {
                         break;
                     }
 
-                    sleep(1);
                     $timeout = $timeout - 1;
-
-                    if ($timeout <= 0) {
-                        if ($retry) {
-                            throw new TelegramException('Timed out while waiting for a request slot after 2 tries!');
-                        } else {
-                            $timeout = 60;
-                            $retry   = true;
-
-                            TelegramLog::debug('Timed out while waiting for a request slot, retrying! Request data:' . PHP_EOL . print_r($data, true) . PHP_EOL . PHP_EOL);
-                        }
-                    }
+                    sleep(1);
                 }
 
                 DB::insertTelegramRequest($action, $data);
