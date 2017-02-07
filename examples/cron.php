@@ -60,6 +60,9 @@ try {
     //$telegram->setDownloadPath('../Download');
     //$telegram->setUploadPath('../Upload');
 
+    // Requests Limiter (tries to prevent reaching Telegram API limits)
+    $telegram->enableLimiter();
+
     // Run user selected commands
     $telegram->runCommands($commands);
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
