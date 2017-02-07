@@ -1029,21 +1029,30 @@ class Request
                 'editMessageReplyMarkup',
             ];
 
-            if ((isset($data['chat_id']) || isset($data['inline_message_id'])) && in_array($action, $limited_methods)) {
+            $chat_id = isset($data['chat_id']) ? $data['chat_id'] : null;
+            $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
+
+            if (($chat_id || $inline_message_id) && in_array($action, $limited_methods)) {
                 $timeout = 60;
 
                 while (true) {
                     if ($timeout <= 0) {
-                        throw new TelegramException('Timed out while waiting for a request slot!');
+                        throw new TelegramException('Timed out while waiting for a request spot!');
                     }
 
-                    $requests = DB::getTelegramRequestCount((isset($data['chat_id']) ? $data['chat_id'] : null), (isset($data['inline_message_id']) ? $data['inline_message_id'] : null));
+                    $requests = DB::getTelegramRequestCount($chat_id, $inline_message_id);
 
-                    if ($requests['LIMIT_PER_SEC'] <= 0 && ((isset($data['inline_message_id']) && $requests['LIMIT_PER_SEC_ALL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] > 0 && $requests['LIMIT_PER_SEC_ALL'] < 30) || (isset($data['chat_id']) && $data['chat_id'] < 0 && $requests['LIMIT_PER_MINUTE'] < 20))) {
+                    if (
+                        $requests['LIMIT_PER_SEC'] == 0 &&  // No more than one message per second inside a particular chat
+                        (
+                            (($chat_id > 0 || $inline_message_id) && $requests['LIMIT_PER_SEC_ALL'] < 30) ||  // No more than 30 messages per second globally
+                            ($chat_id < 0 && $requests['LIMIT_PER_MINUTE'] < 20)  // No more than 20 messages per minute for group chats
+                        )
+                    ) {
                         break;
                     }
 
-                    $timeout = $timeout - 1;
+                    $timeout--;
                     sleep(1);
                 }
 
