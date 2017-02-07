@@ -13,7 +13,8 @@ namespace Longman\TelegramBot\Tools;
 /**
  * Supported by Telegram Emoji Icons unicode values.
  */
-class Icons {
+class Icons
+{
 
     const AERIAL_TRAMWAY = "\xf0\x9f\x9a\xa1";
 
@@ -1756,5 +1757,4 @@ class Icons {
     const WRENCH = "\xf0\x9f\x94\xa7";
 
     const YELLOW_HEART = "\xf0\x9f\x92\x9b";
-
 }
