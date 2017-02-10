@@ -12,7 +12,7 @@
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
 
 ## Руководство по использованию бота
-- [Вступление](#introduction)
+- [Вступление](#вступление)
 - [Instructions](#instructions)
     - [Create your first bot](#create-your-first-bot)
     - [Require this package with Composer](#require-this-package-with-composer)
