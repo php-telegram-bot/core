@@ -1,62 +1,8 @@
-# Telegram Bot
+# Telegram Bot [![Build Status](https://travis-ci.org/olegbukatchuk/telegram_bot.svg?branch=master)](https://travis-ci.org/olegbukatchuk/telegram_bot)
 
-[![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Руководство по использованию бота
 
-[![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
-[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
-[![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.5.0-8892BF.svg)](https://php.net/)
-[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
-
-## Руководство по использованию бота
-- [Вступление](#вступление)
-- [Instructions](#instructions)
-    - [Create your first bot](#create-your-first-bot)
-    - [Require this package with Composer](#require-this-package-with-composer)
-    - [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
-    - [Webhook installation](#webhook-installation)
-    - [Self Signed Certificate](#self-signed-certificate)
-    - [Unset Webhook](#unset-webhook)
-    - [getUpdate installation](#getupdate-installation)
-- [Support](#support)
-    - [Types](#types)
-    - [Inline Query](#inline-query)
-    - [Methods](#methods)
-    - [Send Message](#send-message)
-    - [Send Photo](#send-photo)
-    - [Send Chat Action](#send-chat-action)
-    - [getUserProfilePhoto](#getuserprofilephoto)
-    - [getFile and dowloadFile](#getfile-and-dowloadfile)
-    - [Send message to all active chats](#send-message-to-all-active-chats)
-- [Utils](#utils)
-    - [MySQL storage (Recommended)](#mysql-storage-recommended)
-    - [Channels Support](#channels-support)
-    - [Botan.io integration (Optional)](#botanio-integration-optional)
-- [Commands](#commands)
-    - [Predefined Commands](#predefined-commands)
-    - [Custom Commands](#custom-commands)
-    - [Commands Configuration](#commands-configuration)
-- [Admin Commands](#admin-commands)
-    - [Set Admins](#set-admins)
-    - [Channel Administration](#channel-administration)
-- [Upload and Download directory path](#upload-and-download-directory-path)
-- [Logging](doc/01-utils.md)
-- [Documentation](#documentation)
-- [Projects with this library](#projects-with-this-library)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Credits](#credits)
-
-
-
-
-
-
-## Вступление
+## Введение
 
 This is a pure PHP Telegram Bot, fully extensible via plugins.
 Telegram recently announced official support for a [Bot
