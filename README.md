@@ -1,4 +1,4 @@
-# PHP Telegram Bot
+# Telegram Bot
 
 [![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -11,12 +11,8 @@
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.5.0-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
 
-
-
-A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.org/bots/api)
-
-## Table of Contents
-- [Introduction](#introduction)
+## Руководство по использованию бота
+- [Вступление](#introduction)
 - [Instructions](#instructions)
     - [Create your first bot](#create-your-first-bot)
     - [Require this package with Composer](#require-this-package-with-composer)
@@ -60,7 +56,7 @@ A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.or
 
 
 
-## Introduction
+## Вступление
 
 This is a pure PHP Telegram Bot, fully extensible via plugins.
 Telegram recently announced official support for a [Bot
