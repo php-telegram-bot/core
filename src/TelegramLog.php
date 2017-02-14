@@ -117,7 +117,7 @@ class TelegramLog
      */
     public static function initErrorLog($path, HandlerInterface $external_handler = null)
     {
-        if ($path === null || $path === '') {
+        if (($path === null || $path === '') && is_null($external_handler)) {
             throw new TelegramLogException('Empty path for error log');
         }
         self::initialize();
@@ -143,7 +143,7 @@ class TelegramLog
      */
     public static function initDebugLog($path, HandlerInterface $external_handler = null)
     {
-        if ($path === null || $path === '') {
+        if (($path === null || $path === '') && is_null($external_handler)) {
             throw new TelegramLogException('Empty path for debug log');
         }
         self::initialize();
@@ -204,7 +204,7 @@ class TelegramLog
      */
     public static function initUpdateLog($path, HandlerInterface $external_handler = null)
     {
-        if ($path === null || $path === '') {
+        if (($path === null || $path === '') && is_null($external_handler)) {
             throw new TelegramLogException('Empty path for update log');
         }
         self::initializeUpdate();
