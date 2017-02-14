@@ -12,6 +12,7 @@ namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Exception\TelegramLogException;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -20,14 +21,14 @@ class TelegramLog
     /**
      * Monolog instance
      *
-     * @var \Monolog\Logger
+     * @var Logger
      */
     static protected $monolog;
 
     /**
      * Monolog instance for update
      *
-     * @var \Monolog\Logger
+     * @var Logger
      */
     static protected $monolog_update;
 
@@ -65,24 +66,15 @@ class TelegramLog
      * Initilize monolog instance. Singleton
      * Is possbile provide an external monolog instance
      *
-     * @param \Monolog\Logger
+     * @param Logger $external_monolog
      *
-     * @return \Monolog\Logger
+     * @return Logger
      */
     public static function initialize(Logger $external_monolog = null)
     {
         if (self::$monolog === null) {
             if ($external_monolog !== null) {
                 self::$monolog = $external_monolog;
-
-                foreach (self::$monolog->getHandlers() as $handler) {
-                    if ($handler->getLevel() === 400) {
-                        self::$error_log_path = 'true';
-                    }
-                    if ($handler->getLevel() === 100) {
-                        self::$debug_log_path = 'true';
-                    }
-                }
             } else {
                 self::$monolog = new Logger('bot_log');
             }
@@ -92,16 +84,38 @@ class TelegramLog
     }
 
     /**
+     * Initialize update
+     *
+     * Initilize monolog update instance. Singleton
+     * Is possbile provide an external monolog instance
+     *
+     * @param Logger $external_monolog
+     *
+     * @return Logger
+     */
+    public static function initializeUpdate(Logger $external_monolog = null)
+    {
+        if (self::$monolog_update === null) {
+            if ($external_monolog !== null) {
+                self::$monolog_update = $external_monolog;
+            } else {
+                self::$monolog_update = new Logger('bot_update_log');
+            }
+        }
+
+        return self::$monolog_update;
+    }
+
+    /**
      * Initialize error log
      *
-     * @param string $path
+     * @param string           $path
+     * @param HandlerInterface $external_handler
      *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return Logger
+     * @throws TelegramLogException
      */
-    public static function initErrorLog($path)
+    public static function initErrorLog($path, HandlerInterface $external_handler = null)
     {
         if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for error log');
@@ -109,23 +123,25 @@ class TelegramLog
         self::initialize();
         self::$error_log_path = $path;
 
-        return self::$monolog->pushHandler(
-            (new StreamHandler(self::$error_log_path, Logger::ERROR))
-                ->setFormatter(new LineFormatter(null, null, true))
-        );
+        if (is_null($external_handler)) {
+            $handler = new StreamHandler(self::$error_log_path, Logger::ERROR);
+        } else {
+            $handler = $external_handler;
+        }
+
+        return self::$monolog->pushHandler($handler->setFormatter(new LineFormatter(null, null, true)));
     }
 
     /**
      * Initialize debug log
      *
-     * @param string $path
+     * @param string           $path
+     * @param HandlerInterface $external_handler
      *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return Logger
+     * @throws TelegramLogException
      */
-    public static function initDebugLog($path)
+    public static function initDebugLog($path, HandlerInterface $external_handler = null)
     {
         if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for debug log');
@@ -133,10 +149,13 @@ class TelegramLog
         self::initialize();
         self::$debug_log_path = $path;
 
-        return self::$monolog->pushHandler(
-            (new StreamHandler(self::$debug_log_path, Logger::DEBUG))
-                ->setFormatter(new LineFormatter(null, null, true))
-        );
+        if (is_null($external_handler)) {
+            $handler = new StreamHandler(self::$debug_log_path, Logger::DEBUG);
+        } else {
+            $handler = $external_handler;
+        }
+
+        return self::$monolog->pushHandler($handler->setFormatter(new LineFormatter(null, null, true)));
     }
 
     /**
@@ -177,33 +196,27 @@ class TelegramLog
      * Initilize monolog instance. Singleton
      * Is possbile provide an external monolog instance
      *
-     * @param string $path
+     * @param string           $path
+     * @param HandlerInterface $external_handler
      *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return Logger
+     * @throws TelegramLogException
      */
-    public static function initUpdateLog($path)
+    public static function initUpdateLog($path, HandlerInterface $external_handler = null)
     {
         if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for update log');
         }
+        self::initializeUpdate();
         self::$update_log_path = $path;
-        if (self::$monolog_update === null) {
-            self::$monolog_update = new Logger('bot_update_log');
-            // Create a formatter
-            $output = '%message%' . PHP_EOL;
-            $formatter = new LineFormatter($output);
 
-            // Update handler
-            $update_handler = new StreamHandler(self::$update_log_path, Logger::INFO);
-            $update_handler->setFormatter($formatter);
-
-            self::$monolog_update->pushHandler($update_handler);
+        if (is_null($external_handler)) {
+            $handler = new StreamHandler(self::$update_log_path, Logger::INFO);
+        } else {
+            $handler = $external_handler;
         }
 
-        return self::$monolog;
+        return self::$monolog_update->pushHandler($handler->setFormatter(new LineFormatter('%message%' . PHP_EOL)));
     }
 
     /**
