@@ -121,11 +121,12 @@ class TelegramLog
             throw new TelegramLogException('Empty path for error log');
         }
         self::initialize();
-        self::$error_log_path = $path;
 
         if (is_null($external_handler)) {
+            self::$error_log_path = $path;
             $handler = new StreamHandler(self::$error_log_path, Logger::ERROR);
         } else {
+            self::$error_log_path = 'true';
             $handler = $external_handler;
         }
 
@@ -147,11 +148,12 @@ class TelegramLog
             throw new TelegramLogException('Empty path for debug log');
         }
         self::initialize();
-        self::$debug_log_path = $path;
 
         if (is_null($external_handler)) {
+            self::$debug_log_path = $path;
             $handler = new StreamHandler(self::$debug_log_path, Logger::DEBUG);
         } else {
+            self::$debug_log_path = 'true';
             $handler = $external_handler;
         }
 
@@ -208,11 +210,12 @@ class TelegramLog
             throw new TelegramLogException('Empty path for update log');
         }
         self::initializeUpdate();
-        self::$update_log_path = $path;
 
         if (is_null($external_handler)) {
+            self::$update_log_path = $path;
             $handler = new StreamHandler(self::$update_log_path, Logger::INFO);
         } else {
+            self::$update_log_path = 'true';
             $handler = $external_handler;
         }
 
