@@ -288,7 +288,11 @@ class TelegramLog
         // Pop the $text off the array, as it gets passed via func_get_args().
         array_shift($args);
 
-        // Suppress warning if placeholders don't match out.
-        return @vsprintf($text, $args) ?: $text;
+        // If no placeholders have been passed, don't parse the text.
+        if (empty($args)) {
+            return $text;
+        }
+
+        return vsprintf($text, $args);
     }
 }
