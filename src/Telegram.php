@@ -842,6 +842,16 @@ class Telegram
     }
 
     /**
+     * Enable requests limiter
+     */
+    public function enableLimiter()
+    {
+        Request::setLimiter(true);
+
+        return $this;
+    }
+    
+    /**
      * Run provided commands
      *
      * @param array $commands

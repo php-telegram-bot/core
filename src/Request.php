@@ -47,6 +47,13 @@ class Request
     private static $input;
 
     /**
+     * Request limiter
+     *
+     * @var boolean
+     */
+    private static $limiter_enabled;
+
+    /**
      * Available actions to send
      *
      * @var array
@@ -317,6 +324,8 @@ class Request
         }
 
         self::ensureNonEmptyData($data);
+
+        self::limitTelegramRequests($action, $data);
 
         $response = json_decode(self::execute($action, $data), true);
 
@@ -975,5 +984,77 @@ class Request
     {
         // Must send some arbitrary data for this to work for now...
         return self::send('getWebhookInfo', ['info']);
+    }
+
+    /**
+     * Enable request limiter
+     *
+     * @param boolean $value
+     */
+    public static function setLimiter($value = true)
+    {
+        if (DB::isDbConnected()) {
+            self::$limiter_enabled = $value;
+        }
+    }
+
+    /**
+     * This functions delays API requests to prevent reaching Telegram API limits
+     *  Can be disabled while in execution by 'Request::setLimiter(false)'
+     *
+     * @link https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this
+     *
+     * @param string $action
+     * @param array  $data
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function limitTelegramRequests($action, array $data = [])
+    {
+        if (self::$limiter_enabled) {
+            $limited_methods = [
+                'sendMessage',
+                'forwardMessage',
+                'sendPhoto',
+                'sendAudio',
+                'sendDocument',
+                'sendSticker',
+                'sendVideo',
+                'sendVoice',
+                'sendLocation',
+                'sendVenue',
+                'sendContact',
+                'editMessageText',
+                'editMessageCaption',
+                'editMessageReplyMarkup',
+            ];
+
+            $chat_id = isset($data['chat_id']) ? $data['chat_id'] : null;
+            $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
+
+            if (($chat_id || $inline_message_id) && in_array($action, $limited_methods)) {
+                $timeout = 60;
+
+                while (true) {
+                    if ($timeout <= 0) {
+                        throw new TelegramException('Timed out while waiting for a request spot!');
+                    }
+
+                    $requests = DB::getTelegramRequestCount($chat_id, $inline_message_id);
+
+                    if ($requests['LIMIT_PER_SEC'] == 0  // No more than one message per second inside a particular chat
+                        && ((($chat_id > 0 || $inline_message_id) && $requests['LIMIT_PER_SEC_ALL'] < 30)  // No more than 30 messages per second globally
+                        || ($chat_id < 0 && $requests['LIMIT_PER_MINUTE'] < 20))
+                    ) {
+                        break;
+                    }
+
+                    $timeout--;
+                    sleep(1);
+                }
+
+                DB::insertTelegramRequest($action, $data);
+            }
+        }
     }
 }

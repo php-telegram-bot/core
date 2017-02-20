@@ -66,6 +66,9 @@ try {
     //$telegram->enableBotan('your_token');
     //$telegram->enableBotan('your_token', ['timeout' => 3]);
 
+    // Requests Limiter (tries to prevent reaching Telegram API limits)
+    $telegram->enableLimiter();
+
     // Handle telegram getUpdates request
     $serverResponse = $telegram->handleGetUpdates();
 
