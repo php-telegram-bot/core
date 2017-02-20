@@ -83,10 +83,12 @@ class TelegramLogTest extends TestCase
         $this->assertFileNotExists($file);
         TelegramLog::initErrorLog($file);
         TelegramLog::error('my error');
+        TelegramLog::error('my 50% error');
         TelegramLog::error('my %s error', 'placeholder');
         $this->assertFileExists($file);
         $error_log = file_get_contents($file);
         $this->assertContains('bot_log.ERROR: my error', $error_log);
+        $this->assertContains('bot_log.ERROR: my 50% error', $error_log);
         $this->assertContains('bot_log.ERROR: my placeholder error', $error_log);
     }
 
@@ -96,10 +98,12 @@ class TelegramLogTest extends TestCase
         $this->assertFileNotExists($file);
         TelegramLog::initDebugLog($file);
         TelegramLog::debug('my debug');
+        TelegramLog::debug('my 50% debug');
         TelegramLog::debug('my %s debug', 'placeholder');
         $this->assertFileExists($file);
         $debug_log = file_get_contents($file);
         $this->assertContains('bot_log.DEBUG: my debug', $debug_log);
+        $this->assertContains('bot_log.DEBUG: my 50% debug', $debug_log);
         $this->assertContains('bot_log.DEBUG: my placeholder debug', $debug_log);
     }
 
@@ -109,10 +113,12 @@ class TelegramLogTest extends TestCase
         $this->assertFileNotExists($file);
         TelegramLog::initUpdateLog($file);
         TelegramLog::update('my update');
+        TelegramLog::update('my 50% update');
         TelegramLog::update('my %s update', 'placeholder');
         $this->assertFileExists($file);
         $debug_log = file_get_contents($file);
         $this->assertContains('my update', $debug_log);
+        $this->assertContains('my 50% update', $debug_log);
         $this->assertContains('my placeholder update', $debug_log);
     }
 
@@ -127,15 +133,19 @@ class TelegramLogTest extends TestCase
 
         TelegramLog::initialize($external_monolog);
         TelegramLog::error('my error');
+        TelegramLog::error('my 50% error');
         TelegramLog::error('my %s error', 'placeholder');
         TelegramLog::debug('my debug');
+        TelegramLog::debug('my 50% debug');
         TelegramLog::debug('my %s debug', 'placeholder');
 
         $this->assertFileExists($file);
         $file_contents = file_get_contents($file);
         $this->assertContains('bot_update_log.ERROR: my error', $file_contents);
+        $this->assertContains('bot_update_log.ERROR: my 50% error', $file_contents);
         $this->assertContains('bot_update_log.ERROR: my placeholder error', $file_contents);
         $this->assertContains('bot_update_log.DEBUG: my debug', $file_contents);
+        $this->assertContains('bot_update_log.DEBUG: my 50% debug', $file_contents);
         $this->assertContains('bot_update_log.DEBUG: my placeholder debug', $file_contents);
     }
 }
