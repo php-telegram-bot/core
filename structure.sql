@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `id` bigint COMMENT 'Unique user or chat identifier',
   `type` ENUM('private', 'group', 'supergroup', 'channel') NOT NULL COMMENT 'Chat type, either private, group, supergroup or channel',
   `title` CHAR(255) DEFAULT '' COMMENT 'Chat (group) title, is null if chat type is private',
+  `username` CHAR(255) DEFAULT NULL COMMENT 'Username, for private chats, supergroups and channels if available',
+  `all_members_are_administrators` tinyint(1) DEFAULT 0 COMMENT 'True if a all members of this group are admins',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
   `old_id` bigint DEFAULT NULL COMMENT 'Unique chat identifier, this is filled when a group is converted to a supergroup',
@@ -70,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
   `forward_from` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
   `forward_from_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
+  `forward_from_message_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier of the original message in the channel',
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
@@ -185,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique user or chat identifier',
   `status` ENUM('active', 'cancelled', 'stopped') NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
   `command` varchar(160) DEFAULT '' COMMENT 'Default command to execute',
-  `notes` varchar(1000) DEFAULT 'NULL' COMMENT 'Data stored from command',
+  `notes` text DEFAULT NULL COMMENT 'Data stored from command',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
 
@@ -209,3 +212,13 @@ CREATE TABLE IF NOT EXISTS `botan_shortener` (
 
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `request_limiter` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
+  `chat_id` char(255) NULL DEFAULT NULL COMMENT 'Unique chat identifier',
+  `inline_message_id` char(255) NULL DEFAULT NULL COMMENT 'Identifier of the sent inline message',
+  `method` char(255) DEFAULT NULL COMMENT 'Request method',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT charSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

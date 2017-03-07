@@ -61,7 +61,12 @@ try {
     //$telegram->setUploadPath('../Upload');
 
     // Botan.io integration
+    // Second argument are options
     //$telegram->enableBotan('your_token');
+    //$telegram->enableBotan('your_token', ['timeout' => 3]);
+
+    // Requests Limiter (tries to prevent reaching Telegram API limits)
+    $telegram->enableLimiter();
 
     // Handle telegram webhook request
     $telegram->handle();

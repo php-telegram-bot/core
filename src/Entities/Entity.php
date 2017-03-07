@@ -21,7 +21,8 @@ use ReflectionObject;
  *
  * @link https://core.telegram.org/bots/api#available-types
  *
- * @method array getRawData() Get the raw data passed to this entity
+ * @method array  getRawData() Get the raw data passed to this entity
+ * @method string getBotName() Return the bot name passed to this entity
  */
 abstract class Entity
 {
@@ -141,7 +142,7 @@ abstract class Entity
                 $sub_entities = $this->subEntities();
 
                 if (isset($sub_entities[$property_name])) {
-                    return new $sub_entities[$property_name]($property);
+                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_name'));
                 }
 
                 return $property;

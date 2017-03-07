@@ -90,7 +90,7 @@ class Keyboard extends Entity
 
         $data = reset($args);
 
-        if ($from_data = array_key_exists($keyboard_type, (array)$data)) {
+        if ($from_data = array_key_exists($keyboard_type, (array) $data)) {
             $args = $data[$keyboard_type];
 
             // Make sure we're working with a proper row.

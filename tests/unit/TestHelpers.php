@@ -48,6 +48,7 @@ class TestHelpers
         'last_name' => 'last',
         'username' => 'name',
         'type' => 'private',
+        'all_members_are_administrators' => false,
     ];
 
     /**

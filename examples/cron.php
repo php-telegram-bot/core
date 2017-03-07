@@ -1,13 +1,9 @@
-#!/usr/bin/env php
 <?php
 /**
  * README
- * This configuration file is intented to run the bot with the getUpdates method
+ * This configuration file is intended to run your commands with crontab.
  * Uncommented parameters must be filled
  */
-
-// Bash script
-// while true; do ./getUpdatesCLI.php; done
 
 // Load composer
 require __DIR__ . '/vendor/autoload.php';
@@ -20,12 +16,15 @@ $BOT_NAME = 'username_bot';
 //$commands_path = __DIR__ . '/Commands/';
 
 // Enter your MySQL database credentials
-$mysql_credentials = [
-   'host'     => 'localhost',
-   'user'     => 'dbuser',
-   'password' => 'dbpass',
-   'database' => 'dbname',
-];
+//$mysql_credentials = [
+//    'host'     => 'localhost',
+//    'user'     => 'dbuser',
+//    'password' => 'dbpass',
+//    'database' => 'dbname',
+//];
+
+// Your command(s) to run, pass it just like in a message (arguments supported)
+$commands = ['/whoami', '/echo I\'m a bot!'];
 
 try {
     // Create Telegram API object
@@ -38,7 +37,7 @@ try {
     //Longman\TelegramBot\TelegramLog::initUpdateLog($path . '/' . $BOT_NAME . '_update.log');
 
     // Enable MySQL
-    $telegram->enableMySql($mysql_credentials);
+    //$telegram->enableMySql($mysql_credentials);
 
     // Enable MySQL with table prefix
     //$telegram->enableMySql($mysql_credentials, $BOT_NAME . '_');
@@ -61,29 +60,18 @@ try {
     //$telegram->setDownloadPath('../Download');
     //$telegram->setUploadPath('../Upload');
 
-    // Botan.io integration
-    // Second argument are options
-    //$telegram->enableBotan('your_token');
-    //$telegram->enableBotan('your_token', ['timeout' => 3]);
-
     // Requests Limiter (tries to prevent reaching Telegram API limits)
     $telegram->enableLimiter();
 
-    // Handle telegram getUpdates request
-    $serverResponse = $telegram->handleGetUpdates();
-
-    if ($serverResponse->isOk()) {
-        $updateCount = count($serverResponse->getResult());
-        echo date('Y-m-d H:i:s', time()) . ' - Processed ' . $updateCount . ' updates';
-    } else {
-        echo date('Y-m-d H:i:s', time()) . ' - Failed to fetch updates' . PHP_EOL;
-        echo $serverResponse->printError();
-    }
+    // Run user selected commands
+    $telegram->runCommands($commands);
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-    echo $e;
+    // Silence is golden!
+    //echo $e;
     // Log telegram errors
     Longman\TelegramBot\TelegramLog::error($e);
 } catch (Longman\TelegramBot\Exception\TelegramLogException $e) {
-    // Catch log initilization errors
-    echo $e;
+    // Silence is golden!
+    // Uncomment this to catch log initilization errors
+    //echo $e;
 }

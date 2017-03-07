@@ -47,6 +47,13 @@ class Request
     private static $input;
 
     /**
+     * Request limiter
+     *
+     * @var boolean
+     */
+    private static $limiter_enabled;
+
+    /**
      * Available actions to send
      *
      * @var array
@@ -54,6 +61,7 @@ class Request
     private static $actions = [
         'getUpdates',
         'setWebhook',
+        'deleteWebhook',
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -177,7 +185,12 @@ class Request
     private static function setUpRequestParams(array $data)
     {
         $has_resource = false;
-        $multipart    = [];
+        $multipart = [];
+
+        // Convert any nested arrays into JSON strings.
+        array_walk($data, function (&$item) {
+            is_array($item) && $item = json_encode($item);
+        });
 
         //Reformat data array in multipart way if it contains a resource
         foreach ($data as $key => $item) {
@@ -204,30 +217,29 @@ class Request
     {
         //Fix so that the keyboard markup is a string, not an object
         if (isset($data['reply_markup'])) {
-            $data['reply_markup'] = (string)$data['reply_markup'];
+            $data['reply_markup'] = json_encode($data['reply_markup']);
         }
 
+        $result = null;
         $request_params = self::setUpRequestParams($data);
-
-        $debug_handle            = TelegramLog::getDebugLogTempStream();
-        $request_params['debug'] = $debug_handle;
+        $request_params['debug'] = TelegramLog::getDebugLogTempStream();
 
         try {
             $response = self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
             );
-            $result   = (string)$response->getBody();
+            $result = (string) $response->getBody();
 
             //Logging getUpdates Update
             if ($action === 'getUpdates') {
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
-            $result = (string)$e->getResponse()->getBody();
+            $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream("Verbose HTTP Request output:\n%s\n");
+            TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
 
         return $result;
@@ -263,10 +275,10 @@ class Request
 
             return filesize($file_path) > 0;
         } catch (RequestException $e) {
-            return (string)$e->getResponse()->getBody();
+            return ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream("Verbose HTTP File Download Request output:\n%s\n");
+            TelegramLog::endDebugLogTempStream('Verbose HTTP File Download Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
     }
 
@@ -282,7 +294,7 @@ class Request
     {
         $fp = fopen($file, 'r');
         if ($fp === false) {
-            throw new TelegramException('Cannot open ' . $file . ' for reading');
+            throw new TelegramException('Cannot open "' . $file . '" for reading');
         }
 
         return $fp;
@@ -312,6 +324,8 @@ class Request
         }
 
         self::ensureNonEmptyData($data);
+
+        self::limitTelegramRequests($action, $data);
 
         $response = json_decode(self::execute($action, $data), true);
 
@@ -346,7 +360,7 @@ class Request
     private static function ensureValidAction($action)
     {
         if (!in_array($action, self::$actions, true)) {
-            throw new TelegramException('The action " . $action . " doesn\'t exist!');
+            throw new TelegramException('The action "' . $action . '" doesn\'t exist!');
         }
     }
 
@@ -398,7 +412,7 @@ class Request
         do {
             //Chop off and send the first message
             $data['text'] = mb_substr($text, 0, 4096);
-            $response = self::send('sendMessage', $data);
+            $response     = self::send('sendMessage', $data);
 
             //Prepare the next message
             $text = mb_substr($text, 4096);
@@ -800,18 +814,39 @@ class Request
      * @link https://core.telegram.org/bots/api#setwebhook
      *
      * @param string $url
-     * @param string $file
+     * @param array  $data Optional parameters.
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function setWebhook($url = '', $file = null)
+    public static function setWebhook($url = '', array $data = [])
     {
-        $data = ['url' => $url];
+        $data        = array_intersect_key($data, array_flip([
+            'certificate',
+            'max_connections',
+            'allowed_updates',
+        ]));
+        $data['url'] = $url;
 
-        self::assignEncodedFile($data, 'certificate', $file);
+        if (isset($data['certificate'])) {
+            self::assignEncodedFile($data, 'certificate', $data['certificate']);
+        }
 
         return self::send('setWebhook', $data);
+    }
+
+    /**
+     * Delete webhook
+     *
+     * @link https://core.telegram.org/bots/api#deletewebhook
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function deleteWebhook()
+    {
+        // Must send some arbitrary data for this to work for now...
+        return self::send('deleteWebhook', ['delete']);
     }
 
     /**
@@ -949,5 +984,77 @@ class Request
     {
         // Must send some arbitrary data for this to work for now...
         return self::send('getWebhookInfo', ['info']);
+    }
+
+    /**
+     * Enable request limiter
+     *
+     * @param boolean $value
+     */
+    public static function setLimiter($value = true)
+    {
+        if (DB::isDbConnected()) {
+            self::$limiter_enabled = $value;
+        }
+    }
+
+    /**
+     * This functions delays API requests to prevent reaching Telegram API limits
+     *  Can be disabled while in execution by 'Request::setLimiter(false)'
+     *
+     * @link https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this
+     *
+     * @param string $action
+     * @param array  $data
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    private static function limitTelegramRequests($action, array $data = [])
+    {
+        if (self::$limiter_enabled) {
+            $limited_methods = [
+                'sendMessage',
+                'forwardMessage',
+                'sendPhoto',
+                'sendAudio',
+                'sendDocument',
+                'sendSticker',
+                'sendVideo',
+                'sendVoice',
+                'sendLocation',
+                'sendVenue',
+                'sendContact',
+                'editMessageText',
+                'editMessageCaption',
+                'editMessageReplyMarkup',
+            ];
+
+            $chat_id = isset($data['chat_id']) ? $data['chat_id'] : null;
+            $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
+
+            if (($chat_id || $inline_message_id) && in_array($action, $limited_methods)) {
+                $timeout = 60;
+
+                while (true) {
+                    if ($timeout <= 0) {
+                        throw new TelegramException('Timed out while waiting for a request spot!');
+                    }
+
+                    $requests = DB::getTelegramRequestCount($chat_id, $inline_message_id);
+
+                    if ($requests['LIMIT_PER_SEC'] == 0  // No more than one message per second inside a particular chat
+                        && ((($chat_id > 0 || $inline_message_id) && $requests['LIMIT_PER_SEC_ALL'] < 30)  // No more than 30 messages per second globally
+                        || ($chat_id < 0 && $requests['LIMIT_PER_MINUTE'] < 20))
+                    ) {
+                        break;
+                    }
+
+                    $timeout--;
+                    sleep(1);
+                }
+
+                DB::insertTelegramRequest($action, $data);
+            }
+        }
     }
 }

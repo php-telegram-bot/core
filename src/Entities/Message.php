@@ -21,6 +21,7 @@ namespace Longman\TelegramBot\Entities;
  * @method Chat     getChat()                  Conversation the message belongs to
  * @method User     getForwardFrom()           Optional. For forwarded messages, sender of the original message
  * @method Chat     getForwardFromChat()       Optional. For messages forwarded from a channel, information about the original channel
+ * @method int      getForwardFromMessageId()  Optional. For forwarded channel posts, identifier of the original message in the channel
  * @method int      getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
  * @method Message  getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method int      getEditDate()              Optional. Date the message was last edited in Unix time
@@ -55,7 +56,7 @@ class Message extends Entity
             'from'              => User::class,
             'chat'              => Chat::class,
             'forward_from'      => User::class,
-            'forward_from_chat' => User::class,
+            'forward_from_chat' => Chat::class,
             'reply_to_message'  => self::class,
             'entities'          => MessageEntity::class,
             'audio'             => Audio::class,
@@ -151,7 +152,7 @@ class Message extends Entity
     {
         $text = $this->getProperty('text');
         if (strpos($text, '/') === 0) {
-            $no_EOL   = strtok($text, PHP_EOL);
+            $no_EOL = strtok($text, PHP_EOL);
             $no_space = strtok($text, ' ');
 
             //try to understand which separator \n or space divide /command from text
@@ -173,21 +174,21 @@ class Message extends Entity
             return $command;
         }
 
-        $cmd = $this->getFullCommand();
+        $full_command = $this->getFullCommand();
 
-        if (strpos($cmd, '/') === 0) {
-            $cmd = substr($cmd, 1);
+        if (strpos($full_command, '/') === 0) {
+            $full_command = substr($full_command, 1);
 
             //check if command is follow by botname
-            $split_cmd = explode('@', $cmd);
+            $split_cmd = explode('@', $full_command);
             if (isset($split_cmd[1])) {
                 //command is followed by name check if is addressed to me
-                if (strtolower($split_cmd[1]) === strtolower($this->bot_name)) {
+                if (strtolower($split_cmd[1]) === strtolower($this->getBotName())) {
                     return $split_cmd[0];
                 }
             } else {
                 //command is not followed by name
-                return $cmd;
+                return $full_command;
             }
         }
 
@@ -207,10 +208,10 @@ class Message extends Entity
 
         if ($without_cmd && $command = $this->getFullCommand()) {
             if (strlen($command) + 1 < strlen($text)) {
-                $text = substr($text, strlen($command) + 1);
-            } else {
-                $text = '';
+                return substr($text, strlen($command) + 1);
             }
+
+            return '';
         }
 
         return $text;

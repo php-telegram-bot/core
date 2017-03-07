@@ -50,6 +50,7 @@ class CallbackqueryCommand extends SystemCommand
             'callback_query_id' => $callback_query_id,
             'text'              => 'Hello World!',
             'show_alert'        => $callback_data === 'thumb up',
+            'cache_time'        => 5,
         ];
 
         return Request::answerCallbackQuery($data);

@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.37.0';
+    protected $version = '0.40.0';
 
     /**
      * Telegram API key
@@ -331,7 +331,7 @@ class Telegram
         if ($response->isOk()) {
             //Process all updates
             /** @var Update $result */
-            foreach ((array)$response->getResult() as $result) {
+            foreach ((array) $response->getResult() as $result) {
                 $this->processUpdate($result);
             }
         }
@@ -394,7 +394,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, ['inline_query', 'chosen_inline_result', 'callback_query', 'edited_message'], true)) {
+        if (in_array($update_type, ['edited_message', 'channel_post', 'edited_channel_post', 'inline_query', 'chosen_inline_result', 'callback_query'], true)) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();
@@ -419,8 +419,10 @@ class Telegram
                 'new_chat_member',
                 'new_chat_photo',
                 'new_chat_title',
+                'pinned_message',
                 'supergroup_chat_created',
-            ], true)) {
+            ], true)
+            ) {
                 $command = $this->getCommandFromType($type);
             }
         }
@@ -455,7 +457,7 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('Generic');
         } else {
-            //Botan.io integration, make sure only the command user executed is reported
+            //Botan.io integration, make sure only the actual command user executed is reported
             if ($this->botan_enabled) {
                 Botan::lock($command);
             }
@@ -497,7 +499,7 @@ class Telegram
         if (is_int($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list, true)) {
             $this->admins_list[] = $admin_id;
         } else {
-            TelegramLog::error('Invalid value "' . $admin_id . '" for admin.');
+            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
         }
 
         return $this;
@@ -544,10 +546,12 @@ class Telegram
             //Try to figure out if the user is an admin
             $update_methods = [
                 'getMessage',
+                'getEditedMessage',
+                'getChannelPost',
+                'getEditedChannelPost',
                 'getInlineQuery',
                 'getChosenInlineResult',
                 'getCallbackQuery',
-                'getEditedMessage',
             ];
             foreach ($update_methods as $update_method) {
                 $object = call_user_func([$this->update, $update_method]);
@@ -586,7 +590,7 @@ class Telegram
     public function addCommandsPath($path, $before = true)
     {
         if (!is_dir($path)) {
-            TelegramLog::error('Commands path "' . $path . '" does not exist.');
+            TelegramLog::error('Commands path "%s" does not exist.', $path);
         } elseif (!in_array($path, $this->commands_paths, true)) {
             if ($before) {
                 array_unshift($this->commands_paths, $path);
@@ -613,6 +617,16 @@ class Telegram
         }
 
         return $this;
+    }
+
+    /**
+     * Return the list of commands paths
+     *
+     * @return array
+     */
+    public function getCommandsPaths()
+    {
+        return $this->commands_paths;
     }
 
     /**
@@ -727,19 +741,19 @@ class Telegram
     /**
      * Set Webhook for bot
      *
-     * @param string      $url
-     * @param string|null $path_certificate
+     * @param string $url
+     * @param array  $data Optional parameters.
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function setWebHook($url, $path_certificate = null)
+    public function setWebhook($url, array $data = [])
     {
         if (empty($url)) {
             throw new TelegramException('Hook url is empty!');
         }
 
-        $result = Request::setWebhook($url, $path_certificate);
+        $result = Request::setWebhook($url, $data);
 
         if (!$result->isOk()) {
             throw new TelegramException(
@@ -751,18 +765,31 @@ class Telegram
     }
 
     /**
-     * Unset Webhook for bot
+     * Deprecated alias for deleteWebhook
+     *
+     * This is kept for backwards compatibility!
      *
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function unsetWebHook()
+    public function unsetWebhook()
     {
-        $result = Request::setWebhook();
+        return $this->deleteWebhook();
+    }
+
+    /**
+     * Delete any assigned webhook
+     *
+     * @return mixed
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function deleteWebhook()
+    {
+        $result = Request::deleteWebhook();
 
         if (!$result->isOk()) {
             throw new TelegramException(
-                'Webhook was not unset! Error: ' . $result->getErrorCode() . ' ' . $result->getDescription()
+                'Webhook was not deleted! Error: ' . $result->getErrorCode() . ' ' . $result->getDescription()
             );
         }
 
@@ -800,16 +827,80 @@ class Telegram
     /**
      * Enable Botan.io integration
      *
-     * @param  $token
+     * @param  string $token
+     * @param  array $options
      *
      * @return \Longman\TelegramBot\Telegram
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function enableBotan($token)
+    public function enableBotan($token, array $options = [])
     {
-        Botan::initializeBotan($token);
+        Botan::initializeBotan($token, $options);
         $this->botan_enabled = true;
 
         return $this;
+    }
+
+    /**
+     * Enable requests limiter
+     */
+    public function enableLimiter()
+    {
+        Request::setLimiter(true);
+
+        return $this;
+    }
+    
+    /**
+     * Run provided commands
+     *
+     * @param array $commands
+     *
+     * @throws TelegramException
+     */
+    public function runCommands($commands)
+    {
+        if (!is_array($commands) || empty($commands)) {
+            throw new TelegramException('No command(s) provided!');
+        }
+
+        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
+
+        $result = Request::getMe()->getResult();
+
+        if (!$result->getId()) {
+            throw new TelegramException('Received empty/invalid getMe result!');
+        }
+
+        $bot_id       = $result->getId();
+        $bot_name     = $result->getFirstName();
+        $bot_username = $result->getUsername();
+
+        $this->enableAdmin($bot_id);    // Give bot access to admin commands
+        $this->getCommandsList();       // Load full commands list
+
+        foreach ($commands as $command) {
+            $this->update = new Update(
+                [
+                    'update_id' => 0,
+                    'message'   => [
+                        'message_id' => 0,
+                        'from'       => [
+                            'id'         => $bot_id,
+                            'first_name' => $bot_name,
+                            'username'   => $bot_username
+                        ],
+                        'date'       => time(),
+                        'chat'       => [
+                            'id'   => $bot_id,
+                            'type' => 'private',
+                        ],
+                        'text'       => $command
+                    ]
+                ]
+            );
+
+            $this->executeCommand($this->update->getMessage()->getCommand());
+        }
     }
 }
