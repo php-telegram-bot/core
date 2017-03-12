@@ -78,7 +78,6 @@ class HelpCommand extends UserCommand
                     $command->getName(),
                     $command->getDescription()
                 );
-
             }
 
             $text .= PHP_EOL . 'For exact command help type: /help <command>';
