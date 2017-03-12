@@ -127,6 +127,12 @@ class CommandTest extends TestCase
         $this->assertTrue($this->command_stub->isEnabled());
     }
 
+    public function testDefaultCommandShownInHelp()
+    {
+        $this->assertAttributeEquals(true, 'show_in_help', $this->command_stub);
+        $this->assertTrue($this->command_stub->showInHelp());
+    }
+
     public function testDefaultCommandNeedsMysql()
     {
         $this->assertAttributeEquals(false, 'need_mysql', $this->command_stub);
