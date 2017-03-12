@@ -266,7 +266,7 @@ abstract class Command
      */
      public function showInHelp()
      {
-     	return $this->show_in_help;
+        return $this->show_in_help;
      }
 
     /**
