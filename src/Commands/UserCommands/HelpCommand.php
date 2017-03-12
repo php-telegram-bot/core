@@ -69,14 +69,14 @@ class HelpCommand extends UserCommand
             );
 
             foreach ($command_objs as $command) {
-                if($command->showInHelp()) {
+                if ($command->showInHelp()) {
                     continue;
                 }
 
                 $text .= sprintf(
-                '/%s - %s' . PHP_EOL,
-                $command->getName(),
-                $command->getDescription()
+                    '/%s - %s' . PHP_EOL,
+                    $command->getName(),
+                    $command->getDescription()
                 );
 
             }
