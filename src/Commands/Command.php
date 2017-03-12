@@ -60,6 +60,13 @@ abstract class Command
     protected $usage = 'Command usage';
 
     /**
+     * Show in Help
+     *
+     * @var bool
+     */
+    protected $show_in_help = true;
+
+    /**
      * Version
      *
      * @var string
@@ -250,6 +257,16 @@ abstract class Command
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get Show in Help
+     *
+     * @return bool
+     */
+    public function showInHelp()
+    {
+        return $this->show_in_help;
     }
 
     /**

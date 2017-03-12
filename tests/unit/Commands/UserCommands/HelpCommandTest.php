@@ -10,9 +10,9 @@
 
 namespace Longman\TelegramBot\Tests\Unit\Commands\UserCommands;
 
+use Longman\TelegramBot\Commands\UserCommands\HelpCommand;
 use Longman\TelegramBot\Tests\Unit\Commands\CommandTestCase;
 use Longman\TelegramBot\Tests\Unit\TestHelpers;
-use Longman\TelegramBot\Commands\UserCommands\HelpCommand;
 
 /**
  * @package         TelegramTest
@@ -70,5 +70,16 @@ class HelpCommandTest extends CommandTestCase
             ->getResult()
             ->getText();
         $this->assertContains("Description: Show text\nUsage: /echo <text>", $text);
+    }
+
+    public function testHelpCommandWithHiddenCommand()
+    {
+        $text = $this->command
+            ->setUpdate(TestHelpers::getFakeUpdateCommandObject('/help'))
+            ->execute()
+            ->getResult()
+            ->getText();
+        $this->assertContains('/visible', $text);
+        $this->assertNotContains('/hidden', $text);
     }
 }
