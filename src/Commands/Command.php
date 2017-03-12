@@ -60,6 +60,13 @@ abstract class Command
     protected $usage = 'Command usage';
 
     /**
+     * Show in Help
+     *
+     * @var bool
+     */
+     protected $showInHelp = true;
+
+    /**
      * Version
      *
      * @var string
@@ -251,6 +258,16 @@ abstract class Command
     {
         return $this->name;
     }
+
+    /*
+     * Get Show in Help
+     *
+     * @return bool
+     */
+     public function getShowInHelp()
+     {
+     	return $this->showInHelp;
+     }
 
     /**
      * Check if command is enabled
