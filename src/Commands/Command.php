@@ -259,7 +259,7 @@ abstract class Command
         return $this->name;
     }
 
-    /*
+    /**
      * Get Show in Help
      *
      * @return bool
