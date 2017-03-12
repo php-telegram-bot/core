@@ -69,13 +69,16 @@ class HelpCommand extends UserCommand
             );
 
             foreach ($command_objs as $command) {
-                if($command->getShowInHelp()) {
-                    $text .= sprintf(
-                    '/%s - %s' . PHP_EOL,
-                    $command->getName(),
-                    $command->getDescription()
-                    );
+                if($command->showInHelp()) {
+                    continue;
                 }
+
+                $text .= sprintf(
+                '/%s - %s' . PHP_EOL,
+                $command->getName(),
+                $command->getDescription()
+                );
+
             }
 
             $text .= PHP_EOL . 'For exact command help type: /help <command>';

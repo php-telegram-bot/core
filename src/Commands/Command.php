@@ -64,7 +64,7 @@ abstract class Command
      *
      * @var bool
      */
-     protected $showInHelp = true;
+     protected $show_in_help = true;
 
     /**
      * Version
@@ -264,9 +264,9 @@ abstract class Command
      *
      * @return bool
      */
-     public function getShowInHelp()
+     public function showInHelp()
      {
-     	return $this->showInHelp;
+     	return $this->show_in_help;
      }
 
     /**
