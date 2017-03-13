@@ -1,6 +1,6 @@
 # PHP Telegram Bot
 
-[![Join the chat at https://gitter.im/akalongman/php-telegram-bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/akalongman/php-telegram-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-32a2da.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 
 [![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
