@@ -21,7 +21,7 @@ class InlineKeyboard extends Keyboard
      * Get an inline pagination keyboard.
      *
      * - $callback_data is an ID for the CallbackqueryCommand, to know where the request comes from.
-     * It must contain a '%d' placeholder for the page number. If no placeholder is found, the ID is automatically appended with '_page_%d'
+     * The ID is automatically appended with '_page_%d' to filter out the selected page number.
      *
      * - $labels allows for custom button labels, using '%d' placeholders.
      * Default:
@@ -46,9 +46,7 @@ class InlineKeyboard extends Keyboard
      */
     public static function getPagination($callback_data, $current_page, $max_pages, array $labels = [])
     {
-        if (strpos($callback_data, '%d') === false) {
-            $callback_data .= '_page_%d';
-        }
+        $callback_data .= '_page_%d';
 
         // Merge labels with defaults.
         $labels = array_merge([
@@ -98,5 +96,17 @@ class InlineKeyboard extends Keyboard
         }
 
         return new InlineKeyboard($buttons);
+    }
+
+    /**
+     * Extract the page number from the passed callback data.
+     *
+     * @param string $callback_data
+     *
+     * @return int
+     */
+    public static function getPageFromCallbackData($callback_data)
+    {
+        return (int) preg_replace('/.*_page_(\d+)$/', '$1', $callback_data);
     }
 }

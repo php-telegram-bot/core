@@ -153,7 +153,7 @@ class InlineKeyboardTest extends TestCase
     public function testInlineKeyboardPagination()
     {
         // Should get '_page_%d' appended to it.
-        $callback_data = 'pagination_callback';
+        $callback_data = 'cbdata';
 
         // current
         $keyboard = InlineKeyboard::getPagination($callback_data, 1, 1);
@@ -161,11 +161,8 @@ class InlineKeyboardTest extends TestCase
             ['· 1 ·'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['pagination_callback_page_1'],
+            ['cbdata_page_1'],
         ], 'callback_data', $keyboard);
-
-        // Shorter custom callback data.
-        $callback_data = 'p%d';
 
         // current, next, last
         $keyboard = InlineKeyboard::getPagination($callback_data, 1, 10);
@@ -173,7 +170,7 @@ class InlineKeyboardTest extends TestCase
             ['· 1 ·', '2 ›', '10 »'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['p1', 'p2', 'p10'],
+            ['cbdata_page_1', 'cbdata_page_2', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
 
         // first, previous, current, next, last
@@ -182,7 +179,7 @@ class InlineKeyboardTest extends TestCase
             ['« 1', '‹ 4', '· 5 ·', '6 ›', '10 »'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['p1', 'p4', 'p5', 'p6', 'p10'],
+            ['cbdata_page_1', 'cbdata_page_4', 'cbdata_page_5', 'cbdata_page_6', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
 
         // first, previous, current, last
@@ -191,7 +188,7 @@ class InlineKeyboardTest extends TestCase
             ['« 1', '‹ 8', '· 9 ·', '10 »'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['p1', 'p8', 'p9', 'p10'],
+            ['cbdata_page_1', 'cbdata_page_8', 'cbdata_page_9', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
 
         // first, previous, current
@@ -200,7 +197,7 @@ class InlineKeyboardTest extends TestCase
             ['« 1', '‹ 9', '· 10 ·'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['p1', 'p9', 'p10'],
+            ['cbdata_page_1', 'cbdata_page_9', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
 
         // custom labels
@@ -216,7 +213,7 @@ class InlineKeyboardTest extends TestCase
             ['first 1', 'previous 4', 'cur 5 rent', '6 next', '10 last'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['p1', 'p4', 'p5', 'p6', 'p10'],
+            ['cbdata_page_1', 'cbdata_page_4', 'cbdata_page_5', 'cbdata_page_6', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
     }
 }
