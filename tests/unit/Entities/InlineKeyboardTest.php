@@ -54,51 +54,60 @@ class InlineKeyboardTest extends TestCase
 
     public function testInlineKeyboardSingleButtonSingleRow()
     {
-        $inline_keyboard = (new InlineKeyboard(
+        $keyboard = new InlineKeyboard(
             $this->getRandomButton('Button Text 1')
-        ))->getProperty('inline_keyboard');
-        self::assertSame('Button Text 1', $inline_keyboard[0][0]->getText());
+        );
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+        ], 'text', $keyboard);
 
-        $inline_keyboard = (new InlineKeyboard(
+        $keyboard = new InlineKeyboard(
             [$this->getRandomButton('Button Text 2')]
-        ))->getProperty('inline_keyboard');
-        self::assertSame('Button Text 2', $inline_keyboard[0][0]->getText());
+        );
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 2'],
+        ], 'text', $keyboard);
     }
 
     public function testInlineKeyboardSingleButtonMultipleRows()
     {
-        $keyboard = (new InlineKeyboard(
+        $keyboard = new InlineKeyboard(
             $this->getRandomButton('Button Text 1'),
             $this->getRandomButton('Button Text 2'),
             $this->getRandomButton('Button Text 3')
-        ))->getProperty('inline_keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[2][0]->getText());
+        );
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+            ['Button Text 2'],
+            ['Button Text 3'],
+        ], 'text', $keyboard);
 
-        $keyboard = (new InlineKeyboard(
+        $keyboard = new InlineKeyboard(
             [$this->getRandomButton('Button Text 4')],
             [$this->getRandomButton('Button Text 5')],
             [$this->getRandomButton('Button Text 6')]
-        ))->getProperty('inline_keyboard');
-        self::assertSame('Button Text 4', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 5', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 6', $keyboard[2][0]->getText());
+        );
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 4'],
+            ['Button Text 5'],
+            ['Button Text 6'],
+        ], 'text', $keyboard);
     }
 
     public function testInlineKeyboardMultipleButtonsSingleRow()
     {
-        $keyboard = (new InlineKeyboard([
+        $keyboard = new InlineKeyboard([
             $this->getRandomButton('Button Text 1'),
             $this->getRandomButton('Button Text 2'),
-        ]))->getProperty('inline_keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[0][1]->getText());
+        ]);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1', 'Button Text 2'],
+        ], 'text', $keyboard);
     }
 
     public function testInlineKeyboardMultipleButtonsMultipleRows()
     {
-        $keyboard = (new InlineKeyboard(
+        $keyboard = new InlineKeyboard(
             [
                 $this->getRandomButton('Button Text 1'),
                 $this->getRandomButton('Button Text 2'),
@@ -107,32 +116,107 @@ class InlineKeyboardTest extends TestCase
                 $this->getRandomButton('Button Text 3'),
                 $this->getRandomButton('Button Text 4'),
             ]
-        ))->getProperty('inline_keyboard');
+        );
 
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[0][1]->getText());
-        self::assertSame('Button Text 3', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 4', $keyboard[1][1]->getText());
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1', 'Button Text 2'],
+            ['Button Text 3', 'Button Text 4'],
+        ], 'text', $keyboard);
     }
 
     public function testInlineKeyboardAddRows()
     {
-        $keyboard_obj = new InlineKeyboard([]);
+        $keyboard = new InlineKeyboard([]);
 
-        $keyboard_obj->addRow($this->getRandomButton('Button Text 1'));
-        $keyboard = $keyboard_obj->getProperty('inline_keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        $keyboard->addRow($this->getRandomButton('Button Text 1'));
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+        ], 'text', $keyboard);
 
-        $keyboard_obj->addRow(
+        $keyboard->addRow(
             $this->getRandomButton('Button Text 2'),
             $this->getRandomButton('Button Text 3')
         );
-        $keyboard = $keyboard_obj->getProperty('inline_keyboard');
-        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[1][1]->getText());
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+            ['Button Text 2', 'Button Text 3'],
+        ], 'text', $keyboard);
 
-        $keyboard_obj->addRow($this->getRandomButton('Button Text 4'));
-        $keyboard = $keyboard_obj->getProperty('inline_keyboard');
-        self::assertSame('Button Text 4', $keyboard[2][0]->getText());
+        $keyboard->addRow($this->getRandomButton('Button Text 4'));
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+            ['Button Text 2', 'Button Text 3'],
+            ['Button Text 4'],
+        ], 'text', $keyboard);
+    }
+
+    public function testInlineKeyboardPagination()
+    {
+        // Should get '_page_%d' appended to it.
+        $callback_data = 'pagination_callback';
+
+        // current
+        $keyboard = InlineKeyboard::getPagination($callback_data, 1, 1);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['· 1 ·'],
+        ], 'text', $keyboard);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['pagination_callback_page_1'],
+        ], 'callback_data', $keyboard);
+
+        // Shorter custom callback data.
+        $callback_data = 'p%d';
+
+        // current, next, last
+        $keyboard = InlineKeyboard::getPagination($callback_data, 1, 10);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['· 1 ·', '2 ›', '10 »'],
+        ], 'text', $keyboard);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['p1', 'p2', 'p10'],
+        ], 'callback_data', $keyboard);
+
+        // first, previous, current, next, last
+        $keyboard = InlineKeyboard::getPagination($callback_data, 5, 10);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['« 1', '‹ 4', '· 5 ·', '6 ›', '10 »'],
+        ], 'text', $keyboard);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['p1', 'p4', 'p5', 'p6', 'p10'],
+        ], 'callback_data', $keyboard);
+
+        // first, previous, current, last
+        $keyboard = InlineKeyboard::getPagination($callback_data, 9, 10);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['« 1', '‹ 8', '· 9 ·', '10 »'],
+        ], 'text', $keyboard);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['p1', 'p8', 'p9', 'p10'],
+        ], 'callback_data', $keyboard);
+
+        // first, previous, current
+        $keyboard = InlineKeyboard::getPagination($callback_data, 10, 10);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['« 1', '‹ 9', '· 10 ·'],
+        ], 'text', $keyboard);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['p1', 'p9', 'p10'],
+        ], 'callback_data', $keyboard);
+
+        // custom labels
+        // first, previous, current, next, last
+        $keyboard = InlineKeyboard::getPagination($callback_data, 5, 10, [
+            'first'    => 'first %d',
+            'previous' => 'previous %d',
+            'current'  => 'cur %d rent',
+            'next'     => '%d next',
+            'last'     => '%d last',
+        ]);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['first 1', 'previous 4', 'cur 5 rent', '6 next', '10 last'],
+        ], 'text', $keyboard);
+        KeyboardTest::assertAllButtonPropertiesEqual([
+            ['p1', 'p4', 'p5', 'p6', 'p10'],
+        ], 'callback_data', $keyboard);
     }
 }
