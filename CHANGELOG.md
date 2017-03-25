@@ -3,7 +3,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [0.41.0] - 2017-03-25
 ### Added
-- `$showInHelp` attribute for commands, to set if it should be displayed in the `/help` command.
+- `$show_in_help` attribute for commands, to set if it should be displayed in the `/help` command.
 - Link to new Telegram group: `https://telegram.me/PHP_Telegram_Bot_Support`
 - Introduce change log.
 
