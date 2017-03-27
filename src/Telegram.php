@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.39.0';
+    protected $version = '0.41.0';
 
     /**
      * Telegram API key
@@ -841,6 +841,16 @@ class Telegram
         return $this;
     }
 
+    /**
+     * Enable requests limiter
+     */
+    public function enableLimiter()
+    {
+        Request::setLimiter(true);
+
+        return $this;
+    }
+    
     /**
      * Run provided commands
      *
