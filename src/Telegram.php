@@ -373,7 +373,7 @@ class Telegram
      *
      * @return string
      */
-    private function getCommandFromType($type)
+    protected function getCommandFromType($type)
     {
         return $this->ucfirstUnicode(str_replace('_', '', $type));
     }
