@@ -47,6 +47,13 @@ class Telegram
     protected $bot_name = '';
 
     /**
+     * Telegram Bot id
+     *
+     * @var string
+     */
+    protected $bot_id = '';
+
+    /**
      * Raw request data (json) for webhook methods
      *
      * @var string
@@ -143,6 +150,9 @@ class Telegram
 
         $this->api_key  = $api_key;
         $this->bot_name = $bot_name;
+
+        preg_match("/([0-9]*)\:.*/", $this->api_key, $matches);
+        $this->bot_id = $matches[1];
 
         //Set default download and upload path
         $this->setDownloadPath(BASE_PATH . '/../Download');
@@ -726,6 +736,16 @@ class Telegram
     public function getBotName()
     {
         return $this->bot_name;
+    }
+
+    /**
+     * Get Bot Id
+     *
+     * @return string
+     */
+    public function getBotId()
+    {
+        return $this->bot_id;
     }
 
     /**
