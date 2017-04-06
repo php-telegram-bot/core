@@ -13,7 +13,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 // Add you bot's API key and name
 $API_KEY = 'your_bot_api_key';
-$BOT_NAME = 'username_bot';
+$BOT_USERNAME = 'username_bot';
 
 // Define a path for your custom commands
 //$commands_path = __DIR__ . '/Commands/';
@@ -28,7 +28,7 @@ $BOT_NAME = 'username_bot';
 
 try {
     // Create Telegram API object
-    $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
+    $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_USERNAME);
 
     // Error, Debug and Raw Update logging
     //Longman\TelegramBot\TelegramLog::initialize($your_external_monolog_instance);

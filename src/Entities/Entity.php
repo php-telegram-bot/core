@@ -29,14 +29,14 @@ abstract class Entity
     /**
      * Entity constructor.
      *
-     * @todo Get rid of the $bot_name, it shouldn't be here!
+     * @todo Get rid of the $bot_username, it shouldn't be here!
      *
      * @param array  $data
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct($data, $bot_name = '')
+    public function __construct($data, $bot_username = '')
     {
         //Make sure we're not raw_data inception-ing
         if (array_key_exists('raw_data', $data)) {
@@ -47,7 +47,7 @@ abstract class Entity
             $data['raw_data'] = $data;
         }
 
-        $data['bot_name'] = $bot_name;
+        $data['bot_username'] = $bot_username;
         $this->assignMemberVariables($data);
         $this->validate();
     }
@@ -142,7 +142,7 @@ abstract class Entity
                 $sub_entities = $this->subEntities();
 
                 if (isset($sub_entities[$property_name])) {
-                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_name'));
+                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_username'));
                 }
 
                 return $property;

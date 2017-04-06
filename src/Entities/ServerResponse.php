@@ -26,11 +26,11 @@ class ServerResponse extends Entity
      * ServerResponse constructor.
      *
      * @param array  $data
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct(array $data, $bot_name)
+    public function __construct(array $data, $bot_username)
     {
         // Make sure we don't double-save the raw_data
         unset($data['raw_data']);
@@ -41,13 +41,13 @@ class ServerResponse extends Entity
 
         if ($is_ok && is_array($result)) {
             if ($this->isAssoc($result)) {
-                $data['result'] = $this->createResultObject($result, $bot_name);
+                $data['result'] = $this->createResultObject($result, $bot_username);
             } else {
-                $data['result'] = $this->createResultObjects($result, $bot_name);
+                $data['result'] = $this->createResultObjects($result, $bot_username);
             }
         }
 
-        parent::__construct($data, $bot_name);
+        parent::__construct($data, $bot_username);
     }
 
     /**
@@ -88,12 +88,12 @@ class ServerResponse extends Entity
      * Create and return the object of the received result
      *
      * @param array  $result
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @return \Longman\TelegramBot\Entities\Chat|\Longman\TelegramBot\Entities\ChatMember|\Longman\TelegramBot\Entities\File|\Longman\TelegramBot\Entities\Message|\Longman\TelegramBot\Entities\User|\Longman\TelegramBot\Entities\UserProfilePhotos|\Longman\TelegramBot\Entities\WebhookInfo
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    private function createResultObject($result, $bot_name)
+    private function createResultObject($result, $bot_username)
     {
         // We don't need to save the raw_data of the response object!
         $result['raw_data'] = null;
@@ -115,19 +115,19 @@ class ServerResponse extends Entity
         }
 
         //Response from sendMessage
-        return new Message($result, $bot_name);
+        return new Message($result, $bot_username);
     }
 
     /**
      * Create and return the objects array of the received result
      *
      * @param array  $result
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @return null|\Longman\TelegramBot\Entities\ChatMember[]|\Longman\TelegramBot\Entities\Update[]
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    private function createResultObjects($result, $bot_name)
+    private function createResultObjects($result, $bot_username)
     {
         $results = [];
         if (isset($result[0]['user'])) {
@@ -144,7 +144,7 @@ class ServerResponse extends Entity
                 // We don't need to save the raw_data of the response object!
                 $update['raw_data'] = null;
 
-                $results[] = new Update($update, $bot_name);
+                $results[] = new Update($update, $bot_username);
             }
         }
 
