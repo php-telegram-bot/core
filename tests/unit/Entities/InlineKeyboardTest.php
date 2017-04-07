@@ -200,20 +200,20 @@ class InlineKeyboardTest extends TestCase
             ['cbdata_page_1', 'cbdata_page_9', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
 
-        // custom labels
+        // custom labels, skipping some buttons
         // first, previous, current, next, last
         $keyboard = InlineKeyboard::getPagination($callback_data, 5, 10, [
-            'first'    => 'first %d',
+            'first'    => '',
             'previous' => 'previous %d',
-            'current'  => 'cur %d rent',
+            'current'  => null,
             'next'     => '%d next',
             'last'     => '%d last',
         ]);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['first 1', 'previous 4', 'cur 5 rent', '6 next', '10 last'],
+            ['previous 4', '6 next', '10 last'],
         ], 'text', $keyboard);
         KeyboardTest::assertAllButtonPropertiesEqual([
-            ['cbdata_page_1', 'cbdata_page_4', 'cbdata_page_5', 'cbdata_page_6', 'cbdata_page_10'],
+            ['cbdata_page_4', 'cbdata_page_6', 'cbdata_page_10'],
         ], 'callback_data', $keyboard);
     }
 }

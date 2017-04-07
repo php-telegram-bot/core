@@ -68,6 +68,8 @@ class InlineKeyboard extends Keyboard
         foreach ($labels as $key => &$label) {
             if (strpos($label, '%d') !== false) {
                 $label = sprintf($label, $pages[$key]);
+            } elseif ($label === '') {
+                $label = null;
             }
         }
         unset($label);
@@ -79,19 +81,21 @@ class InlineKeyboard extends Keyboard
 
         $buttons = [];
 
-        if ($current_page > 1) {
+        if ($current_page > 1 && $labels['first'] !== null) {
             $buttons[] = new InlineKeyboardButton(['text' => $labels['first'], 'callback_data' => $callbacks_data['first']]);
         }
-        if ($current_page > 2) {
+        if ($current_page > 2 && $labels['previous'] !== null) {
             $buttons[] = new InlineKeyboardButton(['text' => $labels['previous'], 'callback_data' => $callbacks_data['previous']]);
         }
 
-        $buttons[] = new InlineKeyboardButton(['text' => $labels['current'], 'callback_data' => $callbacks_data['current']]);
+        if ($labels['current'] !== null) {
+            $buttons[] = new InlineKeyboardButton(['text' => $labels['current'], 'callback_data' => $callbacks_data['current']]);
+        }
 
-        if ($current_page < $max_pages - 1) {
+        if ($current_page < $max_pages - 1 && $labels['next'] !== null) {
             $buttons[] = new InlineKeyboardButton(['text' => $labels['next'], 'callback_data' => $callbacks_data['next']]);
         }
-        if ($current_page < $max_pages) {
+        if ($current_page < $max_pages && $labels['last'] !== null) {
             $buttons[] = new InlineKeyboardButton(['text' => $labels['last'], 'callback_data' => $callbacks_data['last']]);
         }
 
