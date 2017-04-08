@@ -37,7 +37,7 @@ class CommandTestCase extends TestCase
      */
     public function setUp()
     {
-        $this->telegram = new Telegram('apikey', 'testbot');
+        $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
         $this->telegram->addCommandsPath(BASE_COMMANDS_PATH . '/UserCommands');
 
         // Add custom commands dedicated to do some tests.
