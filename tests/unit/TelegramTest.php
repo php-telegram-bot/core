@@ -40,7 +40,7 @@ class TelegramTest extends TestCase
     */
     protected function setUp()
     {
-        $this->telegram = new Telegram('apikey', 'testbot');
+        $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
 
         // Create a few dummy custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
@@ -61,6 +61,7 @@ class TelegramTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
+     * @expectedExceptionMessage API KEY not defined!
      */
     public function testNewInstanceWithoutApiKeyParam()
     {
@@ -69,20 +70,30 @@ class TelegramTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
+     * @expectedExceptionMessage Invalid API KEY defined!
      */
-    public function testNewInstanceWithoutBotNameParam()
+    public function testNewInstanceWithInvalidApiKeyParam()
     {
-        new Telegram('apikey', null);
+        new Telegram('invalid-api-key-format', null);
+    }
+
+    /**
+     * @expectedException \Longman\TelegramBot\Exception\TelegramException
+     * @expectedExceptionMessage Bot Username not defined!
+     */
+    public function testNewInstanceWithoutBotUsernameParam()
+    {
+        new Telegram(self::$dummy_api_key, null);
     }
 
     public function testGetApiKey()
     {
-        $this->assertEquals('apikey', $this->telegram->getApiKey());
+        $this->assertEquals(self::$dummy_api_key, $this->telegram->getApiKey());
     }
 
-    public function testGetBotName()
+    public function testGetBotUsername()
     {
-        $this->assertEquals('testbot', $this->telegram->getBotName());
+        $this->assertEquals('testbot', $this->telegram->getBotUsername());
     }
 
     public function testEnableAdmins()

@@ -51,11 +51,11 @@ class CommandTest extends TestCase
     public function setUp()
     {
         //Default command object
-        $this->telegram = new Telegram('apikey', 'testbot');
+        $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
         $this->command_stub = $this->getMockForAbstractClass($this->command_namespace, [$this->telegram]);
 
         //Create separate command object that contain a command config
-        $this->telegram_with_config = new Telegram('apikey', 'testbot');
+        $this->telegram_with_config = new Telegram(self::$dummy_api_key, 'testbot');
         $this->telegram_with_config->setCommandConfig('command_name', ['config_key' => 'config_value']);
         $this->command_stub_with_config = $this->getMockBuilder($this->command_namespace)
              ->disableOriginalConstructor()

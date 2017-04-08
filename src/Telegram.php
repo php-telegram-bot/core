@@ -40,11 +40,18 @@ class Telegram
     protected $api_key = '';
 
     /**
-     * Telegram Bot name
+     * Telegram Bot username
      *
      * @var string
      */
-    protected $bot_name = '';
+    protected $bot_username = '';
+
+    /**
+     * Telegram Bot id
+     *
+     * @var string
+     */
+    protected $bot_id = '';
 
     /**
      * Raw request data (json) for webhook methods
@@ -127,22 +134,26 @@ class Telegram
      * Telegram constructor.
      *
      * @param string $api_key
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct($api_key, $bot_name)
+    public function __construct($api_key, $bot_username)
     {
         if (empty($api_key)) {
             throw new TelegramException('API KEY not defined!');
         }
+        preg_match('/(\d+)\:[\w\-]+/', $api_key, $matches);
+        if (!isset($matches[1])) {
+            throw new TelegramException('Invalid API KEY defined!');
+        }
+        $this->bot_id  = $matches[1];
+        $this->api_key = $api_key;
 
-        if (empty($bot_name)) {
+        if (empty($bot_username)) {
             throw new TelegramException('Bot Username not defined!');
         }
-
-        $this->api_key  = $api_key;
-        $this->bot_name = $bot_name;
+        $this->bot_username = $bot_username;
 
         //Set default download and upload path
         $this->setDownloadPath(BASE_PATH . '/../Download');
@@ -309,7 +320,7 @@ class Telegram
                     'ok'          => false,
                     'description' => 'getUpdates needs MySQL connection!',
                 ],
-                $this->bot_name
+                $this->bot_username
             );
         }
 
@@ -359,7 +370,7 @@ class Telegram
             throw new TelegramException('Invalid JSON!');
         }
 
-        if ($response = $this->processUpdate(new Update($post, $this->bot_name))) {
+        if ($response = $this->processUpdate(new Update($post, $this->bot_username))) {
             return $response->isOk();
         }
 
@@ -723,9 +734,32 @@ class Telegram
      *
      * @return string
      */
+    public function getBotUsername()
+    {
+        return $this->bot_username;
+    }
+
+    /**
+     * Get Bot name
+     *
+     * @todo: Left for backwards compatibility, remove in the future
+     *
+     * @return string
+     */
     public function getBotName()
     {
-        return $this->bot_name;
+        TelegramLog::debug('Usage of deprecated method getBotName() detected, please use getBotUsername() instead!');
+        return $this->getBotUsername();
+    }
+
+    /**
+     * Get Bot Id
+     *
+     * @return string
+     */
+    public function getBotId()
+    {
+        return $this->bot_id;
     }
 
     /**
@@ -828,7 +862,7 @@ class Telegram
      * Enable Botan.io integration
      *
      * @param  string $token
-     * @param  array $options
+     * @param  array  $options
      *
      * @return \Longman\TelegramBot\Telegram
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -850,7 +884,7 @@ class Telegram
 
         return $this;
     }
-    
+
     /**
      * Run provided commands
      *
@@ -888,15 +922,15 @@ class Telegram
                         'from'       => [
                             'id'         => $bot_id,
                             'first_name' => $bot_name,
-                            'username'   => $bot_username
+                            'username'   => $bot_username,
                         ],
                         'date'       => time(),
                         'chat'       => [
                             'id'   => $bot_id,
                             'type' => 'private',
                         ],
-                        'text'       => $command
-                    ]
+                        'text'       => $command,
+                    ],
                 ]
             );
 
