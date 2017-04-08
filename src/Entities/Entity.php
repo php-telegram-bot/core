@@ -12,6 +12,7 @@ namespace Longman\TelegramBot\Entities;
 
 use Exception;
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
+use Longman\TelegramBot\TelegramLog;
 use ReflectionObject;
 
 /**
@@ -21,8 +22,8 @@ use ReflectionObject;
  *
  * @link https://core.telegram.org/bots/api#available-types
  *
- * @method array  getRawData() Get the raw data passed to this entity
- * @method string getBotName() Return the bot name passed to this entity
+ * @method array  getRawData()     Get the raw data passed to this entity
+ * @method string getBotUsername() Return the bot name passed to this entity
  */
 abstract class Entity
 {
@@ -240,5 +241,18 @@ abstract class Entity
         }
 
         return ($is_username ? '@' : '') . $name;
+    }
+
+    /**
+     * Get Bot name
+     *
+     * @todo: Left for backwards compatibility, remove in the future
+     *
+     * @return string
+     */
+    public function getBotName()
+    {
+        TelegramLog::debug('Usage of deprecated method getBotName() detected, please use getBotUsername() instead!');
+        return $this->getBotUsername();
     }
 }
