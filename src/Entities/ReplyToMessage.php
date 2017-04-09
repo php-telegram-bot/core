@@ -21,16 +21,16 @@ class ReplyToMessage extends Message
      * ReplyToMessage constructor.
      *
      * @param array  $data
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct(array $data, $bot_name = '')
+    public function __construct(array $data, $bot_username = '')
     {
         //As explained in the documentation
         //Reply to message can't contain other reply to message entities
         unset($data['reply_to_message']);
 
-        parent::__construct($data, $bot_name);
+        parent::__construct($data, $bot_username);
     }
 }

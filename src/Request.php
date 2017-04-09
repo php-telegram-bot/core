@@ -315,12 +315,12 @@ class Request
     {
         self::ensureValidAction($action);
 
-        $bot_name = self::$telegram->getBotName();
+        $bot_username = self::$telegram->getBotUsername();
 
         if (defined('PHPUNIT_TESTSUITE')) {
             $fake_response = self::generateGeneralFakeServerResponse($data);
 
-            return new ServerResponse($fake_response, $bot_name);
+            return new ServerResponse($fake_response, $bot_username);
         }
 
         self::ensureNonEmptyData($data);
@@ -333,7 +333,7 @@ class Request
             throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
         }
 
-        return new ServerResponse($response, $bot_name);
+        return new ServerResponse($response, $bot_username);
     }
 
     /**

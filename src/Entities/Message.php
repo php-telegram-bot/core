@@ -79,11 +79,11 @@ class Message extends Entity
      * Message constructor
      *
      * @param array  $data
-     * @param string $bot_name
+     * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct(array $data, $bot_name = '')
+    public function __construct(array $data, $bot_username = '')
     {
         //Retro-compatibility
         if (isset($data['new_chat_participant'])) {
@@ -95,7 +95,7 @@ class Message extends Entity
             unset($data['left_chat_participant']);
         }
 
-        parent::__construct($data, $bot_name);
+        parent::__construct($data, $bot_username);
     }
 
     /**

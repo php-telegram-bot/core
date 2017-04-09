@@ -1,6 +1,16 @@
 # Changelog
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.42.0] - 2017-04-09
+### Added
+- Added `getBotId()` to directly access bot ID.
+### Changed
+- Rename `bot_name` to `bot_username` everywhere.
+### Deprecated
+- Deprecated `getBotName()` (Use `getBotUsername()` instead).  
+### Fixed
+- Tests are more reliable now, using a properly formatted API key.
+
 ## [0.41.0] - 2017-03-25
 ### Added
 - `$show_in_help` attribute for commands, to set if it should be displayed in the `/help` command.
@@ -44,7 +54,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [0.37.1] - 2016-12-24
 ### Fixed
 - Keyboards that are built without using the KeyboardButton objects.
-- Commands that are called via `/command@botname` by correctly passing them the botname.
+- Commands that are called via `/command@botname` by correctly passing them the bot name.
 
 ## [0.37.0] - 2016-12-13
 ### Changed
