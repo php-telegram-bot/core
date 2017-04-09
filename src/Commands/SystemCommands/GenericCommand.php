@@ -31,7 +31,7 @@ class GenericCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.0.0';
 
     /**
      * Command execute method
@@ -41,23 +41,12 @@ class GenericCommand extends SystemCommand
      */
     public function execute()
     {
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$chat_id = $message->getChat()->getId();
+        //$user_id = $message->getFrom()->getId();
+        //$command = $message->getCommand();
+        //#text = trim($message->getText(true));
 
-        //You can use $command as param
-        $chat_id = $message->getChat()->getId();
-        $user_id = $message->getFrom()->getId();
-        $command = $message->getCommand();
-
-        //If the user is and admin and the command is in the format "/whoisXYZ", call the /whois command
-        if (stripos($command, 'whois') === 0 && $this->telegram->isAdmin($user_id)) {
-            return $this->telegram->executeCommand('whois');
-        }
-
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => 'Command /' . $command . ' not found.. :(',
-        ];
-
-        return Request::sendMessage($data);
+        return parent::execute();
     }
 }

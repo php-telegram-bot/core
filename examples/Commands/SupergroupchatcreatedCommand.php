@@ -13,24 +13,24 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat member command
+ * Super group chat created command
  */
-class LeftchatmemberCommand extends SystemCommand
+class SupergroupchatcreatedCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Leftchatmember';
+    protected $name = 'Supergroupchatcreated';
 
     /**
      * @var string
      */
-    protected $description = 'Left Chat Member';
+    protected $description = 'Super group chat created';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
@@ -41,7 +41,7 @@ class LeftchatmemberCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$member = $message->getLeftChatMember();
+        //$supergroup_chat_created = $message->getSuperGroupChatCreated();
 
         return parent::execute();
     }

@@ -14,24 +14,24 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * New chat member command
+ * Generic command
  */
-class NewchatmemberCommand extends SystemCommand
+class GenericCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Newchatmember';
+    protected $name = 'Generic';
 
     /**
      * @var string
      */
-    protected $description = 'New Chat Member';
+    protected $description = 'Handles generic commands or is executed by default when a command is not found';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
@@ -43,17 +43,19 @@ class NewchatmemberCommand extends SystemCommand
     {
         $message = $this->getMessage();
 
+        //You can use $command as param
         $chat_id = $message->getChat()->getId();
-        $member  = $message->getNewChatMember();
-        $text    = 'Hi there!';
+        $user_id = $message->getFrom()->getId();
+        $command = $message->getCommand();
 
-        if (!$message->botAddedInChat()) {
-            $text = 'Hi ' . $member->tryMention() . '!';
+        //If the user is and admin and the command is in the format "/whoisXYZ", call the /whois command
+        if (stripos($command, 'whois') === 0 && $this->telegram->isAdmin($user_id)) {
+            return $this->telegram->executeCommand('whois');
         }
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => $text,
+            'text'    => 'Command /' . $command . ' not found.. :(',
         ];
 
         return Request::sendMessage($data);

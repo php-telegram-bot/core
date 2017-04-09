@@ -42,7 +42,10 @@ try {
     // Enable MySQL with table prefix
     //$telegram->enableMySql($mysql_credentials, $BOT_NAME . '_');
 
-    // Add an additional commands path
+    // Uncomment this line to load example commands
+    //$telegram->addCommandsPath(BASE_PATH . '/../examples/Commands');
+
+    // Add commands path containing your commands
     //$telegram->addCommandsPath($commands_path);
 
     // Enable admin user(s)

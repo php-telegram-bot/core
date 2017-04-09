@@ -13,19 +13,19 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat member command
+ * Pinned message command
  */
-class LeftchatmemberCommand extends SystemCommand
+class PinnedmessageCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Leftchatmember';
+    protected $name = 'Pinnedmessage';
 
     /**
      * @var string
      */
-    protected $description = 'Left Chat Member';
+    protected $description = 'Message was pinned';
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class LeftchatmemberCommand extends SystemCommand
     protected $version = '1.0.0';
 
     /**
-     * Command execute method
+     * Execute command
      *
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -41,7 +41,7 @@ class LeftchatmemberCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$member = $message->getLeftChatMember();
+        //$pinned_message = $message->getPinnedMessage();
 
         return parent::execute();
     }

@@ -13,24 +13,24 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat member command
+ * Migrate from chat id command
  */
-class LeftchatmemberCommand extends SystemCommand
+class MigratefromchatidCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Leftchatmember';
+    protected $name = 'Migratefromchatid';
 
     /**
      * @var string
      */
-    protected $description = 'Left Chat Member';
+    protected $description = 'Migrate from chat id';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
@@ -41,7 +41,7 @@ class LeftchatmemberCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$member = $message->getLeftChatMember();
+        //$migrate_from_chat_id = $message->getMigrateFromChatId();
 
         return parent::execute();
     }

@@ -159,10 +159,4 @@ class TelegramTest extends TestCase
         $this->assertInternalType('array', $commands);
         $this->assertNotCount(0, $commands);
     }
-
-    public function testGetHelpCommandObject()
-    {
-        $command = $this->telegram->getCommandObject('help');
-        $this->assertInstanceOf('Longman\TelegramBot\Commands\UserCommands\HelpCommand', $command);
-    }
 }

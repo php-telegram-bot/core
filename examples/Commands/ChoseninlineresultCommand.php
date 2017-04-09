@@ -13,24 +13,24 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat member command
+ * Chosen inline result command
  */
-class LeftchatmemberCommand extends SystemCommand
+class ChoseninlineresultCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Leftchatmember';
+    protected $name = 'choseninlineresult';
 
     /**
      * @var string
      */
-    protected $description = 'Left Chat Member';
+    protected $description = 'Chosen result query';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
@@ -40,8 +40,10 @@ class LeftchatmemberCommand extends SystemCommand
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$member = $message->getLeftChatMember();
+        //Information about chosen result is returned
+        //$update = $this->getUpdate();
+        //$inline_query = $update->getChosenInlineResult();
+        //$query = $inline_query->getQuery();
 
         return parent::execute();
     }

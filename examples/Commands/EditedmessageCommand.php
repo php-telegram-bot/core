@@ -13,24 +13,24 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat member command
+ * Edited message command
  */
-class LeftchatmemberCommand extends SystemCommand
+class EditedmessageCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Leftchatmember';
+    protected $name = 'editedmessage';
 
     /**
      * @var string
      */
-    protected $description = 'Left Chat Member';
+    protected $description = 'User edited message';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
@@ -40,8 +40,8 @@ class LeftchatmemberCommand extends SystemCommand
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$member = $message->getLeftChatMember();
+        //$update = $this->getUpdate();
+        //$edited_message = $update->getEditedMessage();
 
         return parent::execute();
     }

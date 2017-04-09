@@ -14,24 +14,24 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
 /**
- * New chat member command
+ * Callback query command
  */
-class NewchatmemberCommand extends SystemCommand
+class CallbackqueryCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Newchatmember';
+    protected $name = 'callbackquery';
 
     /**
      * @var string
      */
-    protected $description = 'New Chat Member';
+    protected $description = 'Reply to callback query';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
@@ -41,21 +41,18 @@ class NewchatmemberCommand extends SystemCommand
      */
     public function execute()
     {
-        $message = $this->getMessage();
-
-        $chat_id = $message->getChat()->getId();
-        $member  = $message->getNewChatMember();
-        $text    = 'Hi there!';
-
-        if (!$message->botAddedInChat()) {
-            $text = 'Hi ' . $member->tryMention() . '!';
-        }
+        $update            = $this->getUpdate();
+        $callback_query    = $update->getCallbackQuery();
+        $callback_query_id = $callback_query->getId();
+        $callback_data     = $callback_query->getData();
 
         $data = [
-            'chat_id' => $chat_id,
-            'text'    => $text,
+            'callback_query_id' => $callback_query_id,
+            'text'              => 'Hello World!',
+            'show_alert'        => $callback_data === 'thumb up',
+            'cache_time'        => 5,
         ];
 
-        return Request::sendMessage($data);
+        return Request::answerCallbackQuery($data);
     }
 }

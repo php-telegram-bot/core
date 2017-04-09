@@ -415,8 +415,6 @@ class Telegram
                 $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
             }
 
-            $this->addCommandsPath(BASE_COMMANDS_PATH . '/UserCommands', false);
-
             $type = $message->getType();
             if ($type === 'command') {
                 $command = $message->getCommand();

@@ -13,19 +13,19 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Left chat member command
+ * Channel post command
  */
-class LeftchatmemberCommand extends SystemCommand
+class ChannelpostCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Leftchatmember';
+    protected $name = 'Channelpost';
 
     /**
      * @var string
      */
-    protected $description = 'Left Chat Member';
+    protected $description = 'Handle channel post';
 
     /**
      * @var string
@@ -33,15 +33,14 @@ class LeftchatmemberCommand extends SystemCommand
     protected $version = '1.0.0';
 
     /**
-     * Command execute method
+     * Execute command
      *
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$member = $message->getLeftChatMember();
+        //$channel_post = $this->getUpdate()->getChannelPost();
 
         return parent::execute();
     }

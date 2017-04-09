@@ -36,7 +36,7 @@ class StartCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.0.0';
 
     /**
      * Command execute method
@@ -46,16 +46,10 @@ class StartCommand extends SystemCommand
      */
     public function execute()
     {
-        $message = $this->getMessage();
+        //$message = $this->getMessage();
+        //$chat_id = $message->getChat()->getId();
+        //$user_id = $message->getFrom()->getId();
 
-        $chat_id = $message->getChat()->getId();
-        $text    = 'Hi there!' . PHP_EOL . 'Type /help to see all commands!';
-
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => $text,
-        ];
-
-        return Request::sendMessage($data);
+        return parent::execute();
     }
 }
