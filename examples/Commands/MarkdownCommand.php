@@ -44,7 +44,7 @@ class MarkdownCommand extends UserCommand
 preformatted code block
 code block
 ```
-[Best Telegram bot api!!](https://github.com/akalongman/php-telegram-bot)
+[Best Telegram bot api!!](https://github.com/php-telegram-bot/core)
 ',
         ];
 

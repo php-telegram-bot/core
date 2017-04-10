@@ -1,13 +1,17 @@
 # Changelog
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Changed
+- All links point to new organisation repo.
+
 ## [0.42.0] - 2017-04-09
 ### Added
 - Added `getBotId()` to directly access bot ID.
 ### Changed
 - Rename `bot_name` to `bot_username` everywhere.
 ### Deprecated
-- Deprecated `getBotName()` (Use `getBotUsername()` instead).  
+- Deprecated `getBotName()` (Use `getBotUsername()` instead).
 ### Fixed
 - Tests are more reliable now, using a properly formatted API key.
 
@@ -48,7 +52,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - New `switch_inline_query_current_chat` option for inline keyboard.
 - Support for `channel_post` and `edited_channel_post`.
 - New alias `deleteWebhook` (for `unsetWebhook`).
-### Changed 
+### Changed
 - Update WebhookInfo entity and `setWebhook` to allow passing of new arguments.
 
 ## [0.37.1] - 2016-12-24

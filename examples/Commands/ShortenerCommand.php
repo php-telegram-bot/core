@@ -40,7 +40,7 @@ class ShortenerCommand extends UserCommand
         $data = [];
         $data['chat_id'] = $chat_id;
 
-        $text = Botan::shortenUrl('https://github.com/akalongman/php-telegram-bot', $user_id);
+        $text = Botan::shortenUrl('https://github.com/php-telegram-bot/core', $user_id);
 
         $data['text'] = $text;
 

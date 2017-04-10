@@ -42,7 +42,7 @@ class InlinekeyboardCommand extends UserCommand
             ['text' => 'inline current chat', 'switch_inline_query_current_chat' => $switch_element],
         ], [
             ['text' => 'callback', 'callback_data' => 'identifier'],
-            ['text' => 'open url', 'url' => 'https://github.com/akalongman/php-telegram-bot'],
+            ['text' => 'open url', 'url' => 'https://github.com/php-telegram-bot/core'],
         ]);
 
         $data = [
