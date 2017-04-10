@@ -2,14 +2,14 @@
 
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-32a2da.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 
-[![Build Status](https://travis-ci.org/akalongman/php-telegram-bot.svg?branch=master)](https://travis-ci.org/akalongman/php-telegram-bot)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
-[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/php-telegram-bot/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/php-telegram-bot/?b=develop)
+[![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
+[![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.5.0-8892BF.svg)](https://php.net/)
-[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/akalongman/php-telegram-bot/LICENSE.md)
+[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
 
 
 
@@ -83,7 +83,7 @@ The Bot can:
 
 -----
 This code is available on
-[Github](https://github.com/akalongman/php-telegram-bot). Pull requests are welcome.
+[Github](https://github.com/php-telegram-bot/core). Pull requests are welcome.
 
 ## Instructions
 
@@ -424,7 +424,7 @@ The following actions will be tracked:
 
 In order to use the URL shortener you must include the class ```use Longman\TelegramBot\Botan;``` and call it like this:
 
-```Botan::shortenUrl('https://github.com/akalongman/php-telegram-bot', $user_id);```
+```Botan::shortenUrl('https://github.com/php-telegram-bot/core', $user_id);```
 
 Shortened URLs are cached in the database (if MySQL storage is enabled).
 
@@ -526,7 +526,7 @@ $telegram->setUploadPath('yourpath/Upload');
 
 ## Documentation
 
-Take a look at the repo [Wiki](https://github.com/akalongman/php-telegram-bot/wiki) for further information and tutorials!
+Take a look at the repo [Wiki](https://github.com/php-telegram-bot/core/wiki) for further information and tutorials!
 Feel free to improve!
 
 ## Projects with this library
@@ -537,7 +537,7 @@ Here's a list of projects that feats this library, feel free to add yours!
 ## Troubleshooting
 
 If you like living on the edge, please report any bugs you find on the
-[PHP Telegram Bot issues](https://github.com/akalongman/php-telegram-bot/issues) page.
+[PHP Telegram Bot issues](https://github.com/php-telegram-bot/core/issues) page.
 
 ## Contributing
 

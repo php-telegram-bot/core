@@ -4,10 +4,10 @@
     "description": "PHP telegram bot",
     "keywords": ["telegram", "bot", "api"],
     "license": "MIT",
-    "homepage": "https://github.com/akalongman/php-telegram-bot",
+    "homepage": "https://github.com/php-telegram-bot/core",
     "support": {
-        "issues": "https://github.com/akalongman/php-telegram-bot/issues",
-        "source": "https://github.com/akalongman/php-telegram-bot"
+        "issues": "https://github.com/php-telegram-bot/core/issues",
+        "source": "https://github.com/php-telegram-bot/core"
     },
     "authors": [
         {
