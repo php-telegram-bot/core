@@ -18,12 +18,16 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6",
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-mbstring": "*",
         "monolog/monolog": "^1.19",
         "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "squizlabs/php_codesniffer": "~2.5"
     },
     "autoload": {
         "psr-4": {
@@ -35,8 +39,15 @@
             "Longman\\TelegramBot\\Tests\\Unit\\": "tests/unit"
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "~4.8",
-        "squizlabs/php_codesniffer": "~2.5"
+    "scripts": {
+        "check-code": [
+            "./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/ --report-width=150"
+        ],
+        "test-cov": [
+            "./vendor/bin/phpunit --coverage-clover build/logs/clover.xml"
+        ],
+        "test": [
+            "./vendor/bin/phpunit"
+        ]
     }
 }

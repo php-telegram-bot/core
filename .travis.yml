@@ -3,16 +3,16 @@ sudo: required
 language: php
 
 addons:
-  mariadb: '10.1'
+  mariadb: 10.1
 
 cache:
   directories:
-    - $HOME/.composer/cache
+    - "$HOME/.composer/cache"
 
 php:
-  - 5.5
   - 5.6
   - 7.0
+  - 7.1
   - nightly
   - hhvm
 
@@ -25,6 +25,10 @@ matrix:
 notifications:
   on_success: never
   on_failure: always
+  webhooks:
+    on_success: always
+    urls:
+      secure: jW1RbSV8TXSL3qa2cNVhlxEGbImrQS5b8FO4xIe/Sg2S2zgXOxJZrui1d/gh6mM3dqjquvCdUkXOYYWL8Mrnbe07utUigwW4qxmsw2XDqobgUl9/yoqejLsUvccV2bbvxhSlVEnGkYox9yOd7pakBW0wLxG4Izw8ML3q+tJWYAypM/x3mRhXBMRuOhLm3cI9MwYogCq82FRBTvwTszuU74EHQE/LgQnlEwfOhBYa1sqD+HHG51H59+a0pBWiAgcROG/vPffNDzCfmgrcpU6Bw/eJjGJcDYNwjvBp90lYHYXofbWtwj0m6QvCuE7HFlG7UXXipEe+trViH9G7DpPwAf5nghEgJNholESq6DVhy+5fBFEiZfcpbhMJWzh807iL8r0Ekx3oUKe67wcOO55s/Hatln5DNq3vuVzfDhIjGkBE4Z44Il1M/n5zY5Rj/zMPpRFs9cI53wynKoFxI7gPNylqnkoztYsFv/yMf1W9moZvWqzQY0qeMLSUZNJ9TpxhETGkM3P12X/jSkBkmoBPEG1Rdq/H2e6T4bQ/K9I9UyBXM3bZ1ybUqqwyi7vQTm6RCVai1P4dgMZ4VyX79dhiGhtwCIIQSrYdqi7sLO0kTw05j0zvdaT2IEATgdnj+OOSxtJrp069OL7spkRg8EEyn6emawnsrNjqJUwksvuz1tY=
 
 git:
   depth: 1
@@ -36,11 +40,9 @@ before_script:
   - mysql -u root -e 'create database telegrambot; use telegrambot; source structure.sql;'
 
 script:
-  - ./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/ --report-width=150
-  - if [ "$TRAVIS_PHP_VERSION" == "7.0" ]; then ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml;
-    else ./vendor/bin/phpunit;
-    fi
+  - composer check-code
+  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ] ; then composer test-cov; else composer test; fi
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" == "7.0" ]; then
+  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then
     wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml; fi
