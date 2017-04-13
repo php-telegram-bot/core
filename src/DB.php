@@ -367,12 +367,12 @@ class DB
                 INSERT INTO `' . TB_USER . '`
                 (`id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :username, :first_name, :last_name, :date, :date)
+                (:id, :username, :first_name, :last_name, :date, VALUES(`created_at`))
                 ON DUPLICATE KEY UPDATE
-                    `username`   = :username,
-                    `first_name` = :first_name,
-                    `last_name`  = :last_name,
-                    `updated_at` = :date
+                    `username`   = VALUES(`username`),
+                    `first_name` = VALUES(`first_name`),
+                    `last_name`  = VALUES(`last_name`),
+                    `updated_at` = VALUES(`created_at`)
             ');
 
             $sth->bindParam(':id', $user_id, PDO::PARAM_INT);
@@ -436,13 +436,13 @@ class DB
                 INSERT IGNORE INTO `' . TB_CHAT . '`
                 (`id`, `type`, `title`, `username`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :all_members_are_administrators, :date, :date, :oldid)
+                (:id, :type, :title, :username, :all_members_are_administrators, :date, VALUES(`created_at`), :oldid)
                 ON DUPLICATE KEY UPDATE
-                    `type`                           = :type,
-                    `title`                          = :title,
-                    `username`                       = :username,
-                    `all_members_are_administrators` = :all_members_are_administrators,
-                    `updated_at`                     = :date
+                    `type`                           = VALUES(`type`),
+                    `title`                          = VALUES(`title`),
+                    `username`                       = VALUES(`username`),
+                    `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
+                    `updated_at`                     = VALUES(`created_at`)
             ');
 
             if ($migrate_to_chat_id) {
