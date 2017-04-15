@@ -131,6 +131,13 @@ class Telegram
     protected $botan_enabled = false;
 
     /**
+     * Check if runCommands() is running in this session
+     *
+     * @var boolean
+     */
+    protected $run_commands = false;
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -896,6 +903,7 @@ class Telegram
             throw new TelegramException('No command(s) provided!');
         }
 
+        $this->run_commands = true;
         $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
         $result = Request::getMe()->getResult();
@@ -924,8 +932,8 @@ class Telegram
                         ],
                         'date'       => time(),
                         'chat'       => [
-                            'id'   => $bot_id,
-                            'type' => 'private',
+                            'id'         => $bot_id,
+                            'type'       => 'private',
                         ],
                         'text'       => $command,
                     ],
@@ -934,5 +942,15 @@ class Telegram
 
             $this->executeCommand($this->update->getMessage()->getCommand());
         }
+    }
+
+    /**
+     * Is this session initiated by runCommands()
+     *
+     * @return string
+     */
+    public function isRunCommands()
+    {
+        return $this->run_commands;
     }
 }
