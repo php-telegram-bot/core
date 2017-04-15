@@ -882,10 +882,14 @@ class Telegram
 
     /**
      * Enable requests limiter
+     *
+     * @param  array  $options
+     * 
+     * @return \Longman\TelegramBot\Telegram
      */
-    public function enableLimiter()
+    public function enableLimiter(array $options = [])
     {
-        Request::setLimiter(true);
+        Request::setLimiter(true, $options);
 
         return $this;
     }

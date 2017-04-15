@@ -54,6 +54,13 @@ class Request
     private static $limiter_enabled;
 
     /**
+     * Request limiter's interval between checks
+     *
+     * @var boolean
+     */
+    private static $limiter_interval;
+
+    /**
      * Available actions to send
      *
      * @var array
@@ -990,10 +997,24 @@ class Request
      * Enable request limiter
      *
      * @param boolean $value
+     * @param array   $options
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function setLimiter($value = true)
+    public static function setLimiter($value = true, array $options = [])
     {
         if (DB::isDbConnected()) {
+            $options_default = [
+                'interval' => 1,
+            ];
+
+            $options = array_merge($options_default, $options);
+
+            if (!is_numeric($options['interval']) || $options['interval'] <= 0) {
+                throw new TelegramException('Interval must be a number and must be greater than zero!');
+            }
+
+            self::$limiter_interval = $options['interval'];
             self::$limiter_enabled = $value;
         }
     }
@@ -1042,15 +1063,15 @@ class Request
 
                     $requests = DB::getTelegramRequestCount($chat_id, $inline_message_id);
 
-                    if ($requests['LIMIT_PER_SEC'] == 0  // No more than one message per second inside a particular chat
-                        && ((($chat_id > 0 || $inline_message_id) && $requests['LIMIT_PER_SEC_ALL'] < 30)  // No more than 30 messages per second globally
-                        || ($chat_id < 0 && $requests['LIMIT_PER_MINUTE'] < 20))
+                    if ($requests['LIMIT_PER_SEC'] == 0     // No more than one message per second inside a particular chat
+                        && ((($chat_id > 0 || $inline_message_id) && $requests['LIMIT_PER_SEC_ALL'] < 30)       // No more than 30 messages per second globally
+                        || ($chat_id < 0 && $requests['LIMIT_PER_MINUTE'] < 20))        // No more than 20 messages per minute in groups and channels
                     ) {
                         break;
                     }
 
                     $timeout--;
-                    sleep(1);
+                    usleep(self::$limiter_interval * 1000000);
                 }
 
                 DB::insertTelegramRequest($action, $data);
