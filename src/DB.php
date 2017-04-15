@@ -191,7 +191,7 @@ class DB
                 $sql .= ' WHERE `id` = :id';
             }
 
-            $sql.= ' ORDER BY `id` DESC';
+            $sql .= ' ORDER BY `id` DESC';
 
             if ($limit !== null) {
                 $sql .= ' LIMIT :limit';
