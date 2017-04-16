@@ -70,7 +70,7 @@ try {
     //$telegram->enableBotan('your_token', ['timeout' => 3]);
 
     // Requests Limiter (tries to prevent reaching Telegram API limits)
-    // Second argument are options
+    // First argument are options
     $telegram->enableLimiter();
     //$telegram->enableLimiter(['interval' => 0.5);
 

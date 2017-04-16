@@ -64,7 +64,7 @@ try {
     //$telegram->setUploadPath('../Upload');
 
     // Requests Limiter (tries to prevent reaching Telegram API limits)
-    // Second argument are options
+    // First argument are options
     $telegram->enableLimiter();
     //$telegram->enableLimiter(['interval' => 0.5);
 

@@ -173,7 +173,7 @@ class DB
      * Fetch update(s) from DB
      *
      * @param int $limit Limit the number of updates to fetch
-     * @param int $id Check for unique update id
+     * @param int $id    Check for unique update id
      *
      * @return array|bool Fetched data or false if not connected
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -482,7 +482,7 @@ class DB
         $update_id   = $update->getUpdateId();
         $update_type = $update->getUpdateType();
 
-        if (count(self::selectTelegramUpdate(1, $update->getUpdateId())) == 1) {
+        if (count(self::selectTelegramUpdate(1, $update->getUpdateId())) === 1) {
             throw new TelegramException('Duplicate update received!');
         }
 

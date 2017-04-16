@@ -951,7 +951,7 @@ class Telegram
     /**
      * Is this session initiated by runCommands()
      *
-     * @return string
+     * @return bool
      */
     public function isRunCommands()
     {
