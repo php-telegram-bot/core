@@ -1,8 +1,10 @@
 ### Required Information
-
+<!-- Please enter exact version numbers! -->
+- Operating system:
 - PHP version:
 - PHP Telegram Bot version:
 - Using MySQL database: yes / no
+- MySQL version:
 - Update Method: Webhook / getUpdates
 - Self-signed certificate: yes / no
 - RAW update (if available):
