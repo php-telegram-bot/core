@@ -2,8 +2,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Travis CI webhook for Support Bot.
 ### Changed
 - All links point to new organisation repo.
+- Drop PHP 5.5, add PHP 7.1 support.
 
 ## [0.42.0] - 2017-04-09
 ### Added

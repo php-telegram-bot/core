@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

@@ -8,7 +8,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.5.0-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
 
 
@@ -156,12 +156,12 @@ Edit your project's `composer.json` file to require
 `longman/telegram-bot`.
 
 Create *composer.json* file
-```js
+```json
 {
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6",
         "longman/telegram-bot": "*"
     }
 }
@@ -172,7 +172,7 @@ and run `composer update`
 
 run this command in your command line:
 
-```
+```bash
 composer require longman/telegram-bot
 ```
 
