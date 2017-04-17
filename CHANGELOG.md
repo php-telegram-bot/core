@@ -2,12 +2,19 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.43.0] - 2017-04-17
 ### Added
 - Travis CI webhook for Support Bot.
+- Interval for request limiter.
+- `isRunCommands()` method to check if called via `runCommands()`.
 - Ensure coding standards for `tests` folder with `phpcs`.
 ### Changed
+- Move default commands to `examples` folder.
 - All links point to new organisation repo.
-- Drop PHP 5.5, add PHP 7.1 support.
+- Add PHP 7.1 support and update dependencies.
+### Fixed
+- Prevent handling the same Telegram updates multiple times, throw exception instead.
 
 ## [0.42.0] - 2017-04-09
 ### Added
