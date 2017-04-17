@@ -31,10 +31,10 @@ class TestHelpers
      * @var array
      */
     protected static $user_template = [
-        'id' => 1,
+        'id'         => 1,
         'first_name' => 'first',
-        'last_name' => 'last',
-        'username' => 'user',
+        'last_name'  => 'last',
+        'username'   => 'user',
     ];
 
     /**
@@ -43,11 +43,11 @@ class TestHelpers
      * @var array
      */
     protected static $chat_template = [
-        'id' => 1,
-        'first_name' => 'first',
-        'last_name' => 'last',
-        'username' => 'name',
-        'type' => 'private',
+        'id'                             => 1,
+        'first_name'                     => 'first',
+        'last_name'                      => 'last',
+        'username'                       => 'name',
+        'type'                           => 'private',
         'all_members_are_administrators' => false,
     ];
 
@@ -93,11 +93,11 @@ class TestHelpers
             'update_id' => mt_rand(),
             'message'   => [
                 'message_id' => mt_rand(),
-                'chat' => [
+                'chat'       => [
                     'id' => mt_rand(),
                 ],
-                'date' => time(),
-            ]
+                'date'       => time(),
+            ],
         ];
         return new Update($data, 'testbot');
     }
@@ -113,7 +113,7 @@ class TestHelpers
     {
         $data = [
             'update_id' => mt_rand(),
-            'message' => [
+            'message'   => [
                 'message_id' => mt_rand(),
                 'from'       => self::$user_template,
                 'chat'       => self::$chat_template,
@@ -160,13 +160,13 @@ class TestHelpers
     public static function getFakeRecordedAudio()
     {
         $mime_type = ['audio/ogg', 'audio/mpeg', 'audio/vnd.wave', 'audio/x-ms-wma', 'audio/basic'];
-        $data = [
+        $data      = [
             'file_id'   => mt_rand(1, 999),
-            'duration'  => (string)mt_rand(1, 99) . ':' . mt_rand(1, 60),
+            'duration'  => (string) mt_rand(1, 99) . ':' . mt_rand(1, 60),
             'performer' => 'phpunit',
             'title'     => 'track from phpunit',
             'mime_type' => $mime_type[array_rand($mime_type, 1)],
-            'file_size' => mt_rand(1, 99999)
+            'file_size' => mt_rand(1, 99999),
         ];
 
         return $data;
@@ -209,8 +209,8 @@ class TestHelpers
 
         //Just get some random values.
         $message_id = mt_rand();
-        $user_id = mt_rand();
-        $chat_id = mt_rand();
+        $user_id    = mt_rand();
+        $chat_id    = mt_rand();
 
         //Make sure we have a valid user and chat available.
         $message = self::getFakeMessageObject(['message_id' => $message_id], ['id' => $user_id], ['id' => $chat_id]);
@@ -225,9 +225,9 @@ class TestHelpers
      *
      * @param  array $credentials
      */
-    public static function emptyDB(array $credentials)
+    public static function emptyDb(array $credentials)
     {
-        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        $dsn     = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
 
         $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);

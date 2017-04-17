@@ -22,8 +22,8 @@ use Longman\TelegramBot\Telegram;
 class TelegramTest extends TestCase
 {
     /**
-    * @var \Longman\TelegramBot\Telegram
-    */
+     * @var \Longman\TelegramBot\Telegram
+     */
     private $telegram;
 
     /**
@@ -35,9 +35,6 @@ class TelegramTest extends TestCase
         '/tmp/php-telegram-bot-custom-commands-3',
     ];
 
-    /**
-    * setUp
-    */
     protected function setUp()
     {
         $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
@@ -48,9 +45,6 @@ class TelegramTest extends TestCase
         }
     }
 
-    /**
-     * tearDown
-     */
     protected function tearDown()
     {
         // Clean up the custom commands paths.

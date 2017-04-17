@@ -60,8 +60,8 @@ class ServerResponseTest extends TestCase
         self::assertEquals('Mjohn', $server_result->getChat()->getUsername());
         self::assertEquals('1441378360', $server_result->getDate());
         self::assertEquals('hello', $server_result->getText());
-        //... they are not finished...
 
+        //... they are not finished...
     }
 
     public function sendMessageFail()

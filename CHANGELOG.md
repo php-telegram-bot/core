@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - Travis CI webhook for Support Bot.
+- Ensure coding standards for `tests` folder with `phpcs`.
 ### Changed
 - All links point to new organisation repo.
 - Drop PHP 5.5, add PHP 7.1 support.

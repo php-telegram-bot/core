@@ -115,9 +115,9 @@ class KeyboardTest extends TestCase
 
     public function testKeyboardWithDataArray()
     {
-        $resize_keyboard   = (bool)mt_rand(0, 1);
-        $one_time_keyboard = (bool)mt_rand(0, 1);
-        $selective         = (bool)mt_rand(0, 1);
+        $resize_keyboard   = (bool) mt_rand(0, 1);
+        $one_time_keyboard = (bool) mt_rand(0, 1);
+        $selective         = (bool) mt_rand(0, 1);
 
         $keyboard_obj = new Keyboard([
             'resize_keyboard'   => $resize_keyboard,

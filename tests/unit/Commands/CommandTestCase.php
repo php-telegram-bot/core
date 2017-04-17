@@ -10,8 +10,8 @@
 
 namespace Longman\TelegramBot\Tests\Unit\Commands;
 
-use Longman\TelegramBot\Tests\Unit\TestCase;
 use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\Tests\Unit\TestCase;
 
 /**
  * @package         TelegramTest

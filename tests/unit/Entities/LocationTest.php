@@ -21,71 +21,34 @@ use Longman\TelegramBot\Entities\Location;
  */
 class LocationTest extends TestCase
 {
-    
-   /**
-    * lat, long data
-    *
-    * @var array
-    *
-    */
-    public $coordinates;
+    private $coordinates;
 
-   /**
-    *
-    * Set Up
-    *
-    */
     public function setUp()
     {
         $this->coordinates = [
-            'longitude' => (float)mt_rand(10, 69),
-            'latitude'  => (float)mt_rand(10, 48)           
+            'longitude' => (float) mt_rand(10, 69),
+            'latitude'  => (float) mt_rand(10, 48),
         ];
     }
 
-   /**
-    *
-    * TearDown 
-    *
-    */
-    public function tearDown()
-    {
-        //pass
-    }
-
-   /**
-    *
-    * Testing base stage with data object creating
-    *
-    */
     public function testBaseStageLocation()
     {
         $location = new Location($this->coordinates);
         $this->assertInstanceOf('Longman\TelegramBot\Entities\Location', $location);
     }
 
-    /**
-    *
-    * Testing getLongitude
-    *
-    */
     public function testGetLongitude()
     {
         $location = new Location($this->coordinates);
-        $long = $location->getLongitude();
+        $long     = $location->getLongitude();
         $this->assertInternalType('float', $long);
         $this->assertEquals($this->coordinates['longitude'], $long);
     }
-    
-   /**
-    *
-    * Testing getLatitude
-    *
-    */
+
     public function testGetLatitude()
     {
         $location = new Location($this->coordinates);
-        $lat = $location->getLatitude();
+        $lat      = $location->getLatitude();
         $this->assertInternalType('float', $lat);
         $this->assertEquals($this->coordinates['latitude'], $lat);
     }

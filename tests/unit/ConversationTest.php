@@ -27,9 +27,6 @@ class ConversationTest extends TestCase
      */
     private $telegram;
 
-    /**
-     * setUp
-     */
     protected function setUp()
     {
         $credentials = [
@@ -43,7 +40,7 @@ class ConversationTest extends TestCase
         $this->telegram->enableMySql($credentials);
 
         //Make sure we start with an empty DB for each test.
-        TestHelpers::emptyDB($credentials);
+        TestHelpers::emptyDb($credentials);
     }
 
     public function testConversationThatDoesntExistPropertiesSetCorrectly()

@@ -26,9 +26,6 @@ class AudioTest extends TestCase
      */
     private $record;
 
-    /**
-     * Set Up
-     */
     public function setUp()
     {
         $this->record = TestHelpers::getFakeRecordedAudio();

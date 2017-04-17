@@ -33,18 +33,12 @@ class TelegramLogTest extends TestCase
         'external' => '/tmp/php-telegram-bot-externallog.log',
     ];
 
-    /**
-     * setUp
-     */
     protected function setUp()
     {
         // Make sure no monolog instance is set before each test.
         TestHelpers::setStaticProperty('Longman\TelegramBot\TelegramLog', 'monolog', null);
     }
 
-    /**
-     * tearDown
-     */
     protected function tearDown()
     {
         // Make sure no logfiles exist.
