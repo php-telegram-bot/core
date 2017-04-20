@@ -320,6 +320,10 @@ class Telegram
      */
     public function handleGetUpdates($limit = null, $timeout = null)
     {
+        if (empty($this->bot_username)) {
+            throw new TelegramException('Bot Username is not defined!');
+        }
+
         if (!DB::isDbConnected()) {
             return new ServerResponse(
                 [
@@ -365,6 +369,10 @@ class Telegram
      */
     public function handle()
     {
+        if (empty($this->bot_username)) {
+            throw new TelegramException('Bot Username is not defined!');
+        }
+
         $this->input = Request::getInput();
 
         if (empty($this->input)) {
@@ -406,10 +414,6 @@ class Telegram
     public function processUpdate(Update $update)
     {
         $this->update = $update;
-
-        if (empty($this->bot_username)) {
-            throw new TelegramException('Bot Username is not defined!');
-        }
 
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
