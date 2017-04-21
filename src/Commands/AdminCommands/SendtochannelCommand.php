@@ -203,7 +203,7 @@ class SendtochannelCommand extends AdminCommand
                         if ($notes['set_caption']) {
                             $data['caption'] = $notes['caption'];
                         }
-                        $this->sendBack(new Message($notes['message'], $this->telegram->getBotName()), $data);
+                        $this->sendBack(new Message($notes['message'], $this->telegram->getBotUsername()), $data);
 
                         $data['reply_markup'] = new Keyboard(
                             [
@@ -231,7 +231,7 @@ class SendtochannelCommand extends AdminCommand
 
                 if ($notes['post_message']) {
                     $data['text'] = $this->publish(
-                        new Message($notes['message'], $this->telegram->getBotName()),
+                        new Message($notes['message'], $this->telegram->getBotUsername()),
                         $notes['channel'],
                         $notes['caption']
                     );
@@ -350,7 +350,7 @@ class SendtochannelCommand extends AdminCommand
             $channels      = (array) $this->getConfig('your_channel');
             $first_channel = $channels[0];
             $data['text']  = $this->publish(
-                new Message($message->getRawData(), $this->telegram->getBotName()),
+                new Message($message->getRawData(), $this->telegram->getBotUsername()),
                 $first_channel
             );
         }
