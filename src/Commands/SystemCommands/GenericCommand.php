@@ -45,7 +45,7 @@ class GenericCommand extends SystemCommand
         //$chat_id = $message->getChat()->getId();
         //$user_id = $message->getFrom()->getId();
         //$command = $message->getCommand();
-        //#text = trim($message->getText(true));
+        //$text = trim($message->getText(true));
 
         return parent::execute();
     }
