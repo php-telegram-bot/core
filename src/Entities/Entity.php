@@ -13,7 +13,6 @@ namespace Longman\TelegramBot\Entities;
 use Exception;
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
 use Longman\TelegramBot\TelegramLog;
-use ReflectionObject;
 
 /**
  * Class Entity
@@ -132,7 +131,7 @@ abstract class Entity
     public function __call($method, $args)
     {
         //Convert method to snake_case (which is the name of the property)
-        $property_name = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', substr($method, 3))), '_');
+        $property_name = strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', substr($method, 3)), '_'));
 
         $action = substr($method, 0, 3);
         if ($action === 'get') {
@@ -224,7 +223,7 @@ abstract class Entity
         }
 
         //Try with the username first...
-        $name = $this->getProperty('username');
+        $name        = $this->getProperty('username');
         $is_username = $name !== null;
 
         if ($name === null) {
