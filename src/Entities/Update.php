@@ -78,7 +78,10 @@ class Update extends Entity
     public function getUpdateContent()
     {
         if ($update_type = $this->getUpdateType()) {
-            return $this->getProperty($update_type);
+            // Instead of just getting the property as an array,
+            // use the __call method to get the correct Entity object.
+            $method = 'get' . str_replace('_', '', ucwords($update_type, '_'));
+            return $this->$method();
         }
 
         return null;
