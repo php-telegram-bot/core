@@ -71,15 +71,6 @@ class TelegramTest extends TestCase
         new Telegram('invalid-api-key-format', null);
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage Bot Username not defined!
-     */
-    public function testNewInstanceWithoutBotUsernameParam()
-    {
-        new Telegram(self::$dummy_api_key, null);
-    }
-
     public function testGetApiKey()
     {
         $this->assertEquals(self::$dummy_api_key, $this->telegram->getApiKey());
