@@ -145,7 +145,7 @@ class Telegram
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function __construct($api_key, $bot_username)
+    public function __construct($api_key, $bot_username = '')
     {
         if (empty($api_key)) {
             throw new TelegramException('API KEY not defined!');
@@ -157,10 +157,9 @@ class Telegram
         $this->bot_id  = $matches[1];
         $this->api_key = $api_key;
 
-        if (empty($bot_username)) {
-            throw new TelegramException('Bot Username not defined!');
+        if (!empty($bot_username)) {
+            $this->bot_username = $bot_username;
         }
-        $this->bot_username = $bot_username;
 
         //Set default download and upload path
         $this->setDownloadPath(BASE_PATH . '/../Download');
@@ -321,6 +320,10 @@ class Telegram
      */
     public function handleGetUpdates($limit = null, $timeout = null)
     {
+        if (empty($this->bot_username)) {
+            throw new TelegramException('Bot Username is not defined!');
+        }
+
         if (!DB::isDbConnected()) {
             return new ServerResponse(
                 [
@@ -366,6 +369,10 @@ class Telegram
      */
     public function handle()
     {
+        if (empty($this->bot_username)) {
+            throw new TelegramException('Bot Username is not defined!');
+        }
+
         $this->input = Request::getInput();
 
         if (empty($this->input)) {
