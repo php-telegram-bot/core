@@ -30,17 +30,17 @@ try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_USERNAME);
 
-    // Error, Debug and Raw Update logging
+    // Error, Debug and Raw Update logging - Don't forget to define the $path
     //Longman\TelegramBot\TelegramLog::initialize($your_external_monolog_instance);
-    //Longman\TelegramBot\TelegramLog::initErrorLog($path . '/' . $BOT_NAME . '_error.log');
-    //Longman\TelegramBot\TelegramLog::initDebugLog($path . '/' . $BOT_NAME . '_debug.log');
-    //Longman\TelegramBot\TelegramLog::initUpdateLog($path . '/' . $BOT_NAME . '_update.log');
+    //Longman\TelegramBot\TelegramLog::initErrorLog($path . '/' . $BOT_USERNAME . '_error.log');
+    //Longman\TelegramBot\TelegramLog::initDebugLog($path . '/' . $BOT_USERNAME . '_debug.log');
+    //Longman\TelegramBot\TelegramLog::initUpdateLog($path . '/' . $BOT_USERNAME . '_update.log');
 
     // Enable MySQL
     //$telegram->enableMySql($mysql_credentials);
 
     // Enable MySQL with table prefix
-    //$telegram->enableMySql($mysql_credentials, $BOT_NAME . '_');
+    //$telegram->enableMySql($mysql_credentials, $BOT_USERNAME . '_');
 
     // Uncomment this line to load example commands
     //$telegram->addCommandsPath(BASE_PATH . '/../examples/Commands');
