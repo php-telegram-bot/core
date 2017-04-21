@@ -64,7 +64,7 @@ class HelpCommand extends UserCommand
         if ($command === '') {
             $text = sprintf(
                 '%s v. %s' . PHP_EOL . PHP_EOL . 'Commands List:' . PHP_EOL,
-                $this->telegram->getBotName(),
+                $this->telegram->getBotUsername(),
                 $this->telegram->getVersion()
             );
 
