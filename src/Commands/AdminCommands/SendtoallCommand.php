@@ -28,7 +28,7 @@ class SendtoallCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $description = 'Send the message to all the user\'s bot';
+    protected $description = 'Send the message to all the bot\'s users';
 
     /**
      * @var string
