@@ -1,6 +1,8 @@
 # Changelog
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
+
 ## [Unreleased]
 ### Added
 ### Changed
@@ -8,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 ### Fixed
 ### Security
+
+## [0.44.1] - 2017-04-25
+### Fixed
+- Erroneous exception when using webhook without a database connection.
 
 ## [0.44.0] - 2017-04-25
 ### Added
@@ -18,7 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 - All examples have been moved to a [dedicated repository](https://github.com/php-telegram-bot/example-bot).
 ### Fixed
-- Format of Update content type using `$update->getUpdateContent()`.
+- [:exclamation:](https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#0440) Format of Update content type using `$update->getUpdateContent()`.
 
 ## [0.43.0] - 2017-04-17
 ### Added
