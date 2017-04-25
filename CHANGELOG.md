@@ -2,6 +2,17 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Proper standalone `scrutinizer.yml` config.
+- Human-readable last error date for debug command.
+### Changed
+- Bot username no longer required for object instantiation.
+### Deprecated
+### Removed
+- All examples have been moved to a [dedicated repository](https://github.com/php-telegram-bot/example-bot).
+### Fixed
+- Format of Update content type using `$update->getUpdateContent()`.
+### Security
 
 ## [0.43.0] - 2017-04-17
 ### Added
