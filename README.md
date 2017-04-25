@@ -49,6 +49,7 @@ A Telegram Bot based on the official [Telegram Bot API](https://core.telegram.or
 - [Upload and Download directory path](#upload-and-download-directory-path)
 - [Logging](doc/01-utils.md)
 - [Documentation](#documentation)
+- [Example bot](#example-bot)
 - [Projects with this library](#projects-with-this-library)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -528,6 +529,11 @@ $telegram->setUploadPath('yourpath/Upload');
 
 Take a look at the repo [Wiki](https://github.com/php-telegram-bot/core/wiki) for further information and tutorials!
 Feel free to improve!
+
+## Example bot
+
+We're busy working on a full A-Z example bot, to help get you started with this library and to show you how to use all its features.
+You can check the progress of the [example bot repository](https://github.com/php-telegram-bot/example-bot).
 
 ## Projects with this library
 
