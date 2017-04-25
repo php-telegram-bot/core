@@ -479,10 +479,14 @@ class DB
      */
     public static function insertRequest(Update $update)
     {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
         $update_id   = $update->getUpdateId();
         $update_type = $update->getUpdateType();
 
-        if (count(self::selectTelegramUpdate(1, $update->getUpdateId())) === 1) {
+        if (count(self::selectTelegramUpdate(1, $update_id)) === 1) {
             throw new TelegramException('Duplicate update received!');
         }
 
