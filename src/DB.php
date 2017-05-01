@@ -372,7 +372,7 @@ class DB
                     `username`   = VALUES(`username`),
                     `first_name` = VALUES(`first_name`),
                     `last_name`  = VALUES(`last_name`),
-                    `updated_at` = VALUES(`created_at`)
+                    `updated_at` = :now
             ');
 
             $sth->bindParam(':id', $user_id, PDO::PARAM_INT);
@@ -380,6 +380,7 @@ class DB
             $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
+            $sth->bindParam(':now', $date, PDO::PARAM_STR);
 
             $status = $sth->execute();
         } catch (PDOException $e) {
@@ -442,7 +443,7 @@ class DB
                     `title`                          = VALUES(`title`),
                     `username`                       = VALUES(`username`),
                     `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
-                    `updated_at`                     = VALUES(`created_at`)
+                    `updated_at`                     = :now
             ');
 
             if ($migrate_to_chat_id) {
@@ -460,6 +461,7 @@ class DB
             $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
             $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
+            $sth->bindParam(':now', $date, PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (PDOException $e) {
