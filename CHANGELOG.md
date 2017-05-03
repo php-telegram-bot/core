@@ -10,6 +10,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Indexed table columns now have a fitting length.
 ### Security
 
 ## [0.44.1] - 2017-04-25
