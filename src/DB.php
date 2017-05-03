@@ -1102,18 +1102,20 @@ class DB
 
         try {
             $sth = self::$pdo->prepare('SELECT 
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :date) as LIMIT_PER_SEC_ALL,
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE ((`chat_id` = :chat_id AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL)) AND `created_at` >= :date) as LIMIT_PER_SEC,
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `chat_id` = :chat_id AND `created_at` >= :date_minute) as LIMIT_PER_MINUTE
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_1) as LIMIT_PER_SEC_ALL,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_2 AND ((`chat_id` = :chat_id_1 AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL))) as LIMIT_PER_SEC,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_minute AND `chat_id` = :chat_id_2) as LIMIT_PER_MINUTE
             ');
 
             $date = self::getTimestamp();
             $date_minute = self::getTimestamp(strtotime('-1 minute'));
 
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
+            $sth->bindParam(':chat_id_1', $chat_id, \PDO::PARAM_STR);
+            $sth->bindParam(':chat_id_2', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
-            $sth->bindParam(':date', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':date_minute', $date_minute, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at_1', $date, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at_2', $date, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at_minute', $date_minute, \PDO::PARAM_STR);
 
             $sth->execute();
 
