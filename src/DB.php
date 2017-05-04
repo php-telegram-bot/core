@@ -1161,4 +1161,99 @@ class DB
             throw new TelegramException($e->getMessage());
         }
     }
+    
+       /**
+     * @param int $lastDays
+     * @return array|bool
+     * @throws TelegramException
+     * 
+     * retutned /command - total-uses
+     * 
+     */
+    public static function getCountIncomeCommands($lastDays = 1) {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        //Calculate start and end date points
+        $startPeriod = date("Y-m-d 00:00:00", strtotime("- " .(int)$lastDays ." days"));
+
+        //Trying to get information about commands query
+        try {
+            //message table
+            $query = 'SELECT `text` AS command ,COUNT(*) AS total FROM `' . TB_MESSAGE . '` ';
+            $query .= 'WHERE `' . TB_MESSAGE . '`.`date` >= :startPeriod ';
+            $query .= ' AND `' .TB_MESSAGE .'`.`text` LIKE "/%" GROUP BY `' .TB_MESSAGE .'`.`text` ORDER BY `' .TB_MESSAGE .'`.`id` DESC';
+            $sth = self::$pdo->prepare($query);
+            $sth->bindParam(':startPeriod', $startPeriod, \PDO::PARAM_STR);
+            $sth->execute();
+            $results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param int $lastDays
+     * @return bool|string
+     * @throws TelegramException
+     */
+    public static function getCountIncomeMessageAll($lastDays = 1) {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        //Calculate start and end date points
+        $startPeriod = date("Y-m-d 00:00:00", strtotime("- " .(int)$lastDays ." days"));
+
+        //Trying to get information about commands query
+        try {
+            //message table
+            $query = 'SELECT COUNT(*) AS total FROM `' . TB_MESSAGE . '` ';
+            $query .= 'WHERE `' . TB_MESSAGE . '`.`date` >= :startPeriod ';
+            $query .= 'ORDER BY `' .TB_MESSAGE .'`.`id` DESC';
+            $sth = self::$pdo->prepare($query);
+            $sth->bindParam(':startPeriod', $startPeriod, \PDO::PARAM_STR);
+            $sth->execute();
+            $results = $sth->fetchColumn(); //fetch column `total`
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param int $lastDays
+     * @return array|bool
+     * @throws TelegramException
+     */
+    public static function getCountUserActivity($lastDays = 1) {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        //Calculate start and end date points
+        $startPeriod = date("Y-m-d 00:00:00", strtotime("- " .(int)$lastDays ." days"));
+
+        //Trying to get information about commands query
+        try {
+            //message table
+            $query = "SELECT `" .TB_USER ."`.*, `" .TB_MESSAGE ."`.`user_id`, COUNT(*) AS `message_count` 
+            FROM `" .TB_MESSAGE ."`, `user` WHERE `" .TB_MESSAGE ."`.`date` >= :startPeriod 
+            AND `" .TB_MESSAGE ."`.`user_id` = `" .TB_USER ."`.`id` GROUP BY `" .TB_MESSAGE ."`.`user_id` ";
+            $sth = self::$pdo->prepare($query);
+            $sth->bindParam(':startPeriod', $startPeriod, \PDO::PARAM_STR);
+            $sth->execute();
+            $results = $sth->fetchAll(\PDO::FETCH_ASSOC); //fetch column `total`
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+
+        return $results;
+    }
+    
+    
 }
