@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 ### Changed
 ### Deprecated
 ### Removed

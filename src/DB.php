@@ -367,19 +367,20 @@ class DB
                 INSERT INTO `' . TB_USER . '`
                 (`id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :username, :first_name, :last_name, :date, :date)
+                (:id, :username, :first_name, :last_name, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
-                    `username`   = :username,
-                    `first_name` = :first_name,
-                    `last_name`  = :last_name,
-                    `updated_at` = :date
+                    `username`   = VALUES(`username`),
+                    `first_name` = VALUES(`first_name`),
+                    `last_name`  = VALUES(`last_name`),
+                    `updated_at` = VALUES(`updated_at`)
             ');
 
             $sth->bindParam(':id', $user_id, PDO::PARAM_INT);
             $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
             $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
-            $sth->bindParam(':date', $date, PDO::PARAM_STR);
+            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindParam(':updated_at', $date, PDO::PARAM_STR);
 
             $status = $sth->execute();
         } catch (PDOException $e) {
@@ -436,13 +437,13 @@ class DB
                 INSERT IGNORE INTO `' . TB_CHAT . '`
                 (`id`, `type`, `title`, `username`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :all_members_are_administrators, :date, :date, :oldid)
+                (:id, :type, :title, :username, :all_members_are_administrators, :created_at, :updated_at, :oldid)
                 ON DUPLICATE KEY UPDATE
-                    `type`                           = :type,
-                    `title`                          = :title,
-                    `username`                       = :username,
-                    `all_members_are_administrators` = :all_members_are_administrators,
-                    `updated_at`                     = :date
+                    `type`                           = VALUES(`type`),
+                    `title`                          = VALUES(`title`),
+                    `username`                       = VALUES(`username`),
+                    `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
+                    `updated_at`                     = VALUES(`updated_at`)
             ');
 
             if ($migrate_to_chat_id) {
@@ -459,7 +460,8 @@ class DB
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
             $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
             $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
-            $sth->bindParam(':date', $date, PDO::PARAM_STR);
+            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindParam(':updated_at', $date, PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -948,7 +950,7 @@ class DB
                 INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
                 (`chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`)
                 VALUES
-                (:chat_id, :message_id, :user_id, :date, :text, :entities, :caption)
+                (:chat_id, :message_id, :user_id, :edit_date, :text, :entities, :caption)
             ');
 
             $message_id = $edited_message->getMessageId();
@@ -965,7 +967,7 @@ class DB
             $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
             $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
             $sth->bindParam(':user_id', $from_id, PDO::PARAM_INT);
-            $sth->bindParam(':date', $edit_date, PDO::PARAM_STR);
+            $sth->bindParam(':edit_date', $edit_date, PDO::PARAM_STR);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
             $sth->bindParam(':caption', $caption, PDO::PARAM_STR);
@@ -1100,18 +1102,20 @@ class DB
 
         try {
             $sth = self::$pdo->prepare('SELECT 
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :date) as LIMIT_PER_SEC_ALL,
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE ((`chat_id` = :chat_id AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL)) AND `created_at` >= :date) as LIMIT_PER_SEC,
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `chat_id` = :chat_id AND `created_at` >= :date_minute) as LIMIT_PER_MINUTE
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_1) as LIMIT_PER_SEC_ALL,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_2 AND ((`chat_id` = :chat_id_1 AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL))) as LIMIT_PER_SEC,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_minute AND `chat_id` = :chat_id_2) as LIMIT_PER_MINUTE
             ');
 
             $date = self::getTimestamp();
             $date_minute = self::getTimestamp(strtotime('-1 minute'));
 
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
+            $sth->bindParam(':chat_id_1', $chat_id, \PDO::PARAM_STR);
+            $sth->bindParam(':chat_id_2', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
-            $sth->bindParam(':date', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':date_minute', $date_minute, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at_1', $date, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at_2', $date, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at_minute', $date_minute, \PDO::PARAM_STR);
 
             $sth->execute();
 
@@ -1145,7 +1149,7 @@ class DB
                 `method`, `chat_id`, `inline_message_id`, `created_at`
                 )
                 VALUES (
-                :method, :chat_id, :inline_message_id, :date
+                :method, :chat_id, :inline_message_id, :created_at
                 );
             ');
 
@@ -1154,7 +1158,7 @@ class DB
             $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
             $sth->bindParam(':method', $method, \PDO::PARAM_STR);
-            $sth->bindParam(':date', $created_at, \PDO::PARAM_STR);
+            $sth->bindParam(':created_at', $created_at, \PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (\Exception $e) {
