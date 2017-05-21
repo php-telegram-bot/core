@@ -81,6 +81,7 @@ class Request
         'sendLocation',
         'sendVenue',
         'sendContact',
+        'sendInvoice',
         'sendChatAction',
         'getUserProfilePhotos',
         'getFile',
@@ -93,6 +94,8 @@ class Request
         'getChatMembersCount',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'answerShippingQuery',
+        'answerPreCheckoutQuery',
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup',
@@ -631,6 +634,23 @@ class Request
     }
 
     /**
+     * Use this method to send invoices.
+     *
+     * On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendinvoice
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function sendInvoice(array $data)
+    {
+        return self::send('sendInvoice', $data);
+    }
+
+    /**
      * Use this method when you need to tell the user that something is happening on the bot's side.
      *
      * The status is set for 5 seconds or less.
@@ -946,6 +966,44 @@ class Request
     }
 
     /**
+     * Use this method to reply to shipping queries.
+     *
+     * If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot.
+     * On success, True is returned.
+     *
+     * @link https://core.telegram.org/bots/api#answershippingquery
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function answerShippingQuery(array $data)
+    {
+        return self::send('answerShippingQuery', $data);
+    }
+
+    /**
+     * Use this method to respond to pre-checkout queries.
+     *
+     * Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query.
+     * On success, True is returned.
+     *
+     * Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
+     *
+     * @link https://core.telegram.org/bots/api#answerprecheckoutquery
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function answerPreCheckoutQuery(array $data)
+    {
+        return self::send('answerPreCheckoutQuery', $data);
+    }
+
+    /**
      * Return an empty Server Response
      *
      * No request to telegram are sent, this function is used in commands that
@@ -1058,6 +1116,7 @@ class Request
                 'sendLocation',
                 'sendVenue',
                 'sendContact',
+                'sendInvoice',
                 'editMessageText',
                 'editMessageCaption',
                 'editMessageReplyMarkup',
