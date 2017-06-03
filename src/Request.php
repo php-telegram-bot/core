@@ -1096,4 +1096,22 @@ class Request
     {
         return self::send('deleteMessage', $data);
     }
+
+    /**
+     * Use this method to send video notes. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendvideonote
+     *
+     * @param array  $data
+     * @param string $file
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function sendVideoNote(array $data, $file = null)
+    {
+        self::assignEncodedFile($data, 'video_note', $file);
+
+        return self::send('sendVideoNote', $data);
+    }
 }
