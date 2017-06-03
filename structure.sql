@@ -108,7 +108,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   KEY `forward_from_chat` (`forward_from_chat`),
   KEY `reply_to_chat` (`reply_to_chat`),
   KEY `reply_to_message` (`reply_to_message`),
-  KEY `new_chat_member` (`new_chat_member`),
   KEY `left_chat_member` (`left_chat_member`),
   KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
   KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
@@ -119,7 +118,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`new_chat_member`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
