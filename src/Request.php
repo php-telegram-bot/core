@@ -97,6 +97,7 @@ class Request
         'editMessageCaption',
         'editMessageReplyMarkup',
         'getWebhookInfo',
+        'deleteMessage',
     ];
 
     /**
@@ -1077,5 +1078,22 @@ class Request
                 DB::insertTelegramRequest($action, $data);
             }
         }
+    }
+
+    /**
+     * Use this method to delete either bot's messages or messages of other users if the bot is admin of the group.
+     *
+     * On success, true is returned.
+     *
+     * @link https://core.telegram.org/bots/api#deletemessage
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function deleteMessage(array $data)
+    {
+        return self::send('deleteMessage', $data);
     }
 }

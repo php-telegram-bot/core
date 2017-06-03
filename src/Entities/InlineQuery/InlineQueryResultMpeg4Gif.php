@@ -37,6 +37,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getMpeg4Url()            A valid URL for the MP4 file. File size must not exceed 1MB
  * @method int                  getMpeg4Width()          Optional. Video width
  * @method int                  getMpeg4Height()         Optional. Video height
+ * @method int                  getMpeg4Duration()       Optional. Video duration
  * @method string               getThumbUrl()            URL of the static thumbnail (jpeg or gif) for the result
  * @method string               getTitle()               Optional. Title for the result
  * @method string               getCaption()             Optional. Caption of the MPEG-4 file to be sent, 0-200 characters
@@ -47,6 +48,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setMpeg4Url(string $mpeg4_url)                                     A valid URL for the MP4 file. File size must not exceed 1MB
  * @method $this setMpeg4Width(int $mpeg4_width)                                    Optional. Video width
  * @method $this setMpeg4Height(int $mpeg4_height)                                  Optional. Video height
+ * @method $this setMpeg4Duration(int $mpeg4_duration)                              Optional. Video duration
  * @method $this setThumbUrl(string $thumb_url)                                     URL of the static thumbnail (jpeg or gif) for the result
  * @method $this setTitle(string $title)                                            Optional. Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the MPEG-4 file to be sent, 0-200 characters
