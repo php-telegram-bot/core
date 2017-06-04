@@ -15,16 +15,11 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#user
  *
- * @property int    $id              Unique identifier for this user or bot
- * @property string $first_name      User's or bot’s first name
- * @property string $last_name       Optional. User's or bot’s last name
- * @property string $username        Optional. User's or bot’s username
- *
- * @method int    getId()            Unique identifier for this user or bot
- * @method string getFirstName()     User's or bot’s first name
- * @method string getLastName()      Optional. User's or bot’s last name
- * @method string getUsername()      Optional. User's or bot’s username
- * @method string getLanguageCode()  Optional. User's system language
+ * @method int    getId()           Unique identifier for this user or bot
+ * @method string getFirstName()    User's or bot’s first name
+ * @method string getLastName()     Optional. User's or bot’s last name
+ * @method string getUsername()     Optional. User's or bot’s username
+ * @method string getLanguageCode() Optional. User's system language
  */
 class User extends Entity
 {
