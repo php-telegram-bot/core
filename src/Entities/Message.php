@@ -35,7 +35,6 @@ namespace Longman\TelegramBot\Entities;
  * @method Contact      getContact()               Optional. Message is a shared contact, information about the contact
  * @method Location     getLocation()              Optional. Message is a shared location, information about the location
  * @method Venue        getVenue()                 Optional. Message is a venue, information about the venue
- * @method User         getNewChatMembers()        Optional. A new member(s) was added to the group, information about them (one of this members may be the bot itself)
  * @method User         getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot itself)
  * @method string       getNewChatTitle()          Optional. A chat title was changed to this value
  * @method bool         getDeleteChatPhoto()       Optional. Service message: the chat photo was deleted
@@ -70,7 +69,7 @@ class Message extends Entity
             'contact'           => Contact::class,
             'location'          => Location::class,
             'venue'             => Venue::class,
-            'new_chat_member'   => User::class,
+            'new_chat_members'  => User::class,
             'left_chat_member'  => User::class,
             'new_chat_photo'    => PhotoSize::class,
             'pinned_message'    => Message::class,
@@ -80,6 +79,8 @@ class Message extends Entity
     /**
      * Message constructor
      *
+     * @todo: BC stuff should be removed at some point.
+     *
      * @param array  $data
      * @param string $bot_username
      *
@@ -87,10 +88,14 @@ class Message extends Entity
      */
     public function __construct(array $data, $bot_username = '')
     {
-        //Retro-compatibility
+        // Backwards-compatibility
         if (isset($data['new_chat_participant'])) {
-            $data['new_chat_member'] = $data['new_chat_participant'];
+            $data['new_chat_members'] = $data['new_chat_participant'];
             unset($data['new_chat_participant']);
+        }
+        if (isset($data['new_chat_member'])) {
+            $data['new_chat_members'] = $data['new_chat_member'];
+            unset($data['new_chat_member']);
         }
         if (isset($data['left_chat_participant'])) {
             $data['left_chat_member'] = $data['left_chat_participant'];
@@ -126,6 +131,21 @@ class Message extends Entity
     public function getNewChatPhoto()
     {
         $pretty_array = $this->makePrettyObjectArray(PhotoSize::class, 'new_chat_photo');
+
+        return empty($pretty_array) ? null : $pretty_array;
+    }
+
+    /**
+     * Optional. A new member(s) was added to the group, information about them (one of this members may be the bot itself)
+     *
+     * This method overrides the default getNewChatMembers method
+     * and returns a nice array of User objects.
+     *
+     * @return null|User[]
+     */
+    public function getNewChatMembers()
+    {
+        $pretty_array = $this->makePrettyObjectArray(User::class, 'new_chat_members');
 
         return empty($pretty_array) ? null : $pretty_array;
     }
@@ -223,13 +243,12 @@ class Message extends Entity
      * Bot added in chat
      *
      * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function botAddedInChat()
     {
         foreach ($this->getNewChatMembers() as $member) {
-            $member = new User($member);
-
-            if ($member !== null && $member->getUsername() === $this->getBotUsername()) {
+            if ($member instanceof User && $member->getUsername() === $this->getBotUsername()) {
                 return true;
             }
         }
@@ -255,7 +274,7 @@ class Message extends Entity
             'contact',
             'location',
             'venue',
-            'new_chat_member',
+            'new_chat_members',
             'left_chat_member',
             'new_chat_title',
             'new_chat_photo',
