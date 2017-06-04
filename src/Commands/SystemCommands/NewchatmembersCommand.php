@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
  * New chat members command
@@ -42,7 +41,7 @@ class NewchatmembersCommand extends SystemCommand
     public function execute()
     {
         //$message = $this->getMessage();
-        //$member = $message->getNewChatMembers();
+        //$members = $message->getNewChatMembers();
 
         return parent::execute();
     }

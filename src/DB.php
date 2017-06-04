@@ -805,9 +805,7 @@ class DB
         //New and left chat member
         if (!empty($new_chat_members)) {
             foreach ($new_chat_members as $new_chat_member) {
-                $new_chat_member = new User($new_chat_member);
-
-                if ($new_chat_member !== null) {
+                if ($new_chat_member instanceof User) {
                     //Insert the new chat user
                     self::insertUser($new_chat_member, $date, $chat);
                 }
