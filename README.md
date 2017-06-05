@@ -364,7 +364,7 @@ $results = Request::sendToActiveChats(
         true, // Send to chats (super group chat)
         true, // Send to users (single chat)
         null, // 'yyyy-mm-dd hh:mm:ss' date range from
-        null, // 'yyyy-mm-dd hh:mm:ss' date range to
+        null // 'yyyy-mm-dd hh:mm:ss' date range to
     );
 ```
 
