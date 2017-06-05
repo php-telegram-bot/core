@@ -10,6 +10,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Take `custom_input` into account when using getUpdates method (mainly for testing).
 ### Security
 
 ## [0.44.1] - 2017-04-25
