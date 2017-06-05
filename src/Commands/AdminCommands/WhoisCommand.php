@@ -90,10 +90,10 @@ class WhoisCommand extends AdminCommand
 
             if (is_numeric($text)) {
                 $results = DB::selectChats(
-                    true, //Select groups (group chat)
-                    true, //Select supergroups (super group chat)
+                    true, //Select groups
+                    true, //Select super groups
                     true, //Select channels
-                    true, //Select users (single chat)
+                    true, //Select users
                     null, //'yyyy-mm-dd hh:mm:ss' date range from
                     null, //'yyyy-mm-dd hh:mm:ss' date range to
                     $user_id //Specific chat_id to select
@@ -104,10 +104,10 @@ class WhoisCommand extends AdminCommand
                 }
             } else {
                 $results = DB::selectChats(
-                    true, //Select groups (group chat)
-                    true, //Select supergroups (super group chat)
+                    true, //Select groups
+                    true, //Select super groups
                     true, //Select channels
-                    true, //Select users (single chat)
+                    true, //Select users
                     null, //'yyyy-mm-dd hh:mm:ss' date range from
                     null, //'yyyy-mm-dd hh:mm:ss' date range to
                     null, //Specific chat_id to select
@@ -120,8 +120,9 @@ class WhoisCommand extends AdminCommand
             }
 
             if (is_array($result)) {
-                $result['id'] = $result['chat_id'];
-                $chat         = new Chat($result);
+                $result['id']       = $result['chat_id'];
+                $result['username'] = $result['chat_username'];
+                $chat               = new Chat($result);
 
                 $user_id    = $result['id'];
                 $created_at = $result['chat_created_at'];

@@ -1015,6 +1015,7 @@ class DB
             $query = '
                 SELECT * ,
                 ' . TB_CHAT . '.`id` AS `chat_id`,
+                ' . TB_CHAT . '.`username` AS `chat_username`,
                 ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
                 ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`
             ';
