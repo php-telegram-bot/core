@@ -66,6 +66,7 @@ class SendtoallCommand extends AdminCommand
                 ['text' => $text], //Param to evaluate the request
                 true, //Send to groups (group chat)
                 true, //Send to super groups chats (super group chat)
+                false, //Select channels
                 true, //Send to users (single chat)
                 null, //'yyyy-mm-dd hh:mm:ss' date range from
                 null  //'yyyy-mm-dd hh:mm:ss' date range to

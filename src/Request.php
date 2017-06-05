@@ -945,6 +945,7 @@ class Request
      * @param array   $data
      * @param boolean $send_groups
      * @param boolean $send_super_groups
+     * @param boolean $send_channels
      * @param boolean $send_users
      * @param string  $date_from
      * @param string  $date_to
@@ -957,6 +958,7 @@ class Request
         array $data,
         $send_groups = true,
         $send_super_groups = true,
+        $send_channels = false,
         $send_users = true,
         $date_from = null,
         $date_to = null
@@ -966,7 +968,7 @@ class Request
             throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
         }
 
-        $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
+        $chats = DB::selectChats($send_groups, $send_super_groups, $send_channels, $send_users, $date_from, $date_to);
 
         $results = [];
         if (is_array($chats)) {

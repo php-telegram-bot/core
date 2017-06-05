@@ -92,6 +92,7 @@ class WhoisCommand extends AdminCommand
                 $results = DB::selectChats(
                     true, //Select groups (group chat)
                     true, //Select supergroups (super group chat)
+                    true, //Select channels
                     true, //Select users (single chat)
                     null, //'yyyy-mm-dd hh:mm:ss' date range from
                     null, //'yyyy-mm-dd hh:mm:ss' date range to
@@ -105,6 +106,7 @@ class WhoisCommand extends AdminCommand
                 $results = DB::selectChats(
                     true, //Select groups (group chat)
                     true, //Select supergroups (super group chat)
+                    true, //Select channels
                     true, //Select users (single chat)
                     null, //'yyyy-mm-dd hh:mm:ss' date range from
                     null, //'yyyy-mm-dd hh:mm:ss' date range to

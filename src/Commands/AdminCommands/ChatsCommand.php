@@ -58,6 +58,7 @@ class ChatsCommand extends AdminCommand
         $results = DB::selectChats(
             true, //Select groups (group chat)
             true, //Select supergroups (super group chat)
+            true, //Select channels
             true, //Select users (single chat)
             null, //'yyyy-mm-dd hh:mm:ss' date range from
             null, //'yyyy-mm-dd hh:mm:ss' date range to
@@ -68,6 +69,7 @@ class ChatsCommand extends AdminCommand
         $user_chats        = 0;
         $group_chats       = 0;
         $super_group_chats = 0;
+        $channel_chats     = 0;
 
         if ($text === '') {
             $text_back = '';
@@ -107,6 +109,12 @@ class ChatsCommand extends AdminCommand
                     }
 
                     ++$group_chats;
+                } elseif ($chat->isChannel()) {
+                    if ($text !== '') {
+                        $text_back .= '- C ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
+                    }
+
+                    ++$channel_chats;
                 }
             }
         }
@@ -117,6 +125,7 @@ class ChatsCommand extends AdminCommand
             $text_back .= PHP_EOL . 'Private Chats: ' . $user_chats;
             $text_back .= PHP_EOL . 'Groups: ' . $group_chats;
             $text_back .= PHP_EOL . 'Super Groups: ' . $super_group_chats;
+            $text_back .= PHP_EOL . 'Channels: ' . $channel_chats;
             $text_back .= PHP_EOL . 'Total: ' . ($user_chats + $group_chats + $super_group_chats);
 
             if ($text === '') {

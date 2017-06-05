@@ -983,6 +983,7 @@ class DB
      *
      * @param bool   $select_groups
      * @param bool   $select_super_groups
+     * @param bool   $select_channels
      * @param bool   $select_users
      * @param string $date_from
      * @param string $date_to
@@ -995,6 +996,7 @@ class DB
     public static function selectChats(
         $select_groups = true,
         $select_super_groups = true,
+        $select_channels = true,
         $select_users = true,
         $date_from = null,
         $date_to = null,
@@ -1036,6 +1038,7 @@ class DB
 
                 $select_groups && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
                 $select_super_groups && $chat_or_user[] = TB_CHAT . '.`type` = "supergroup"';
+                $select_channels && $chat_or_user[] = TB_CHAT . '.`type` = "channel"';
                 $select_users && $chat_or_user[] = TB_CHAT . '.`type` = "private"';
 
                 $where[] = '(' . implode(' OR ', $chat_or_user) . ')';
