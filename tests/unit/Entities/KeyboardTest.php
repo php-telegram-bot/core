@@ -22,6 +22,27 @@ use Longman\TelegramBot\Entities\KeyboardButton;
  */
 class KeyboardTest extends TestCase
 {
+    public static function assertButtonPropertiesEqual($value, $property, $keyboard, $row, $column, $message = '')
+    {
+        self::assertSame($value, $keyboard->getProperty($keyboard->getKeyboardType())[$row][$column]->getProperty($property), $message);
+    }
+
+    public static function assertRowButtonPropertiesEqual(array $values, $property, $keyboard, $row, $message = '')
+    {
+        $column = 0;
+        foreach ($values as $value) {
+            self::assertButtonPropertiesEqual($value, $property, $keyboard, $row, $column++, $message);
+        }
+    }
+
+    public static function assertAllButtonPropertiesEqual(array $all_values, $property, $keyboard, $message = '')
+    {
+        $row = 0;
+        foreach ($all_values as $values) {
+            self::assertRowButtonPropertiesEqual($values, $property, $keyboard, $row++, $message);
+        }
+    }
+
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
      * @expectedExceptionMessage keyboard field is not an array!
@@ -42,75 +63,88 @@ class KeyboardTest extends TestCase
 
     public function testKeyboardSingleButtonSingleRow()
     {
-        $keyboard = (new Keyboard('Button Text 1'))->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        $keyboard = new Keyboard('Button Text 1');
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+        ], 'text', $keyboard);
 
-        $keyboard = (new Keyboard(['Button Text 2']))->getProperty('keyboard');
-        self::assertSame('Button Text 2', $keyboard[0][0]->getText());
+        $keyboard = new Keyboard(['Button Text 2']);
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 2'],
+        ], 'text', $keyboard);
     }
 
     public function testKeyboardSingleButtonMultipleRows()
     {
-        $keyboard = (new Keyboard(
+        $keyboard = new Keyboard(
             'Button Text 1',
             'Button Text 2',
             'Button Text 3'
-        ))->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[2][0]->getText());
+        );
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+            ['Button Text 2'],
+            ['Button Text 3'],
+        ], 'text', $keyboard);
 
-        $keyboard = (new Keyboard(
+        $keyboard = new Keyboard(
             ['Button Text 4'],
             ['Button Text 5'],
             ['Button Text 6']
-        ))->getProperty('keyboard');
-        self::assertSame('Button Text 4', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 5', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 6', $keyboard[2][0]->getText());
+        );
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 4'],
+            ['Button Text 5'],
+            ['Button Text 6'],
+        ], 'text', $keyboard);
     }
 
     public function testKeyboardMultipleButtonsSingleRow()
     {
-        $keyboard = (new Keyboard(['Button Text 1', 'Button Text 2']))->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[0][1]->getText());
+        $keyboard = new Keyboard(['Button Text 1', 'Button Text 2']);
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1', 'Button Text 2'],
+        ], 'text', $keyboard);
     }
 
     public function testKeyboardMultipleButtonsMultipleRows()
     {
-        $keyboard = (new Keyboard(
+        $keyboard = new Keyboard(
             ['Button Text 1', 'Button Text 2'],
             ['Button Text 3', 'Button Text 4']
-        ))->getProperty('keyboard');
-
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 2', $keyboard[0][1]->getText());
-        self::assertSame('Button Text 3', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 4', $keyboard[1][1]->getText());
+        );
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1', 'Button Text 2'],
+            ['Button Text 3', 'Button Text 4'],
+        ], 'text', $keyboard);
     }
 
     public function testKeyboardWithButtonObjects()
     {
-        $keyboard = (new Keyboard(
+        $keyboard = new Keyboard(
             new KeyboardButton('Button Text 1')
-        ))->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        );
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+        ], 'text', $keyboard);
 
-        $keyboard = (new Keyboard(
+        $keyboard = new Keyboard(
             new KeyboardButton('Button Text 2'),
             new KeyboardButton('Button Text 3')
-        ))->getProperty('keyboard');
-        self::assertSame('Button Text 2', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[1][0]->getText());
+        );
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 2'],
+            ['Button Text 3'],
+        ], 'text', $keyboard);
 
-        $keyboard = (new Keyboard(
+        $keyboard = new Keyboard(
             [new KeyboardButton('Button Text 4')],
             [new KeyboardButton('Button Text 5'), new KeyboardButton('Button Text 6')]
-        ))->getProperty('keyboard');
-        self::assertSame('Button Text 4', $keyboard[0][0]->getText());
-        self::assertSame('Button Text 5', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 6', $keyboard[1][1]->getText());
+        );
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 4'],
+            ['Button Text 5', 'Button Text 6'],
+        ], 'text', $keyboard);
     }
 
     public function testKeyboardWithDataArray()
@@ -119,19 +153,19 @@ class KeyboardTest extends TestCase
         $one_time_keyboard = (bool) mt_rand(0, 1);
         $selective         = (bool) mt_rand(0, 1);
 
-        $keyboard_obj = new Keyboard([
+        $keyboard = new Keyboard([
             'resize_keyboard'   => $resize_keyboard,
             'one_time_keyboard' => $one_time_keyboard,
             'selective'         => $selective,
             'keyboard'          => [['Button Text 1']],
         ]);
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+        ], 'text', $keyboard);
 
-        $keyboard = $keyboard_obj->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
-
-        self::assertSame($resize_keyboard, $keyboard_obj->getResizeKeyboard());
-        self::assertSame($one_time_keyboard, $keyboard_obj->getOneTimeKeyboard());
-        self::assertSame($selective, $keyboard_obj->getSelective());
+        self::assertSame($resize_keyboard, $keyboard->getResizeKeyboard());
+        self::assertSame($one_time_keyboard, $keyboard->getOneTimeKeyboard());
+        self::assertSame($selective, $keyboard->getSelective());
     }
 
     public function testPredefinedKeyboards()
@@ -145,43 +179,48 @@ class KeyboardTest extends TestCase
 
     public function testKeyboardMethods()
     {
-        $keyboard_obj = new Keyboard([]);
+        $keyboard = new Keyboard([]);
 
-        self::assertEmpty($keyboard_obj->getOneTimeKeyboard());
-        self::assertEmpty($keyboard_obj->getResizeKeyboard());
-        self::assertEmpty($keyboard_obj->getSelective());
+        self::assertEmpty($keyboard->getOneTimeKeyboard());
+        self::assertEmpty($keyboard->getResizeKeyboard());
+        self::assertEmpty($keyboard->getSelective());
 
-        $keyboard_obj->setOneTimeKeyboard(true);
-        self::assertTrue($keyboard_obj->getOneTimeKeyboard());
-        $keyboard_obj->setOneTimeKeyboard(false);
-        self::assertFalse($keyboard_obj->getOneTimeKeyboard());
+        $keyboard->setOneTimeKeyboard(true);
+        self::assertTrue($keyboard->getOneTimeKeyboard());
+        $keyboard->setOneTimeKeyboard(false);
+        self::assertFalse($keyboard->getOneTimeKeyboard());
 
-        $keyboard_obj->setResizeKeyboard(true);
-        self::assertTrue($keyboard_obj->getResizeKeyboard());
-        $keyboard_obj->setResizeKeyboard(false);
-        self::assertFalse($keyboard_obj->getResizeKeyboard());
+        $keyboard->setResizeKeyboard(true);
+        self::assertTrue($keyboard->getResizeKeyboard());
+        $keyboard->setResizeKeyboard(false);
+        self::assertFalse($keyboard->getResizeKeyboard());
 
-        $keyboard_obj->setSelective(true);
-        self::assertTrue($keyboard_obj->getSelective());
-        $keyboard_obj->setSelective(false);
-        self::assertFalse($keyboard_obj->getSelective());
+        $keyboard->setSelective(true);
+        self::assertTrue($keyboard->getSelective());
+        $keyboard->setSelective(false);
+        self::assertFalse($keyboard->getSelective());
     }
 
     public function testKeyboardAddRows()
     {
-        $keyboard_obj = new Keyboard([]);
+        $keyboard = new Keyboard([]);
 
-        $keyboard_obj->addRow('Button Text 1');
-        $keyboard = $keyboard_obj->getProperty('keyboard');
-        self::assertSame('Button Text 1', $keyboard[0][0]->getText());
+        $keyboard->addRow('Button Text 1');
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+        ], 'text', $keyboard);
 
-        $keyboard_obj->addRow('Button Text 2', 'Button Text 3');
-        $keyboard = $keyboard_obj->getProperty('keyboard');
-        self::assertSame('Button Text 2', $keyboard[1][0]->getText());
-        self::assertSame('Button Text 3', $keyboard[1][1]->getText());
+        $keyboard->addRow('Button Text 2', 'Button Text 3');
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+            ['Button Text 2', 'Button Text 3'],
+        ], 'text', $keyboard);
 
-        $keyboard_obj->addRow(['text' => 'Button Text 4']);
-        $keyboard = $keyboard_obj->getProperty('keyboard');
-        self::assertSame('Button Text 4', $keyboard[2][0]->getText());
+        $keyboard->addRow(['text' => 'Button Text 4']);
+        self::assertAllButtonPropertiesEqual([
+            ['Button Text 1'],
+            ['Button Text 2', 'Button Text 3'],
+            ['Button Text 4'],
+        ], 'text', $keyboard);
     }
 }
