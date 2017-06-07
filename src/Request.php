@@ -96,6 +96,7 @@ class Request
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup',
+        'deleteMessage',
         'getWebhookInfo',
     ];
 
