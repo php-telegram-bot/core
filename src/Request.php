@@ -908,6 +908,28 @@ class Request
     }
 
     /**
+     * A message can only be deleted if it was sent less than 48 hours ago.
+     * Any such recently sent outgoing message may be deleted.
+     * Additionally, if the bot is an administrator in a group chat, it can delete any message.
+     * If the bot is an administrator in a supergroup, it can delete messages from any other user and service messages
+     * about people joining or leaving the group (other types of service messages may only be removed by the group creator).
+     * In channels, bots can only remove their own messages.
+     *
+     * On success, returns True.
+     *
+     * @link https://core.telegram.org/bots/api#deletemessage
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function deleteMessage(array $data)
+    {
+        return self::send('deleteMessage', $data);
+    }
+
+    /**
      * Use this method to send answers to an inline query. On success, True is returned.
      *
      * No more than 50 results per query are allowed.
