@@ -278,8 +278,12 @@ class Request
      */
     public static function downloadFile(File $file)
     {
+        if (empty($download_path = self::$telegram->getDownloadPath())) {
+            throw new TelegramException('Download path not set!');
+        }
+
         $tg_file_path = $file->getFilePath();
-        $file_path    = self::$telegram->getDownloadPath() . '/' . $tg_file_path;
+        $file_path    = $download_path . '/' . $tg_file_path;
 
         $file_dir = dirname($file_path);
         //For safety reasons, first try to create the directory, then check that it exists.
