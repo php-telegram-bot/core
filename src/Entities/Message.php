@@ -79,8 +79,6 @@ class Message extends Entity
     /**
      * Message constructor
      *
-     * @todo: BC stuff should be removed at some point.
-     *
      * @param array  $data
      * @param string $bot_username
      *
@@ -88,20 +86,6 @@ class Message extends Entity
      */
     public function __construct(array $data, $bot_username = '')
     {
-        // Backwards-compatibility
-        if (isset($data['new_chat_participant'])) {
-            $data['new_chat_members'] = $data['new_chat_participant'];
-            unset($data['new_chat_participant']);
-        }
-        if (isset($data['new_chat_member'])) {
-            $data['new_chat_members'] = $data['new_chat_member'];
-            unset($data['new_chat_member']);
-        }
-        if (isset($data['left_chat_participant'])) {
-            $data['left_chat_member'] = $data['left_chat_participant'];
-            unset($data['left_chat_participant']);
-        }
-
         parent::__construct($data, $bot_username);
     }
 
