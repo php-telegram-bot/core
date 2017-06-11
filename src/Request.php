@@ -104,16 +104,32 @@ class Request
      *
      * @param \Longman\TelegramBot\Telegram $telegram
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function initialize(Telegram $telegram)
     {
-        if (is_object($telegram)) {
-            self::$telegram = $telegram;
-            self::$client   = new Client(['base_uri' => self::$api_base_uri]);
-        } else {
-            throw new TelegramException('Telegram pointer is empty!');
+        if (!($telegram instanceof Telegram)) {
+            throw new TelegramException('Invalid Telegram pointer!');
         }
+
+        self::$telegram = $telegram;
+        self::setClient(new Client(['base_uri' => self::$api_base_uri]));
+    }
+
+    /**
+     * Set a custom Guzzle HTTP Client object
+     *
+     * @param Client $client
+     *
+     * @throws TelegramException
+     */
+    public static function setClient(Client $client)
+    {
+        if (!($client instanceof Client)) {
+            throw new TelegramException('Invalid GuzzleHttp\Client pointer!');
+        }
+
+        self::$client = $client;
     }
 
     /**
