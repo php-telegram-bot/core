@@ -10,6 +10,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Changed
 ### Deprecated
 ### Removed
+- [:exclamation:][unreleased-bc-up-download-directory] Upload and download directories are not set any more by default and must be set manually.
 ### Fixed
 ### Security
 
@@ -26,7 +27,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 - All examples have been moved to a [dedicated repository](https://github.com/php-telegram-bot/example-bot).
 ### Fixed
-- [:exclamation:](https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#0440) Format of Update content type using `$update->getUpdateContent()`.
+- [:exclamation:][0.44.0-bc-update-content-type] Format of Update content type using `$update->getUpdateContent()`.
 
 ## [0.43.0] - 2017-04-17
 ### Added
@@ -101,3 +102,6 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Logging improvements to Botan integration.
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
+
+[unreleased-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
+[0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
