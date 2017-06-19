@@ -12,6 +12,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 - [:exclamation:][unreleased-bc-up-download-directory] Upload and download directories are not set any more by default and must be set manually.
 ### Fixed
+- ID fields are now typed with `PARAM_STR` PDO data type, to allow huge numbers.
+- Message type data type for PDO corrected.
 ### Security
 
 ## [0.44.1] - 2017-04-25
