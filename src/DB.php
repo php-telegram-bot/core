@@ -201,7 +201,7 @@ class DB
             $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
 
             if ($id !== null) {
-                $sth->bindParam(':id', $id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $id, PDO::PARAM_STR);
             }
 
             $sth->execute();
@@ -327,13 +327,13 @@ class DB
                 (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id)
             ');
 
-            $sth->bindParam(':id', $id, PDO::PARAM_INT);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, PDO::PARAM_INT);
-            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':id', $id, PDO::PARAM_STR);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
+            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, PDO::PARAM_STR);
+            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -377,7 +377,7 @@ class DB
                     `updated_at`     = VALUES(`updated_at`)
             ');
 
-            $sth->bindParam(':id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
             $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
@@ -401,8 +401,8 @@ class DB
                     (:user_id, :chat_id)
                 ');
 
-                $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+                $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
 
                 $status = $sth->execute();
             } catch (PDOException $e) {
@@ -452,14 +452,14 @@ class DB
             if ($migrate_to_chat_id) {
                 $chat_type = 'supergroup';
 
-                $sth->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_INT);
-                $sth->bindParam(':oldid', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_STR);
+                $sth->bindParam(':oldid', $chat_id, PDO::PARAM_STR);
             } else {
-                $sth->bindParam(':id', $chat_id, PDO::PARAM_INT);
-                $sth->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $chat_id, PDO::PARAM_STR);
+                $sth->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_STR);
             }
 
-            $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
+            $sth->bindParam(':type', $chat_type, PDO::PARAM_STR);
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
             $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
             $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
@@ -619,8 +619,8 @@ class DB
             $query    = $inline_query->getQuery();
             $offset   = $inline_query->getOffset();
 
-            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':query', $query, PDO::PARAM_STR);
             $sth->bindParam(':param_offset', $offset, PDO::PARAM_STR);
@@ -668,7 +668,7 @@ class DB
             $query             = $chosen_inline_result->getQuery();
 
             $sth->bindParam(':result_id', $result_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
             $sth->bindParam(':query', $query, PDO::PARAM_STR);
@@ -736,10 +736,10 @@ class DB
             $inline_message_id = $callback_query->getInlineMessageId();
             $data              = $callback_query->getData();
 
-            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
+            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
             $sth->bindParam(':data', $data, PDO::PARAM_STR);
             $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
@@ -877,13 +877,13 @@ class DB
             $migrate_to_chat_id      = $message->getMigrateToChatId();
             $pinned_message          = $message->getPinnedMessage();
 
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $from_id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $from_id, PDO::PARAM_STR);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
-            $sth->bindParam(':forward_from', $forward_from, PDO::PARAM_INT);
-            $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_INT);
-            $sth->bindParam(':forward_from_message_id', $forward_from_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':forward_from', $forward_from, PDO::PARAM_STR);
+            $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_STR);
+            $sth->bindParam(':forward_from_message_id', $forward_from_message_id, PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, PDO::PARAM_STR);
 
             $reply_to_chat_id = null;
@@ -891,8 +891,8 @@ class DB
                 $reply_to_chat_id = $chat_id;
             }
 
-            $sth->bindParam(':reply_to_chat', $reply_to_chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':reply_to_chat', $reply_to_chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_STR);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, PDO::PARAM_STR);
@@ -907,15 +907,15 @@ class DB
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':venue', $venue, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_members', $new_chat_members, PDO::PARAM_STR);
-            $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_INT);
+            $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);
             $sth->bindParam(':delete_chat_photo', $delete_chat_photo, PDO::PARAM_INT);
             $sth->bindParam(':group_chat_created', $group_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':supergroup_chat_created', $supergroup_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':channel_chat_created', $channel_chat_created, PDO::PARAM_INT);
-            $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, PDO::PARAM_INT);
+            $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, PDO::PARAM_STR);
             $sth->bindParam(':pinned_message', $pinned_message, PDO::PARAM_STR);
 
             return $sth->execute();
@@ -974,9 +974,9 @@ class DB
             $text    = $edited_message->getText();
             $caption = $edited_message->getCaption();
 
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $from_id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $from_id, PDO::PARAM_STR);
             $sth->bindParam(':edit_date', $edit_date, PDO::PARAM_STR);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
