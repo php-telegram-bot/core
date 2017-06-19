@@ -104,16 +104,32 @@ class Request
      *
      * @param \Longman\TelegramBot\Telegram $telegram
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function initialize(Telegram $telegram)
     {
-        if (is_object($telegram)) {
-            self::$telegram = $telegram;
-            self::$client   = new Client(['base_uri' => self::$api_base_uri]);
-        } else {
-            throw new TelegramException('Telegram pointer is empty!');
+        if (!($telegram instanceof Telegram)) {
+            throw new TelegramException('Invalid Telegram pointer!');
         }
+
+        self::$telegram = $telegram;
+        self::setClient(new Client(['base_uri' => self::$api_base_uri]));
+    }
+
+    /**
+     * Set a custom Guzzle HTTP Client object
+     *
+     * @param Client $client
+     *
+     * @throws TelegramException
+     */
+    public static function setClient(Client $client)
+    {
+        if (!($client instanceof Client)) {
+            throw new TelegramException('Invalid GuzzleHttp\Client pointer!');
+        }
+
+        self::$client = $client;
     }
 
     /**
@@ -201,7 +217,7 @@ class Request
 
         //Reformat data array in multipart way if it contains a resource
         foreach ($data as $key => $item) {
-            $has_resource |= is_resource($item);
+            $has_resource |= (is_resource($item) || $item instanceof \GuzzleHttp\Psr7\Stream);
             $multipart[] = ['name' => $key, 'contents' => $item];
         }
         if ($has_resource) {
@@ -262,8 +278,12 @@ class Request
      */
     public static function downloadFile(File $file)
     {
+        if (empty($download_path = self::$telegram->getDownloadPath())) {
+            throw new TelegramException('Download path not set!');
+        }
+
         $tg_file_path = $file->getFilePath();
-        $file_path    = self::$telegram->getDownloadPath() . '/' . $tg_file_path;
+        $file_path    = $download_path . '/' . $tg_file_path;
 
         $file_dir = dirname($file_path);
         //For safety reasons, first try to create the directory, then check that it exists.
