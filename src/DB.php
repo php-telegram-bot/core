@@ -804,19 +804,15 @@ class DB
 
         //New and left chat member
         if (!empty($new_chat_members)) {
-            $new_chat_members_ids = '';
+            $new_chat_members_ids = [];
             foreach ($new_chat_members as $new_chat_member) {
                 if ($new_chat_member instanceof User) {
                     //Insert the new chat user
                     self::insertUser($new_chat_member, $date, $chat);
-
-                    if (!empty($new_chat_members_ids)) {
-                        $new_chat_members_ids .= ',';
-                    }
-
-                    $new_chat_members_ids .= $new_chat_member->getId();
+                    $new_chat_members_ids[] = $new_chat_member->getId();
                 }
             }
+            $new_chat_members_ids = implode(',', $new_chat_members_ids);
         } elseif ($left_chat_member instanceof User) {
             //Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
