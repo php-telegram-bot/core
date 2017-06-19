@@ -161,10 +161,6 @@ class Telegram
             $this->bot_username = $bot_username;
         }
 
-        //Set default download and upload path
-        $this->setDownloadPath(BASE_PATH . '/../Download');
-        $this->setUploadPath(BASE_PATH . '/../Upload');
-
         //Add default system commands path
         $this->addCommandsPath(BASE_COMMANDS_PATH . '/SystemCommands');
 
