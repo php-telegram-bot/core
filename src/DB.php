@@ -804,14 +804,19 @@ class DB
 
         //New and left chat member
         if (!empty($new_chat_members)) {
+            $new_chat_members_ids = '';
             foreach ($new_chat_members as $new_chat_member) {
                 if ($new_chat_member instanceof User) {
                     //Insert the new chat user
                     self::insertUser($new_chat_member, $date, $chat);
+
+                    if (!empty($new_chat_members_ids)) {
+                        $new_chat_members_ids .= ',';
+                    }
+
+                    $new_chat_members_ids .= $new_chat_member->getId();
                 }
             }
-
-            $new_chat_members = json_encode($new_chat_members);
         } elseif ($left_chat_member instanceof User) {
             //Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
@@ -906,7 +911,7 @@ class DB
             $sth->bindParam(':contact', $contact, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':venue', $venue, PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_members', $new_chat_members, PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_members', $new_chat_members_ids, PDO::PARAM_STR);
             $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);

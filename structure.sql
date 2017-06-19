@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `location` TEXT COMMENT 'Location object. Message is a shared location, information about the location',
   `venue` TEXT COMMENT 'Venue object. Message is a Venue, information about the Venue',
   `caption` TEXT COMMENT  'For message with caption, the actual UTF-8 text of the caption',
-  `new_chat_members` TEXT COMMENT 'Array of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
+  `new_chat_members` TEXT COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
   `left_chat_member` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
   `new_chat_title` CHAR(255) DEFAULT NULL COMMENT 'A chat title was changed to this value',
   `new_chat_photo` TEXT COMMENT 'Array of PhotoSize objects. A chat photo was change to this value',
