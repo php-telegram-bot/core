@@ -6,10 +6,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
+- Allow setting a custom Guzzle HTTP Client for requests (#511).
+- First implementations towards Bots API 3.0.
 ### Changed
+- [:exclamation:][unreleased-bc-chats-params-array] `Request::sendToActiveChats` and `DB::selectChats` now accept parameters as an options array.
 ### Deprecated
 ### Removed
+- [:exclamation:][unreleased-bc-up-download-directory] Upload and download directories are not set any more by default and must be set manually.
 ### Fixed
+- ID fields are now typed with `PARAM_STR` PDO data type, to allow huge numbers.
+- Message type data type for PDO corrected.
+- Indexed table columns now have a fitting length.
 - Take `custom_input` into account when using getUpdates method (mainly for testing).
 ### Security
 
@@ -26,7 +33,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 - All examples have been moved to a [dedicated repository](https://github.com/php-telegram-bot/example-bot).
 ### Fixed
-- [:exclamation:](https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#0440) Format of Update content type using `$update->getUpdateContent()`.
+- [:exclamation:][0.44.0-bc-update-content-type] Format of Update content type using `$update->getUpdateContent()`.
 
 ## [0.43.0] - 2017-04-17
 ### Added
@@ -101,3 +108,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Logging improvements to Botan integration.
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
+
+[unreleased-bc-chats-params-array]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
+[unreleased-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
+[0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
