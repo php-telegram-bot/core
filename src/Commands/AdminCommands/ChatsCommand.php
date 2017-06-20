@@ -35,7 +35,7 @@ class ChatsCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
 
     /**
      * @var bool
@@ -45,7 +45,7 @@ class ChatsCommand extends AdminCommand
     /**
      * Command execute method
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
@@ -55,19 +55,18 @@ class ChatsCommand extends AdminCommand
         $chat_id = $message->getChat()->getId();
         $text    = trim($message->getText(true));
 
-        $results = DB::selectChats(
-            true, //Select groups (group chat)
-            true, //Select supergroups (super group chat)
-            true, //Select users (single chat)
-            null, //'yyyy-mm-dd hh:mm:ss' date range from
-            null, //'yyyy-mm-dd hh:mm:ss' date range to
-            null, //Specific chat_id to select
-            ($text === '' || $text === '*') ? null : $text //Text to search in user/group name
-        );
+        $results = DB::selectChats([
+            'groups'      => true,
+            'supergroups' => true,
+            'channels'    => true,
+            'users'       => true,
+            'text'        => ($text === '' || $text === '*') ? null : $text //Text to search in user/group name
+        ]);
 
-        $user_chats        = 0;
-        $group_chats       = 0;
-        $super_group_chats = 0;
+        $user_chats       = 0;
+        $group_chats      = 0;
+        $supergroup_chats = 0;
+        $channel_chats    = 0;
 
         if ($text === '') {
             $text_back = '';
@@ -100,24 +99,31 @@ class ChatsCommand extends AdminCommand
                         $text_back .= '- S ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
                     }
 
-                    ++$super_group_chats;
+                    ++$supergroup_chats;
                 } elseif ($chat->isGroupChat()) {
                     if ($text !== '') {
                         $text_back .= '- G ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
                     }
 
                     ++$group_chats;
+                } elseif ($chat->isChannel()) {
+                    if ($text !== '') {
+                        $text_back .= '- C ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
+                    }
+
+                    ++$channel_chats;
                 }
             }
         }
 
-        if (($user_chats + $group_chats + $super_group_chats) === 0) {
+        if (($user_chats + $group_chats + $supergroup_chats) === 0) {
             $text_back = 'No chats found..';
         } else {
             $text_back .= PHP_EOL . 'Private Chats: ' . $user_chats;
             $text_back .= PHP_EOL . 'Groups: ' . $group_chats;
-            $text_back .= PHP_EOL . 'Super Groups: ' . $super_group_chats;
-            $text_back .= PHP_EOL . 'Total: ' . ($user_chats + $group_chats + $super_group_chats);
+            $text_back .= PHP_EOL . 'Super Groups: ' . $supergroup_chats;
+            $text_back .= PHP_EOL . 'Channels: ' . $channel_chats;
+            $text_back .= PHP_EOL . 'Total: ' . ($user_chats + $group_chats + $supergroup_chats);
 
             if ($text === '') {
                 $text_back .= PHP_EOL . PHP_EOL . 'List all chats: /' . $this->name . ' *' . PHP_EOL . 'Search for chats: /' . $this->name . ' <search string>';
