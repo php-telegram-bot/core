@@ -357,28 +357,31 @@ class DB
             return false;
         }
 
-        $user_id    = $user->getId();
-        $username   = $user->getUsername();
-        $first_name = $user->getFirstName();
-        $last_name  = $user->getLastName();
+        $user_id        = $user->getId();
+        $username       = $user->getUsername();
+        $first_name     = $user->getFirstName();
+        $last_name      = $user->getLastName();
+        $language_code  = $user->getLanguageCode();
 
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
-                (`id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`)
+                (`id`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :username, :first_name, :last_name, :created_at, :updated_at)
+                (:id, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
-                    `username`   = VALUES(`username`),
-                    `first_name` = VALUES(`first_name`),
-                    `last_name`  = VALUES(`last_name`),
-                    `updated_at` = VALUES(`updated_at`)
+                    `username`       = VALUES(`username`),
+                    `first_name`     = VALUES(`first_name`),
+                    `last_name`      = VALUES(`last_name`),
+                    `language_code`  = VALUES(`language_code`),
+                    `updated_at`     = VALUES(`updated_at`)
             ');
 
             $sth->bindParam(':id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
             $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
+            $sth->bindParam(':language_code', $language_code, PDO::PARAM_STR, 10);
             $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
             $sth->bindParam(':updated_at', $date, PDO::PARAM_STR);
 
@@ -773,9 +776,9 @@ class DB
         $forward_from_message_id = $message->getForwardFromMessageId();
         $photo                   = self::entitiesArrayToJson($message->getPhoto(), '');
         $entities                = self::entitiesArrayToJson($message->getEntities(), null);
-        $new_chat_member         = $message->getNewChatMember();
-        $new_chat_photo          = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
+        $new_chat_members        = $message->getNewChatMembers();
         $left_chat_member        = $message->getLeftChatMember();
+        $new_chat_photo          = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
         $migrate_to_chat_id      = $message->getMigrateToChatId();
 
         //Insert chat, update chat id in case it migrated
@@ -800,10 +803,16 @@ class DB
         }
 
         //New and left chat member
-        if ($new_chat_member instanceof User) {
-            //Insert the new chat user
-            self::insertUser($new_chat_member, $date, $chat);
-            $new_chat_member = $new_chat_member->getId();
+        if (!empty($new_chat_members)) {
+            $new_chat_members_ids = [];
+            foreach ($new_chat_members as $new_chat_member) {
+                if ($new_chat_member instanceof User) {
+                    //Insert the new chat user
+                    self::insertUser($new_chat_member, $date, $chat);
+                    $new_chat_members_ids[] = $new_chat_member->getId();
+                }
+            }
+            $new_chat_members_ids = implode(',', $new_chat_members_ids);
         } elseif ($left_chat_member instanceof User) {
             //Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
@@ -816,16 +825,16 @@ class DB
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
-                    `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
-                    `location`, `venue`, `new_chat_member`, `left_chat_member`,
+                    `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
+                    `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`,
                     `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
-                    :photo, :sticker, :video, :voice, :caption, :contact,
-                    :location, :venue, :new_chat_member, :left_chat_member,
+                    :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
+                    :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created,
                     :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
@@ -855,6 +864,7 @@ class DB
             $sticker                 = $message->getSticker();
             $video                   = $message->getVideo();
             $voice                   = $message->getVoice();
+            $video_note              = $message->getVideoNote();
             $caption                 = $message->getCaption();
             $contact                 = $message->getContact();
             $location                = $message->getLocation();
@@ -892,11 +902,12 @@ class DB
             $sth->bindParam(':sticker', $sticker, PDO::PARAM_STR);
             $sth->bindParam(':video', $video, PDO::PARAM_STR);
             $sth->bindParam(':voice', $voice, PDO::PARAM_STR);
+            $sth->bindParam(':video_note', $video_note, PDO::PARAM_STR);
             $sth->bindParam(':caption', $caption, PDO::PARAM_STR);
             $sth->bindParam(':contact', $contact, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':venue', $venue, PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_member', $new_chat_member, PDO::PARAM_STR);
+            $sth->bindParam(':new_chat_members', $new_chat_members_ids, PDO::PARAM_STR);
             $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);

@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 - Allow setting a custom Guzzle HTTP Client for requests (#511).
+- First implementations towards Bots API 3.0.
 ### Changed
 - [:exclamation:][unreleased-bc-chats-params-array] `Request::sendToActiveChats` and `DB::selectChats` now accept parameters as an options array.
 ### Deprecated
