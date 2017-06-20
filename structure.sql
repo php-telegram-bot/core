@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint COMMENT 'Unique user identifier',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User''s first name',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User''s last name',
-  `username` CHAR(255) DEFAULT NULL COMMENT 'User''s username',
+  `username` CHAR(191) DEFAULT NULL COMMENT 'User''s username',
   `language_code` CHAR(10) DEFAULT NULL COMMENT 'User''s system language',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
@@ -31,10 +31,8 @@ CREATE TABLE IF NOT EXISTS `user_chat` (
 
   PRIMARY KEY (`user_id`, `chat_id`),
 
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
-    ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `inline_query` (
@@ -221,4 +219,4 @@ CREATE TABLE IF NOT EXISTS `request_limiter` (
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT charSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
