@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 - Allow setting a custom Guzzle HTTP Client for requests (#511).
 ### Changed
+- [:exclamation:][unreleased-bc-chats-params-array] `Request::sendToActiveChats` and `DB::selectChats` now accept parameters as an options array.
 ### Deprecated
 ### Removed
 - [:exclamation:][unreleased-bc-up-download-directory] Upload and download directories are not set any more by default and must be set manually.
@@ -105,5 +106,6 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-bc-chats-params-array]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
 [unreleased-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
