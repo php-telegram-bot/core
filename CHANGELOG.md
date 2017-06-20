@@ -17,6 +17,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - ID fields are now typed with `PARAM_STR` PDO data type, to allow huge numbers.
 - Message type data type for PDO corrected.
 - Indexed table columns now have a fitting length.
+- Take `custom_input` into account when using getUpdates method (mainly for testing).
 ### Security
 
 ## [0.44.1] - 2017-04-25
