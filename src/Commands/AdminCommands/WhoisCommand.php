@@ -42,7 +42,7 @@ class WhoisCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $version = '1.2.0';
+    protected $version = '1.3.0';
 
     /**
      * @var bool
@@ -52,7 +52,7 @@ class WhoisCommand extends AdminCommand
     /**
      * Command execute method
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
@@ -89,30 +89,25 @@ class WhoisCommand extends AdminCommand
             $result     = null;
 
             if (is_numeric($text)) {
-                $results = DB::selectChats(
-                    true, //Select groups
-                    true, //Select super groups
-                    true, //Select channels
-                    true, //Select users
-                    null, //'yyyy-mm-dd hh:mm:ss' date range from
-                    null, //'yyyy-mm-dd hh:mm:ss' date range to
-                    $user_id //Specific chat_id to select
-                );
+                $results = DB::selectChats([
+                    'groups'      => true,
+                    'supergroups' => true,
+                    'channels'    => true,
+                    'users'       => true,
+                    'chat_id'     => $user_id, //Specific chat_id to select
+                ]);
 
                 if (!empty($results)) {
                     $result = reset($results);
                 }
             } else {
-                $results = DB::selectChats(
-                    true, //Select groups
-                    true, //Select super groups
-                    true, //Select channels
-                    true, //Select users
-                    null, //'yyyy-mm-dd hh:mm:ss' date range from
-                    null, //'yyyy-mm-dd hh:mm:ss' date range to
-                    null, //Specific chat_id to select
-                    $text //Text to search in user/group name
-                );
+                $results = DB::selectChats([
+                    'groups'      => true,
+                    'supergroups' => true,
+                    'channels'    => true,
+                    'users'       => true,
+                    'text'        => $text //Text to search in user/group name
+                ]);
 
                 if (is_array($results) && count($results) === 1) {
                     $result = reset($results);

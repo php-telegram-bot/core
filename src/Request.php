@@ -961,40 +961,30 @@ class Request
     /**
      * Send message to all active chats
      *
-     * @param string  $callback_function
-     * @param array   $data
-     * @param boolean $send_groups
-     * @param boolean $send_super_groups
-     * @param boolean $send_channels
-     * @param boolean $send_users
-     * @param string  $date_from
-     * @param string  $date_to
+     * @param string $callback_function
+     * @param array  $data
+     * @param array  $select_chats_params
      *
      * @return array
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function sendToActiveChats(
         $callback_function,
         array $data,
-        $send_groups = true,
-        $send_super_groups = true,
-        $send_channels = false,
-        $send_users = true,
-        $date_from = null,
-        $date_to = null
+        array $select_chats_params
     ) {
         $callback_path = __NAMESPACE__ . '\Request';
         if (!method_exists($callback_path, $callback_function)) {
             throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
         }
 
-        $chats = DB::selectChats($send_groups, $send_super_groups, $send_channels, $send_users, $date_from, $date_to);
+        $chats = DB::selectChats($select_chats_params);
 
         $results = [];
         if (is_array($chats)) {
             foreach ($chats as $row) {
                 $data['chat_id'] = $row['chat_id'];
-                $results[]       = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+                $results[]       = call_user_func($callback_path . '::' . $callback_function, $data);
             }
         }
 

@@ -979,35 +979,32 @@ class DB
     }
 
     /**
-     * Select Group and/or single Chats
+     * Select Groups, Supergroups, Channels and/or single user Chats (also by ID or text)
      *
-     * @param bool   $select_groups
-     * @param bool   $select_super_groups
-     * @param bool   $select_channels
-     * @param bool   $select_users
-     * @param string $date_from
-     * @param string $date_to
-     * @param int    $chat_id
-     * @param string $text
+     * @param $select_chats_params
      *
-     * @return array|bool (Selected chats or false if invalid arguments)
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return array|bool
+     * @throws TelegramException
      */
-    public static function selectChats(
-        $select_groups = true,
-        $select_super_groups = true,
-        $select_channels = true,
-        $select_users = true,
-        $date_from = null,
-        $date_to = null,
-        $chat_id = null,
-        $text = null
-    ) {
+    public static function selectChats($select_chats_params)
+    {
         if (!self::isDbConnected()) {
             return false;
         }
 
-        if (!$select_groups && !$select_users && !$select_super_groups) {
+        // Set defaults for omitted values.
+        $select = array_merge([
+            'groups'      => true,
+            'supergroups' => true,
+            'channels'    => true,
+            'users'       => true,
+            'date_from'   => null,
+            'date_to'     => null,
+            'chat_id'     => null,
+            'text'        => null,
+        ], $select_chats_params);
+
+        if (!$select['groups'] && !$select['users'] && !$select['supergroups']) {
             return false;
         }
 
@@ -1019,7 +1016,7 @@ class DB
                 ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
                 ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`
             ';
-            if ($select_users) {
+            if ($select['users']) {
                 $query .= '
                     , ' . TB_USER . '.`id` AS `user_id`
                     FROM `' . TB_CHAT . '`
@@ -1034,34 +1031,34 @@ class DB
             $where  = [];
             $tokens = [];
 
-            if (!$select_groups || !$select_users || !$select_super_groups) {
+            if (!$select['groups'] || !$select['users'] || !$select['supergroups']) {
                 $chat_or_user = [];
 
-                $select_groups && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
-                $select_super_groups && $chat_or_user[] = TB_CHAT . '.`type` = "supergroup"';
-                $select_channels && $chat_or_user[] = TB_CHAT . '.`type` = "channel"';
-                $select_users && $chat_or_user[] = TB_CHAT . '.`type` = "private"';
+                $select['groups'] && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
+                $select['supergroups'] && $chat_or_user[] = TB_CHAT . '.`type` = "supergroup"';
+                $select['channels'] && $chat_or_user[] = TB_CHAT . '.`type` = "channel"';
+                $select['users'] && $chat_or_user[] = TB_CHAT . '.`type` = "private"';
 
                 $where[] = '(' . implode(' OR ', $chat_or_user) . ')';
             }
 
-            if (null !== $date_from) {
+            if (null !== $select['date_from']) {
                 $where[]              = TB_CHAT . '.`updated_at` >= :date_from';
-                $tokens[':date_from'] = $date_from;
+                $tokens[':date_from'] = $select['date_from'];
             }
 
-            if (null !== $date_to) {
+            if (null !== $select['date_to']) {
                 $where[]            = TB_CHAT . '.`updated_at` <= :date_to';
-                $tokens[':date_to'] = $date_to;
+                $tokens[':date_to'] = $select['date_to'];
             }
 
-            if (null !== $chat_id) {
+            if (null !== $select['chat_id']) {
                 $where[]            = TB_CHAT . '.`id` = :chat_id';
-                $tokens[':chat_id'] = $chat_id;
+                $tokens[':chat_id'] = $select['chat_id'];
             }
 
-            if (null !== $text) {
-                if ($select_users) {
+            if (null !== $select['text']) {
+                if ($select['users']) {
                     $where[] = '(
                         LOWER(' . TB_CHAT . '.`title`) LIKE :text
                         OR LOWER(' . TB_USER . '.`first_name`) LIKE :text
@@ -1071,7 +1068,7 @@ class DB
                 } else {
                     $where[] = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
                 }
-                $tokens[':text'] = '%' . strtolower($text) . '%';
+                $tokens[':text'] = '%' . strtolower($select['text']) . '%';
             }
 
             if (!empty($where)) {
