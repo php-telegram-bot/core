@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User''s first name',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User''s last name',
   `username` CHAR(191) DEFAULT NULL COMMENT 'User''s username',
+  `language_code` CHAR(10) DEFAULT NULL COMMENT 'User''s system language',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
 
@@ -82,19 +83,20 @@ CREATE TABLE IF NOT EXISTS `message` (
   `sticker` TEXT COMMENT 'Sticker object. Message is a sticker, information about the sticker',
   `video` TEXT COMMENT 'Video object. Message is a video, information about the video',
   `voice` TEXT COMMENT 'Voice Object. Message is a Voice, information about the Voice',
+  `video_note` TEXT COMMENT 'VoiceNote Object. Message is a Video Note, information about the Video Note',
   `contact` TEXT COMMENT 'Contact object. Message is a shared contact, information about the contact',
   `location` TEXT COMMENT 'Location object. Message is a shared location, information about the location',
   `venue` TEXT COMMENT 'Venue object. Message is a Venue, information about the Venue',
   `caption` TEXT COMMENT  'For message with caption, the actual UTF-8 text of the caption',
-  `new_chat_member` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, a new member was added to the group, information about them (this member may be bot itself)',
-  `left_chat_member` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be bot itself)',
+  `new_chat_members` TEXT COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
+  `left_chat_member` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
   `new_chat_title` CHAR(255) DEFAULT NULL COMMENT 'A chat title was changed to this value',
   `new_chat_photo` TEXT COMMENT 'Array of PhotoSize objects. A chat photo was change to this value',
   `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the chat photo was deleted',
   `group_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group has been created',
   `supergroup_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the supergroup has been created',
   `channel_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the channel chat has been created',
-  `migrate_to_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifie',
+  `migrate_to_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
   `migrate_from_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
   `pinned_message` TEXT NULL COMMENT 'Message object. Specified message was pinned',
 
@@ -104,7 +106,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   KEY `forward_from_chat` (`forward_from_chat`),
   KEY `reply_to_chat` (`reply_to_chat`),
   KEY `reply_to_message` (`reply_to_message`),
-  KEY `new_chat_member` (`new_chat_member`),
   KEY `left_chat_member` (`left_chat_member`),
   KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
   KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
@@ -115,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`new_chat_member`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 

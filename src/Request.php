@@ -97,6 +97,7 @@ class Request
         'editMessageCaption',
         'editMessageReplyMarkup',
         'getWebhookInfo',
+        'deleteMessage',
     ];
 
     /**
@@ -104,16 +105,32 @@ class Request
      *
      * @param \Longman\TelegramBot\Telegram $telegram
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function initialize(Telegram $telegram)
     {
-        if (is_object($telegram)) {
-            self::$telegram = $telegram;
-            self::$client   = new Client(['base_uri' => self::$api_base_uri]);
-        } else {
-            throw new TelegramException('Telegram pointer is empty!');
+        if (!($telegram instanceof Telegram)) {
+            throw new TelegramException('Invalid Telegram pointer!');
         }
+
+        self::$telegram = $telegram;
+        self::setClient(new Client(['base_uri' => self::$api_base_uri]));
+    }
+
+    /**
+     * Set a custom Guzzle HTTP Client object
+     *
+     * @param Client $client
+     *
+     * @throws TelegramException
+     */
+    public static function setClient(Client $client)
+    {
+        if (!($client instanceof Client)) {
+            throw new TelegramException('Invalid GuzzleHttp\Client pointer!');
+        }
+
+        self::$client = $client;
     }
 
     /**
@@ -262,8 +279,12 @@ class Request
      */
     public static function downloadFile(File $file)
     {
+        if (empty($download_path = self::$telegram->getDownloadPath())) {
+            throw new TelegramException('Download path not set!');
+        }
+
         $tg_file_path = $file->getFilePath();
-        $file_path    = self::$telegram->getDownloadPath() . '/' . $tg_file_path;
+        $file_path    = $download_path . '/' . $tg_file_path;
 
         $file_dir = dirname($file_path);
         //For safety reasons, first try to create the directory, then check that it exists.
@@ -941,38 +962,30 @@ class Request
     /**
      * Send message to all active chats
      *
-     * @param string  $callback_function
-     * @param array   $data
-     * @param boolean $send_groups
-     * @param boolean $send_super_groups
-     * @param boolean $send_users
-     * @param string  $date_from
-     * @param string  $date_to
+     * @param string $callback_function
+     * @param array  $data
+     * @param array  $select_chats_params
      *
      * @return array
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function sendToActiveChats(
         $callback_function,
         array $data,
-        $send_groups = true,
-        $send_super_groups = true,
-        $send_users = true,
-        $date_from = null,
-        $date_to = null
+        array $select_chats_params
     ) {
         $callback_path = __NAMESPACE__ . '\Request';
         if (!method_exists($callback_path, $callback_function)) {
             throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
         }
 
-        $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
+        $chats = DB::selectChats($select_chats_params);
 
         $results = [];
         if (is_array($chats)) {
             foreach ($chats as $row) {
                 $data['chat_id'] = $row['chat_id'];
-                $results[]       = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+                $results[]       = call_user_func($callback_path . '::' . $callback_function, $data);
             }
         }
 
@@ -1077,5 +1090,40 @@ class Request
                 DB::insertTelegramRequest($action, $data);
             }
         }
+    }
+
+    /**
+     * Use this method to delete either bot's messages or messages of other users if the bot is admin of the group.
+     *
+     * On success, true is returned.
+     *
+     * @link https://core.telegram.org/bots/api#deletemessage
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function deleteMessage(array $data)
+    {
+        return self::send('deleteMessage', $data);
+    }
+
+    /**
+     * Use this method to send video notes. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendvideonote
+     *
+     * @param array  $data
+     * @param string $file
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function sendVideoNote(array $data, $file = null)
+    {
+        self::assignEncodedFile($data, 'video_note', $file);
+
+        return self::send('sendVideoNote', $data);
     }
 }
