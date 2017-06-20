@@ -38,7 +38,7 @@ class SendtoallCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $version = '1.3.0';
+    protected $version = '1.4.0';
 
     /**
      * @var bool
@@ -48,7 +48,7 @@ class SendtoallCommand extends AdminCommand
     /**
      * Execute command
      *
-     * @return boolean
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
@@ -64,12 +64,12 @@ class SendtoallCommand extends AdminCommand
             $results = Request::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
                 ['text' => $text], //Param to evaluate the request
-                true, //Send to groups (group chat)
-                true, //Send to super groups chats (super group chat)
-                false, //Select channels
-                true, //Send to users (single chat)
-                null, //'yyyy-mm-dd hh:mm:ss' date range from
-                null  //'yyyy-mm-dd hh:mm:ss' date range to
+                [
+                    'groups'      => true,
+                    'supergroups' => true,
+                    'channels'    => false,
+                    'users'       => true,
+                ]
             );
 
             $total  = 0;
