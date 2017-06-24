@@ -1,5 +1,5 @@
 {
-    "name": "longman/telegram-bot",
+    "name": "farzin/telegram-bot",
     "type": "library",
     "description": "PHP telegram bot",
     "keywords": ["telegram", "bot", "api"],
@@ -10,6 +10,11 @@
         "source": "https://github.com/php-telegram-bot/core"
     },
     "authors": [
+        {
+            "name": "Farzin Ft",
+            "email": "farzin.fthi@gmail.com",
+            "role": "Developer"
+        },
         {
             "name": "Avtandil Kikabidze aka LONGMAN",
             "email": "akalongman@gmail.com",
