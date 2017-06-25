@@ -1076,10 +1076,11 @@ class Request
 
                     $requests = DB::getTelegramRequestCount($chat_id, $inline_message_id);
 
-                    if ($requests['LIMIT_PER_SEC'] == 0     // No more than one message per second inside a particular chat
-                        && ((($chat_id > 0 || $inline_message_id) && $requests['LIMIT_PER_SEC_ALL'] < 30)       // No more than 30 messages per second globally
-                        || ($chat_id < 0 && $requests['LIMIT_PER_MINUTE'] < 20))        // No more than 20 messages per minute in groups and channels
-                    ) {
+                    $chat_per_second = ($requests['LIMIT_PER_SEC'] == 0); // No more than one message per second inside a particular chat
+                    $global_per_second = ($requests['LIMIT_PER_SEC_ALL'] < 30);    // No more than 30 messages per second to different chats
+                    $groups_per_minute = (((is_numeric($chat_id) && $chat_id > 0) || !is_null($inline_message_id)) || ((!is_numeric($chat_id) || $chat_id < 0) && $requests['LIMIT_PER_MINUTE'] < 20));    // No more than 20 messages per minute in groups and channels
+
+                    if ($chat_per_second && $global_per_second && $groups_per_minute) {
                         break;
                     }
 
