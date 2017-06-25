@@ -753,19 +753,6 @@ class Telegram
     }
 
     /**
-     * Get Bot name
-     *
-     * @todo: Left for backwards compatibility, remove in the future
-     *
-     * @return string
-     */
-    public function getBotName()
-    {
-        TelegramLog::debug('Usage of deprecated method getBotName() detected, please use getBotUsername() instead!');
-        return $this->getBotUsername();
-    }
-
-    /**
      * Get Bot Id
      *
      * @return string
@@ -809,19 +796,6 @@ class Telegram
         }
 
         return $result;
-    }
-
-    /**
-     * Deprecated alias for deleteWebhook
-     *
-     * This is kept for backwards compatibility!
-     *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function unsetWebhook()
-    {
-        return $this->deleteWebhook();
     }
 
     /**
