@@ -161,10 +161,6 @@ class Telegram
             $this->bot_username = $bot_username;
         }
 
-        //Set default download and upload path
-        $this->setDownloadPath(BASE_PATH . '/../Download');
-        $this->setUploadPath(BASE_PATH . '/../Upload');
-
         //Add default system commands path
         $this->addCommandsPath(BASE_COMMANDS_PATH . '/SystemCommands');
 
@@ -334,20 +330,25 @@ class Telegram
             );
         }
 
-        //DB Query
-        $last_update = DB::selectTelegramUpdate(1);
-        $last_update = reset($last_update);
+        //Take custom input into account.
+        if ($custom_input = $this->getCustomInput()) {
+            $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
+        } else {
+            //DB Query
+            $last_update = DB::selectTelegramUpdate(1);
+            $last_update = reset($last_update);
 
-        //As explained in the telegram bot api documentation
-        $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
+            //As explained in the telegram bot api documentation
+            $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
 
-        $response = Request::getUpdates(
-            [
-                'offset'  => $offset,
-                'limit'   => $limit,
-                'timeout' => $timeout,
-            ]
-        );
+            $response = Request::getUpdates(
+                [
+                    'offset'  => $offset,
+                    'limit'   => $limit,
+                    'timeout' => $timeout,
+                ]
+            );
+        }
 
         if ($response->isOk()) {
             //Process all updates
@@ -890,7 +891,7 @@ class Telegram
     /**
      * Enable requests limiter
      *
-     * @param  array  $options
+     * @param  array $options
      *
      * @return \Longman\TelegramBot\Telegram
      */
@@ -914,7 +915,7 @@ class Telegram
             throw new TelegramException('No command(s) provided!');
         }
 
-        $this->run_commands = true;
+        $this->run_commands  = true;
         $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
         $result = Request::getMe()->getResult();
@@ -943,8 +944,8 @@ class Telegram
                         ],
                         'date'       => time(),
                         'chat'       => [
-                            'id'         => $bot_id,
-                            'type'       => 'private',
+                            'id'   => $bot_id,
+                            'type' => 'private',
                         ],
                         'text'       => $command,
                     ],

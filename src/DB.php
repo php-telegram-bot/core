@@ -201,7 +201,7 @@ class DB
             $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
 
             if ($id !== null) {
-                $sth->bindParam(':id', $id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $id, PDO::PARAM_STR);
             }
 
             $sth->execute();
@@ -327,13 +327,13 @@ class DB
                 (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id)
             ');
 
-            $sth->bindParam(':id', $id, PDO::PARAM_INT);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, PDO::PARAM_INT);
-            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':id', $id, PDO::PARAM_STR);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
+            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, PDO::PARAM_STR);
+            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_STR);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -357,28 +357,31 @@ class DB
             return false;
         }
 
-        $user_id    = $user->getId();
-        $username   = $user->getUsername();
-        $first_name = $user->getFirstName();
-        $last_name  = $user->getLastName();
+        $user_id        = $user->getId();
+        $username       = $user->getUsername();
+        $first_name     = $user->getFirstName();
+        $last_name      = $user->getLastName();
+        $language_code  = $user->getLanguageCode();
 
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
-                (`id`, `username`, `first_name`, `last_name`, `created_at`, `updated_at`)
+                (`id`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :username, :first_name, :last_name, :created_at, :updated_at)
+                (:id, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
-                    `username`   = VALUES(`username`),
-                    `first_name` = VALUES(`first_name`),
-                    `last_name`  = VALUES(`last_name`),
-                    `updated_at` = VALUES(`updated_at`)
+                    `username`       = VALUES(`username`),
+                    `first_name`     = VALUES(`first_name`),
+                    `last_name`      = VALUES(`last_name`),
+                    `language_code`  = VALUES(`language_code`),
+                    `updated_at`     = VALUES(`updated_at`)
             ');
 
-            $sth->bindParam(':id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
             $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
+            $sth->bindParam(':language_code', $language_code, PDO::PARAM_STR, 10);
             $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
             $sth->bindParam(':updated_at', $date, PDO::PARAM_STR);
 
@@ -398,8 +401,8 @@ class DB
                     (:user_id, :chat_id)
                 ');
 
-                $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+                $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
 
                 $status = $sth->execute();
             } catch (PDOException $e) {
@@ -449,14 +452,14 @@ class DB
             if ($migrate_to_chat_id) {
                 $chat_type = 'supergroup';
 
-                $sth->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_INT);
-                $sth->bindParam(':oldid', $chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_STR);
+                $sth->bindParam(':oldid', $chat_id, PDO::PARAM_STR);
             } else {
-                $sth->bindParam(':id', $chat_id, PDO::PARAM_INT);
-                $sth->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_INT);
+                $sth->bindParam(':id', $chat_id, PDO::PARAM_STR);
+                $sth->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_STR);
             }
 
-            $sth->bindParam(':type', $chat_type, PDO::PARAM_INT);
+            $sth->bindParam(':type', $chat_type, PDO::PARAM_STR);
             $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
             $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
             $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
@@ -616,8 +619,8 @@ class DB
             $query    = $inline_query->getQuery();
             $offset   = $inline_query->getOffset();
 
-            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':query', $query, PDO::PARAM_STR);
             $sth->bindParam(':param_offset', $offset, PDO::PARAM_STR);
@@ -665,7 +668,7 @@ class DB
             $query             = $chosen_inline_result->getQuery();
 
             $sth->bindParam(':result_id', $result_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
             $sth->bindParam(':query', $query, PDO::PARAM_STR);
@@ -733,10 +736,10 @@ class DB
             $inline_message_id = $callback_query->getInlineMessageId();
             $data              = $callback_query->getData();
 
-            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
+            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
             $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
             $sth->bindParam(':data', $data, PDO::PARAM_STR);
             $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
@@ -773,9 +776,9 @@ class DB
         $forward_from_message_id = $message->getForwardFromMessageId();
         $photo                   = self::entitiesArrayToJson($message->getPhoto(), '');
         $entities                = self::entitiesArrayToJson($message->getEntities(), null);
-        $new_chat_member         = $message->getNewChatMember();
-        $new_chat_photo          = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
+        $new_chat_members        = $message->getNewChatMembers();
         $left_chat_member        = $message->getLeftChatMember();
+        $new_chat_photo          = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
         $migrate_to_chat_id      = $message->getMigrateToChatId();
 
         //Insert chat, update chat id in case it migrated
@@ -800,10 +803,16 @@ class DB
         }
 
         //New and left chat member
-        if ($new_chat_member instanceof User) {
-            //Insert the new chat user
-            self::insertUser($new_chat_member, $date, $chat);
-            $new_chat_member = $new_chat_member->getId();
+        if (!empty($new_chat_members)) {
+            $new_chat_members_ids = [];
+            foreach ($new_chat_members as $new_chat_member) {
+                if ($new_chat_member instanceof User) {
+                    //Insert the new chat user
+                    self::insertUser($new_chat_member, $date, $chat);
+                    $new_chat_members_ids[] = $new_chat_member->getId();
+                }
+            }
+            $new_chat_members_ids = implode(',', $new_chat_members_ids);
         } elseif ($left_chat_member instanceof User) {
             //Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
@@ -816,16 +825,16 @@ class DB
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
-                    `photo`, `sticker`, `video`, `voice`, `caption`, `contact`,
-                    `location`, `venue`, `new_chat_member`, `left_chat_member`,
+                    `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
+                    `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`,
                     `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
-                    :photo, :sticker, :video, :voice, :caption, :contact,
-                    :location, :venue, :new_chat_member, :left_chat_member,
+                    :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
+                    :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created,
                     :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
@@ -855,6 +864,7 @@ class DB
             $sticker                 = $message->getSticker();
             $video                   = $message->getVideo();
             $voice                   = $message->getVoice();
+            $video_note              = $message->getVideoNote();
             $caption                 = $message->getCaption();
             $contact                 = $message->getContact();
             $location                = $message->getLocation();
@@ -868,13 +878,13 @@ class DB
             $migrate_to_chat_id      = $message->getMigrateToChatId();
             $pinned_message          = $message->getPinnedMessage();
 
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $from_id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $from_id, PDO::PARAM_STR);
             $sth->bindParam(':date', $date, PDO::PARAM_STR);
-            $sth->bindParam(':forward_from', $forward_from, PDO::PARAM_INT);
-            $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_INT);
-            $sth->bindParam(':forward_from_message_id', $forward_from_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':forward_from', $forward_from, PDO::PARAM_STR);
+            $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_STR);
+            $sth->bindParam(':forward_from_message_id', $forward_from_message_id, PDO::PARAM_STR);
             $sth->bindParam(':forward_date', $forward_date, PDO::PARAM_STR);
 
             $reply_to_chat_id = null;
@@ -882,8 +892,8 @@ class DB
                 $reply_to_chat_id = $chat_id;
             }
 
-            $sth->bindParam(':reply_to_chat', $reply_to_chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_INT);
+            $sth->bindParam(':reply_to_chat', $reply_to_chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_STR);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
             $sth->bindParam(':audio', $audio, PDO::PARAM_STR);
@@ -892,20 +902,21 @@ class DB
             $sth->bindParam(':sticker', $sticker, PDO::PARAM_STR);
             $sth->bindParam(':video', $video, PDO::PARAM_STR);
             $sth->bindParam(':voice', $voice, PDO::PARAM_STR);
+            $sth->bindParam(':video_note', $video_note, PDO::PARAM_STR);
             $sth->bindParam(':caption', $caption, PDO::PARAM_STR);
             $sth->bindParam(':contact', $contact, PDO::PARAM_STR);
             $sth->bindParam(':location', $location, PDO::PARAM_STR);
             $sth->bindParam(':venue', $venue, PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_member', $new_chat_member, PDO::PARAM_INT);
-            $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_INT);
+            $sth->bindParam(':new_chat_members', $new_chat_members_ids, PDO::PARAM_STR);
+            $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
             $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);
             $sth->bindParam(':delete_chat_photo', $delete_chat_photo, PDO::PARAM_INT);
             $sth->bindParam(':group_chat_created', $group_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':supergroup_chat_created', $supergroup_chat_created, PDO::PARAM_INT);
             $sth->bindParam(':channel_chat_created', $channel_chat_created, PDO::PARAM_INT);
-            $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, PDO::PARAM_INT);
+            $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, PDO::PARAM_STR);
             $sth->bindParam(':pinned_message', $pinned_message, PDO::PARAM_STR);
 
             return $sth->execute();
@@ -964,9 +975,9 @@ class DB
             $text    = $edited_message->getText();
             $caption = $edited_message->getCaption();
 
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_INT);
-            $sth->bindParam(':user_id', $from_id, PDO::PARAM_INT);
+            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
+            $sth->bindParam(':user_id', $from_id, PDO::PARAM_STR);
             $sth->bindParam(':edit_date', $edit_date, PDO::PARAM_STR);
             $sth->bindParam(':text', $text, PDO::PARAM_STR);
             $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
@@ -979,33 +990,32 @@ class DB
     }
 
     /**
-     * Select Group and/or single Chats
+     * Select Groups, Supergroups, Channels and/or single user Chats (also by ID or text)
      *
-     * @param bool   $select_groups
-     * @param bool   $select_super_groups
-     * @param bool   $select_users
-     * @param string $date_from
-     * @param string $date_to
-     * @param int    $chat_id
-     * @param string $text
+     * @param $select_chats_params
      *
-     * @return array|bool (Selected chats or false if invalid arguments)
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return array|bool
+     * @throws TelegramException
      */
-    public static function selectChats(
-        $select_groups = true,
-        $select_super_groups = true,
-        $select_users = true,
-        $date_from = null,
-        $date_to = null,
-        $chat_id = null,
-        $text = null
-    ) {
+    public static function selectChats($select_chats_params)
+    {
         if (!self::isDbConnected()) {
             return false;
         }
 
-        if (!$select_groups && !$select_users && !$select_super_groups) {
+        // Set defaults for omitted values.
+        $select = array_merge([
+            'groups'      => true,
+            'supergroups' => true,
+            'channels'    => true,
+            'users'       => true,
+            'date_from'   => null,
+            'date_to'     => null,
+            'chat_id'     => null,
+            'text'        => null,
+        ], $select_chats_params);
+
+        if (!$select['groups'] && !$select['users'] && !$select['supergroups']) {
             return false;
         }
 
@@ -1013,10 +1023,11 @@ class DB
             $query = '
                 SELECT * ,
                 ' . TB_CHAT . '.`id` AS `chat_id`,
+                ' . TB_CHAT . '.`username` AS `chat_username`,
                 ' . TB_CHAT . '.`created_at` AS `chat_created_at`,
                 ' . TB_CHAT . '.`updated_at` AS `chat_updated_at`
             ';
-            if ($select_users) {
+            if ($select['users']) {
                 $query .= '
                     , ' . TB_USER . '.`id` AS `user_id`
                     FROM `' . TB_CHAT . '`
@@ -1031,33 +1042,34 @@ class DB
             $where  = [];
             $tokens = [];
 
-            if (!$select_groups || !$select_users || !$select_super_groups) {
+            if (!$select['groups'] || !$select['users'] || !$select['supergroups']) {
                 $chat_or_user = [];
 
-                $select_groups && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
-                $select_super_groups && $chat_or_user[] = TB_CHAT . '.`type` = "supergroup"';
-                $select_users && $chat_or_user[] = TB_CHAT . '.`type` = "private"';
+                $select['groups'] && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
+                $select['supergroups'] && $chat_or_user[] = TB_CHAT . '.`type` = "supergroup"';
+                $select['channels'] && $chat_or_user[] = TB_CHAT . '.`type` = "channel"';
+                $select['users'] && $chat_or_user[] = TB_CHAT . '.`type` = "private"';
 
                 $where[] = '(' . implode(' OR ', $chat_or_user) . ')';
             }
 
-            if (null !== $date_from) {
+            if (null !== $select['date_from']) {
                 $where[]              = TB_CHAT . '.`updated_at` >= :date_from';
-                $tokens[':date_from'] = $date_from;
+                $tokens[':date_from'] = $select['date_from'];
             }
 
-            if (null !== $date_to) {
+            if (null !== $select['date_to']) {
                 $where[]            = TB_CHAT . '.`updated_at` <= :date_to';
-                $tokens[':date_to'] = $date_to;
+                $tokens[':date_to'] = $select['date_to'];
             }
 
-            if (null !== $chat_id) {
+            if (null !== $select['chat_id']) {
                 $where[]            = TB_CHAT . '.`id` = :chat_id';
-                $tokens[':chat_id'] = $chat_id;
+                $tokens[':chat_id'] = $select['chat_id'];
             }
 
-            if (null !== $text) {
-                if ($select_users) {
+            if (null !== $select['text']) {
+                if ($select['users']) {
                     $where[] = '(
                         LOWER(' . TB_CHAT . '.`title`) LIKE :text
                         OR LOWER(' . TB_USER . '.`first_name`) LIKE :text
@@ -1067,7 +1079,7 @@ class DB
                 } else {
                     $where[] = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
                 }
-                $tokens[':text'] = '%' . strtolower($text) . '%';
+                $tokens[':text'] = '%' . strtolower($select['text']) . '%';
             }
 
             if (!empty($where)) {

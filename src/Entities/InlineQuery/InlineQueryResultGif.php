@@ -37,6 +37,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getGifUrl()              A valid URL for the GIF file. File size must not exceed 1MB
  * @method int                  getGifWidth()            Optional. Width of the GIF
  * @method int                  getGifHeight()           Optional. Height of the GIF
+ * @method int                  getGifDuration()         Optional. Duration of the GIF
  * @method string               getThumbUrl()            URL of the static thumbnail for the result (jpeg or gif)
  * @method string               getTitle()               Optional. Title for the result
  * @method string               getCaption()             Optional. Caption of the GIF file to be sent, 0-200 characters
@@ -47,6 +48,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setGifUrl(string $gif_url)                                         A valid URL for the GIF file. File size must not exceed 1MB
  * @method $this setGifWidth(int $gif_width)                                        Optional. Width of the GIF
  * @method $this setGifHeight(int $gif_height)                                      Optional. Height of the GIF
+ * @method $this setGifDuration(int $gif_duration)                                  Optional.  Duration of the GIF
  * @method $this setThumbUrl(string $thumb_url)                                     URL of the static thumbnail for the result (jpeg or gif)
  * @method $this setTitle(string $title)                                            Optional. Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the GIF file to be sent, 0-200 characters
