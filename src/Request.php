@@ -85,8 +85,10 @@ class Request
         'getUserProfilePhotos',
         'getFile',
         'kickChatMember',
-        'leaveChat',
         'unbanChatMember',
+        'restrictChatMember',
+        'promoteChatMember',
+        'leaveChat',
         'getChat',
         'getChatAdministrators',
         'getChatMember',
@@ -701,21 +703,6 @@ class Request
     }
 
     /**
-     * Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
-     *
-     * @link https://core.telegram.org/bots/api#leavechat
-     *
-     * @param array $data
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function leaveChat(array $data)
-    {
-        return self::send('leaveChat', $data);
-    }
-
-    /**
      * Use this method to unban a previously kicked user in a supergroup. Returns True on success.
      *
      * The user will not return to the group automatically, but will be able to join via link, etc.
@@ -731,6 +718,57 @@ class Request
     public static function unbanChatMember(array $data)
     {
         return self::send('unbanChatMember', $data);
+    }
+
+    /**
+     * Use this method to restrict a user in a supergroup. Returns True on success.
+     *
+     * The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights.
+     * Pass True for all boolean parameters to lift restrictions from a user.
+     *
+     * @link https://core.telegram.org/bots/api#restrictchatmember
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function restrictChatMember(array $data)
+    {
+        return self::send('restrictChatMember', $data);
+    }
+
+    /**
+     * Use this method to promote or demote a user in a supergroup or a channel. Returns True on success.
+     *
+     * The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+     * Pass False for all boolean parameters to demote a user.
+     *
+     * @link https://core.telegram.org/bots/api#promotechatmember
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function promoteChatMember(array $data)
+    {
+        return self::send('promoteChatMember', $data);
+    }
+
+    /**
+     * Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
+     *
+     * @link https://core.telegram.org/bots/api#leavechat
+     *
+     * @param array $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function leaveChat(array $data)
+    {
+        return self::send('leaveChat', $data);
     }
 
     /**
