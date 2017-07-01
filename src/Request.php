@@ -219,11 +219,11 @@ class Request
         }
 
         // Make sure we have a string to work with.
-        if (is_string($input)) {
-            self::$input = $input;
-        } else {
+        if (!is_string($input)) {
             throw new TelegramException('Input must be a string!');
         }
+
+        self::$input = $input;
 
         TelegramLog::update(self::$input);
 
@@ -281,7 +281,7 @@ class Request
     private static function setUpRequestParams(array $data)
     {
         $has_resource = false;
-        $multipart = [];
+        $multipart    = [];
 
         // Convert any nested arrays into JSON strings.
         array_walk($data, function (&$item) {
@@ -291,7 +291,7 @@ class Request
         //Reformat data array in multipart way if it contains a resource
         foreach ($data as $key => $item) {
             $has_resource |= (is_resource($item) || $item instanceof \GuzzleHttp\Psr7\Stream);
-            $multipart[] = ['name' => $key, 'contents' => $item];
+            $multipart[]  = ['name' => $key, 'contents' => $item];
         }
         if ($has_resource) {
             return ['multipart' => $multipart];
@@ -316,8 +316,8 @@ class Request
             $data['reply_markup'] = json_encode($data['reply_markup']);
         }
 
-        $result = null;
-        $request_params = self::setUpRequestParams($data);
+        $result                  = null;
+        $request_params          = self::setUpRequestParams($data);
         $request_params['debug'] = TelegramLog::getDebugLogTempStream();
 
         try {
@@ -325,7 +325,7 @@ class Request
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
             );
-            $result = (string) $response->getBody();
+            $result   = (string) $response->getBody();
 
             //Logging getUpdates Update
             if ($action === 'getUpdates') {
@@ -404,6 +404,7 @@ class Request
      * Send command
      *
      * @todo Fake response doesn't need json encoding?
+     * @todo Write debug entry on failure
      *
      * @param string $action
      * @param array  $data
@@ -598,7 +599,7 @@ class Request
             }
 
             self::$limiter_interval = $options['interval'];
-            self::$limiter_enabled = $value;
+            self::$limiter_enabled  = $value;
         }
     }
 
@@ -636,7 +637,7 @@ class Request
                 'setChatDescription',
             ];
 
-            $chat_id = isset($data['chat_id']) ? $data['chat_id'] : null;
+            $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;
             $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
 
             if (($chat_id || $inline_message_id) && in_array($action, $limited_methods)) {
@@ -649,7 +650,7 @@ class Request
 
                     $requests = DB::getTelegramRequestCount($chat_id, $inline_message_id);
 
-                    $chat_per_second = ($requests['LIMIT_PER_SEC'] == 0); // No more than one message per second inside a particular chat
+                    $chat_per_second   = ($requests['LIMIT_PER_SEC'] == 0); // No more than one message per second inside a particular chat
                     $global_per_second = ($requests['LIMIT_PER_SEC_ALL'] < 30);    // No more than 30 messages per second to different chats
                     $groups_per_minute = (((is_numeric($chat_id) && $chat_id > 0) || !is_null($inline_message_id)) || ((!is_numeric($chat_id) || $chat_id < 0) && $requests['LIMIT_PER_MINUTE'] < 20));    // No more than 20 messages per minute in groups and channels
 
