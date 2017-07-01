@@ -19,6 +19,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 /**
  * Class Request
  *
+ * @method static ServerResponse setWebhook(array $data)             Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns true.
  * @method static ServerResponse deleteWebhook()                     Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters.
  * @method static ServerResponse getWebhookInfo()                    Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
  * @method static ServerResponse getMe()                             A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
@@ -344,9 +345,9 @@ class Request
      * @return resource
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    protected static function encodeFile($file)
+    public static function encodeFile($file)
     {
-        $fp = fopen($file, 'r');
+        $fp = fopen($file, 'rb');
         if ($fp === false) {
             throw new TelegramException('Cannot open "' . $file . '" for reading');
         }
@@ -903,33 +904,6 @@ class Request
     public static function getUpdates(array $data)
     {
         return self::send('getUpdates', $data);
-    }
-
-    /**
-     * Set webhook
-     *
-     * @link https://core.telegram.org/bots/api#setwebhook
-     *
-     * @param string $url
-     * @param array  $data Optional parameters.
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function setWebhook($url = '', array $data = [])
-    {
-        $data        = array_intersect_key($data, array_flip([
-            'certificate',
-            'max_connections',
-            'allowed_updates',
-        ]));
-        $data['url'] = $url;
-
-        if (isset($data['certificate'])) {
-            self::assignEncodedFile($data, 'certificate', $data['certificate']);
-        }
-
-        return self::send('setWebhook', $data);
     }
 
     /**
