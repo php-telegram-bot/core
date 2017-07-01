@@ -16,6 +16,13 @@ use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 
+/**
+ * Class Request
+ *
+ * @method static ServerResponse deleteWebhook()                     Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters.
+ * @method static ServerResponse getWebhookInfo()                    Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
+ * @method static ServerResponse getMe()                             A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
+ */
 class Request
 {
     /**
@@ -63,12 +70,17 @@ class Request
     /**
      * Available actions to send
      *
+     * This is basically the list of all methods listed on the official API documentation.
+     *
+     * @link https://core.telegram.org/bots/api
+     *
      * @var array
      */
     private static $actions = [
         'getUpdates',
         'setWebhook',
         'deleteWebhook',
+        'getWebhookInfo',
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -98,8 +110,20 @@ class Request
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup',
-        'getWebhookInfo',
         'deleteMessage',
+    ];
+
+    /**
+     * Some methods need a dummy param due to certain cURL issues.
+     *
+     * @see Request::addDummyParamIfNecessary()
+     *
+     * @var array
+     */
+    private static $actions_need_dummy_param = [
+        'deleteWebhook',
+        'getWebhookInfo',
+        'getMe',
     ];
 
     /**
@@ -344,6 +368,7 @@ class Request
     public static function send($action, array $data = [])
     {
         self::ensureValidAction($action);
+        self::addDummyParamIfNecessary($action, $data);
 
         $bot_username = self::$telegram->getBotUsername();
 
@@ -364,6 +389,27 @@ class Request
         }
 
         return new ServerResponse($response, $bot_username);
+    }
+
+    /**
+     * Add a dummy parameter if the passed action requires it.
+     *
+     * If a method doesn't require parameters, we need to add a dummy one anyway,
+     * because of some cURL version failed POST request without parameters.
+     *
+     * @link https://github.com/php-telegram-bot/core/pull/228
+     *
+     * @todo Would be nice to find a better solution for this!
+     *
+     * @param string $action
+     * @param array  $data
+     */
+    protected static function addDummyParamIfNecessary($action, array &$data)
+    {
+        if (in_array($action, self::$actions_need_dummy_param, true)) {
+            // Can be anything, using a single letter to minimise request size.
+            $data = ['d'];
+        }
     }
 
     /**
@@ -408,21 +454,6 @@ class Request
         if ($file !== null && $file !== '') {
             $data[$field] = self::encodeFile($file);
         }
-    }
-
-    /**
-     * Returns basic information about the bot in form of a User object
-     *
-     * @link https://core.telegram.org/bots/api#getme
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getMe()
-    {
-        // Added fake parameter, because of some cURL version failed POST request without parameters
-        // see https://github.com/php-telegram-bot/core/pull/228
-        return self::send('getMe', ['whoami']);
     }
 
     /**
@@ -902,20 +933,6 @@ class Request
     }
 
     /**
-     * Delete webhook
-     *
-     * @link https://core.telegram.org/bots/api#deletewebhook
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function deleteWebhook()
-    {
-        // Must send some arbitrary data for this to work for now...
-        return self::send('deleteWebhook', ['delete']);
-    }
-
-    /**
      * Use this method to edit text and game messages sent by the bot or via the bot (for inline bots).
      *
      * On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -1028,20 +1045,6 @@ class Request
         }
 
         return $results;
-    }
-
-    /**
-     * Use this method to get current webhook status.
-     *
-     * @link https://core.telegram.org/bots/api#getwebhookinfo
-     *
-     * @return Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getWebhookInfo()
-    {
-        // Must send some arbitrary data for this to work for now...
-        return self::send('getWebhookInfo', ['info']);
     }
 
     /**
