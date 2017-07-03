@@ -241,17 +241,4 @@ abstract class Entity
 
         return ($is_username ? '@' : '') . $name;
     }
-
-    /**
-     * Get Bot name
-     *
-     * @todo: Left for backwards compatibility, remove in the future
-     *
-     * @return string
-     */
-    public function getBotName()
-    {
-        TelegramLog::debug('Usage of deprecated method getBotName() detected, please use getBotUsername() instead!');
-        return $this->getBotUsername();
-    }
 }
