@@ -36,7 +36,7 @@ class PreCheckoutQuery extends Entity
     public function subEntities()
     {
         return [
-            'user' => User::class,
+            'user'       => User::class,
             'order_info' => OrderInfo::class,
         ];
     }

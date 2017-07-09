@@ -787,7 +787,19 @@ class Telegram
             throw new TelegramException('Hook url is empty!');
         }
 
-        $result = Request::setWebhook($url, $data);
+        $data        = array_intersect_key($data, array_flip([
+            'certificate',
+            'max_connections',
+            'allowed_updates',
+        ]));
+        $data['url'] = $url;
+
+        // If the certificate is passed as a path, encode and add the file to the data array.
+        if (!empty($data['certificate']) && is_string($data['certificate'])) {
+            $data['certificate'] = Request::encodeFile($data['certificate']);
+        }
+
+        $result = Request::setWebhook($data);
 
         if (!$result->isOk()) {
             throw new TelegramException(

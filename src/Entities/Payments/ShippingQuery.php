@@ -33,7 +33,7 @@ class ShippingQuery extends Entity
     public function subEntities()
     {
         return [
-            'user' => User::class,
+            'user'             => User::class,
             'shipping_address' => ShippingAddress::class,
         ];
     }

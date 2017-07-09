@@ -11,10 +11,27 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Entities\CallbackQuery;
+use Longman\TelegramBot\Entities\ChosenInlineResult;
+use Longman\TelegramBot\Entities\InlineQuery;
+use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\Entities\Update;
 
+/**
+ * Class Command
+ *
+ * Base class for commands. It includes some helper methods that can fetch data directly from the Update object.
+ *
+ * @method Message             getMessage()            Optional. New incoming message of any kind — text, photo, sticker, etc.
+ * @method Message             getEditedMessage()      Optional. New version of a message that is known to the bot and was edited
+ * @method Message             getChannelPost()        Optional. New post in the channel, can be any kind — text, photo, sticker, etc.
+ * @method Message             getEditedChannelPost()  Optional. New version of a post in the channel that is known to the bot and was edited
+ * @method InlineQuery         getInlineQuery()        Optional. New incoming inline query
+ * @method ChosenInlineResult  getChosenInlineResult() Optional. The result of an inline query that was chosen by a user and sent to their chat partner.
+ * @method CallbackQuery       getCallbackQuery()      Optional. New incoming callback query
+ */
 abstract class Command
 {
     /**
@@ -30,13 +47,6 @@ abstract class Command
      * @var \Longman\TelegramBot\Entities\Update
      */
     protected $update;
-
-    /**
-     * Message object
-     *
-     * @var \Longman\TelegramBot\Entities\Message
-     */
-    protected $message;
 
     /**
      * Name
@@ -117,8 +127,7 @@ abstract class Command
     public function setUpdate(Update $update = null)
     {
         if ($update !== null) {
-            $this->update  = $update;
-            $this->message = $this->update->getMessage();
+            $this->update = $update;
         }
 
         return $this;
@@ -178,13 +187,21 @@ abstract class Command
     }
 
     /**
-     * Get message object
+     * Relay any non-existing function calls to Update object.
      *
-     * @return \Longman\TelegramBot\Entities\Message
+     * This is purely a helper method to make requests from within execute() method easier.
+     *
+     * @param string $name
+     * @param array  $arguments
+     *
+     * @return Command
      */
-    public function getMessage()
+    public function __call($name, array $arguments)
     {
-        return $this->message;
+        if ($this->update === null) {
+            return null;
+        }
+        return call_user_func_array([$this->update, $name], $arguments);
     }
 
     /**
