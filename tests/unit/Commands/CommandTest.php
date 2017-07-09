@@ -163,9 +163,7 @@ class CommandTest extends TestCase
         $update  = TestHelpers::getFakeUpdateObject();
         $message = $update->getMessage();
         $stub->setUpdate($update);
-        $this->assertAttributeEquals($update, 'update', $stub);
         $this->assertEquals($update, $stub->getUpdate());
-        $this->assertAttributeEquals($message, 'message', $stub);
         $this->assertEquals($message, $stub->getMessage());
     }
 
