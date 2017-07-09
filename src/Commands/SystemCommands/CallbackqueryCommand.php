@@ -19,6 +19,11 @@ use Longman\TelegramBot\Request;
 class CallbackqueryCommand extends SystemCommand
 {
     /**
+     * @var callable[]
+     */
+    protected static $callbacks = [];
+
+    /**
      * @var string
      */
     protected $name = 'callbackquery';
@@ -46,6 +51,21 @@ class CallbackqueryCommand extends SystemCommand
         //$query_id       = $callback_query->getId();
         //$query_data     = $callback_query->getData();
 
+        // Call all registered callbacks.
+        foreach (self::$callbacks as $callback) {
+            $callback($this->getUpdate()->getCallbackQuery());
+        }
+
         return Request::answerCallbackQuery(['callback_query_id' => $this->getUpdate()->getCallbackQuery()->getId()]);
+    }
+
+    /**
+     * Add a new callback handler for callback queries.
+     *
+     * @param $callback
+     */
+    public static function addCallbackHandler($callback)
+    {
+        self::$callbacks[] = $callback;
     }
 }

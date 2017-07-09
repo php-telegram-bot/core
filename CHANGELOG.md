@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Callbacks can be added to be executed when callback queries are called.
 ### Changed
 ### Deprecated
 ### Removed
