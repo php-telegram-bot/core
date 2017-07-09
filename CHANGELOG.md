@@ -6,7 +6,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 - Callbacks can be added to be executed when callback queries are called.
+- New Bot API 3.1 changes (#550).
 ### Changed
+- [:exclamation:][unreleased-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 ### Deprecated
 ### Removed
 ### Fixed
@@ -122,6 +124,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
 [0.45.0-bc-remove-deprecated-methods]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-deprecated-methods
 [0.45.0-bc-chats-params-array]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chats-params-array
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
