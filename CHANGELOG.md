@@ -5,15 +5,19 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- Callbacks can be added to be executed when callback queries are called.
-- New Bot API 3.1 changes (#550).
-- `/cleanup` command for admins, that cleans out old entries from the DB.
 ### Changed
-- [:exclamation:][unreleased-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.46.0] - 2017-07-15
+### Added
+- Callbacks can be added to be executed when callback queries are called.
+- New Bot API 3.1 changes (#550).
+- `/cleanup` command for admins, that cleans out old entries from the DB.
+### Changed
+- [:exclamation:][0.46.0-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 
 ## [0.45.0] - 2017-06-25
 **Note:** After updating to this version, you will need to execute the [SQL migration script](https://github.com/php-telegram-bot/core/tree/0.45.0/utils/db-schema-update/0.44.1-0.45.0.sql) on your database.
@@ -125,7 +129,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
+[0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
 [0.45.0-bc-remove-deprecated-methods]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-deprecated-methods
 [0.45.0-bc-chats-params-array]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chats-params-array
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
