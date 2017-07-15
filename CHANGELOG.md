@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Callbacks can be added to be executed when callback queries are called.
 - New Bot API 3.1 changes (#550).
+- `/cleanup` command for admins, that cleans out old entries from the DB.
 ### Changed
 - [:exclamation:][unreleased-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 ### Deprecated
