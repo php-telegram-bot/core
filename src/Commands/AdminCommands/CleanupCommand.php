@@ -35,12 +35,49 @@ class CleanupCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $usage = '/cleanup';
+    protected $usage = '/cleanup <days> or /cleanup <count> <unit> (e.g. 3 weeks)';
 
     /**
      * @var string
      */
     protected $version = '1.0.0';
+
+    /**
+     * Default tables to clean, cleaning 'chat', 'user' and 'user_chat' by default is bad practice!
+     *
+     * @var array
+     */
+    protected static $default_tables_to_clean = [
+        'botan_shortener',
+        'callback_query',
+        'chosen_inline_result',
+        'conversation',
+        'edited_message',
+        'inline_query',
+        'message',
+        'request_limiter',
+        'telegram_update',
+    ];
+
+    /**
+     * By default, remove records older than X days/hours/anything from these tables.
+     *
+     * @var array
+     */
+    protected static $default_clean_older_than = [
+        'botan_shortener'      => '30 days',
+        'chat'                 => '365 days',
+        'callback_query'       => '30 days',
+        'chosen_inline_result' => '30 days',
+        'conversation'         => '30 days',
+        'edited_message'       => '30 days',
+        'inline_query'         => '30 days',
+        'message'              => '30 days',
+        'request_limiter'      => '1 minute',
+        'telegram_update'      => '30 days',
+        'user'                 => '365 days',
+        'user_chat'            => '365 days',
+    ];
 
     /**
      * Set command config
@@ -51,83 +88,29 @@ class CleanupCommand extends AdminCommand
      */
     private function getSettings($custom_time = '')
     {
-        // default tables to clean, cleaning 'chat', 'user' and 'user_chat' will be a bad practice!
-        $tables_to_clean = [
-            'botan_shortener',
-            'callback_query',
-            'chosen_inline_result',
-            'conversation',
-            'edited_message',
-            'inline_query',
-            'message',
-            'request_limiter',
-            'telegram_update',
-        ];
-
-        // remove records from these tables older than these X days/hours/anything
-        $time_to_clean = [
-            'botan_shortener'      => '30 days',
-            'chat'                 => '365 days',
-            'callback_query'       => '30 days',
-            'chosen_inline_result' => '30 days',
-            'conversation'         => '30 days',
-            'edited_message'       => '30 days',
-            'inline_query'         => '30 days',
-            'message'              => '30 days',
-            'request_limiter'      => '1 minute',
-            'telegram_update'      => '30 days',
-            'user'                 => '365 days',
-            'user_chat'            => '365 days',
-        ];
-
+        $tables_to_clean      = self::$default_tables_to_clean;
         $user_tables_to_clean = $this->getConfig('tables_to_clean');
-        if (!is_null($user_tables_to_clean)) {
-            if (!is_array($user_tables_to_clean)) {
-                throw new TelegramException('Variable \'tables_to_clean\' must be an array!');
-            }
-
+        if (is_array($user_tables_to_clean)) {
             $tables_to_clean = $user_tables_to_clean;
         }
 
-        $user_time_to_clean = $this->getConfig('time_to_clean');
-        if (!is_null($user_tables_to_clean)) {
-            if (!$this->isAssociativeArray($user_time_to_clean)) {
-                throw new TelegramException('Variable \'time_to_clean\' must be an associative array!');
-            }
-
-            $time_to_clean = array_merge($time_to_clean, $user_time_to_clean);
+        $clean_older_than      = self::$default_clean_older_than;
+        $user_clean_older_than = $this->getConfig('clean_older_than');
+        if (is_array($user_clean_older_than)) {
+            $clean_older_than = array_merge($clean_older_than, $user_clean_older_than);
         }
 
-        $settings['tables_to_clean']    = $tables_to_clean;
-        $settings['time_to_clean']      = $time_to_clean;
-
-        if (is_numeric($custom_time)) {
-            $custom_time = $custom_time . ' days';
-        }
-
-        foreach ($settings['tables_to_clean'] as $table_to_clean) {
+        // Convert numeric-only values to days.
+        array_walk($clean_older_than, function (&$time) use ($custom_time) {
             if (!empty($custom_time)) {
-                $settings['time_to_clean'][$table_to_clean] = $custom_time;
+                $time = $custom_time;
             }
-        }
+            if (is_numeric($time)) {
+                $time .= ' days';
+            }
+        });
 
-        return $settings;
-    }
-
-    /**
-     * Little function to return whenever array is associative or not
-     *
-     * @param array $arr
-     *
-     * @return bool
-     */
-    private function isAssociativeArray(array $arr)
-    {
-        if (!is_array($arr) || empty($arr)) {
-            return false;
-        }
-
-        return array_keys($arr) !== range(0, count($arr) - 1);
+        return compact('tables_to_clean', 'clean_older_than');
     }
 
     /**
@@ -144,61 +127,177 @@ class CleanupCommand extends AdminCommand
             throw new TelegramException('Settings variable is not an array or is empty!');
         }
 
+        // Convert all clean_older_than times to correct format.
+        $clean_older_than = $settings['clean_older_than'];
+        foreach ($clean_older_than as $table => $time) {
+            $clean_older_than[$table] = date('Y-m-d H:i:s', strtotime('-' . $time));
+        }
+        $tables_to_clean = $settings['tables_to_clean'];
+
         $queries = [];
 
-        if (in_array('telegram_update', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `telegram_update` WHERE
-`id` != \'' . $this->getUpdate()->getUpdateId() . '\' AND
-`chat_id` NOT IN (SELECT `id` FROM `chat` WHERE `chat_id` = `chat`.`id`) AND
-(`message_id` IS NOT NULL AND `message_id` IN (SELECT f.id FROM `message` f WHERE `date` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['telegram_update'])) . '\')) OR
-(`edited_message_id` IS NOT NULL AND `edited_message_id` IN (SELECT f.id FROM `edited_message` f WHERE `edit_date` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['telegram_update'])) . '\')) OR
-(`inline_query_id` IS NOT NULL AND `inline_query_id` IN (SELECT f.id FROM `inline_query` f WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['telegram_update'])) . '\')) OR
-(`chosen_inline_result_id` IS NOT NULL AND `chosen_inline_result_id` IN (SELECT f.id FROM `chosen_inline_result` f WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['telegram_update'])) . '\')) OR
-(`callback_query_id` IS NOT NULL AND `callback_query_id` IN (SELECT f.id FROM `callback_query` f WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['telegram_update'])) . '\'))';
+        if (in_array('telegram_update', $tables_to_clean, true)) {
+            $queries[] = sprintf(
+                'DELETE FROM `%3$s`
+                WHERE `id` != \'%1$s\'
+                  AND `chat_id` NOT IN (
+                    SELECT `id`
+                    FROM `%4$s`
+                    WHERE `chat_id` = `%4$s`.`id`
+                  )
+                  AND (
+                    `message_id` IS NOT NULL
+                    AND `message_id` IN (
+                      SELECT f.id
+                      FROM `%5$s` f
+                      WHERE `date` < \'%2$s\'
+                    )
+                  )
+                  OR (
+                    `edited_message_id` IS NOT NULL
+                    AND `edited_message_id` IN (
+                      SELECT f.id
+                      FROM `%6$s` f
+                      WHERE `edit_date` < \'%2$s\'
+                    )
+                  )
+                  OR (
+                    `inline_query_id` IS NOT NULL
+                    AND `inline_query_id` IN (
+                      SELECT f.id
+                      FROM `%7$s` f
+                      WHERE `created_at` < \'%2$s\'
+                    )
+                  )
+                  OR (
+                    `chosen_inline_result_id` IS NOT NULL
+                    AND `chosen_inline_result_id` IN (
+                      SELECT f.id
+                      FROM `%8$s` f
+                      WHERE `created_at` < \'%2$s\'
+                    )
+                  )
+                  OR (
+                    `callback_query_id` IS NOT NULL
+                    AND `callback_query_id` IN (
+                      SELECT f.id
+                      FROM `%9$s` f
+                      WHERE `created_at` < \'%2$s\'
+                    )
+                  )
+            ',
+                $this->getUpdate()->getUpdateId(),
+                $clean_older_than['telegram_update'],
+                TB_TELEGRAM_UPDATE,
+                TB_CHAT,
+                TB_MESSAGE,
+                TB_EDITED_MESSAGE,
+                TB_INLINE_QUERY,
+                TB_CHOSEN_INLINE_RESULT,
+                TB_CALLBACK_QUERY
+            );
         }
 
-        if (in_array('user_chat', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `user_chat` WHERE `user_id` IN (SELECT f.id FROM `user` f WHERE `updated_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['chat'])) . '\')' . PHP_EOL;
+        if (in_array('user_chat', $tables_to_clean, true)) {
+            $queries[] = sprintf(
+                'DELETE FROM `%1$s`
+                WHERE `user_id` IN (
+                  SELECT f.id
+                  FROM `%2$s` f
+                  WHERE `updated_at` < \'%3$s\'
+                )
+            ',
+                TB_USER_CHAT,
+                TB_USER,
+                $clean_older_than['chat']
+            );
         }
 
-        if (in_array('user', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `user` WHERE `updated_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['user'])) . '\'' . PHP_EOL;
+        // Simple.
+        $simple_tables = [
+            'user'            => ['table' => TB_USER, 'field' => 'updated_at'],
+            'chat'            => ['table' => TB_CHAT, 'field' => 'updated_at'],
+            'conversation'    => ['table' => TB_CONVERSATION, 'field' => 'updated_at'],
+            'request_limiter' => ['table' => TB_REQUEST_LIMITER, 'field' => 'created_at'],
+        ];
+
+        // Botan table is only available if enabled.
+        if (defined('TB_BOTAN_SHORTENER')) {
+            $simple_tables['botan_shortener'] = ['table' => TB_BOTAN_SHORTENER, 'field' => 'created_at'];
         }
 
-        if (in_array('chat', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `chat` WHERE `updated_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['chat'])) . '\'' . PHP_EOL;
+        foreach (array_intersect(array_keys($simple_tables), $tables_to_clean) as $table_to_clean) {
+            $queries[] = sprintf(
+                'DELETE FROM `%1$s`
+                WHERE `%2$s` < \'%3$s\'
+            ',
+                $simple_tables[$table_to_clean]['table'],
+                $simple_tables[$table_to_clean]['field'],
+                $clean_older_than[$table_to_clean]
+            );
         }
 
-        if (in_array('inline_query', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `inline_query` WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['inline_query'])) . '\' AND `id` NOT IN (SELECT `inline_query_id` FROM `telegram_update` WHERE `inline_query_id` = `inline_query`.`id`)';
+        // Queries.
+        $query_tables = [
+            'inline_query'         => ['table' => TB_INLINE_QUERY, 'field' => 'created_at'],
+            'chosen_inline_result' => ['table' => TB_CHOSEN_INLINE_RESULT, 'field' => 'created_at'],
+            'callback_query'       => ['table' => TB_CALLBACK_QUERY, 'field' => 'created_at'],
+        ];
+        foreach (array_intersect(array_keys($query_tables), $tables_to_clean) as $table_to_clean) {
+            $queries[] = sprintf(
+                'DELETE FROM `%1$s`
+                WHERE `%2$s` < \'%3$s\'
+                  AND `id` NOT IN (
+                    SELECT `%4$s`
+                    FROM `%5$s`
+                    WHERE `%4$s` = `%1$s`.`id`
+                  )
+            ',
+                $query_tables[$table_to_clean]['table'],
+                $query_tables[$table_to_clean]['field'],
+                $clean_older_than[$table_to_clean],
+                $table_to_clean . '_id',
+                TB_TELEGRAM_UPDATE
+            );
         }
 
-        if (in_array('chosen_inline_result', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `chosen_inline_result` WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['chosen_inline_result'])) . '\' AND `id` NOT IN (SELECT `chosen_inline_result_id` FROM `telegram_update` WHERE `chosen_inline_result_id` = `chosen_inline_result`.`id`)';
+        // Messages
+        if (in_array('edited_message', $tables_to_clean, true)) {
+            $queries[] = sprintf(
+                'DELETE FROM `%1$s`
+                WHERE `edit_date` < \'%2$s\'
+                  AND `id` NOT IN (
+                    SELECT `message_id`
+                    FROM `%3$s`
+                    WHERE `edited_message_id` = `%1$s`.`id`
+                  )
+            ',
+                TB_EDITED_MESSAGE,
+                $clean_older_than['edited_message'],
+                TB_TELEGRAM_UPDATE
+            );
         }
 
-        if (in_array('callback_query', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `callback_query` WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['callback_query'])) . '\' AND `id` NOT IN (SELECT `callback_query_id` FROM `telegram_update` WHERE `callback_query_id` = `callback_query`.`id`)' . PHP_EOL;
-        }
-
-        if (in_array('edited_message', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `edited_message` WHERE `edit_date` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['edited_message'])) . '\' AND `id` NOT IN (SELECT `message_id` FROM `telegram_update` WHERE `edited_message_id` = `edited_message`.`id`)' . PHP_EOL;
-        }
-
-        if (in_array('message', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `message` WHERE `date` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['message'])) . '\' AND `id` NOT IN (SELECT `message_id` FROM `callback_query` WHERE `message_id` = `message`.`id`) AND `id` NOT IN (SELECT `message_id` FROM `telegram_update` WHERE `message_id` = `message`.`id`)' . PHP_EOL;
-        }
-
-        if (in_array('botan_shortener', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `botan_shortener` WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['botan_shortener'])) . '\'';
-        }
-
-        if (in_array('conversation', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `conversation` WHERE `updated_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['conversation'])) . '\'';
-        }
-
-        if (in_array('request_limiter', $settings['tables_to_clean'])) {
-            $queries[] = 'DELETE FROM `request_limiter` WHERE `created_at` < \'' . date('Y-m-d H:i:s', strtotime('-' . $settings['time_to_clean']['request_limiter'])) . '\'';
+        if (in_array('message', $tables_to_clean, true)) {
+            $queries[] = sprintf(
+                'DELETE FROM `%1$s`
+                WHERE `date` < \'%2$s\'
+                  AND `id` NOT IN (
+                    SELECT `message_id`
+                    FROM `%3$s`
+                    WHERE `message_id` = `%1$s`.`id`
+                  )
+                  AND `id` NOT IN (
+                    SELECT `message_id`
+                    FROM `%4$s`
+                    WHERE `message_id` = `%1$s`.`id`
+                  )
+            ',
+                TB_MESSAGE,
+                $clean_older_than['message'],
+                TB_TELEGRAM_UPDATE,
+                TB_CALLBACK_QUERY
+            );
         }
 
         return $queries;
@@ -214,67 +313,64 @@ class CleanupCommand extends AdminCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getFrom()->getId();
-        $text = $message->getText(true);
+        $text    = $message->getText(true);
 
-        $data = [];
-        $data['chat_id'] = $chat_id;
-        $data['parse_mode'] = 'Markdown';
+        $data = [
+            'chat_id'    => $chat_id,
+            'parse_mode' => 'Markdown',
+        ];
 
         if (!$message->getChat()->isPrivateChat()) {
-            $data['text'] = 'Only available in a private chat.';
+            $data['text'] = '/cleanup command is only available in a private chat.';
 
             return Request::sendMessage($data);
         }
 
         $settings = $this->getSettings($text);
-        $queries = $this->getQueries($settings);
+        $queries  = $this->getQueries($settings);
 
-        $tables = '';
+        $infos = [];
         foreach ($settings['tables_to_clean'] as $table) {
-            if (!empty($tables)) {
-                $tables .= ', ';
+            $info = '*' . $table . '*';
+
+            if (isset($settings['clean_older_than'][$table])) {
+                $info .= ' (' . $settings['clean_older_than'][$table] . ')';
             }
 
-            $tables .= '*' . $table . '*';
-            $time = $settings['time_to_clean'][$table];
-
-            if (isset($time)) {
-                $tables .= ' (' . $time . ')';
-            }
+            $infos[] = $info;
         }
 
-        $data['text'] = 'Cleaning up tables:' . PHP_EOL . ' ' . $tables;
+        $data['text'] = 'Cleaning up tables:' . PHP_EOL . implode(PHP_EOL, $infos);
 
         Request::sendMessage($data);
 
         $rows = 0;
-        $pdo = DB::getPdo();
+        $pdo  = DB::getPdo();
         try {
             $pdo->beginTransaction();
 
             foreach ($queries as $query) {
-                $dbq = $pdo->prepare($query);
-                if ($dbq->execute()) {
+                if ($dbq = $pdo->query($query)) {
                     $rows += $dbq->rowCount();
                 } else {
-                    TelegramLog::error('Error while executing query: ' . $query . PHP_EOL);
+                    TelegramLog::error('Error while executing query: ' . $query);
                 }
             }
+
+            $pdo->commit();     // commit changes to the database and end transaction
         } catch (PDOException $e) {
             $pdo->rollBack();   // rollback changes on exception (useful if you want to track down error - you can't replicate it when some of the data is already deleted...)
+
+            $data['text'] = '*Database cleanup failed!* _(check your error logs)_';
+            Request::sendMessage($data);
+
             throw new TelegramException($e->getMessage());
-        } finally {
-            $pdo->commit();     // commit changes to the database and end transaction
         }
 
-        if (isset($rows)) {
-            if ($rows > 0) {
-                $data['text'] = '*Database cleanup done!* _(removed ' . $rows .' rows)_';
-            } else {
-                $data['text'] = '*No data to clean!*';
-            }
+        if ($rows > 0) {
+            $data['text'] = '*Database cleanup done!* _(removed ' . $rows . ' rows)_';
         } else {
-            $data['text'] = '*Database cleanup failed!*';
+            $data['text'] = '*No data to clean!*';
         }
 
         return Request::sendMessage($data);
