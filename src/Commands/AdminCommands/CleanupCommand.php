@@ -19,6 +19,21 @@ use PDOException;
 
 /**
  * User "/cleanup" command
+ *
+ * Configuration options:
+ *
+ * $telegram->setCommandConfig('cleanup', [
+ *     // Define which tables should be cleaned.
+ *     'tables_to_clean' => [
+ *         'message',
+ *         'edited_message',
+ *     ],
+ *     // Define how old cleaned entries should be.
+ *     'clean_older_than' => [
+ *         'message'        => '7 days',
+ *         'edited_message' => '30 days',
+ *     ]
+ * );
  */
 class CleanupCommand extends AdminCommand
 {
