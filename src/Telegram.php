@@ -904,15 +904,20 @@ class Telegram
         $this->run_commands  = true;
         $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
-        $result = Request::getMe()->getResult();
+        $result = Request::getMe();
 
-        if (!$result->getId()) {
-            throw new TelegramException('Received empty/invalid getMe result!');
+        if ($result->isOk()) {
+            $result = $result->getResult();
+
+            $bot_id       = $result->getId();
+            $bot_name     = $result->getFirstName();
+            $bot_username = $result->getUsername();
+        } else {
+            $bot_id       = $this->getBotId();
+            $bot_name     = $this->getBotUsername();
+            $bot_username = $this->getBotUsername();
         }
 
-        $bot_id       = $result->getId();
-        $bot_name     = $result->getFirstName();
-        $bot_username = $result->getUsername();
 
         $this->enableAdmin($bot_id);    // Give bot access to admin commands
         $this->getCommandsList();       // Load full commands list
