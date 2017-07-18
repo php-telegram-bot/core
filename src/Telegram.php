@@ -918,8 +918,10 @@ class Telegram
             $bot_username = $this->getBotUsername();
         }
 
+        if (!$this->isAdmin($bot_id)) {
+            $this->enableAdmin($bot_id);    // Give bot access to admin commands
+        }
 
-        $this->enableAdmin($bot_id);    // Give bot access to admin commands
         $this->getCommandsList();       // Load full commands list
 
         foreach ($commands as $command) {
