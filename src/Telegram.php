@@ -520,10 +520,10 @@ class Telegram
      */
     public function enableAdmin($admin_id)
     {
-        if (is_int($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list, true)) {
-            $this->admins_list[] = $admin_id;
-        } else {
+        if (!is_int($admin_id) || $admin_id <= 0) {
             TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
+        } elseif (!in_array($admin_id, $this->admins_list, true)) {
+            $this->admins_list[] = $admin_id;
         }
 
         return $this;
@@ -918,10 +918,8 @@ class Telegram
             $bot_username = $this->getBotUsername();
         }
 
-        if (!$this->isAdmin($bot_id)) {
-            $this->enableAdmin($bot_id);    // Give bot access to admin commands
-        }
 
+        $this->enableAdmin($bot_id);    // Give bot access to admin commands
         $this->getCommandsList();       // Load full commands list
 
         foreach ($commands as $command) {
