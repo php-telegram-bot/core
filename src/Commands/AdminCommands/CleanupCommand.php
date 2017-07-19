@@ -58,6 +58,11 @@ class CleanupCommand extends AdminCommand
     protected $version = '1.0.0';
 
     /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
      * Default tables to clean, cleaning 'chat', 'user' and 'user_chat' by default is bad practice!
      *
      * @var array
@@ -316,6 +321,25 @@ class CleanupCommand extends AdminCommand
         }
 
         return $queries;
+    }
+
+    /**
+     * Execution if MySQL is required but not available
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     */
+    public function executeNoDb()
+    {
+        $message = $this->getMessage();
+        $chat_id = $message->getFrom()->getId();
+
+        $data = [
+            'chat_id'    => $chat_id,
+            'parse_mode' => 'Markdown',
+            'text'       => 'No database connection!',
+        ];
+
+        return Request::sendMessage($data);
     }
 
     /**
