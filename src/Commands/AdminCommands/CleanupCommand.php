@@ -336,7 +336,7 @@ class CleanupCommand extends AdminCommand
         $data = [
             'chat_id'    => $chat_id,
             'parse_mode' => 'Markdown',
-            'text'       => 'No database connection!',
+            'text'       => '*No database connection!*',
         ];
 
         return Request::sendMessage($data);
