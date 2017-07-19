@@ -331,7 +331,7 @@ class CleanupCommand extends AdminCommand
     public function executeNoDb()
     {
         $message = $this->getMessage();
-        $chat_id = $message->getFrom()->getId();
+        $chat_id = $message->getChat()->getId();
 
         $data = [
             'chat_id'    => $chat_id,
@@ -351,7 +351,7 @@ class CleanupCommand extends AdminCommand
     public function execute()
     {
         $message = $this->getMessage();
-        $chat_id = $message->getFrom()->getId();
+        $chat_id = $message->getChat()->getId();
         $text    = $message->getText(true);
 
         $data = [
