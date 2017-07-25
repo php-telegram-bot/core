@@ -440,7 +440,7 @@ class Telegram
                 'left_chat_member',
                 'migrate_from_chat_id',
                 'migrate_to_chat_id',
-                'new_chat_member',
+                'new_chat_members',
                 'new_chat_photo',
                 'new_chat_title',
                 'pinned_message',
