@@ -351,19 +351,13 @@ class CleanupCommand extends AdminCommand
     public function execute()
     {
         $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
+        $user_id = $message->getFrom()->getId();
         $text    = $message->getText(true);
 
         $data = [
-            'chat_id'    => $chat_id,
+            'chat_id'    => $user_id,
             'parse_mode' => 'Markdown',
         ];
-
-        if (!$message->getChat()->isPrivateChat()) {
-            $data['text'] = '/cleanup command is only available in a private chat.';
-
-            return Request::sendMessage($data);
-        }
 
         $settings = $this->getSettings($text);
         $queries  = $this->getQueries($settings);
