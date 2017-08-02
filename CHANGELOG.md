@@ -6,9 +6,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Updated readme to latest state of 0.46.0.
 ### Deprecated
 ### Removed
 ### Fixed
+- `Telegram::enableAdmin()` now handles duplicate additions properly.
+- `Request::getMe()` failure doesn't break cron execution any more.
 ### Security
 
 ## [0.46.0] - 2017-07-15
