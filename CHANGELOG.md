@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `Telegram::enableAdmin()` now handles duplicate additions properly.
 - `Request::getMe()` failure doesn't break cron execution any more.
 ### Security
+- New command parameter `$private_only` to enforce usage in private chats only.
 
 ## [0.46.0] - 2017-07-15
 ### Added
