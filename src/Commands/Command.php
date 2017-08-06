@@ -368,17 +368,20 @@ abstract class Command
      */
     protected function removeNonPrivateMessage()
     {
-        $message = $this->getMessage();
-        $chat    = $message->getChat();
+        $message = $this->getMessage() ?: $this->getEditedMessage();
 
-        if (!$chat->isPrivateChat()) {
-            // Delete the falsely called command message.
-            Request::deleteMessage([
-                'chat_id'    => $chat->getId(),
-                'message_id' => $message->getMessageId(),
-            ]);
+        if ($message) {
+            $chat = $message->getChat();
 
-            return true;
+            if (!$chat->isPrivateChat()) {
+                // Delete the falsely called command message.
+                Request::deleteMessage([
+                    'chat_id'    => $chat->getId(),
+                    'message_id' => $message->getMessageId(),
+                ]);
+
+                return true;
+            }
         }
 
         return false;
