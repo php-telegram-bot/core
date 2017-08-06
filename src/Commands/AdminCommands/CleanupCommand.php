@@ -58,6 +58,11 @@ class CleanupCommand extends AdminCommand
     protected $version = '1.0.0';
 
     /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
      * Default tables to clean, cleaning 'chat', 'user' and 'user_chat' by default is bad practice!
      *
      * @var array
@@ -319,6 +324,25 @@ class CleanupCommand extends AdminCommand
     }
 
     /**
+     * Execution if MySQL is required but not available
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     */
+    public function executeNoDb()
+    {
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+
+        $data = [
+            'chat_id'    => $chat_id,
+            'parse_mode' => 'Markdown',
+            'text'       => '*No database connection!*',
+        ];
+
+        return Request::sendMessage($data);
+    }
+
+    /**
      * Command execute method
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
@@ -327,19 +351,13 @@ class CleanupCommand extends AdminCommand
     public function execute()
     {
         $message = $this->getMessage();
-        $chat_id = $message->getFrom()->getId();
+        $user_id = $message->getFrom()->getId();
         $text    = $message->getText(true);
 
         $data = [
-            'chat_id'    => $chat_id,
+            'chat_id'    => $user_id,
             'parse_mode' => 'Markdown',
         ];
-
-        if (!$message->getChat()->isPrivateChat()) {
-            $data['text'] = '/cleanup command is only available in a private chat.';
-
-            return Request::sendMessage($data);
-        }
 
         $settings = $this->getSettings($text);
         $queries  = $this->getQueries($settings);
