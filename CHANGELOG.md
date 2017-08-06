@@ -13,7 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `Telegram::enableAdmin()` now handles duplicate additions properly.
 - `Request::getMe()` failure doesn't break cron execution any more.
 ### Security
-- New command parameter `$private_only` to enforce usage in private chats only.
+- [:exclamation:][unreleased-private-only-admin-commands] New command parameter `$private_only` to enforce usage in private chats only (set by default for Admin commands).
 
 ## [0.46.0] - 2017-07-15
 ### Added
@@ -133,6 +133,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
 [0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
 [0.45.0-bc-remove-deprecated-methods]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-deprecated-methods
 [0.45.0-bc-chats-params-array]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chats-params-array
