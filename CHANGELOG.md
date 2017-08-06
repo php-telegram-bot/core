@@ -11,7 +11,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
-## [0.47.0] - 2017-08-06
+## [0.47.1] - 2017-08-06
+### Added
+- Linked version numbers in changelog for easy verification of code changes. 
+### Fixed
+- Private-only commands work with edited messages now too.
+
+## [0.47.0] - 2017-08-06 [YANKED]
 ### Changed
 - Updated readme to latest state of 0.47.0.
 ### Fixed
@@ -146,3 +152,21 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
 [example-bot]: https://github.com/php-telegram-bot/example-bot
+
+[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.47.1]: https://github.com/php-telegram-bot/core/compare/0.47.0...0.47.1
+[0.47.0]: https://github.com/php-telegram-bot/core/compare/0.46.0...0.47.0
+[0.46.0]: https://github.com/php-telegram-bot/core/compare/0.45.0...0.46.0
+[0.45.0]: https://github.com/php-telegram-bot/core/compare/0.44.1...0.45.0
+[0.44.1]: https://github.com/php-telegram-bot/core/compare/0.44.0...0.44.1
+[0.44.0]: https://github.com/php-telegram-bot/core/compare/0.43.0...0.44.0
+[0.43.0]: https://github.com/php-telegram-bot/core/compare/0.42.0...0.43.0
+[0.42.0]: https://github.com/php-telegram-bot/core/compare/0.41.0...0.42.0
+[0.41.0]: https://github.com/php-telegram-bot/core/compare/0.40.1...0.41.0
+[0.40.1]: https://github.com/php-telegram-bot/core/compare/0.40.0...0.40.1
+[0.40.0]: https://github.com/php-telegram-bot/core/compare/0.39.0...0.40.0
+[0.39.0]: https://github.com/php-telegram-bot/core/compare/0.38.1...0.39.0
+[0.38.1]: https://github.com/php-telegram-bot/core/compare/0.38.0...0.38.1
+[0.38.0]: https://github.com/php-telegram-bot/core/compare/0.37.1...0.38.0
+[0.37.1]: https://github.com/php-telegram-bot/core/compare/0.37.0...0.37.1
+[0.37.0]: https://github.com/php-telegram-bot/core/compare/0.36...0.37.0
