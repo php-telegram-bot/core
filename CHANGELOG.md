@@ -5,18 +5,38 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- Callbacks can be added to be executed when callback queries are called.
-- New Bot API 3.1 changes (#550).
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 ### Changed
-- [:exclamation:][unreleased-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
 
+## [0.47.1] - 2017-08-06
+### Added
+- Linked version numbers in changelog for easy verification of code changes. 
+### Fixed
+- Private-only commands work with edited messages now too.
+
+## [0.47.0] - 2017-08-06 [YANKED]
+### Changed
+- Updated readme to latest state of 0.47.0.
+### Fixed
+- `Telegram::enableAdmin()` now handles duplicate additions properly.
+- `Request::getMe()` failure doesn't break cron execution any more.
+### Security
+- [:exclamation:][0.47.0-private-only-admin-commands] New command parameter `$private_only` to enforce usage in private chats only (set by default for Admin commands).
+
+## [0.46.0] - 2017-07-15
+### Added
+- Callbacks can be added to be executed when callback queries are called.
+- New Bot API 3.1 changes (#550).
+- `/cleanup` command for admins, that cleans out old entries from the DB.
+### Changed
+- [:exclamation:][0.46.0-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
+
 ## [0.45.0] - 2017-06-25
-**Note:** After updating to this version, you will need to execute the [SQL migration script](https://github.com/php-telegram-bot/core/tree/0.45.0/utils/db-schema-update/0.44.1-0.45.0.sql) on your database.
+**Note:** After updating to this version, you will need to execute the [SQL migration script][0.45.0-sql-migration] on your database.
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 - Allow setting a custom Guzzle HTTP Client for requests (#511).
@@ -43,11 +63,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [0.44.0] - 2017-04-25
 ### Added
 - Proper standalone `scrutinizer.yml` config.
-- Human-readable last error date for debug command.
+- Human-readable `last_error_date_string` for debug command.
 ### Changed
 - Bot username no longer required for object instantiation.
 ### Removed
-- All examples have been moved to a [dedicated repository](https://github.com/php-telegram-bot/example-bot).
+- All examples have been moved to a [dedicated repository][example-bot].
 ### Fixed
 - [:exclamation:][0.44.0-bc-update-content-type] Format of Update content type using `$update->getUpdateContent()`.
 
@@ -125,8 +145,29 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
+[0.47.0-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
+[0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
+[0.46.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/0.45.0/utils/db-schema-update/0.44.1-0.45.0.sql
 [0.45.0-bc-remove-deprecated-methods]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-deprecated-methods
 [0.45.0-bc-chats-params-array]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chats-params-array
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
+[example-bot]: https://github.com/php-telegram-bot/example-bot
+
+[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.47.1]: https://github.com/php-telegram-bot/core/compare/0.47.0...0.47.1
+[0.47.0]: https://github.com/php-telegram-bot/core/compare/0.46.0...0.47.0
+[0.46.0]: https://github.com/php-telegram-bot/core/compare/0.45.0...0.46.0
+[0.45.0]: https://github.com/php-telegram-bot/core/compare/0.44.1...0.45.0
+[0.44.1]: https://github.com/php-telegram-bot/core/compare/0.44.0...0.44.1
+[0.44.0]: https://github.com/php-telegram-bot/core/compare/0.43.0...0.44.0
+[0.43.0]: https://github.com/php-telegram-bot/core/compare/0.42.0...0.43.0
+[0.42.0]: https://github.com/php-telegram-bot/core/compare/0.41.0...0.42.0
+[0.41.0]: https://github.com/php-telegram-bot/core/compare/0.40.1...0.41.0
+[0.40.1]: https://github.com/php-telegram-bot/core/compare/0.40.0...0.40.1
+[0.40.0]: https://github.com/php-telegram-bot/core/compare/0.39.0...0.40.0
+[0.39.0]: https://github.com/php-telegram-bot/core/compare/0.38.1...0.39.0
+[0.38.1]: https://github.com/php-telegram-bot/core/compare/0.38.0...0.38.1
+[0.38.0]: https://github.com/php-telegram-bot/core/compare/0.37.1...0.38.0
+[0.37.1]: https://github.com/php-telegram-bot/core/compare/0.37.0...0.37.1
+[0.37.0]: https://github.com/php-telegram-bot/core/compare/0.36...0.37.0

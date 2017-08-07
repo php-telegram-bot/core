@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.45.0';
+    protected $version = '0.47.1';
 
     /**
      * Telegram API key
@@ -440,7 +440,7 @@ class Telegram
                 'left_chat_member',
                 'migrate_from_chat_id',
                 'migrate_to_chat_id',
-                'new_chat_member',
+                'new_chat_members',
                 'new_chat_photo',
                 'new_chat_title',
                 'pinned_message',
@@ -520,10 +520,10 @@ class Telegram
      */
     public function enableAdmin($admin_id)
     {
-        if (is_int($admin_id) && $admin_id > 0 && !in_array($admin_id, $this->admins_list, true)) {
-            $this->admins_list[] = $admin_id;
-        } else {
+        if (!is_int($admin_id) || $admin_id <= 0) {
             TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
+        } elseif (!in_array($admin_id, $this->admins_list, true)) {
+            $this->admins_list[] = $admin_id;
         }
 
         return $this;
@@ -904,15 +904,20 @@ class Telegram
         $this->run_commands  = true;
         $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
-        $result = Request::getMe()->getResult();
+        $result = Request::getMe();
 
-        if (!$result->getId()) {
-            throw new TelegramException('Received empty/invalid getMe result!');
+        if ($result->isOk()) {
+            $result = $result->getResult();
+
+            $bot_id       = $result->getId();
+            $bot_name     = $result->getFirstName();
+            $bot_username = $result->getUsername();
+        } else {
+            $bot_id       = $this->getBotId();
+            $bot_name     = $this->getBotUsername();
+            $bot_username = $this->getBotUsername();
         }
 
-        $bot_id       = $result->getId();
-        $bot_name     = $result->getFirstName();
-        $bot_username = $result->getUsername();
 
         $this->enableAdmin($bot_id);    // Give bot access to admin commands
         $this->getCommandsList();       // Load full commands list

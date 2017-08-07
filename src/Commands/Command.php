@@ -97,6 +97,13 @@ abstract class Command
      */
     protected $need_mysql = false;
 
+    /*
+    * Make sure this command only executes on a private chat.
+    *
+    * @var bool
+    */
+    protected $private_only = false;
+
     /**
      * Command config
      *
@@ -143,6 +150,24 @@ abstract class Command
     {
         if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
             return $this->executeNoDb();
+        }
+
+        if ($this->isPrivateOnly() && $this->removeNonPrivateMessage()) {
+            $message = $this->getMessage();
+
+            if ($user = $message->getFrom()) {
+                return Request::sendMessage([
+                    'chat_id'    => $user->getId(),
+                    'parse_mode' => 'Markdown',
+                    'text'       => sprintf(
+                        "/%s command is only available in a private chat.\n(`%s`)",
+                        $this->getName(),
+                        $message->getText()
+                    ),
+                ]);
+            }
+
+            return Request::emptyResponse();
         }
 
         return $this->execute();
@@ -297,6 +322,16 @@ abstract class Command
     }
 
     /**
+     * If this command is intended for private chats only.
+     *
+     * @return bool
+     */
+    public function isPrivateOnly()
+    {
+        return $this->private_only;
+    }
+
+    /**
      * If this is a SystemCommand
      *
      * @return bool
@@ -324,5 +359,31 @@ abstract class Command
     public function isUserCommand()
     {
         return ($this instanceof UserCommand);
+    }
+
+    /**
+     * Delete the current message if it has been called in a non-private chat.
+     *
+     * @return bool
+     */
+    protected function removeNonPrivateMessage()
+    {
+        $message = $this->getMessage() ?: $this->getEditedMessage();
+
+        if ($message) {
+            $chat = $message->getChat();
+
+            if (!$chat->isPrivateChat()) {
+                // Delete the falsely called command message.
+                Request::deleteMessage([
+                    'chat_id'    => $chat->getId(),
+                    'message_id' => $message->getMessageId(),
+                ]);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }
