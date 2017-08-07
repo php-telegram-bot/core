@@ -77,11 +77,23 @@ class ServerResponse extends Entity
     /**
      * Print error
      *
-     * @return string
+     * @see https://secure.php.net/manual/en/function.print-r.php
+     *
+     * @param bool $return
+     *
+     * @return bool|string
      */
-    public function printError()
+    public function printError($return = false)
     {
-        return 'Error N: ' . $this->getErrorCode() . ' Description: ' . $this->getDescription();
+        $error = sprintf('Error N: %s, Description: %s', $this->getErrorCode(), $this->getDescription());
+
+        if ($return) {
+            return $error;
+        }
+
+        echo $error;
+
+        return true;
     }
 
     /**
