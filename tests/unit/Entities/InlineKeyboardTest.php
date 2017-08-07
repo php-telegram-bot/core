@@ -24,7 +24,7 @@ class InlineKeyboardTest extends TestCase
 {
     private function getRandomButton($text)
     {
-        $random_params = ['url', 'callback_data', 'switch_inline_query', 'switch_inline_query_current_chat'];
+        $random_params = ['url', 'callback_data', 'switch_inline_query', 'switch_inline_query_current_chat', 'pay'];
         $param         = $random_params[array_rand($random_params, 1)];
         $data          = [
             'text' => $text,

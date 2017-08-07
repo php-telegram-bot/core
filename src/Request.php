@@ -132,6 +132,7 @@ class Request
         'sendLocation',
         'sendVenue',
         'sendContact',
+        'sendInvoice',
         'sendChatAction',
         'getUserProfilePhotos',
         'getFile',
@@ -153,6 +154,8 @@ class Request
         'getChatMember',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'answerShippingQuery',
+        'answerPreCheckoutQuery',
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup',
@@ -527,6 +530,7 @@ class Request
         // Make sure to add the action being called as the first parameter to be passed.
         array_unshift($data, $action);
 
+        // @todo Use splat operator for unpacking when we move to PHP 5.6+
         return call_user_func_array('static::send', $data);
     }
 
@@ -559,8 +563,7 @@ class Request
         array $data,
         array $select_chats_params
     ) {
-        $callback_path = __NAMESPACE__ . '\Request';
-        if (!method_exists($callback_path, $callback_function)) {
+        if (!method_exists(Request::class, $callback_function)) {
             throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
         }
 
@@ -570,7 +573,7 @@ class Request
         if (is_array($chats)) {
             foreach ($chats as $row) {
                 $data['chat_id'] = $row['chat_id'];
-                $results[]       = call_user_func($callback_path . '::' . $callback_function, $data);
+                $results[]       = call_user_func(Request::class . '::' . $callback_function, $data);
             }
         }
 
@@ -630,6 +633,7 @@ class Request
                 'sendLocation',
                 'sendVenue',
                 'sendContact',
+                'sendInvoice',
                 'editMessageText',
                 'editMessageCaption',
                 'editMessageReplyMarkup',

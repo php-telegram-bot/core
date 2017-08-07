@@ -10,6 +10,9 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
+use Longman\TelegramBot\Entities\Payments\ShippingQuery;
+
 /**
  * Class Update
  *
@@ -23,6 +26,8 @@ namespace Longman\TelegramBot\Entities;
  * @method InlineQuery         getInlineQuery()        Optional. New incoming inline query
  * @method ChosenInlineResult  getChosenInlineResult() Optional. The result of an inline query that was chosen by a user and sent to their chat partner.
  * @method CallbackQuery       getCallbackQuery()      Optional. New incoming callback query
+ * @method ShippingQuery       getShippingQuery()      Optional. New incoming shipping query. Only for invoices with flexible price
+ * @method PreCheckoutQuery    getPreCheckoutQuery()   Optional. New incoming pre-checkout query. Contains full information about checkout
  */
 class Update extends Entity
 {
@@ -39,6 +44,8 @@ class Update extends Entity
             'inline_query'         => InlineQuery::class,
             'chosen_inline_result' => ChosenInlineResult::class,
             'callback_query'       => CallbackQuery::class,
+            'shipping_query'       => ShippingQuery::class,
+            'pre_checkout_query'   => PreCheckoutQuery::class,
         ];
     }
 
@@ -57,6 +64,8 @@ class Update extends Entity
             'inline_query',
             'chosen_inline_result',
             'callback_query',
+            'shipping_query',
+            'pre_checkout_query',
         ];
         foreach ($types as $type) {
             if ($this->getProperty($type)) {
