@@ -9,7 +9,7 @@
 namespace Longman\TelegramBot;
 
 
-class LongmanServiceProvider extends Illuminate\Support\ServiceProvider
+class LongmanServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
