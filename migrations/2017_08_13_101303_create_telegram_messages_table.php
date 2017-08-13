@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramMessagesTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_message', function (Blueprint $table) {
+        Schema::create($this->prefix . 'message', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -67,15 +74,15 @@ class CreateTelegramMessagesTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('telegram_message', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
-            $table->foreign('chat_id')->references('id')->on('telegram_chat');
+        Schema::table($this->prefix . 'message', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
+            $table->foreign('chat_id')->references('id')->on($this->prefix . 'chat');
 
-            $table->foreign('forward_from')->references('id')->on('telegram_user');
-            $table->foreign('forward_from_chat')->references('id')->on('telegram_chat');
+            $table->foreign('forward_from')->references('id')->on($this->prefix . 'user');
+            $table->foreign('forward_from_chat')->references('id')->on($this->prefix . 'chat');
 
-            $table->foreign(['reply_to_chat','reply_to_message'])->references(['chat_id','id'])->on('telegram_message');
-            $table->foreign('left_chat_member')->references('id')->on('telegram_user');
+            $table->foreign(['reply_to_chat','reply_to_message'])->references(['chat_id','id'])->on($this->prefix . 'message');
+            $table->foreign('left_chat_member')->references('id')->on($this->prefix . 'user');
 
         });
     }
@@ -87,6 +94,6 @@ class CreateTelegramMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_message');
+        Schema::dropIfExists($this->prefix . 'message');
     }
 }

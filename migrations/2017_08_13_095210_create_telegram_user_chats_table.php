@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramUserChatsTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramUserChatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_user_chat', function (Blueprint $table) {
+        Schema::create($this->prefix . 'user_chat', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -23,9 +30,9 @@ class CreateTelegramUserChatsTable extends Migration
             $table->primary(['user_id','chat_id']);
         });
 
-        Schema::table('telegram_user_chat', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('chat_id')->references('id')->on('telegram_chat')->onDelete('cascade')->onUpdate('cascade');
+        Schema::table($this->prefix . 'user_chat', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('chat_id')->references('id')->on($this->prefix . 'chat')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -36,6 +43,6 @@ class CreateTelegramUserChatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_user_chat');
+        Schema::dropIfExists($this->prefix . 'user_chat');
     }
 }

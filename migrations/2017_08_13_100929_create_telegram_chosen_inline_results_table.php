@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramChosenInlineResultsTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramChosenInlineResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_chosen_inline_result', function (Blueprint $table) {
+        Schema::create($this->prefix . 'chosen_inline_result', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -29,8 +36,8 @@ class CreateTelegramChosenInlineResultsTable extends Migration
             $table->index('user_id');
         });
 
-        Schema::table('telegram_chosen_inline_result', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
+        Schema::table($this->prefix . 'chosen_inline_result', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
         });
     }
 
@@ -41,6 +48,6 @@ class CreateTelegramChosenInlineResultsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_chosen_inline_result');
+        Schema::dropIfExists($this->prefix . 'chosen_inline_result');
     }
 }

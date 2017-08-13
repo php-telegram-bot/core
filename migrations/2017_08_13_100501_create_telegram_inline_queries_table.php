@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramInlineQueriesTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramInlineQueriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_inline_query', function (Blueprint $table) {
+        Schema::create($this->prefix . 'inline_query', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -28,8 +35,8 @@ class CreateTelegramInlineQueriesTable extends Migration
             $table->index('user_id');
         });
 
-        Schema::table('telegram_inline_query', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
+        Schema::table($this->prefix . 'inline_query', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
         });
     }
 
@@ -40,6 +47,6 @@ class CreateTelegramInlineQueriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_inline_query');
+        Schema::dropIfExists($this->prefix . 'inline_query');
     }
 }

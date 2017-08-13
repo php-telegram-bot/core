@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramEditedMessagesTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramEditedMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_edited_message', function (Blueprint $table) {
+        Schema::create($this->prefix . 'edited_message', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -33,10 +40,10 @@ class CreateTelegramEditedMessagesTable extends Migration
             $table->index('user_id');
         });
 
-        Schema::table('telegram_edited_message', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
-            $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on('telegram_message');
-            $table->foreign('chat_id')->references('id')->on('telegram_chat');
+        Schema::table($this->prefix . 'edited_message', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
+            $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on($this->prefix . 'message');
+            $table->foreign('chat_id')->references('id')->on($this->prefix . 'chat');
         });
     }
 
@@ -47,6 +54,6 @@ class CreateTelegramEditedMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_edited_message');
+        Schema::dropIfExists($this->prefix . 'edited_message');
     }
 }

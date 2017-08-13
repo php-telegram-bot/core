@@ -18,6 +18,10 @@ class LongmanServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/../config/longman.php' => config_path('longman.php'),
+        ]);
+
         $this->loadMigrationsFrom(__DIR__.'/../migrations');
     }
 }

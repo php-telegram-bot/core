@@ -6,6 +6,12 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramCallbackQueriesTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
     /**
      * Run the migrations.
      *
@@ -13,7 +19,7 @@ class CreateTelegramCallbackQueriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_callback_query', function (Blueprint $table) {
+        Schema::create($this->prefix . 'callback_query', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -31,9 +37,9 @@ class CreateTelegramCallbackQueriesTable extends Migration
             $table->index('message_id');
         });
 
-        Schema::table('telegram_callback_query', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
-            $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on('telegram_message');
+        Schema::table($this->prefix . 'callback_query', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
+            $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on($this->prefix . 'message');
         });
     }
 
@@ -44,6 +50,6 @@ class CreateTelegramCallbackQueriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_callback_query');
+        Schema::dropIfExists($this->prefix . 'callback_query');
     }
 }

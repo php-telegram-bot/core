@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramUpdatesTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramUpdatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_update', function (Blueprint $table) {
+        Schema::create($this->prefix . 'update', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -34,12 +41,12 @@ class CreateTelegramUpdatesTable extends Migration
             $table->index('edited_message_id');
         });
 
-        Schema::table('telegram_update', function(Blueprint $table) {
-            $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on('telegram_message');
-            $table->foreign('inline_query_id')->references('id')->on('telegram_inline_query');
-            $table->foreign('chosen_inline_result_id')->references('id')->on('telegram_chosen_inline_result');
-            $table->foreign('callback_query_id')->references('id')->on('telegram_callback_query');
-            $table->foreign('edited_message_id')->references('id')->on('telegram_edited_message');
+        Schema::table($this->prefix . 'update', function(Blueprint $table) {
+            $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on($this->prefix . 'message');
+            $table->foreign('inline_query_id')->references('id')->on($this->prefix . 'inline_query');
+            $table->foreign('chosen_inline_result_id')->references('id')->on($this->prefix . 'chosen_inline_result');
+            $table->foreign('callback_query_id')->references('id')->on($this->prefix . 'callback_query');
+            $table->foreign('edited_message_id')->references('id')->on($this->prefix . 'edited_message');
         });
     }
 
@@ -50,6 +57,6 @@ class CreateTelegramUpdatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_update');
+        Schema::dropIfExists($this->prefix . 'update');
     }
 }

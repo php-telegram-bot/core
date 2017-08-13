@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramBotanShortenersTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramBotanShortenersTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_botan_shortener', function (Blueprint $table) {
+        Schema::create($this->prefix . 'botan_shortener', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -27,8 +34,8 @@ class CreateTelegramBotanShortenersTable extends Migration
             $table->index('user_id');
         });
 
-        Schema::table('telegram_botan_shortener', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
+        Schema::table($this->prefix . 'botan_shortener', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
         });
     }
     /**
@@ -38,6 +45,6 @@ class CreateTelegramBotanShortenersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_botan_shortener');
+        Schema::dropIfExists($this->prefix . 'botan_shortener');
     }
 }

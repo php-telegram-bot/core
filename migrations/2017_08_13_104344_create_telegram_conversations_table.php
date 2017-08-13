@@ -6,6 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTelegramConversationsTable extends Migration
 {
+    protected $prefix;
+
+    public function __construct()
+    {
+        $this->prefix = config('longman.db_prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTelegramConversationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_conversation', function (Blueprint $table) {
+        Schema::create($this->prefix . 'conversation', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -31,9 +38,9 @@ class CreateTelegramConversationsTable extends Migration
             $table->index('status');
         });
 
-        Schema::table('telegram_conversation', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('telegram_user');
-            $table->foreign('chat_id')->references('id')->on('telegram_chat');
+        Schema::table($this->prefix . 'conversation', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on($this->prefix . 'user');
+            $table->foreign('chat_id')->references('id')->on($this->prefix . 'chat');
         });
     }
 
@@ -44,6 +51,6 @@ class CreateTelegramConversationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_conversation');
+        Schema::dropIfExists($this->prefix . 'conversation');
     }
 }
