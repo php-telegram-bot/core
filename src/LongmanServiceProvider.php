@@ -8,7 +8,6 @@
 
 namespace Longman\TelegramBot;
 
-
 class LongmanServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**

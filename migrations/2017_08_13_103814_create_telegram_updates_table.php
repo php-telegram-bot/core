@@ -20,7 +20,7 @@ class CreateTelegramUpdatesTable extends Migration
      */
     public function up()
     {
-        Schema::create($this->prefix . 'update', function (Blueprint $table) {
+        Schema::create($this->prefix . 'telegram_update', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_520_ci';
@@ -41,7 +41,7 @@ class CreateTelegramUpdatesTable extends Migration
             $table->index('edited_message_id');
         });
 
-        Schema::table($this->prefix . 'update', function(Blueprint $table) {
+        Schema::table($this->prefix . 'telegram_', function(Blueprint $table) {
             $table->foreign(['chat_id','message_id'])->references(['chat_id', 'id'])->on($this->prefix . 'message');
             $table->foreign('inline_query_id')->references('id')->on($this->prefix . 'inline_query');
             $table->foreign('chosen_inline_result_id')->references('id')->on($this->prefix . 'chosen_inline_result');
@@ -57,6 +57,6 @@ class CreateTelegramUpdatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($this->prefix . 'update');
+        Schema::dropIfExists($this->prefix . 'telegram_');
     }
 }
