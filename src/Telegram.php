@@ -470,16 +470,17 @@ class Telegram
      */
     public function executeCommand($command)
     {
+        $command     = strtolower($command);
         $command_obj = $this->getCommandObject($command);
 
         if (!$command_obj || !$command_obj->isEnabled()) {
             //Failsafe in case the Generic command can't be found
-            if ($command === 'Generic') {
+            if ($command === 'generic') {
                 throw new TelegramException('Generic command missing!');
             }
 
             //Handle a generic command or non existing one
-            $this->last_command_response = $this->executeCommand('Generic');
+            $this->last_command_response = $this->executeCommand('generic');
         } else {
             //Botan.io integration, make sure only the actual command user executed is reported
             if ($this->botan_enabled) {

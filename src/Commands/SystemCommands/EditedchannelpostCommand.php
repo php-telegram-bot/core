@@ -20,7 +20,7 @@ class EditedchannelpostCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Editedchannelpost';
+    protected $name = 'editedchannelpost';
 
     /**
      * @var string

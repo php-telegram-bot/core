@@ -22,7 +22,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Genericmessage';
+    protected $name = 'genericmessage';
 
     /**
      * @var string

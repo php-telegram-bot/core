@@ -20,7 +20,7 @@ class ChannelchatcreatedCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Channelchatcreated';
+    protected $name = 'channelchatcreated';
 
     /**
      * @var string
