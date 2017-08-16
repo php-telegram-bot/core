@@ -21,7 +21,7 @@ class GenericCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Generic';
+    protected $name = 'generic';
 
     /**
      * @var string

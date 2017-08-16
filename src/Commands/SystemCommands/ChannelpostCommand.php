@@ -20,7 +20,7 @@ class ChannelpostCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Channelpost';
+    protected $name = 'channelpost';
 
     /**
      * @var string
