@@ -20,7 +20,7 @@ class MigratefromchatidCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Migratefromchatid';
+    protected $name = 'migratefromchatid';
 
     /**
      * @var string

@@ -20,7 +20,7 @@ class NewchattitleCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Newchattitle';
+    protected $name = 'newchattitle';
 
     /**
      * @var string

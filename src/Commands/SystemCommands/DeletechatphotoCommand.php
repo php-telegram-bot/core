@@ -20,7 +20,7 @@ class DeletechatphotoCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Deletechatphoto';
+    protected $name = 'deletechatphoto';
 
     /**
      * @var string

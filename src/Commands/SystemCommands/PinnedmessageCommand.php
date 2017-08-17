@@ -20,7 +20,7 @@ class PinnedmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'Pinnedmessage';
+    protected $name = 'pinnedmessage';
 
     /**
      * @var string
