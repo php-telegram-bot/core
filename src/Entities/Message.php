@@ -57,7 +57,7 @@ class Message extends Entity
             'chat'              => Chat::class,
             'forward_from'      => User::class,
             'forward_from_chat' => Chat::class,
-            'reply_to_message'  => self::class,
+            'reply_to_message'  => ReplyToMessage::class,
             'entities'          => MessageEntity::class,
             'audio'             => Audio::class,
             'document'          => Document::class,
