@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Correctly save `reply_to_message` to DB.
 ### Security
 
 ## [0.47.1] - 2017-08-06
