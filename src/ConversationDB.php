@@ -48,15 +48,15 @@ class ConversationDB extends DB
             $query .= 'AND `chat_id` = :chat_id ';
             $query .= 'AND `user_id` = :user_id ';
 
-            if (!is_null($limit)) {
+            if ($limit !== null) {
                 $query .= ' LIMIT :limit';
             }
             $sth = self::$pdo->prepare($query);
 
-            $active = 'active';
-            $sth->bindParam(':status', $active, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_INT);
+            $status = 'active';
+            $sth->bindParam(':status', $status);
+            $sth->bindParam(':user_id', $user_id);
+            $sth->bindParam(':chat_id', $chat_id);
             $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
             $sth->execute();
 
@@ -84,24 +84,26 @@ class ConversationDB extends DB
         }
 
         try {
-            $sth    = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
+            $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
                 (
                 `status`, `user_id`, `chat_id`, `command`, `notes`, `created_at`, `updated_at`
                 )
                 VALUES (
-                :status, :user_id, :chat_id, :command, :notes, :date, :date
+                :status, :user_id, :chat_id, :command, :notes, :created_at, :updated_at
                 )
-               ');
-            $active = 'active';
-            $notes  = '[]';
-            $created_at = self::getTimestamp();
+            ');
 
-            $sth->bindParam(':status', $active);
+            $status = 'active';
+            $notes  = '[]';
+            $date   = self::getTimestamp();
+
+            $sth->bindParam(':status', $status);
             $sth->bindParam(':command', $command);
             $sth->bindParam(':user_id', $user_id);
             $sth->bindParam(':chat_id', $chat_id);
             $sth->bindParam(':notes', $notes);
-            $sth->bindParam(':date', $created_at);
+            $sth->bindParam(':created_at', $date);
+            $sth->bindParam(':updated_at', $date);
 
             $status = $sth->execute();
         } catch (Exception $e) {
