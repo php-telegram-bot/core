@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 - Add new methods, fields and objects for working with stickers (Bot API 3.2).
+- New fields for Chat, User and Message objects (Bot API 3.3).
 ### Changed
 - [:exclamation:][unreleased-correct-printerror] Corrected `ServerResponse->printError` method to print by default and return by setting `$return` parameter.
 - Ensure command names are handled as lower case.
