@@ -4,10 +4,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
+**Note:** After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 - Add new methods, fields and objects for working with stickers (Bot API 3.2).
-- New fields for Chat, User and Message objects (Bot API 3.3).
+- New fields for Chat, User and Message objects (Bot API 3.3). `is_bot` added to `user` DB table.
 ### Changed
 - [:exclamation:][unreleased-correct-printerror] Corrected `ServerResponse->printError` method to print by default and return by setting `$return` parameter.
 - Ensure command names are handled as lower case.
@@ -150,6 +151,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-unreleased.sql
 [unreleased-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
 [0.47.0-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
 [0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor

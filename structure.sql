@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint COMMENT 'Unique user identifier',
+  `is_bot` tinyint(1) DEFAULT 0 COMMENT 'True if this user is a bot',
   `first_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User''s first name',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User''s last name',
   `username` CHAR(191) DEFAULT NULL COMMENT 'User''s username',

@@ -358,6 +358,7 @@ class DB
         }
 
         $user_id        = $user->getId();
+        $is_bot         = $user->getIsBot();
         $username       = $user->getUsername();
         $first_name     = $user->getFirstName();
         $last_name      = $user->getLastName();
@@ -366,10 +367,11 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
-                (`id`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
+                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
+                (:id, :is_bot,:username, :first_name, :last_name, :language_code, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
+                    `is_bot`         = VALUES(`is_bot`),
                     `username`       = VALUES(`username`),
                     `first_name`     = VALUES(`first_name`),
                     `last_name`      = VALUES(`last_name`),
@@ -378,6 +380,7 @@ class DB
             ');
 
             $sth->bindParam(':id', $user_id, PDO::PARAM_STR);
+            $sth->bindParam(':is_bot', $is_bot, PDO::PARAM_INT);
             $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
             $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
             $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
