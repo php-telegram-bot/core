@@ -4,19 +4,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
-**Note:** After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.48.0] - 2017-08-26
+**Note:** After updating to this version, you will need to execute the [SQL migration script][0.48.0-sql-migration] on your database.
 ### Added
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 - Add new methods, fields and objects for working with stickers (Bot API 3.2).
 - New fields for Chat, User and Message objects (Bot API 3.3). `is_bot` added to `user` DB table.
 ### Changed
-- [:exclamation:][unreleased-correct-printerror] Corrected `ServerResponse->printError` method to print by default and return by setting `$return` parameter.
+- [:exclamation:][0.48.0-bc-correct-printerror] Corrected `ServerResponse->printError` method to print by default and return by setting `$return` parameter.
 - Ensure command names are handled as lower case.
-### Deprecated
-### Removed
 ### Fixed
 - Correctly save `reply_to_message` to DB.
-### Security
 
 ## [0.47.1] - 2017-08-06
 ### Added
@@ -31,7 +36,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `Telegram::enableAdmin()` now handles duplicate additions properly.
 - `Request::getMe()` failure doesn't break cron execution any more.
 ### Security
-- [:exclamation:][0.47.0-private-only-admin-commands] New command parameter `$private_only` to enforce usage in private chats only (set by default for Admin commands).
+- [:exclamation:][0.47.0-bc-private-only-admin-commands] New command parameter `$private_only` to enforce usage in private chats only (set by default for Admin commands).
 
 ## [0.46.0] - 2017-07-15
 ### Added
@@ -151,9 +156,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-unreleased.sql
-[unreleased-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
-[0.47.0-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
+[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
+[0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
+[0.47.0-bc-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
 [0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
 [0.46.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/0.45.0/utils/db-schema-update/0.44.1-0.45.0.sql
 [0.45.0-bc-remove-deprecated-methods]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-deprecated-methods
@@ -163,6 +168,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.48.0]: https://github.com/php-telegram-bot/core/compare/0.47.1...0.48.0
 [0.47.1]: https://github.com/php-telegram-bot/core/compare/0.47.0...0.47.1
 [0.47.0]: https://github.com/php-telegram-bot/core/compare/0.46.0...0.47.0
 [0.46.0]: https://github.com/php-telegram-bot/core/compare/0.45.0...0.46.0
