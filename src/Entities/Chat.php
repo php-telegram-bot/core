@@ -35,6 +35,7 @@ namespace Longman\TelegramBot\Entities;
  * @method   ChatPhoto getPhoto()                       Optional. Chat photo. Returned only in getChat.
  * @method   string    getDescription()                 Optional. Description, for supergroups and channel chats. Returned only in getChat.
  * @method   string    getInviteLink()                  Optional. Chat invite link, for supergroups and channel chats. Returned only in getChat.
+ * @method   Message   getPinnedMessage()               Optional. Pinned message, for supergroups. Returned only in getChat.
  */
 class Chat extends Entity
 {
@@ -44,7 +45,8 @@ class Chat extends Entity
     public function subEntities()
     {
         return [
-            'photo' => ChatPhoto::class,
+            'photo'          => ChatPhoto::class,
+            'pinned_message' => Message::class,
         ];
     }
 
