@@ -49,20 +49,20 @@ class DB
     /**
      * Telegram class object
      *
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     static protected $telegram;
 
     /**
      * Initialize
      *
-     * @param array                         $credentials  Database connection details
-     * @param \Longman\TelegramBot\Telegram $telegram     Telegram object to connect with this object
-     * @param string                        $table_prefix Table prefix
-     * @param string                        $encoding     Database character encoding
+     * @param array    $credentials  Database connection details
+     * @param Telegram $telegram     Telegram object to connect with this object
+     * @param string   $table_prefix Table prefix
+     * @param string   $encoding     Database character encoding
      *
      * @return PDO PDO database object
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function initialize(
         array $credentials,
@@ -98,12 +98,12 @@ class DB
      *
      * Let you use the class with an external already existing Pdo Mysql connection.
      *
-     * @param PDO                           $external_pdo_connection PDO database object
-     * @param \Longman\TelegramBot\Telegram $telegram                Telegram object to connect with this object
-     * @param string                        $table_prefix            Table prefix
+     * @param PDO      $external_pdo_connection PDO database object
+     * @param Telegram $telegram                Telegram object to connect with this object
+     * @param string   $table_prefix            Table prefix
      *
      * @return PDO PDO database object
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function externalInitialize(
         $external_pdo_connection,
@@ -162,7 +162,7 @@ class DB
     /**
      * Get the PDO object of the connected database
      *
-     * @return \PDO
+     * @return PDO
      */
     public static function getPdo()
     {
@@ -172,11 +172,11 @@ class DB
     /**
      * Fetch update(s) from DB
      *
-     * @param int $limit Limit the number of updates to fetch
-     * @param int $id    Check for unique update id
+     * @param int    $limit Limit the number of updates to fetch
+     * @param string $id    Check for unique update id
      *
      * @return array|bool Fetched data or false if not connected
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function selectTelegramUpdate($limit = null, $id = null)
     {
@@ -218,7 +218,7 @@ class DB
      * @param int $limit Limit the number of messages to fetch
      *
      * @return array|bool Fetched data or false if not connected
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function selectMessages($limit = null)
     {
@@ -291,16 +291,18 @@ class DB
     /**
      * Insert entry to telegram_update table
      *
-     * @param int $id
-     * @param int $chat_id
-     * @param int $message_id
-     * @param int $inline_query_id
-     * @param int $chosen_inline_result_id
-     * @param int $callback_query_id
-     * @param int $edited_message_id
+     * @todo Add missing values! See https://core.telegram.org/bots/api#update
+     *
+     * @param string $id
+     * @param string $chat_id
+     * @param string $message_id
+     * @param string $inline_query_id
+     * @param string $chosen_inline_result_id
+     * @param string $callback_query_id
+     * @param string $edited_message_id
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertTelegramUpdate(
         $id,
@@ -344,12 +346,12 @@ class DB
     /**
      * Insert users and save their connection to chats
      *
-     * @param  \Longman\TelegramBot\Entities\User $user
-     * @param  string                             $date
-     * @param  \Longman\TelegramBot\Entities\Chat $chat
+     * @param User   $user
+     * @param string $date
+     * @param Chat   $chat
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertUser(User $user, $date, Chat $chat = null)
     {
@@ -393,7 +395,7 @@ class DB
             throw new TelegramException($e->getMessage());
         }
 
-        //insert also the relationship to the chat into user_chat table
+        // Also insert the relationship to the chat into the user_chat table
         if ($chat instanceof Chat) {
             $chat_id = $chat->getId();
             try {
@@ -419,12 +421,12 @@ class DB
     /**
      * Insert chat
      *
-     * @param  \Longman\TelegramBot\Entities\Chat $chat
-     * @param  string                             $date
-     * @param  int                                $migrate_to_chat_id
+     * @param Chat   $chat
+     * @param string $date
+     * @param string $migrate_to_chat_id
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertChat(Chat $chat, $date, $migrate_to_chat_id = null)
     {
@@ -480,10 +482,10 @@ class DB
      *
      * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
      *
-     * @param \Longman\TelegramBot\Entities\Update $update
+     * @param Update $update
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertRequest(Update $update)
     {
@@ -590,10 +592,10 @@ class DB
     /**
      * Insert inline query request into database
      *
-     * @param \Longman\TelegramBot\Entities\InlineQuery $inline_query
+     * @param InlineQuery $inline_query
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertInlineQueryRequest(InlineQuery $inline_query)
     {
@@ -638,10 +640,10 @@ class DB
     /**
      * Insert chosen inline result request into database
      *
-     * @param \Longman\TelegramBot\Entities\ChosenInlineResult $chosen_inline_result
+     * @param ChosenInlineResult $chosen_inline_result
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertChosenInlineResultRequest(ChosenInlineResult $chosen_inline_result)
     {
@@ -686,10 +688,10 @@ class DB
     /**
      * Insert callback query request into database
      *
-     * @param \Longman\TelegramBot\Entities\CallbackQuery $callback_query
+     * @param CallbackQuery $callback_query
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertCallbackQueryRequest(CallbackQuery $callback_query)
     {
@@ -756,10 +758,10 @@ class DB
     /**
      * Insert Message request in db
      *
-     * @param \Longman\TelegramBot\Entities\Message $message
+     * @param Message $message
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertMessageRequest(Message $message)
     {
@@ -792,7 +794,7 @@ class DB
             self::insertUser($from, $date, $chat);
         }
 
-        //Insert the forwarded message user in users table
+        // Insert the forwarded message user in users table
         if ($forward_from instanceof User) {
             $forward_date = self::getTimestamp($message->getForwardDate());
             self::insertUser($forward_from, $forward_date);
@@ -805,19 +807,19 @@ class DB
             $forward_from_chat = $forward_from_chat->getId();
         }
 
-        //New and left chat member
+        // New and left chat member
         if (!empty($new_chat_members)) {
             $new_chat_members_ids = [];
             foreach ($new_chat_members as $new_chat_member) {
                 if ($new_chat_member instanceof User) {
-                    //Insert the new chat user
+                    // Insert the new chat user
                     self::insertUser($new_chat_member, $date, $chat);
                     $new_chat_members_ids[] = $new_chat_member->getId();
                 }
             }
             $new_chat_members_ids = implode(',', $new_chat_members_ids);
         } elseif ($left_chat_member instanceof User) {
-            //Insert the left chat user
+            // Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
             $left_chat_member = $left_chat_member->getId();
         }
@@ -931,10 +933,10 @@ class DB
     /**
      * Insert Edited Message request in db
      *
-     * @param \Longman\TelegramBot\Entities\Message $edited_message
+     * @param Message $edited_message
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertEditedMessageRequest(Message $edited_message)
     {
@@ -1111,8 +1113,8 @@ class DB
      * @param integer $chat_id
      * @param string  $inline_message_id
      *
-     * @return array|bool (Array containing TOTAL and CURRENT fields or false on invalid arguments)
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return array|bool Array containing TOTAL and CURRENT fields or false on invalid arguments
+     * @throws TelegramException
      */
     public static function getTelegramRequestCount($chat_id = null, $inline_message_id = null)
     {
@@ -1152,7 +1154,7 @@ class DB
      * @param array  $data
      *
      * @return bool If the insert was successful
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertTelegramRequest($method, $data)
     {
