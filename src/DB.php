@@ -1072,17 +1072,22 @@ class DB
             }
 
             if (null !== $select['text']) {
+                $text_like = '%' . strtolower($select['text']) . '%';
                 if ($select['users']) {
                     $where[] = '(
-                        LOWER(' . TB_CHAT . '.`title`) LIKE :text
-                        OR LOWER(' . TB_USER . '.`first_name`) LIKE :text
-                        OR LOWER(' . TB_USER . '.`last_name`) LIKE :text
-                        OR LOWER(' . TB_USER . '.`username`) LIKE :text
+                        LOWER(' . TB_CHAT . '.`title`) LIKE :text1
+                        OR LOWER(' . TB_USER . '.`first_name`) LIKE :text2
+                        OR LOWER(' . TB_USER . '.`last_name`) LIKE :text3
+                        OR LOWER(' . TB_USER . '.`username`) LIKE :text4
                     )';
+                    $tokens[':text1'] = $text_like;
+                    $tokens[':text2'] = $text_like;
+                    $tokens[':text3'] = $text_like;
+                    $tokens[':text4'] = $text_like;
                 } else {
                     $where[] = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
+                    $tokens[':text'] = $text_like;
                 }
-                $tokens[':text'] = '%' . strtolower($select['text']) . '%';
             }
 
             if (!empty($where)) {
