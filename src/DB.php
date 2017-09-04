@@ -185,23 +185,28 @@ class DB
         }
 
         try {
-            $sql = 'SELECT `id` FROM `' . TB_TELEGRAM_UPDATE . '`';
+            $sql = '
+                SELECT `id`
+                FROM `' . TB_TELEGRAM_UPDATE . '`
+            ';
 
             if ($id !== null) {
                 $sql .= ' WHERE `id` = :id';
+            } else {
+                $sql .= ' ORDER BY `id` DESC';
             }
-
-            $sql .= ' ORDER BY `id` DESC';
 
             if ($limit !== null) {
                 $sql .= ' LIMIT :limit';
             }
 
             $sth = self::$pdo->prepare($sql);
-            $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
 
+            if ($limit !== null) {
+                $sth->bindValue(':limit', $limit, PDO::PARAM_INT);
+            }
             if ($id !== null) {
-                $sth->bindParam(':id', $id, PDO::PARAM_STR);
+                $sth->bindValue(':id', $id);
             }
 
             $sth->execute();
@@ -230,16 +235,19 @@ class DB
             $sql = '
                 SELECT *
                 FROM `' . TB_MESSAGE . '`
-                WHERE `update_id` != 0
-                ORDER BY `message_id` DESC
+                ORDER BY `id` DESC
             ';
 
             if ($limit !== null) {
-                $sql .= 'LIMIT :limit';
+                $sql .= ' LIMIT :limit';
             }
 
             $sth = self::$pdo->prepare($sql);
-            $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
+
+            if ($limit !== null) {
+                $sth->bindValue(':limit', $limit, PDO::PARAM_INT);
+            }
+
             $sth->execute();
 
             return $sth->fetchAll(PDO::FETCH_ASSOC);
