@@ -288,7 +288,7 @@ class DB
             return $default;
         }
 
-        //Convert each Entity item into an object based on its JSON reflection
+        // Convert each Entity item into an object based on its JSON reflection
         $json_entities = array_map(function ($entity) {
             return json_decode($entity, true);
         }, $entities);
@@ -337,13 +337,13 @@ class DB
                 (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id)
             ');
 
-            $sth->bindParam(':id', $id, PDO::PARAM_STR);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
-            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_STR);
-            $sth->bindParam(':chosen_inline_result_id', $chosen_inline_result_id, PDO::PARAM_STR);
-            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_STR);
-            $sth->bindParam(':edited_message_id', $edited_message_id, PDO::PARAM_STR);
+            $sth->bindValue(':id', $id);
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':message_id', $message_id);
+            $sth->bindValue(':edited_message_id', $edited_message_id);
+            $sth->bindValue(':inline_query_id', $inline_query_id);
+            $sth->bindValue(':chosen_inline_result_id', $chosen_inline_result_id);
+            $sth->bindValue(':callback_query_id', $callback_query_id);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -367,19 +367,12 @@ class DB
             return false;
         }
 
-        $user_id        = $user->getId();
-        $is_bot         = $user->getIsBot();
-        $username       = $user->getUsername();
-        $first_name     = $user->getFirstName();
-        $last_name      = $user->getLastName();
-        $language_code  = $user->getLanguageCode();
-
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
                 (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :is_bot,:username, :first_name, :last_name, :language_code, :created_at, :updated_at)
+                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
                     `is_bot`         = VALUES(`is_bot`),
                     `username`       = VALUES(`username`),
@@ -389,14 +382,14 @@ class DB
                     `updated_at`     = VALUES(`updated_at`)
             ');
 
-            $sth->bindParam(':id', $user_id, PDO::PARAM_STR);
-            $sth->bindParam(':is_bot', $is_bot, PDO::PARAM_INT);
-            $sth->bindParam(':username', $username, PDO::PARAM_STR, 255);
-            $sth->bindParam(':first_name', $first_name, PDO::PARAM_STR, 255);
-            $sth->bindParam(':last_name', $last_name, PDO::PARAM_STR, 255);
-            $sth->bindParam(':language_code', $language_code, PDO::PARAM_STR, 10);
-            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
-            $sth->bindParam(':updated_at', $date, PDO::PARAM_STR);
+            $sth->bindValue(':id', $user->getId());
+            $sth->bindValue(':is_bot', $user->getIsBot(), PDO::PARAM_INT);
+            $sth->bindValue(':username', $user->getUsername());
+            $sth->bindValue(':first_name', $user->getFirstName());
+            $sth->bindValue(':last_name', $user->getLastName());
+            $sth->bindValue(':language_code', $user->getLanguageCode());
+            $sth->bindValue(':created_at', $date);
+            $sth->bindValue(':updated_at', $date);
 
             $status = $sth->execute();
         } catch (PDOException $e) {
@@ -405,7 +398,6 @@ class DB
 
         // Also insert the relationship to the chat into the user_chat table
         if ($chat instanceof Chat) {
-            $chat_id = $chat->getId();
             try {
                 $sth = self::$pdo->prepare('
                     INSERT IGNORE INTO `' . TB_USER_CHAT . '`
@@ -414,8 +406,8 @@ class DB
                     (:user_id, :chat_id)
                 ');
 
-                $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-                $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
+                $sth->bindValue(':user_id', $user->getId());
+                $sth->bindValue(':chat_id', $chat->getId());
 
                 $status = $sth->execute();
             } catch (PDOException $e) {
@@ -442,18 +434,12 @@ class DB
             return false;
         }
 
-        $chat_id                             = $chat->getId();
-        $chat_title                          = $chat->getTitle();
-        $chat_username                       = $chat->getUsername();
-        $chat_type                           = $chat->getType();
-        $chat_all_members_are_administrators = $chat->getAllMembersAreAdministrators();
-
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
                 (`id`, `type`, `title`, `username`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :all_members_are_administrators, :created_at, :updated_at, :oldid)
+                (:id, :type, :title, :username, :all_members_are_administrators, :created_at, :updated_at, :old_id)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = VALUES(`type`),
                     `title`                          = VALUES(`title`),
@@ -462,22 +448,25 @@ class DB
                     `updated_at`                     = VALUES(`updated_at`)
             ');
 
+            $chat_id   = $chat->getId();
+            $chat_type = $chat->getType();
+
             if ($migrate_to_chat_id) {
                 $chat_type = 'supergroup';
 
-                $sth->bindParam(':id', $migrate_to_chat_id, PDO::PARAM_STR);
-                $sth->bindParam(':oldid', $chat_id, PDO::PARAM_STR);
+                $sth->bindValue(':id', $migrate_to_chat_id);
+                $sth->bindValue(':old_id', $chat_id);
             } else {
-                $sth->bindParam(':id', $chat_id, PDO::PARAM_STR);
-                $sth->bindParam(':oldid', $migrate_to_chat_id, PDO::PARAM_STR);
+                $sth->bindValue(':id', $chat_id);
+                $sth->bindValue(':old_id', $migrate_to_chat_id);
             }
 
-            $sth->bindParam(':type', $chat_type, PDO::PARAM_STR);
-            $sth->bindParam(':title', $chat_title, PDO::PARAM_STR, 255);
-            $sth->bindParam(':username', $chat_username, PDO::PARAM_STR, 255);
-            $sth->bindParam(':all_members_are_administrators', $chat_all_members_are_administrators, PDO::PARAM_INT);
-            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
-            $sth->bindParam(':updated_at', $date, PDO::PARAM_STR);
+            $sth->bindValue(':type', $chat_type);
+            $sth->bindValue(':title', $chat->getTitle());
+            $sth->bindValue(':username', $chat->getUsername());
+            $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
+            $sth->bindValue(':created_at', $date);
+            $sth->bindValue(':updated_at', $date);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -635,28 +624,24 @@ class DB
                 INSERT IGNORE INTO `' . TB_INLINE_QUERY . '`
                 (`id`, `user_id`, `location`, `query`, `offset`, `created_at`)
                 VALUES
-                (:inline_query_id, :user_id, :location, :query, :param_offset, :created_at)
+                (:id, :user_id, :location, :query, :offset, :created_at)
             ');
 
-            $date            = self::getTimestamp();
-            $inline_query_id = $inline_query->getId();
-            $from            = $inline_query->getFrom();
-            $user_id         = null;
-            if ($from instanceof User) {
-                $user_id = $from->getId();
-                self::insertUser($from, $date);
+            $date    = self::getTimestamp();
+            $user_id = null;
+
+            $user = $inline_query->getFrom();
+            if ($user instanceof User) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
             }
 
-            $location = $inline_query->getLocation();
-            $query    = $inline_query->getQuery();
-            $offset   = $inline_query->getOffset();
-
-            $sth->bindParam(':inline_query_id', $inline_query_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-            $sth->bindParam(':location', $location, PDO::PARAM_STR);
-            $sth->bindParam(':query', $query, PDO::PARAM_STR);
-            $sth->bindParam(':param_offset', $offset, PDO::PARAM_STR);
-            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindValue(':id', $inline_query->getId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':location', $inline_query->getLocation());
+            $sth->bindValue(':query', $inline_query->getQuery());
+            $sth->bindValue(':offset', $inline_query->getOffset());
+            $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -686,25 +671,21 @@ class DB
                 (:result_id, :user_id, :location, :inline_message_id, :query, :created_at)
             ');
 
-            $date      = self::getTimestamp();
-            $result_id = $chosen_inline_result->getResultId();
-            $from      = $chosen_inline_result->getFrom();
-            $user_id   = null;
-            if ($from instanceof User) {
-                $user_id = $from->getId();
-                self::insertUser($from, $date);
+            $date    = self::getTimestamp();
+            $user_id = null;
+
+            $user = $chosen_inline_result->getFrom();
+            if ($user instanceof User) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
             }
 
-            $location          = $chosen_inline_result->getLocation();
-            $inline_message_id = $chosen_inline_result->getInlineMessageId();
-            $query             = $chosen_inline_result->getQuery();
-
-            $sth->bindParam(':result_id', $result_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-            $sth->bindParam(':location', $location, PDO::PARAM_STR);
-            $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
-            $sth->bindParam(':query', $query, PDO::PARAM_STR);
-            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindValue(':result_id', $chosen_inline_result->getResultId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':location', $chosen_inline_result->getLocation());
+            $sth->bindValue(':inline_message_id', $chosen_inline_result->getInlineMessageId());
+            $sth->bindValue(':query', $chosen_inline_result->getQuery());
+            $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -731,16 +712,16 @@ class DB
                 INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
                 (`id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`)
                 VALUES
-                (:callback_query_id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at)
+                (:id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at)
             ');
 
-            $date              = self::getTimestamp();
-            $callback_query_id = $callback_query->getId();
-            $from              = $callback_query->getFrom();
-            $user_id           = null;
-            if ($from instanceof User) {
-                $user_id = $from->getId();
-                self::insertUser($from, $date);
+            $date    = self::getTimestamp();
+            $user_id = null;
+
+            $user = $callback_query->getFrom();
+            if ($user instanceof User) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
             }
 
             $message    = $callback_query->getMessage();
@@ -765,16 +746,13 @@ class DB
                 }
             }
 
-            $inline_message_id = $callback_query->getInlineMessageId();
-            $data              = $callback_query->getData();
-
-            $sth->bindParam(':callback_query_id', $callback_query_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
-            $sth->bindParam(':inline_message_id', $inline_message_id, PDO::PARAM_STR);
-            $sth->bindParam(':data', $data, PDO::PARAM_STR);
-            $sth->bindParam(':created_at', $date, PDO::PARAM_STR);
+            $sth->bindValue(':id', $callback_query->getId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':message_id', $message_id);
+            $sth->bindValue(':inline_message_id', $callback_query->getInlineMessageId());
+            $sth->bindValue(':data', $callback_query->getData());
+            $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -784,6 +762,8 @@ class DB
 
     /**
      * Insert Message request in db
+     *
+     * @todo Complete with new fields: https://core.telegram.org/bots/api#message
      *
      * @param Message $message
      *
@@ -796,47 +776,40 @@ class DB
             return false;
         }
 
-        $from = $message->getFrom();
-        $chat = $message->getChat();
-
-        $chat_id = $chat->getId();
-
         $date = self::getTimestamp($message->getDate());
 
-        $forward_from            = $message->getForwardFrom();
-        $forward_from_chat       = $message->getForwardFromChat();
-        $forward_from_message_id = $message->getForwardFromMessageId();
-        $photo                   = self::entitiesArrayToJson($message->getPhoto(), '');
-        $entities                = self::entitiesArrayToJson($message->getEntities(), null);
-        $new_chat_members        = $message->getNewChatMembers();
-        $left_chat_member        = $message->getLeftChatMember();
-        $new_chat_photo          = self::entitiesArrayToJson($message->getNewChatPhoto(), '');
-        $migrate_to_chat_id      = $message->getMigrateToChatId();
+        // Insert chat, update chat id in case it migrated
+        $chat = $message->getChat();
+        self::insertChat($chat, $date, $message->getMigrateToChatId());
 
-        //Insert chat, update chat id in case it migrated
-        self::insertChat($chat, $date, $migrate_to_chat_id);
-
-        //Insert user and the relation with the chat
-        if (is_object($from)) {
-            self::insertUser($from, $date, $chat);
+        // Insert user and the relation with the chat
+        $user = $message->getFrom();
+        if ($user instanceof User) {
+            self::insertUser($user, $date, $chat);
         }
 
         // Insert the forwarded message user in users table
+        $forward_date = null;
+        $forward_from = $message->getForwardFrom();
         if ($forward_from instanceof User) {
-            $forward_date = self::getTimestamp($message->getForwardDate());
             self::insertUser($forward_from, $forward_date);
             $forward_from = $forward_from->getId();
-        }
-
-        if ($forward_from_chat instanceof Chat) {
             $forward_date = self::getTimestamp($message->getForwardDate());
+        }
+        $forward_from_chat = $message->getForwardFromChat();
+        if ($forward_from_chat instanceof Chat) {
             self::insertChat($forward_from_chat, $forward_date);
             $forward_from_chat = $forward_from_chat->getId();
+            $forward_date      = self::getTimestamp($message->getForwardDate());
         }
 
         // New and left chat member
+        $new_chat_members_ids = null;
+        $left_chat_member_id  = null;
+
+        $new_chat_members = $message->getNewChatMembers();
+        $left_chat_member = $message->getLeftChatMember();
         if (!empty($new_chat_members)) {
-            $new_chat_members_ids = [];
             foreach ($new_chat_members as $new_chat_member) {
                 if ($new_chat_member instanceof User) {
                     // Insert the new chat user
@@ -848,7 +821,7 @@ class DB
         } elseif ($left_chat_member instanceof User) {
             // Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
-            $left_chat_member = $left_chat_member->getId();
+            $left_chat_member_id = $left_chat_member->getId();
         }
 
         try {
@@ -873,13 +846,11 @@ class DB
                 )
             ');
 
-            $message_id = $message->getMessageId();
-
-            if (is_object($from)) {
-                $from_id = $from->getId();
-            } else {
-                $from_id = null;
+            $user_id = null;
+            if ($user instanceof User) {
+                $user_id = $user->getId();
             }
+            $chat_id = $chat->getId();
 
             $reply_to_message    = $message->getReplyToMessage();
             $reply_to_message_id = null;
@@ -890,66 +861,46 @@ class DB
                 self::insertMessageRequest($reply_to_message);
             }
 
-            $text                    = $message->getText();
-            $audio                   = $message->getAudio();
-            $document                = $message->getDocument();
-            $sticker                 = $message->getSticker();
-            $video                   = $message->getVideo();
-            $voice                   = $message->getVoice();
-            $video_note              = $message->getVideoNote();
-            $caption                 = $message->getCaption();
-            $contact                 = $message->getContact();
-            $location                = $message->getLocation();
-            $venue                   = $message->getVenue();
-            $new_chat_title          = $message->getNewChatTitle();
-            $delete_chat_photo       = $message->getDeleteChatPhoto();
-            $group_chat_created      = $message->getGroupChatCreated();
-            $supergroup_chat_created = $message->getSupergroupChatCreated();
-            $channel_chat_created    = $message->getChannelChatCreated();
-            $migrate_from_chat_id    = $message->getMigrateFromChatId();
-            $migrate_to_chat_id      = $message->getMigrateToChatId();
-            $pinned_message          = $message->getPinnedMessage();
-
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $from_id, PDO::PARAM_STR);
-            $sth->bindParam(':date', $date, PDO::PARAM_STR);
-            $sth->bindParam(':forward_from', $forward_from, PDO::PARAM_STR);
-            $sth->bindParam(':forward_from_chat', $forward_from_chat, PDO::PARAM_STR);
-            $sth->bindParam(':forward_from_message_id', $forward_from_message_id, PDO::PARAM_STR);
-            $sth->bindParam(':forward_date', $forward_date, PDO::PARAM_STR);
+            $sth->bindValue(':message_id', $message->getMessageId());
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':date', $date);
+            $sth->bindValue(':forward_from', $forward_from);
+            $sth->bindValue(':forward_from_chat', $forward_from_chat);
+            $sth->bindValue(':forward_from_message_id', $message->getForwardFromMessageId());
+            $sth->bindValue(':forward_date', $forward_date);
 
             $reply_to_chat_id = null;
             if ($reply_to_message_id) {
                 $reply_to_chat_id = $chat_id;
             }
+            $sth->bindValue(':reply_to_chat', $reply_to_chat_id);
+            $sth->bindValue(':reply_to_message', $reply_to_message_id);
 
-            $sth->bindParam(':reply_to_chat', $reply_to_chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':reply_to_message', $reply_to_message_id, PDO::PARAM_STR);
-            $sth->bindParam(':text', $text, PDO::PARAM_STR);
-            $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
-            $sth->bindParam(':audio', $audio, PDO::PARAM_STR);
-            $sth->bindParam(':document', $document, PDO::PARAM_STR);
-            $sth->bindParam(':photo', $photo, PDO::PARAM_STR);
-            $sth->bindParam(':sticker', $sticker, PDO::PARAM_STR);
-            $sth->bindParam(':video', $video, PDO::PARAM_STR);
-            $sth->bindParam(':voice', $voice, PDO::PARAM_STR);
-            $sth->bindParam(':video_note', $video_note, PDO::PARAM_STR);
-            $sth->bindParam(':caption', $caption, PDO::PARAM_STR);
-            $sth->bindParam(':contact', $contact, PDO::PARAM_STR);
-            $sth->bindParam(':location', $location, PDO::PARAM_STR);
-            $sth->bindParam(':venue', $venue, PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_members', $new_chat_members_ids, PDO::PARAM_STR);
-            $sth->bindParam(':left_chat_member', $left_chat_member, PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_title', $new_chat_title, PDO::PARAM_STR);
-            $sth->bindParam(':new_chat_photo', $new_chat_photo, PDO::PARAM_STR);
-            $sth->bindParam(':delete_chat_photo', $delete_chat_photo, PDO::PARAM_INT);
-            $sth->bindParam(':group_chat_created', $group_chat_created, PDO::PARAM_INT);
-            $sth->bindParam(':supergroup_chat_created', $supergroup_chat_created, PDO::PARAM_INT);
-            $sth->bindParam(':channel_chat_created', $channel_chat_created, PDO::PARAM_INT);
-            $sth->bindParam(':migrate_from_chat_id', $migrate_from_chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':migrate_to_chat_id', $migrate_to_chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':pinned_message', $pinned_message, PDO::PARAM_STR);
+            $sth->bindValue(':text', $message->getText());
+            $sth->bindValue(':entities', $t = self::entitiesArrayToJson($message->getEntities(), null));
+            $sth->bindValue(':audio', $message->getAudio());
+            $sth->bindValue(':document', $message->getDocument());
+            $sth->bindValue(':photo', $t = self::entitiesArrayToJson($message->getPhoto(), null));
+            $sth->bindValue(':sticker', $message->getSticker());
+            $sth->bindValue(':video', $message->getVideo());
+            $sth->bindValue(':voice', $message->getVoice());
+            $sth->bindValue(':video_note', $message->getVideoNote());
+            $sth->bindValue(':caption', $message->getCaption());
+            $sth->bindValue(':contact', $message->getContact());
+            $sth->bindValue(':location', $message->getLocation());
+            $sth->bindValue(':venue', $message->getVenue());
+            $sth->bindValue(':new_chat_members', $new_chat_members_ids);
+            $sth->bindValue(':left_chat_member', $left_chat_member_id);
+            $sth->bindValue(':new_chat_title', $message->getNewChatTitle());
+            $sth->bindValue(':new_chat_photo', $t = self::entitiesArrayToJson($message->getNewChatPhoto(), null));
+            $sth->bindValue(':delete_chat_photo', $message->getDeleteChatPhoto());
+            $sth->bindValue(':group_chat_created', $message->getGroupChatCreated());
+            $sth->bindValue(':supergroup_chat_created', $message->getSupergroupChatCreated());
+            $sth->bindValue(':channel_chat_created', $message->getChannelChatCreated());
+            $sth->bindValue(':migrate_from_chat_id', $message->getMigrateFromChatId());
+            $sth->bindValue(':migrate_to_chat_id', $message->getMigrateToChatId());
+            $sth->bindValue(':pinned_message', $message->getPinnedMessage());
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -971,24 +922,19 @@ class DB
             return false;
         }
 
-        $from = $edited_message->getFrom();
-        $chat = $edited_message->getChat();
-
-        $chat_id = $chat->getId();
-
-        $edit_date = self::getTimestamp($edited_message->getEditDate());
-
-        $entities = self::entitiesArrayToJson($edited_message->getEntities(), null);
-
-        //Insert chat
-        self::insertChat($chat, $edit_date);
-
-        //Insert user and the relation with the chat
-        if (is_object($from)) {
-            self::insertUser($from, $edit_date, $chat);
-        }
-
         try {
+            $edit_date = self::getTimestamp($edited_message->getEditDate());
+
+            // Insert chat
+            $chat = $edited_message->getChat();
+            self::insertChat($chat, $edit_date);
+
+            // Insert user and the relation with the chat
+            $user = $edited_message->getFrom();
+            if ($user instanceof User) {
+                self::insertUser($user, $edit_date, $chat);
+            }
+
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_EDITED_MESSAGE . '`
                 (`chat_id`, `message_id`, `user_id`, `edit_date`, `text`, `entities`, `caption`)
@@ -996,24 +942,18 @@ class DB
                 (:chat_id, :message_id, :user_id, :edit_date, :text, :entities, :caption)
             ');
 
-            $message_id = $edited_message->getMessageId();
-
-            if (is_object($from)) {
-                $from_id = $from->getId();
-            } else {
-                $from_id = null;
+            $user_id = null;
+            if ($user instanceof User) {
+                $user_id = $user->getId();
             }
 
-            $text    = $edited_message->getText();
-            $caption = $edited_message->getCaption();
-
-            $sth->bindParam(':chat_id', $chat_id, PDO::PARAM_STR);
-            $sth->bindParam(':message_id', $message_id, PDO::PARAM_STR);
-            $sth->bindParam(':user_id', $from_id, PDO::PARAM_STR);
-            $sth->bindParam(':edit_date', $edit_date, PDO::PARAM_STR);
-            $sth->bindParam(':text', $text, PDO::PARAM_STR);
-            $sth->bindParam(':entities', $entities, PDO::PARAM_STR);
-            $sth->bindParam(':caption', $caption, PDO::PARAM_STR);
+            $sth->bindValue(':chat_id', $chat->getId());
+            $sth->bindValue(':message_id', $edited_message->getMessageId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':edit_date', $edit_date);
+            $sth->bindValue(':text', $edited_message->getText());
+            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities(), null));
+            $sth->bindValue(':caption', $edited_message->getCaption());
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -1103,7 +1043,7 @@ class DB
             if (null !== $select['text']) {
                 $text_like = '%' . strtolower($select['text']) . '%';
                 if ($select['users']) {
-                    $where[] = '(
+                    $where[]          = '(
                         LOWER(' . TB_CHAT . '.`title`) LIKE :text1
                         OR LOWER(' . TB_USER . '.`first_name`) LIKE :text2
                         OR LOWER(' . TB_USER . '.`last_name`) LIKE :text3
@@ -1114,7 +1054,7 @@ class DB
                     $tokens[':text3'] = $text_like;
                     $tokens[':text4'] = $text_like;
                 } else {
-                    $where[] = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
+                    $where[]         = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
                     $tokens[':text'] = $text_like;
                 }
             }
@@ -1151,20 +1091,20 @@ class DB
 
         try {
             $sth = self::$pdo->prepare('SELECT 
-                (SELECT COUNT(DISTINCT `chat_id`) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_1) as LIMIT_PER_SEC_ALL,
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_2 AND ((`chat_id` = :chat_id_1 AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL))) as LIMIT_PER_SEC,
-                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_minute AND `chat_id` = :chat_id_2) as LIMIT_PER_MINUTE
+                (SELECT COUNT(DISTINCT `chat_id`) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_1) AS LIMIT_PER_SEC_ALL,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_2 AND ((`chat_id` = :chat_id_1 AND `inline_message_id` IS NULL) OR (`inline_message_id` = :inline_message_id AND `chat_id` IS NULL))) AS LIMIT_PER_SEC,
+                (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_minute AND `chat_id` = :chat_id_2) AS LIMIT_PER_MINUTE
             ');
 
-            $date = self::getTimestamp();
+            $date        = self::getTimestamp();
             $date_minute = self::getTimestamp(strtotime('-1 minute'));
 
-            $sth->bindParam(':chat_id_1', $chat_id, \PDO::PARAM_STR);
-            $sth->bindParam(':chat_id_2', $chat_id, \PDO::PARAM_STR);
-            $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
-            $sth->bindParam(':created_at_1', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':created_at_2', $date, \PDO::PARAM_STR);
-            $sth->bindParam(':created_at_minute', $date_minute, \PDO::PARAM_STR);
+            $sth->bindValue(':chat_id_1', $chat_id);
+            $sth->bindValue(':chat_id_2', $chat_id);
+            $sth->bindValue(':inline_message_id', $inline_message_id);
+            $sth->bindValue(':created_at_1', $date);
+            $sth->bindValue(':created_at_2', $date);
+            $sth->bindValue(':created_at_minute', $date_minute);
 
             $sth->execute();
 
@@ -1189,25 +1129,20 @@ class DB
             return false;
         }
 
-        $chat_id = ((isset($data['chat_id'])) ? $data['chat_id'] : null);
-        $inline_message_id = (isset($data['inline_message_id']) ? $data['inline_message_id'] : null);
-
         try {
             $sth = self::$pdo->prepare('INSERT INTO `' . TB_REQUEST_LIMITER . '`
-                (
-                `method`, `chat_id`, `inline_message_id`, `created_at`
-                )
-                VALUES (
-                :method, :chat_id, :inline_message_id, :created_at
-                );
+                (`method`, `chat_id`, `inline_message_id`, `created_at`)
+                VALUES
+                (:method, :chat_id, :inline_message_id, :created_at);
             ');
 
-            $created_at = self::getTimestamp();
+            $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;
+            $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
 
-            $sth->bindParam(':chat_id', $chat_id, \PDO::PARAM_STR);
-            $sth->bindParam(':inline_message_id', $inline_message_id, \PDO::PARAM_STR);
-            $sth->bindParam(':method', $method, \PDO::PARAM_STR);
-            $sth->bindParam(':created_at', $created_at, \PDO::PARAM_STR);
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':inline_message_id', $inline_message_id);
+            $sth->bindValue(':method', $method);
+            $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
         } catch (\Exception $e) {
