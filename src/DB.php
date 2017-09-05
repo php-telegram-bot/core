@@ -11,6 +11,7 @@
 
 namespace Longman\TelegramBot;
 
+use Exception;
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
@@ -1010,7 +1011,7 @@ class DB
                 $query .= 'FROM `' . TB_CHAT . '`';
             }
 
-            //Building parts of query
+            // Building parts of query
             $where  = [];
             $tokens = [];
 
@@ -1109,7 +1110,7 @@ class DB
             $sth->execute();
 
             return $sth->fetch();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -1145,7 +1146,50 @@ class DB
             $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Bulk update the entries of any table
+     *
+     * @param string $table
+     * @param array  $fields_values
+     * @param array  $where_fields_values
+     *
+     * @return bool
+     * @throws TelegramException
+     */
+    public static function update($table, array $fields_values, array $where_fields_values)
+    {
+        if (empty($fields_values) || !self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            // Building parts of query
+            $tokens = $fields = $where = [];
+
+            // Fields with values to update
+            foreach ($fields_values as $field => $value) {
+                $token          = ':' . count($tokens);
+                $fields[]       = "`{$field}` = {$token}";
+                $tokens[$token] = $value;
+            }
+
+            // Where conditions
+            foreach ($where_fields_values as $field => $value) {
+                $token          = ':' . count($tokens);
+                $where[]        = "`{$field}` = {$token}";
+                $tokens[$token] = $value;
+            }
+
+            $sql = 'UPDATE `' . $table . '` SET ' . implode(', ', $fields);
+            $sql .= count($where) > 0 ? ' WHERE ' . implode(' AND ', $where) : '';
+
+            return self::$pdo->prepare($sql)->execute($tokens);
+        } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
     }

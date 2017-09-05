@@ -123,66 +123,9 @@ class ConversationDB extends DB
      */
     public static function updateConversation(array $fields_values, array $where_fields_values)
     {
-        return self::update(TB_CONVERSATION, $fields_values, $where_fields_values);
-    }
-
-    /**
-     * Update the conversation in the database
-     *
-     * @param string $table
-     * @param array  $fields_values
-     * @param array  $where_fields_values
-     *
-     * @todo This function is generic should be moved in DB.php
-     *
-     * @return bool
-     * @throws TelegramException
-     */
-    public static function update($table, array $fields_values, array $where_fields_values)
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-        //Auto update the field update_at
+        // Auto update the update_at field.
         $fields_values['updated_at'] = self::getTimestamp();
 
-        //Values
-        $update         = '';
-        $tokens         = [];
-        $tokens_counter = 0;
-        $a              = 0;
-        foreach ($fields_values as $field => $value) {
-            if ($a) {
-                $update .= ', ';
-            }
-            ++$a;
-            ++$tokens_counter;
-            $update .= '`' . $field . '` = :' . $tokens_counter;
-            $tokens[':' . $tokens_counter] = $value;
-        }
-
-        //Where
-        $a     = 0;
-        $where = '';
-        foreach ($where_fields_values as $field => $value) {
-            if ($a) {
-                $where .= ' AND ';
-            } else {
-                ++$a;
-                $where .= 'WHERE ';
-            }
-            ++$tokens_counter;
-            $where .= '`' . $field . '`= :' . $tokens_counter;
-            $tokens[':' . $tokens_counter] = $value;
-        }
-
-        $query = 'UPDATE `' . $table . '` SET ' . $update . ' ' . $where;
-        try {
-            $sth    = self::$pdo->prepare($query);
-            $status = $sth->execute($tokens);
-        } catch (Exception $e) {
-            throw new TelegramException($e->getMessage());
-        }
-        return $status;
+        return self::update(TB_CONVERSATION, $fields_values, $where_fields_values);
     }
 }
