@@ -17,7 +17,7 @@ use PDO;
 class ConversationDB extends DB
 {
     /**
-     * Initilize conversation table
+     * Initialize conversation table
      */
     public static function initializeConversation()
     {
@@ -29,12 +29,12 @@ class ConversationDB extends DB
     /**
      * Select a conversation from the DB
      *
-     * @param int  $user_id
-     * @param int  $chat_id
-     * @param bool $limit
+     * @param string $user_id
+     * @param string $chat_id
+     * @param bool   $limit
      *
      * @return array|bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function selectConversation($user_id, $chat_id, $limit = null)
     {
@@ -70,12 +70,12 @@ class ConversationDB extends DB
     /**
      * Insert the conversation in the database
      *
-     * @param int    $user_id
-     * @param int    $chat_id
+     * @param string $user_id
+     * @param string $chat_id
      * @param string $command
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertConversation($user_id, $chat_id, $command)
     {
@@ -119,6 +119,7 @@ class ConversationDB extends DB
      * @param array $where_fields_values
      *
      * @return bool
+     * @throws TelegramException
      */
     public static function updateConversation(array $fields_values, array $where_fields_values)
     {
@@ -135,7 +136,7 @@ class ConversationDB extends DB
      * @todo This function is generic should be moved in DB.php
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function update($table, array $fields_values, array $where_fields_values)
     {
