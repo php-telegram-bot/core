@@ -43,28 +43,34 @@ class ConversationDB extends DB
         }
 
         try {
-            $query = 'SELECT * FROM `' . TB_CONVERSATION . '` ';
-            $query .= 'WHERE `status` = :status ';
-            $query .= 'AND `chat_id` = :chat_id ';
-            $query .= 'AND `user_id` = :user_id ';
+            $sql = '
+              SELECT *
+              FROM `' . TB_CONVERSATION . '`
+              WHERE `status` = :status
+                AND `chat_id` = :chat_id
+                AND `user_id` = :user_id
+            ';
 
             if ($limit !== null) {
-                $query .= ' LIMIT :limit';
+                $sql .= ' LIMIT :limit';
             }
-            $sth = self::$pdo->prepare($query);
 
-            $status = 'active';
-            $sth->bindParam(':status', $status);
-            $sth->bindParam(':user_id', $user_id);
-            $sth->bindParam(':chat_id', $chat_id);
-            $sth->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $sth = self::$pdo->prepare($sql);
+
+            $sth->bindValue(':status', 'active');
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':chat_id', $chat_id);
+
+            if ($limit !== null) {
+                $sth->bindValue(':limit', $limit, PDO::PARAM_INT);
+            }
+
             $sth->execute();
 
-            $results = $sth->fetchAll(PDO::FETCH_ASSOC);
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
-        return $results;
     }
 
     /**
@@ -85,31 +91,25 @@ class ConversationDB extends DB
 
         try {
             $sth = self::$pdo->prepare('INSERT INTO `' . TB_CONVERSATION . '`
-                (
-                `status`, `user_id`, `chat_id`, `command`, `notes`, `created_at`, `updated_at`
-                )
-                VALUES (
-                :status, :user_id, :chat_id, :command, :notes, :created_at, :updated_at
-                )
+                (`status`, `user_id`, `chat_id`, `command`, `notes`, `created_at`, `updated_at`)
+                VALUES
+                (:status, :user_id, :chat_id, :command, :notes, :created_at, :updated_at)
             ');
 
-            $status = 'active';
-            $notes  = '[]';
-            $date   = self::getTimestamp();
+            $date = self::getTimestamp();
 
-            $sth->bindParam(':status', $status);
-            $sth->bindParam(':command', $command);
-            $sth->bindParam(':user_id', $user_id);
-            $sth->bindParam(':chat_id', $chat_id);
-            $sth->bindParam(':notes', $notes);
-            $sth->bindParam(':created_at', $date);
-            $sth->bindParam(':updated_at', $date);
+            $sth->bindValue(':status', 'active');
+            $sth->bindValue(':command', $command);
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':notes', '[]');
+            $sth->bindValue(':created_at', $date);
+            $sth->bindValue(':updated_at', $date);
 
-            $status = $sth->execute();
+            return $sth->execute();
         } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
-        return $status;
     }
 
     /**
