@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - Ensure named SQL statement parameters are unique.
+- Channel selection when using `DB::selectChats()`.
 ### Security
 
 ## [0.48.0] - 2017-08-26

@@ -988,7 +988,7 @@ class DB
             'text'        => null,
         ], $select_chats_params);
 
-        if (!$select['groups'] && !$select['users'] && !$select['supergroups']) {
+        if (!$select['groups'] && !$select['users'] && !$select['supergroups'] && !$select['channels']) {
             return false;
         }
 
@@ -1015,7 +1015,7 @@ class DB
             $where  = [];
             $tokens = [];
 
-            if (!$select['groups'] || !$select['users'] || !$select['supergroups']) {
+            if (!$select['groups'] || !$select['users'] || !$select['supergroups'] || !$select['channels']) {
                 $chat_or_user = [];
 
                 $select['groups'] && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
