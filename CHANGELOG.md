@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Donation section and links in readme.
 ### Changed
 - Updated and optimised all DB classes, removing a lot of bulky code.
 ### Deprecated
