@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Ensure named SQL statement parameters are unique.
 ### Security
 
 ## [0.48.0] - 2017-08-26
