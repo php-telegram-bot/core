@@ -24,7 +24,7 @@ A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
     - [Webhook installation](#webhook-installation)
     - [Self Signed Certificate](#self-signed-certificate)
     - [Unset Webhook](#unset-webhook)
-    - [getUpdate installation](#getupdates-installation)
+    - [getUpdates installation](#getupdates-installation)
 - [Support](#support)
     - [Types](#types)
     - [Inline Query](#inline-query)
@@ -71,7 +71,7 @@ Bot aims to provide a platform where one can simply write a plugin
 and have interactions in a matter of minutes.
 
 The Bot can:
-- retrieve updates with webhook and getUpdate methods.
+- retrieve updates with webhook and getUpdates methods.
 - supports all types and methods according to Telegram API (25 May 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
@@ -180,7 +180,7 @@ composer require longman/telegram-bot
 
 The bot can handle updates with **Webhook** or **getUpdates** method:
 
-|      | Webhook | getUpdate |
+|      | Webhook | getUpdates |
 | ---- | :----: | :----: |
 | Description | Telegram sends the updates directly to your host | You have to fetch Telegram updates manually |
 | Host with https | Required | Not required |
@@ -281,7 +281,7 @@ try {
     // Enable MySQL
     $telegram->enableMySql($mysql_credentials);
 
-    // Handle telegram getUpdate request
+    // Handle telegram getUpdates request
     $telegram->handleGetUpdates();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
