@@ -24,7 +24,7 @@ A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
     - [Webhook installation](#webhook-installation)
     - [Self Signed Certificate](#self-signed-certificate)
     - [Unset Webhook](#unset-webhook)
-    - [getUpdate installation](#getupdate-installation)
+    - [getUpdate installation](#getupdates-installation)
 - [Support](#support)
     - [Types](#types)
     - [Inline Query](#inline-query)
