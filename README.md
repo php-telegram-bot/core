@@ -112,10 +112,12 @@ The Bot can:
 >
 >**The token** is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API.
 
-Unclear? Check this mini video:
+<details>
+<summary>Unclear? Check this mini video:</summary>
 <p align="center">
 <img src="assets/Botfather_compressed.gif" width="300">
 </p>
+</details>
 
 
 ## Require this package with Composer
