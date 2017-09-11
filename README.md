@@ -101,6 +101,7 @@ The Bot can:
 <center><img src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
 </center>
 
+![gif](assets/Botfather_compressed.gif?raw=true)
 
 * Use the /newbot command to create a new bot. The BotFather will ask you for a **name** and **username**, then generate an authorization token for your new bot.
 
