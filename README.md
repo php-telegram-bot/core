@@ -13,59 +13,65 @@
 
 
 
-A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
+:rocket: A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
 
-## Table of Contents
+
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [PHP Telegram Bot](#php-telegram-bot)
 - [Introduction](#introduction)
 - [Instructions](#instructions)
-    - [Create your first bot](#create-your-first-bot)
-    - [Require this package with Composer](#require-this-package-with-composer)
-    - [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
-    - [Webhook installation](#webhook-installation)
-    - [Self Signed Certificate](#self-signed-certificate)
-    - [Unset Webhook](#unset-webhook)
-    - [getUpdate installation](#getupdate-installation)
-- [Support](#support)
-    - [Types](#types)
-    - [Inline Query](#inline-query)
-    - [Methods](#methods)
-    - [Send Message](#send-message)
-    - [Send Photo](#send-photo)
-    - [Send Chat Action](#send-chat-action)
-    - [getUserProfilePhoto](#getuserprofilephoto)
-    - [getFile and dowloadFile](#getfile-and-dowloadfile)
-    - [Send message to all active chats](#send-message-to-all-active-chats)
-- [Utils](#utils)
-    - [MySQL storage (Recommended)](#mysql-storage-recommended)
-    - [Channels Support](#channels-support)
-    - [Botan.io integration (Optional)](#botanio-integration-optional)
-- [Commands](#commands)
-    - [Predefined Commands](#predefined-commands)
-    - [Custom Commands](#custom-commands)
-    - [Commands Configuration](#commands-configuration)
-- [Admin Commands](#admin-commands)
-    - [Set Admins](#set-admins)
-    - [Channel Administration](#channel-administration)
-- [Upload and Download directory path](#upload-and-download-directory-path)
-- [Logging](doc/01-utils.md)
-- [Documentation](#documentation)
-- [Example bot](#example-bot)
-- [Projects with this library](#projects-with-this-library)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Credits](#credits)
+	- [Create your first bot](#create-your-first-bot)
+	- [Require this package with Composer](#require-this-package-with-composer)
+	- [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
+		- [Webhook installation](#webhook-installation)
+			- [Self Signed Certificate](#self-signed-certificate)
+			- [Unset Webhook](#unset-webhook)
+		- [getUpdates installation](#getupdates-installation)
+- [!/usr/bin/env php](#usrbinenv-php)
+	- [What the framework supports](#what-the-framework-supports)
+		- [[Types](https://core.telegram.org/bots/api#available-types)](#typeshttpscoretelegramorgbotsapiavailable-types)
+		- [[Inline Query](https://core.telegram.org/bots/api#inline-mode)](#inline-queryhttpscoretelegramorgbotsapiinline-mode)
+		- [[Methods](https://core.telegram.org/bots/api#available-methods)](#methodshttpscoretelegramorgbotsapiavailable-methods)
+			- [Send Message](#send-message)
+			- [Send Photo](#send-photo)
+			- [Send Chat Action](#send-chat-action)
+			- [getUserProfilePhoto](#getuserprofilephoto)
+			- [getFile and downloadFile](#getfile-and-downloadfile)
+			- [Send message to all active chats](#send-message-to-all-active-chats)
+	- [Utils](#utils)
+		- [MySQL storage (Recommended)](#mysql-storage-recommended)
+			- [External Database connection](#external-database-connection)
+		- [Channels Support](#channels-support)
+		- [Botan.io integration (Optional)](#botanio-integration-optional)
+		- [Commands](#commands)
+			- [Predefined Commands](#predefined-commands)
+			- [Custom Commands](#custom-commands)
+			- [Commands Configuration](#commands-configuration)
+		- [Admin Commands](#admin-commands)
+			- [Set Admins](#set-admins)
+			- [Channel Administration](#channel-administration)
+		- [Upload and Download directory path](#upload-and-download-directory-path)
+	- [Documentation](#documentation)
+	- [Example bot](#example-bot)
+	- [Projects with this library](#projects-with-this-library)
+	- [Troubleshooting](#troubleshooting)
+	- [Contributing](#contributing)
+	- [License](#license)
+	- [Credits](#credits)
+
+<!-- /TOC -->
 
 
 
 
 
 
-## Introduction
+# Introduction
 
 This is a pure PHP Telegram Bot, fully extensible via plugins.
-Telegram recently announced official support for a [Bot
-API](https://telegram.org/blog/bot-revolution) allowing integrators of
+Telegram announced official support for a [Bot
+API](https://telegram.org/blog/bot-revolution) since 2015, allowing integrators of
 all sorts to bring automated interactions to the mobile platform. This
 Bot aims to provide a platform where one can simply write a plugin
 and have interactions in a matter of minutes.
@@ -79,83 +85,50 @@ The Bot can:
 - full support for **inline bots**.
 - inline keyboard.
 - Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
-- *Botan.io* integration and database cache system. (**new!**)
+- *Botan.io* integration and database cache system. (**new!** :bomb:)
 - Conversation feature
 
 -----
-This code is available on
-[Github](https://github.com/php-telegram-bot/core). Pull requests are welcome.
+:construction: This code is available on
+[Github](https://github.com/php-telegram-bot/core). Pull requests and donations are welcome to keep up and kicking the project.
 
-## Instructions
+# Instructions
 
-### Create your first bot
+## Create your first bot
 
-1. Message @botfather https://telegram.me/botfather with the following
-text: `/newbot`
-   If you don't know how to message by username, click the search
-field on your Telegram app and type `@botfather`, where you should be able
-to initiate a conversation. Be careful not to send it to the wrong
-contact, because some users has similar usernames to `botfather`.
+:point_right: Meet [@BotFather](https://t.me/botfather), the official Telegram Bot to rule them all.
 
-   ![botfather initial conversation](http://i.imgur.com/aI26ixR.png)
 
-2. @botfather replies with `Alright, a new bot. How are we going to
-call it? Please choose a name for your bot.`
+<center><img src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
+</center>
 
-3. Type whatever name you want for your bot.
 
-4. @botfather replies with ```Good. Now let's choose a username for your
-bot. It must end in `bot`. Like this, for example: TetrisBot or
-tetris_bot.```
+* Use the /newbot command to create a new bot. The BotFather will ask you for a **name** and **username**, then generate an authorization token for your new bot.
 
-5. Type whatever username you want for your bot, minimum 5 characters,
-and must end with `bot`. For example: `telesample_bot`
+<details>
+<summary>Unclear? Check this mini video : </summary>
+![](assets/Botfather_compressed.webp)
+</details>
 
-6. @botfather replies with:
 
-    ```
-    Done! Congratulations on your new bot. You will find it at
-    telegram.me/telesample_bot. You can now add a description, about
-    section and profile picture for your bot, see /help for a list of
-    commands.
+> **The name** of your bot is displayed in contact details and elsewhere.
+>
+>**The Username** is a short name, to be used in mentions and telegram.me links. Usernames are 5-32 characters long and are case insensitive, but may only include Latin characters, numbers, and underscores. Your bot's username must end in ‘bot’, e.g. ‘tetris_bot’ or ‘TetrisBot’.
+>
+>**The token** is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API.
 
-    Use this token to access the HTTP API:
-    123456789:AAG90e14-0f8-40183D-18491dDE
 
-    For a description of the Bot API, see this page:
-    https://core.telegram.org/bots/api
-    ```
 
-7. Note down the 'token' mentioned above.
+## Require this package with Composer
 
-8. Type `/setprivacy` to @botfather.
+Install this package through [Composer][composer] by running this command in your command line:
 
-   ![botfather later conversation](http://i.imgur.com/tWDVvh4.png)
+```bash
+composer require longman/telegram-bot
+```
+<details>
+<summary>Alternatively you can create your own `composer.json`...  </summary>
 
-9. @botfather replies with `Choose a bot to change group messages settings.`
-
-10. Type (or select) `@telesample_bot` (change to the username you set at step 5
-above, but start it with `@`)
-
-11. @botfather replies with
-
-    ```
-    'Enable' - your bot will only receive messages that either start with the '/' symbol or mention the bot by username.
-    'Disable' - your bot will receive all messages that people send to groups.
-    Current status is: ENABLED
-    ```
-
-12. Type (or select) `Disable` to let your bot receive all messages sent to a
-group. This step is up to you actually.
-
-13. @botfather replies with `Success! The new status is: DISABLED. /help`
-
-### Require this package with Composer
-
-Install this package through [Composer][composer].
-Edit your project's `composer.json` file to require `longman/telegram-bot`.
-
-Create *composer.json* file
 ```json
 {
     "name": "yourproject/yourproject",
@@ -166,28 +139,22 @@ Create *composer.json* file
     }
 }
 ```
-and run `composer update`
+</details>
 
-**or**
 
-run this command in your command line:
 
-```bash
-composer require longman/telegram-bot
-```
+## Choose how to retrieve Telegram updates
 
-### Choose how to retrieve Telegram updates
+The bot can handle updates with the **Webhook** or **getUpdates** method:
 
-The bot can handle updates with **Webhook** or **getUpdates** method:
-
-|      | Webhook | getUpdate |
+|      | Webhook | getUpdates |
 | ---- | :----: | :----: |
 | Description | Telegram sends the updates directly to your host | You have to fetch Telegram updates manually |
 | Host with https | Required | Not required |
 | MySQL | Not required | Required  |
 
 
-## Webhook installation
+### Webhook installation
 
 Note: For a more detailed explanation, head over to the [example-bot repository][example-bot-repository] and follow the instructions there.
 
@@ -244,20 +211,20 @@ try {
 }
 ```
 
-### Self Signed Certificate
+#### Self Signed Certificate
 
 To upload the certificate, add the certificate path as a parameter in *set.php*:
 ```php
 $result = $telegram->setWebhook($hook_url, ['certificate' => '/path/to/certificate']);
 ```
 
-### Unset Webhook
+#### Unset Webhook
 
 Edit [*unset.php*][unset.php] with your bot credentials and execute it.
 
 ### getUpdates installation
 
-The MySQL database must be enabled for the getUpdates method!
+The MySQL database **must** be enabled for the getUpdates method!
 
 Create [*getUpdatesCLI.php*][getUpdatesCLI.php] with the following contents:
 ```php
@@ -299,17 +266,17 @@ Lastly, run it!
 $ ./getUpdatesCLI.php
 ```
 
-## Support
+## What the framework supports
 
-### Types
+### [Types](https://core.telegram.org/bots/api#available-types)
 
 All types are implemented according to Telegram API (20 January 2016).
 
-### Inline Query
+### [Inline Query](https://core.telegram.org/bots/api#inline-mode)
 
 Full support for inline query according to Telegram API (20 January 2016).
 
-### Methods
+### [Methods](https://core.telegram.org/bots/api#available-methods)
 
 All methods are implemented according to Telegram API (20 January 2016).
 
@@ -458,9 +425,7 @@ Shortened URLs are cached in the database (if MySQL storage is enabled).
 
 The bot is able to recognise commands in a chat with multiple bots (/command@mybot).
 
-It can execute commands that get triggered by chat events.
-
-Here's the list:
+It can execute commands that get triggered by chat events:
 
 - *StartCommand.php* (A new user starts to use the bot.)
 - *NewChatMembersCommand.php* (A new member(s) was added to the group, information about them.)
