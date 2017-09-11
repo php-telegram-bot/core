@@ -99,7 +99,7 @@ The Bot can:
 
 
 <center>
-<img align="center" src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
+<img src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
 </center>
 
 
@@ -114,7 +114,7 @@ The Bot can:
 >**The token** is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API.
 
 Unclear? Check this mini video:
-<center>![video](assets/Botfather_compressed.webp)
+<center>![video](/assets/Botfather_compressed.webp)
 </center>
 
 
