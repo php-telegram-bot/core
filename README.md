@@ -98,17 +98,13 @@ The Bot can:
 :point_right: Meet [@BotFather](https://t.me/botfather), the official Telegram Bot to rule them all.
 
 
-<center><img src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
-</center>
 
-![gif](assets/Botfather_compressed.webp?raw=true)
+<img align="center" src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
+
+
+
 
 * Use the /newbot command to create a new bot. The BotFather will ask you for a **name** and **username**, then generate an authorization token for your new bot.
-
-<details>
-<summary>Unclear? Check this mini video : </summary>
-![](./assets/Botfather_compressed.webp?raw=true)
-</details>
 
 
 > **The name** of your bot is displayed in contact details and elsewhere.
@@ -117,6 +113,9 @@ The Bot can:
 >
 >**The token** is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API.
 
+Unclear? Check this mini video:
+<center>![Botfather bot creation video](assets/Botfather_compressed.webp?raw=true)
+</center>
 
 
 ## Require this package with Composer
@@ -126,6 +125,7 @@ Install this package through [Composer][composer] by running this command in you
 ```bash
 composer require longman/telegram-bot
 ```
+
 <details>
 <summary>Alternatively you can create your own `composer.json`...  </summary>
 
@@ -161,7 +161,8 @@ Note: For a more detailed explanation, head over to the [example-bot repository]
 In order to set a [Webhook][api-setwebhook] you need a server with HTTPS and composer support.
 (For a [self signed certificate](#self-signed-certificate) you need to add some extra code)
 
-Create [*set.php*][set.php] with the following contents:
+Create [*set.php*][set.php] with the following contents, replacing where appropriate with your bot credentials:
+
 ```php
 <?php
 // Load composer
@@ -189,7 +190,8 @@ try {
 Open your *set.php* via the browser to register the webhook with Telegram.
 You should see `Webhook was set`.
 
-Now, create [*hook.php*][hook.php] with the following contents:
+Now, create [*hook.php*][hook.php] with the following contents, replacing where appropriate with your bot credentials:
+
 ```php
 <?php
 // Load composer
@@ -213,7 +215,7 @@ try {
 
 #### Self Signed Certificate
 
-To upload the certificate, add the certificate path as a parameter in *set.php*:
+To use a self signed certificate, upload it along with the bot and then add the certificate path as a parameter in *set.php*:
 ```php
 $result = $telegram->setWebhook($hook_url, ['certificate' => '/path/to/certificate']);
 ```
@@ -225,8 +227,9 @@ Edit [*unset.php*][unset.php] with your bot credentials and execute it.
 ### getUpdates installation
 
 The MySQL database **must** be enabled for the getUpdates method!
+Create a new empty database and import the [structure.sql](structure.sql) to properly initialize it.
 
-Create [*getUpdatesCLI.php*][getUpdatesCLI.php] with the following contents:
+Create [*getUpdatesCLI.php*][getUpdatesCLI.php] with the following contents, replacing where appropriate with your databse credentials:
 ```php
  #!/usr/bin/env php
 <?php
@@ -265,6 +268,13 @@ Lastly, run it!
 ```bash
 $ ./getUpdatesCLI.php
 ```
+>Note: you can create a daemon to keep the script in execution as explained in the wiki.
+>Alternatively, in a **local development system**, you can keep the getUpdatesCLI.php alive with
+
+>```bash
+$ while true; do ./getUpdatesCLI.php; done
+```
+> Care to add a `sleep(3);` at the very end of the file to avoid performance issues on your machine.
 
 ## What the framework supports
 
@@ -280,6 +290,7 @@ Full support for [inline query](https://core.telegram.org/bots/api#inline-mode) 
 
 All [methods](https://core.telegram.org/bots/api#available-methods) are implemented according to Telegram API (20 January 2016).
 
+<details><summary>Usage example of some methods...</summary>
 #### Send Message
 
 Messages longer than 4096 characters are split up into multiple messages.
@@ -356,6 +367,7 @@ $results = Request::sendToActiveChats(
 ```
 
 You can also broadcast a message to users, from the private chat with your bot. Take a look at the [admin commands](#admin-commands) below.
+</details>
 
 ## Utils
 
