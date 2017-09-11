@@ -114,8 +114,7 @@ The Bot can:
 
 Unclear? Check this mini video:
 <p align="center">
-<img src="assets/Botfather_compressed.webp" width="250">
-<img src="assets/Botfather_compressed.gif" width="250">
+<img src="assets/Botfather_compressed.webp" width="300">
 </p>
 
 
