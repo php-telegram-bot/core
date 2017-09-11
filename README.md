@@ -268,13 +268,13 @@ Lastly, run it!
 ```bash
 $ ./getUpdatesCLI.php
 ```
->Note: you can create a daemon to keep the script in execution as explained in the wiki.
->Alternatively, in a **local development system**, you can keep the getUpdatesCLI.php alive with
-
+> Note: you can create a daemon to keep the script in execution as explained in the wiki.
+> Alternatively, in a **local development system**, you can keep the getUpdatesCLI.php alive with
+>
 >```bash
-$ while true; do ./getUpdatesCLI.php; done
-```
-> Care to add a `sleep(3);` at the very end of the file to avoid performance issues on your machine.
+>$ while true; do ./getUpdatesCLI.php; done
+> ```
+>Care to add a `sleep(3);` at the very end of the file to avoid performance issues on your machine.
 
 ## What the framework supports
 
