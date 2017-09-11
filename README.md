@@ -76,7 +76,7 @@ Bot aims to provide a platform where one can simply write a plugin
 and have interactions in a matter of minutes.
 
 The Bot can:
-- retrieve updates with webhook and getUpdate methods.
+- retrieve updates with webhook and getUpdates methods.
 - supports all types and methods according to Telegram API (25 May 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
@@ -247,7 +247,7 @@ try {
     // Enable MySQL
     $telegram->enableMySql($mysql_credentials);
 
-    // Handle telegram getUpdate request
+    // Handle telegram getUpdates request
     $telegram->handleGetUpdates();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
