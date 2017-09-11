@@ -290,7 +290,6 @@ Full support for [inline query](https://core.telegram.org/bots/api#inline-mode) 
 
 All [methods](https://core.telegram.org/bots/api#available-methods) are implemented according to Telegram API (20 January 2016).
 
-<details><summary>Usage example of some methods...</summary>
 #### Send Message
 
 Messages longer than 4096 characters are split up into multiple messages.
@@ -367,7 +366,6 @@ $results = Request::sendToActiveChats(
 ```
 
 You can also broadcast a message to users, from the private chat with your bot. Take a look at the [admin commands](#admin-commands) below.
-</details>
 
 ## Utils
 
