@@ -97,10 +97,9 @@ The Bot can:
 
 :point_right: Meet [@BotFather](https://t.me/botfather), the official Telegram Bot to rule them all.
 
-
-<center>
-<img src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
-</center>
+<p align="center">
+  <img src="https://core.telegram.org/file/811140327/1/zlN4goPTupk/9ff2f2f01c4bd1b013" width="250">
+</p>
 
 
 
