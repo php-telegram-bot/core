@@ -114,7 +114,7 @@ The Bot can:
 >**The token** is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API.
 
 Unclear? Check this mini video:
-<center>![Botfather bot creation video](assets/Botfather_compressed.webp?raw=true)
+<center>![video](assets/Botfather_compressed.webp)
 </center>
 
 
