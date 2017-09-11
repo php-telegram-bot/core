@@ -106,7 +106,7 @@ The Bot can:
 
 <details>
 <summary>Unclear? Check this mini video : </summary>
-![](./assets/Botfather_compressed.webp?raw=true))
+![gif](assets/Botfather_compressed.gif?raw=true)
 </details>
 
 
