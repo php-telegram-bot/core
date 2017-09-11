@@ -28,11 +28,10 @@
 			- [Self Signed Certificate](#self-signed-certificate)
 			- [Unset Webhook](#unset-webhook)
 		- [getUpdates installation](#getupdates-installation)
-- [!/usr/bin/env php](#usrbinenv-php)
 	- [What the framework supports](#what-the-framework-supports)
-		- [[Types](https://core.telegram.org/bots/api#available-types)](#typeshttpscoretelegramorgbotsapiavailable-types)
-		- [[Inline Query](https://core.telegram.org/bots/api#inline-mode)](#inline-queryhttpscoretelegramorgbotsapiinline-mode)
-		- [[Methods](https://core.telegram.org/bots/api#available-methods)](#methodshttpscoretelegramorgbotsapiavailable-methods)
+		- [Types](#types)
+		- [Inline Query](#inline-query)
+		- [Methods](#methods)
 			- [Send Message](#send-message)
 			- [Send Photo](#send-photo)
 			- [Send Chat Action](#send-chat-action)
@@ -228,7 +227,7 @@ The MySQL database **must** be enabled for the getUpdates method!
 
 Create [*getUpdatesCLI.php*][getUpdatesCLI.php] with the following contents:
 ```php
-#!/usr/bin/env php
+ #!/usr/bin/env php
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
@@ -268,17 +267,17 @@ $ ./getUpdatesCLI.php
 
 ## What the framework supports
 
-### [Types](https://core.telegram.org/bots/api#available-types)
+### Types
 
-All types are implemented according to Telegram API (20 January 2016).
+All [types](https://core.telegram.org/bots/api#available-types) are implemented according to Telegram API (20 January 2016).
 
-### [Inline Query](https://core.telegram.org/bots/api#inline-mode)
+### Inline Query
 
-Full support for inline query according to Telegram API (20 January 2016).
+Full support for [inline query](https://core.telegram.org/bots/api#inline-mode) according to Telegram API (20 January 2016).
 
-### [Methods](https://core.telegram.org/bots/api#available-methods)
+### Methods
 
-All methods are implemented according to Telegram API (20 January 2016).
+All [methods](https://core.telegram.org/bots/api#available-methods) are implemented according to Telegram API (20 January 2016).
 
 #### Send Message
 
