@@ -10,6 +10,8 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\InlineQuery\InlineQueryResult;
+
 /**
  * Class InlineQuery
  *
@@ -32,5 +34,21 @@ class InlineQuery extends Entity
             'from'     => User::class,
             'location' => Location::class,
         ];
+    }
+
+    /**
+     * Answer this inline query with the passed results.
+     *
+     * @param InlineQueryResult[] $results
+     * @param array               $data
+     *
+     * @return ServerResponse
+     */
+    public function answer(array $results, array $data = [])
+    {
+        return Request::answerCallbackQuery(array_merge([
+            'callback_query_id' => $this->getId(),
+            'results'           => $results,
+        ], $data));
     }
 }

@@ -47,7 +47,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the photo
  */
-class InlineQueryResultCachedPhoto extends InlineEntity
+class InlineQueryResultCachedPhoto extends InlineEntity implements InlineQueryResult
 {
     /**
      * InlineQueryResultCachedPhoto constructor

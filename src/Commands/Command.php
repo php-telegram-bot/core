@@ -386,4 +386,44 @@ abstract class Command
 
         return false;
     }
+
+    /**
+     * Helper to reply to a chat directly.
+     *
+     * @param string $text
+     * @param array  $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     */
+    public function replyToChat($text, array $data = [])
+    {
+        if ($message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost()) {
+            return Request::sendMessage(array_merge([
+                'chat_id' => $message->getChat()->getId(),
+                'text'    => $text,
+            ], $data));
+        }
+
+        return Request::emptyResponse();
+    }
+
+    /**
+     * Helper to reply to a user directly.
+     *
+     * @param string $text
+     * @param array  $data
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     */
+    public function replyToUser($text, array $data = [])
+    {
+        if ($message = $this->getMessage() ?: $this->getEditedMessage()) {
+            return Request::sendMessage(array_merge([
+                'chat_id' => $message->getFrom()->getId(),
+                'text'    => $text,
+            ], $data));
+        }
+
+        return Request::emptyResponse();
+    }
 }

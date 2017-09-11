@@ -41,7 +41,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. An Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the audio
  */
-class InlineQueryResultCachedAudio extends InlineEntity
+class InlineQueryResultCachedAudio extends InlineEntity implements InlineQueryResult
 {
     /**
      * InlineQueryResultCachedAudio constructor
