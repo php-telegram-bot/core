@@ -103,7 +103,7 @@ The Bot can:
 
 
 
-* Use the /newbot command to create a new bot. The BotFather will ask you for a **name** and **username**, then generate an authorization token for your new bot.
+* Open a conversation with[@BotFather](https://t.me/botfather), use then the /newbot command to create a new bot. The BotFather will ask you for a **name** and **username**, then generate an authorization token for your new bot.
 
 
 > **The name** of your bot is displayed in contact details and elsewhere.
