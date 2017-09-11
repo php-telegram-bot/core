@@ -70,7 +70,7 @@
 
 This is a pure PHP Telegram Bot, fully extensible via plugins.
 Telegram announced official support for a [Bot
-API](https://telegram.org/blog/bot-revolution) since 2015, allowing integrators of
+API](https://telegram.org/blog/bot-revolution) in 2015, allowing integrators of
 all sorts to bring automated interactions to the mobile platform. This
 Bot aims to provide a platform where one can simply write a plugin
 and have interactions in a matter of minutes.
@@ -113,9 +113,9 @@ The Bot can:
 >**The token** is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API.
 
 <details>
-<summary>Unclear? Check this mini video:</summary>
+<summary>Unclear? Check this animation...</summary>
 <p align="center">
-<img src="assets/Botfather_compressed.gif" width="300">
+<img src="assets/Botfather_compressed.gif" width="350">
 </p>
 </details>
 
