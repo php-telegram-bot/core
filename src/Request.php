@@ -66,6 +66,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse addStickerToSet(array $data)         Use this method to add a new sticker to a set created by the bot. Returns True on success.
  * @method static ServerResponse setStickerPositionInSet(array $data) Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.
  * @method static ServerResponse deleteStickerFromSet(array $data)    Use this method to delete a sticker from a set created by the bot. Returns True on success.
+ * @method static ServerResponse sendInvoice(array $data)             Use this method to send invoices. On success, the sent Message is returned.
+ * @method static ServerResponse answerShippingQuery(array $data)     If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
+ * @method static ServerResponse answerPreCheckoutQuery(array $data)  Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
  */
 class Request
 {
@@ -138,7 +141,6 @@ class Request
         'sendLocation',
         'sendVenue',
         'sendContact',
-        'sendInvoice',
         'sendChatAction',
         'getUserProfilePhotos',
         'getFile',
@@ -160,8 +162,6 @@ class Request
         'getChatMember',
         'answerCallbackQuery',
         'answerInlineQuery',
-        'answerShippingQuery',
-        'answerPreCheckoutQuery',
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup',
@@ -172,6 +172,9 @@ class Request
         'addStickerToSet',
         'setStickerPositionInSet',
         'deleteStickerFromSet',
+        'sendInvoice',
+        'answerShippingQuery',
+        'answerPreCheckoutQuery',
     ];
 
     /**
