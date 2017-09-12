@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Donation section and links in readme.
 - Missing payment methods in `Request` class.
+- Some helper methods for replying to commands and answering queries.
 ### Changed
 - Updated and optimised all DB classes, removing a lot of bulky code.
 ### Deprecated
