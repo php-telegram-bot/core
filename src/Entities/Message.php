@@ -183,20 +183,21 @@ class Message extends Entity
 
         $full_command = $this->getFullCommand();
 
-        if (strpos($full_command, '/') === 0) {
-            $full_command = substr($full_command, 1);
+        if (strpos($full_command, '/') !== 0) {
+            return false;
+        }
+        $full_command = substr($full_command, 1);
 
-            //check if command is follow by botname
-            $split_cmd = explode('@', $full_command);
-            if (isset($split_cmd[1])) {
-                //command is followed by name check if is addressed to me
-                if (strtolower($split_cmd[1]) === strtolower($this->getBotUsername())) {
-                    return $split_cmd[0];
-                }
-            } else {
-                //command is not followed by name
-                return $full_command;
+        //check if command is follow by botname
+        $split_cmd = explode('@', $full_command);
+        if (isset($split_cmd[1])) {
+            //command is followed by name check if is addressed to me
+            if (strtolower($split_cmd[1]) === strtolower($this->getBotUsername())) {
+                return $split_cmd[0];
             }
+        } else {
+            //command is not followed by name
+            return $full_command;
         }
 
         return false;
