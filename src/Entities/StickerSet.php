@@ -31,15 +31,16 @@ class StickerSet extends Entity
     public function getStickers()
     {
         $all_stickers = [];
-
-        if ($these_stickers = $this->getProperty('stickers')) {
-            foreach ($these_stickers as $stickers) {
-                $new_stickers = [];
-                foreach ($stickers as $sticker) {
-                    $new_stickers[] = new Sticker($sticker);
-                }
-                $all_stickers[] = $new_stickers;
+        $these_stickers = $this->getProperty('stickers')
+        if (!$these_stickers) {
+            return [];
+        }
+        foreach ($these_stickers as $stickers) {
+            $new_stickers = [];
+            foreach ($stickers as $sticker) {
+                $new_stickers[] = new Sticker($sticker);
             }
+            $all_stickers[] = $new_stickers;
         }
 
         return $all_stickers;
