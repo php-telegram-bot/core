@@ -159,15 +159,14 @@ class Message extends Entity
     public function getFullCommand()
     {
         $text = $this->getProperty('text');
-        if (strpos($text, '/') === 0) {
-            $no_EOL = strtok($text, PHP_EOL);
-            $no_space = strtok($text, ' ');
-
-            //try to understand which separator \n or space divide /command from text
-            return strlen($no_space) < strlen($no_EOL) ? $no_space : $no_EOL;
+        if (strpos($text, '/') !== 0) {
+            return null;
         }
+        $no_EOL = strtok($text, PHP_EOL);
+        $no_space = strtok($text, ' ');
 
-        return null;
+        //try to understand which separator \n or space divide /command from text
+        return strlen($no_space) < strlen($no_EOL) ? $no_space : $no_EOL;
     }
 
     /**
