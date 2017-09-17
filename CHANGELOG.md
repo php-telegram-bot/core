@@ -5,10 +5,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Donation section and links in readme.
+- Missing payment methods in `Request` class.
+- Some helper methods for replying to commands and answering queries.
 ### Changed
+- Updated and optimised all DB classes, removing a lot of bulky code.
 ### Deprecated
 ### Removed
 ### Fixed
+- Ensure named SQL statement parameters are unique.
+- Channel selection when using `DB::selectChats()`.
 ### Security
 
 ## [0.48.0] - 2017-08-26

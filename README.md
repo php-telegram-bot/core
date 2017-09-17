@@ -1,6 +1,7 @@
 # PHP Telegram Bot
 
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-32a2da.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
+[![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](#donate)
 
 [![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
@@ -24,7 +25,7 @@ A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
     - [Webhook installation](#webhook-installation)
     - [Self Signed Certificate](#self-signed-certificate)
     - [Unset Webhook](#unset-webhook)
-    - [getUpdate installation](#getupdate-installation)
+    - [getUpdates installation](#getupdates-installation)
 - [Support](#support)
     - [Types](#types)
     - [Inline Query](#inline-query)
@@ -53,6 +54,7 @@ A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
 - [Projects with this library](#projects-with-this-library)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Donate](#donate)
 - [License](#license)
 - [Credits](#credits)
 
@@ -71,7 +73,7 @@ Bot aims to provide a platform where one can simply write a plugin
 and have interactions in a matter of minutes.
 
 The Bot can:
-- retrieve updates with webhook and getUpdate methods.
+- retrieve updates with webhook and getUpdates methods.
 - supports all types and methods according to Telegram API (25 May 2016).
 - supports supergroups.
 - handle commands in chat with other bots.
@@ -180,7 +182,7 @@ composer require longman/telegram-bot
 
 The bot can handle updates with **Webhook** or **getUpdates** method:
 
-|      | Webhook | getUpdate |
+|      | Webhook | getUpdates |
 | ---- | :----: | :----: |
 | Description | Telegram sends the updates directly to your host | You have to fetch Telegram updates manually |
 | Host with https | Required | Not required |
@@ -281,7 +283,7 @@ try {
     // Enable MySQL
     $telegram->enableMySql($mysql_credentials);
 
-    // Handle telegram getUpdate request
+    // Handle telegram getUpdates request
     $telegram->handleGetUpdates();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
     // log telegram errors
@@ -573,6 +575,19 @@ If you like living on the edge, please report any bugs you find on the
 
 See [CONTRIBUTING](.github/CONTRIBUTING.md) for more information.
 
+## Donate
+
+All work on this bot consists of many hours of coding during our free time, to provide you with a Telegram Bot library that is easy to use and extend.
+If you enjoy using this library and would like to say thank you, donations are a great way to show your support.
+
+Donations are invested back into the project :+1:
+
+- Gratipay: [Gratipay/PHP-Telegram-Bot]
+- Liberapay: [Liberapay/PHP-Telegram-Bot]
+- PayPal: [PayPal/noplanman] (account of @noplanman)
+- Bitcoin: [166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][bitcoin]
+- Ethereum: [0x485855634fa212b0745375e593fAaf8321A81055][ethereum]
+
 ## License
 
 Please see the [LICENSE](LICENSE.md) included in this repository for a full copy of the MIT license,
@@ -600,3 +615,8 @@ Credit list in [CREDITS](CREDITS)
 [wiki]: https://github.com/php-telegram-bot/core/wiki "PHP Telegram Bot Wiki"
 [wiki-create-your-own-commands]: https://github.com/php-telegram-bot/core/wiki/Create-your-own-commands "Create your own commands"
 [issues]: https://github.com/php-telegram-bot/core/issues "PHP Telegram Bot Issues"
+[Gratipay/PHP-Telegram-Bot]: https://gratipay.com/PHP-Telegram-Bot "Donate with Gratipay"
+[Liberapay/PHP-Telegram-Bot]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
+[PayPal/noplanman]: https://paypal.me/noplanman "Donate with PayPal"
+[bitcoin]: bitcoin:166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
+[ethereum]: https://www.myetherwallet.com/?to=0x485855634fa212b0745375e593fAaf8321A81055 "Donate with Ethereum"

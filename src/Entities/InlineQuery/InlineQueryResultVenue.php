@@ -59,7 +59,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setThumbWidth(int $thumb_width)                                    Optional. Thumbnail width
  * @method $this setThumbHeight(int $thumb_height)                                  Optional. Thumbnail height
  */
-class InlineQueryResultVenue extends InlineEntity
+class InlineQueryResultVenue extends InlineEntity implements InlineQueryResult
 {
     /**
      * InlineQueryResultVenue constructor

@@ -44,7 +44,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. An Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the video animation
  */
-class InlineQueryResultCachedMpeg4Gif extends InlineEntity
+class InlineQueryResultCachedMpeg4Gif extends InlineEntity implements InlineQueryResult
 {
     /**
      * InlineQueryResultCachedMpeg4Gif constructor

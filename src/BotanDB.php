@@ -12,7 +12,6 @@ namespace Longman\TelegramBot;
 
 use Exception;
 use Longman\TelegramBot\Exception\TelegramException;
-use PDO;
 
 /**
  * Class BotanDB
@@ -20,7 +19,7 @@ use PDO;
 class BotanDB extends DB
 {
     /**
-     * Initilize botan shortener table
+     * Initialize botan shortener table
      */
     public static function initializeBotanDb()
     {
@@ -32,11 +31,11 @@ class BotanDB extends DB
     /**
      * Select cached shortened URL from the database
      *
-     * @param string  $url
-     * @param integer $user_id
+     * @param string $url
+     * @param string $user_id
      *
      * @return array|bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function selectShortUrl($url, $user_id)
     {
@@ -46,14 +45,16 @@ class BotanDB extends DB
 
         try {
             $sth = self::$pdo->prepare('
-                SELECT `short_url` FROM `' . TB_BOTAN_SHORTENER . '`
-                WHERE `user_id` = :user_id AND `url` = :url
+                SELECT `short_url`
+                FROM `' . TB_BOTAN_SHORTENER . '`
+                WHERE `user_id` = :user_id
+                  AND `url` = :url
                 ORDER BY `created_at` DESC
                 LIMIT 1
             ');
 
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':url', $url, PDO::PARAM_STR);
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':url', $url);
             $sth->execute();
 
             return $sth->fetchColumn();
@@ -65,12 +66,12 @@ class BotanDB extends DB
     /**
      * Insert shortened URL into the database
      *
-     * @param string  $url
-     * @param integer $user_id
-     * @param string  $short_url
+     * @param string $url
+     * @param string $user_id
+     * @param string $short_url
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function insertShortUrl($url, $user_id, $short_url)
     {
@@ -83,15 +84,13 @@ class BotanDB extends DB
                 INSERT INTO `' . TB_BOTAN_SHORTENER . '`
                 (`user_id`, `url`, `short_url`, `created_at`)
                 VALUES
-                (:user_id, :url, :short_url, :date)
+                (:user_id, :url, :short_url, :created_at)
             ');
 
-            $created_at = self::getTimestamp();
-
-            $sth->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $sth->bindParam(':url', $url, PDO::PARAM_STR);
-            $sth->bindParam(':short_url', $short_url, PDO::PARAM_STR);
-            $sth->bindParam(':date', $created_at, PDO::PARAM_STR);
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':url', $url);
+            $sth->bindValue(':short_url', $short_url);
+            $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
         } catch (Exception $e) {
