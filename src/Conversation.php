@@ -106,22 +106,23 @@ class Conversation
     {
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
-        if (isset($conversation[0])) {
-            //Pick only the first element
-            $this->conversation = $conversation[0];
-
-            //Load the command from the conversation if it hasn't been passed
-            $this->command = $this->command ?: $this->conversation['command'];
-
-            if ($this->command !== $this->conversation['command']) {
-                $this->cancel();
-                return false;
-            }
-
-            //Load the conversation notes
-            $this->protected_notes = json_decode($this->conversation['notes'], true);
-            $this->notes           = $this->protected_notes;
+        if (!isset($conversation[0])) {
+            return $this->exists();
         }
+        //Pick only the first element
+        $this->conversation = $conversation[0];
+
+        //Load the command from the conversation if it hasn't been passed
+        $this->command = $this->command ?: $this->conversation['command'];
+
+        if ($this->command !== $this->conversation['command']) {
+            $this->cancel();
+            return false;
+        }
+
+        //Load the conversation notes
+        $this->protected_notes = json_decode($this->conversation['notes'], true);
+        $this->notes           = $this->protected_notes;
 
         return $this->exists();
     }
