@@ -29,9 +29,9 @@ class ConversationDB extends DB
     /**
      * Select a conversation from the DB
      *
-     * @param string $user_id
-     * @param string $chat_id
-     * @param bool   $limit
+     * @param string   $user_id
+     * @param string   $chat_id
+     * @param int|null $limit
      *
      * @return array|bool
      * @throws TelegramException

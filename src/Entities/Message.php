@@ -32,7 +32,7 @@ namespace Longman\TelegramBot\Entities;
  * @method Sticker      getSticker()               Optional. Message is a sticker, information about the sticker
  * @method Video        getVideo()                 Optional. Message is a video, information about the video
  * @method Voice        getVoice()                 Optional. Message is a voice message, information about the file
- * @method Video Note   getVideoNote()             Optional. Message is a video note message, information about the video
+ * @method VideoNote    getVideoNote()             Optional. Message is a video note message, information about the video
  * @method string       getCaption()               Optional. Caption for the document, photo or video, 0-200 characters
  * @method Contact      getContact()               Optional. Message is a shared contact, information about the contact
  * @method Location     getLocation()              Optional. Message is a shared location, information about the location
@@ -173,7 +173,7 @@ class Message extends Entity
     /**
      * Get command
      *
-     * @return bool|string
+     * @return string|null
      */
     public function getCommand()
     {
@@ -199,7 +199,7 @@ class Message extends Entity
             return $split_cmd[0];
         }
 
-        return false;
+        return null;
     }
 
     /**

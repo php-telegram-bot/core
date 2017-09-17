@@ -110,7 +110,7 @@ class Request
     /**
      * Request limiter's interval between checks
      *
-     * @var boolean
+     * @var float
      */
     private static $limiter_interval;
 
@@ -598,12 +598,12 @@ class Request
     /**
      * Enable request limiter
      *
-     * @param boolean $value
+     * @param boolean $enable
      * @param array   $options
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public static function setLimiter($value = true, array $options = [])
+    public static function setLimiter($enable = true, array $options = [])
     {
         if (DB::isDbConnected()) {
             $options_default = [
@@ -617,7 +617,7 @@ class Request
             }
 
             self::$limiter_interval = $options['interval'];
-            self::$limiter_enabled  = $value;
+            self::$limiter_enabled  = $enable;
         }
     }
 
