@@ -5,17 +5,22 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.49.0] - 2017-09-17
+### Added
 - Donation section and links in readme.
 - Missing payment methods in `Request` class.
 - Some helper methods for replying to commands and answering queries.
 ### Changed
 - Updated and optimised all DB classes, removing a lot of bulky code.
-### Deprecated
-### Removed
 ### Fixed
 - Ensure named SQL statement parameters are unique.
 - Channel selection when using `DB::selectChats()`.
-### Security
 
 ## [0.48.0] - 2017-08-26
 **Note:** After updating to this version, you will need to execute the [SQL migration script][0.48.0-sql-migration] on your database.
@@ -174,6 +179,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.49.0]: https://github.com/php-telegram-bot/core/compare/0.48.0...0.49.0
 [0.48.0]: https://github.com/php-telegram-bot/core/compare/0.47.1...0.48.0
 [0.47.1]: https://github.com/php-telegram-bot/core/compare/0.47.0...0.47.1
 [0.47.0]: https://github.com/php-telegram-bot/core/compare/0.46.0...0.47.0
