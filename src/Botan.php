@@ -142,18 +142,19 @@ class Botan
 
             if ($update_type === 'message' && $entities = $update->getMessage()->getEntities()) {
                 foreach ($entities as $entity) {
-                    if ($entity->getType() === 'bot_command' && $entity->getOffset() === 0) {
-                        if ($command === 'generic') {
-                            $command = 'Generic';
-                        } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
-                            $command = 'Generic Message';
-                        } else {
-                            $command = '/' . $command;
-                        }
-
-                        $event_name = 'Command (' . $command . ')';
-                        break;
+                    if ($entity->getType() !== 'bot_command' || $entity->getOffset() !== 0) {
+                        continue;
                     }
+                    if ($command === 'generic') {
+                        $command = 'Generic';
+                    } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
+                        $command = 'Generic Message';
+                    } else {
+                        $command = '/' . $command;
+                    }
+
+                    $event_name = 'Command (' . $command . ')';
+                    break;
                 }
             }
         }
