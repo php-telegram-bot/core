@@ -145,15 +145,7 @@ class Botan
                     if ($entity->getType() !== 'bot_command' || $entity->getOffset() !== 0) {
                         continue;
                     }
-                    if ($command === 'generic') {
-                        $command = 'Generic';
-                    } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
-                        $command = 'Generic Message';
-                    } else {
-                        $command = '/' . $command;
-                    }
-
-                    $event_name = 'Command (' . $command . ')';
+                    $event_name = self::getEventName($command);
                     break;
                 }
             }
@@ -247,5 +239,24 @@ class Botan
         BotanDB::insertShortUrl($url, $user_id, $result);
 
         return $result;
+    }
+
+    /**
+     * @param $command
+     * @return string
+     */
+    private static function getEventName($command)
+    {
+        if ($command === 'generic') {
+            $command = 'Generic';
+        } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
+            $command = 'Generic Message';
+        } else {
+            $command = '/'.$command;
+        }
+
+        $event_name = 'Command ('.$command.')';
+
+        return $event_name;
     }
 }
