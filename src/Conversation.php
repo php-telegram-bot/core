@@ -190,17 +190,18 @@ class Conversation
      */
     protected function updateStatus($status)
     {
-        if ($this->exists()) {
-            $fields = ['status' => $status];
-            $where  = [
-                'id'      => $this->conversation['id'],
-                'status'  => 'active',
-                'user_id' => $this->user_id,
-                'chat_id' => $this->chat_id,
-            ];
-            if (ConversationDB::updateConversation($fields, $where)) {
-                return true;
-            }
+        if (!$this->exists()) {
+            return false;
+        }
+        $fields = ['status' => $status];
+        $where  = [
+            'id'      => $this->conversation['id'],
+            'status'  => 'active',
+            'user_id' => $this->user_id,
+            'chat_id' => $this->chat_id,
+        ];
+        if (ConversationDB::updateConversation($fields, $where)) {
+            return true;
         }
 
         return false;
