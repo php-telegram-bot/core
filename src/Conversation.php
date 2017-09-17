@@ -106,22 +106,23 @@ class Conversation
     {
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
-        if (isset($conversation[0])) {
-            //Pick only the first element
-            $this->conversation = $conversation[0];
-
-            //Load the command from the conversation if it hasn't been passed
-            $this->command = $this->command ?: $this->conversation['command'];
-
-            if ($this->command !== $this->conversation['command']) {
-                $this->cancel();
-                return false;
-            }
-
-            //Load the conversation notes
-            $this->protected_notes = json_decode($this->conversation['notes'], true);
-            $this->notes           = $this->protected_notes;
+        if (!isset($conversation[0])) {
+            return $this->exists();
         }
+        //Pick only the first element
+        $this->conversation = $conversation[0];
+
+        //Load the command from the conversation if it hasn't been passed
+        $this->command = $this->command ?: $this->conversation['command'];
+
+        if ($this->command !== $this->conversation['command']) {
+            $this->cancel();
+            return false;
+        }
+
+        //Load the conversation notes
+        $this->protected_notes = json_decode($this->conversation['notes'], true);
+        $this->notes           = $this->protected_notes;
 
         return $this->exists();
     }
@@ -189,17 +190,18 @@ class Conversation
      */
     protected function updateStatus($status)
     {
-        if ($this->exists()) {
-            $fields = ['status' => $status];
-            $where  = [
-                'id'      => $this->conversation['id'],
-                'status'  => 'active',
-                'user_id' => $this->user_id,
-                'chat_id' => $this->chat_id,
-            ];
-            if (ConversationDB::updateConversation($fields, $where)) {
-                return true;
-            }
+        if (!$this->exists()) {
+            return false;
+        }
+        $fields = ['status' => $status];
+        $where  = [
+            'id'      => $this->conversation['id'],
+            'status'  => 'active',
+            'user_id' => $this->user_id,
+            'chat_id' => $this->chat_id,
+        ];
+        if (ConversationDB::updateConversation($fields, $where)) {
+            return true;
         }
 
         return false;
@@ -212,13 +214,14 @@ class Conversation
      */
     public function update()
     {
-        if ($this->exists()) {
-            $fields = ['notes' => json_encode($this->notes)];
-            //I can update a conversation whatever the state is
-            $where = ['id' => $this->conversation['id']];
-            if (ConversationDB::updateConversation($fields, $where)) {
-                return true;
-            }
+        if (!$this->exists()) {
+            return false;
+        }
+        $fields = ['notes' => json_encode($this->notes)];
+        //I can update a conversation whatever the state is
+        $where = ['id' => $this->conversation['id']];
+        if (ConversationDB::updateConversation($fields, $where)) {
+            return true;
         }
 
         return false;
