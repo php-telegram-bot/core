@@ -24,25 +24,15 @@ class StickerSet extends Entity
     /**
      * List of all set stickers
      *
-     * This method overrides the default getStickers method and returns a nice array
+     * This method overrides the default getStickers method
+     * and returns a nice array of Sticker objects.
      *
-     * @return Sticker[]
+     * @return null|Sticker[]
      */
     public function getStickers()
     {
-        $all_stickers = [];
-        $these_stickers = $this->getProperty('stickers')
-        if (!$these_stickers) {
-            return [];
-        }
-        foreach ($these_stickers as $stickers) {
-            $new_stickers = [];
-            foreach ($stickers as $sticker) {
-                $new_stickers[] = new Sticker($sticker);
-            }
-            $all_stickers[] = $new_stickers;
-        }
+        $pretty_array = $this->makePrettyObjectArray(Sticker::class, 'stickers');
 
-        return $all_stickers;
+        return empty($pretty_array) ? null : $pretty_array;
     }
 }
