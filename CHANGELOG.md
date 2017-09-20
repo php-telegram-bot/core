@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Finish implementing payments, adding all missing type checks and docblock methods.
 ### Changed
 ### Deprecated
 ### Removed
