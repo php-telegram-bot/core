@@ -420,9 +420,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, ['edited_message', 'channel_post', 'edited_channel_post', 'inline_query', 'chosen_inline_result', 'callback_query'], true)) {
-            $command = $this->getCommandFromType($update_type);
-        } elseif ($update_type === 'message') {
+        if ($update_type === 'message') {
             $message = $this->update->getMessage();
 
             //Load admin commands
@@ -434,21 +432,25 @@ class Telegram
             if ($type === 'command') {
                 $command = $message->getCommand();
             } elseif (in_array($type, [
-                'channel_chat_created',
+                'new_chat_members',
+                'left_chat_member',
+                'new_chat_title',
+                'new_chat_photo',
                 'delete_chat_photo',
                 'group_chat_created',
-                'left_chat_member',
-                'migrate_from_chat_id',
-                'migrate_to_chat_id',
-                'new_chat_members',
-                'new_chat_photo',
-                'new_chat_title',
-                'pinned_message',
                 'supergroup_chat_created',
+                'channel_chat_created',
+                'migrate_to_chat_id',
+                'migrate_from_chat_id',
+                'pinned_message',
+                'invoice',
+                'successful_payment',
             ], true)
             ) {
                 $command = $this->getCommandFromType($type);
             }
+        } else {
+            $command = $this->getCommandFromType($update_type);
         }
 
         //Make sure we have an up-to-date command list
