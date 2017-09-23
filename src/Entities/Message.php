@@ -190,7 +190,7 @@ class Message extends Entity
 
         $full_command = $this->getFullCommand();
         if (strpos($full_command, '/') !== 0) {
-            return false;
+            return null;
         }
         $full_command = substr($full_command, 1);
 
@@ -281,9 +281,10 @@ class Message extends Entity
             'successful_payment',
         ];
 
+        $is_command = strlen($this->getCommand()) > 0;
         foreach ($types as $type) {
             if ($this->getProperty($type)) {
-                if ($type === 'text' && $this->getCommand()) {
+                if ($is_command && $type === 'text') {
                     return 'command';
                 }
 

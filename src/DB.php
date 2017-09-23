@@ -452,7 +452,7 @@ class DB
             $chat_id   = $chat->getId();
             $chat_type = $chat->getType();
 
-            if ($migrate_to_chat_id) {
+            if ($migrate_to_chat_id !== null) {
                 $chat_type = 'supergroup';
 
                 $sth->bindValue(':id', $migrate_to_chat_id);
@@ -872,7 +872,7 @@ class DB
             $sth->bindValue(':forward_date', $forward_date);
 
             $reply_to_chat_id = null;
-            if ($reply_to_message_id) {
+            if ($reply_to_message_id !== null) {
                 $reply_to_chat_id = $chat_id;
             }
             $sth->bindValue(':reply_to_chat', $reply_to_chat_id);
