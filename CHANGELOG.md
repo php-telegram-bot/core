@@ -7,10 +7,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Finish implementing payments, adding all missing type checks and docblock methods.
 ### Changed
+- [:exclamation:][unreleased-bc-messagegetcommand-return-value] `Message::getCommand()` returns `null` if not a command, instead of `false`.
 ### Deprecated
 ### Removed
 ### Fixed
 - SQL update script for version 0.44.1-0.45.0.
+- Issues found by Scrutinizer (Type hints and return values).
 ### Security
 
 ## [0.49.0] - 2017-09-17
@@ -169,6 +171,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
 [0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
 [0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
 [0.47.0-bc-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands

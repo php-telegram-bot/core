@@ -60,10 +60,7 @@ class TelegramLog
     static protected $debug_log_temp_stream_handle;
 
     /**
-     * Initialize
-     *
-     * Initilize monolog instance. Singleton
-     * Is possbile provide an external monolog instance
+     * Initialize Monolog Logger instance, optionally passing an existing one
      *
      * @param \Monolog\Logger
      *
@@ -76,10 +73,10 @@ class TelegramLog
                 self::$monolog = $external_monolog;
 
                 foreach (self::$monolog->getHandlers() as $handler) {
-                    if ($handler->getLevel() === 400) {
+                    if (method_exists($handler, 'getLevel') && $handler->getLevel() === 400) {
                         self::$error_log_path = 'true';
                     }
-                    if ($handler->getLevel() === 100) {
+                    if (method_exists($handler, 'getLevel') && $handler->getLevel() === 100) {
                         self::$debug_log_path = 'true';
                     }
                 }
@@ -174,9 +171,6 @@ class TelegramLog
     /**
      * Initialize update log
      *
-     * Initilize monolog instance. Singleton
-     * Is possbile provide an external monolog instance
-     *
      * @param string $path
      *
      * @return \Monolog\Logger
@@ -190,20 +184,17 @@ class TelegramLog
             throw new TelegramLogException('Empty path for update log');
         }
         self::$update_log_path = $path;
+
         if (self::$monolog_update === null) {
             self::$monolog_update = new Logger('bot_update_log');
-            // Create a formatter
-            $output = '%message%' . PHP_EOL;
-            $formatter = new LineFormatter($output);
 
-            // Update handler
-            $update_handler = new StreamHandler(self::$update_log_path, Logger::INFO);
-            $update_handler->setFormatter($formatter);
-
-            self::$monolog_update->pushHandler($update_handler);
+            self::$monolog_update->pushHandler(
+                (new StreamHandler(self::$update_log_path, Logger::INFO))
+                    ->setFormatter(new LineFormatter('%message%' . PHP_EOL))
+            );
         }
 
-        return self::$monolog;
+        return self::$monolog_update;
     }
 
     /**

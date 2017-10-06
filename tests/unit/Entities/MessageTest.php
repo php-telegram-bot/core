@@ -30,8 +30,8 @@ class MessageTest extends TestCase
 
         // text
         $message = TestHelpers::getFakeMessageObject(['text' => 'some text']);
-        self::assertEquals('', $message->getFullCommand());
-        self::assertEquals('', $message->getCommand());
+        self::assertNull($message->getFullCommand());
+        self::assertNull($message->getCommand());
         self::assertEquals('some text', $message->getText());
         self::assertEquals('some text', $message->getText(true));
 
