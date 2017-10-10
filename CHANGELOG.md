@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 - SQL update script for version 0.44.1-0.45.0.
 - Issues found by Scrutinizer (Type hints and return values).
+- Check inline keyboard button parameter value correctly. 
 ### Security
 
 ## [0.49.0] - 2017-09-17
