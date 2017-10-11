@@ -25,6 +25,8 @@ namespace Longman\TelegramBot\Entities;
  * @property ChatPhoto $photo                           Optional. Chat photo. Returned only in getChat.
  * @property string    $description                     Optional. Description, for supergroups and channel chats. Returned only in getChat.
  * @property string    $invite_link                     Optional. Chat invite link, for supergroups and channel chats. Returned only in getChat.
+ * @property string    $sticker_set_name                Optional. For supergroups, name of Group sticker set. Returned only in getChat.
+ * @property bool      $can_set_sticker_set             Optional. True, if the bot can change group the sticker set. Returned only in getChat.
  * @method   int       getId()                          Unique identifier for this chat. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
  * @method   string    getType()                        Type of chat, can be either "private ", "group", "supergroup" or "channel"
  * @method   string    getTitle()                       Optional. Title, for channels and group chats
@@ -36,6 +38,8 @@ namespace Longman\TelegramBot\Entities;
  * @method   string    getDescription()                 Optional. Description, for supergroups and channel chats. Returned only in getChat.
  * @method   string    getInviteLink()                  Optional. Chat invite link, for supergroups and channel chats. Returned only in getChat.
  * @method   Message   getPinnedMessage()               Optional. Pinned message, for supergroups. Returned only in getChat.
+ * @method   string    getStickerSetName()              Optional. For supergroups, name of Group sticker set. Returned only in getChat.
+ * @method   bool      getCanSetStickerSet()            Optional. True, if the bot can change group the sticker set. Returned only in getChat.
  */
 class Chat extends Entity
 {

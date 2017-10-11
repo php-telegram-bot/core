@@ -56,6 +56,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse getChatAdministrators(array $data)   Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
  * @method static ServerResponse getChatMembersCount(array $data)     Use this method to get the number of members in a chat. Returns Int on success.
  * @method static ServerResponse getChatMember(array $data)           Use this method to get information about a member of a chat. Returns a ChatMember object on success.
+ * @method static ServerResponse setChatStickerSet(array $data)       Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
+ * @method static ServerResponse deleteChatStickerSet(array $data)    Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)     Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)       Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse editMessageText(array $data)         Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -164,6 +166,8 @@ class Request
         'getChatAdministrators',
         'getChatMembersCount',
         'getChatMember',
+        'setChatStickerSet',
+        'deleteChatStickerSet',
         'answerCallbackQuery',
         'answerInlineQuery',
         'editMessageText',
@@ -660,6 +664,8 @@ class Request
                 'editMessageReplyMarkup',
                 'setChatTitle',
                 'setChatDescription',
+                'setChatStickerSet',
+                'deleteChatStickerSet',
             ];
 
             $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;
