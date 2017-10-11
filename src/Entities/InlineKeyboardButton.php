@@ -64,7 +64,7 @@ class InlineKeyboardButton extends KeyboardButton
         $num_params = 0;
 
         foreach (['url', 'callback_data', 'switch_inline_query', 'switch_inline_query_current_chat', 'pay'] as $param) {
-            if (!empty($this->getProperty($param))) {
+            if ($this->getProperty($param, '') !== '') {
                 $num_params++;
             }
         }
