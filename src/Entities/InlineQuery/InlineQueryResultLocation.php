@@ -24,6 +24,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'latitude'              => 36.0338,
  *   'longitude'             => 71.8601,
  *   'title'                 => '',
+ *   'live_period'           => 900,
  *   'reply_markup'          => <InlineKeyboard>,
  *   'input_message_content' => <InputMessageContent>,
  *   'thumb_url'             => '',
@@ -37,6 +38,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method float                getLatitude()            Location latitude in degrees
  * @method float                getLongitude()           Location longitude in degrees
  * @method string               getTitle()               Location title
+ * @method int                  getLivePeriod()          Optional. Period in seconds for which the location can be updated, should be between 60 and 86400.
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the location
  * @method string               getThumbUrl()            Optional. Url of the thumbnail for the result
@@ -47,6 +49,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setLatitude(float $latitude)                                       Location latitude in degrees
  * @method $this setLongitude(float $longitude)                                     Location longitude in degrees
  * @method $this setTitle(string $title)                                            Location title
+ * @method $this setLivePeriod(int $live_period)                                    Optional. Period in seconds for which the location can be updated, should be between 60 and 86400.
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the location
  * @method $this setThumbUrl(string $thumb_url)                                     Optional. Url of the thumbnail for the result

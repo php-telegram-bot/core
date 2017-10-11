@@ -33,6 +33,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendVoice(array $data)               Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendVideoNote(array $data)           Use this method to send video messages. On success, the sent Message is returned.
  * @method static ServerResponse sendLocation(array $data)            Use this method to send point on the map. On success, the sent Message is returned.
+ * @method static ServerResponse editMessageLiveLocation(array $data) Use this method to edit live location messages sent by the bot or via the bot (for inline bots). A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse stopMessageLiveLocation(array $data) Use this method to stop updating a live location message sent by the bot or via the bot (for inline bots) before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
  * @method static ServerResponse sendVenue(array $data)               Use this method to send information about a venue. On success, the sent Message is returned.
  * @method static ServerResponse sendContact(array $data)             Use this method to send phone contacts. On success, the sent Message is returned.
  * @method static ServerResponse sendChatAction(array $data)          Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
@@ -139,6 +141,8 @@ class Request
         'sendVoice',
         'sendVideoNote',
         'sendLocation',
+        'editMessageLiveLocation',
+        'stopMessageLiveLocation',
         'sendVenue',
         'sendContact',
         'sendChatAction',
@@ -646,6 +650,8 @@ class Request
                 'sendVoice',
                 'sendVideoNote',
                 'sendLocation',
+                'editMessageLiveLocation',
+                'stopMessageLiveLocation',
                 'sendVenue',
                 'sendContact',
                 'sendInvoice',
