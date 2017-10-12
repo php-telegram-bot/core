@@ -33,6 +33,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendVoice(array $data)               Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendVideoNote(array $data)           Use this method to send video messages. On success, the sent Message is returned.
  * @method static ServerResponse sendLocation(array $data)            Use this method to send point on the map. On success, the sent Message is returned.
+ * @method static ServerResponse editMessageLiveLocation(array $data) Use this method to edit live location messages sent by the bot or via the bot (for inline bots). A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse stopMessageLiveLocation(array $data) Use this method to stop updating a live location message sent by the bot or via the bot (for inline bots) before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
  * @method static ServerResponse sendVenue(array $data)               Use this method to send information about a venue. On success, the sent Message is returned.
  * @method static ServerResponse sendContact(array $data)             Use this method to send phone contacts. On success, the sent Message is returned.
  * @method static ServerResponse sendChatAction(array $data)          Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
@@ -54,6 +56,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse getChatAdministrators(array $data)   Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
  * @method static ServerResponse getChatMembersCount(array $data)     Use this method to get the number of members in a chat. Returns Int on success.
  * @method static ServerResponse getChatMember(array $data)           Use this method to get information about a member of a chat. Returns a ChatMember object on success.
+ * @method static ServerResponse setChatStickerSet(array $data)       Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
+ * @method static ServerResponse deleteChatStickerSet(array $data)    Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)     Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)       Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse editMessageText(array $data)         Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -139,6 +143,8 @@ class Request
         'sendVoice',
         'sendVideoNote',
         'sendLocation',
+        'editMessageLiveLocation',
+        'stopMessageLiveLocation',
         'sendVenue',
         'sendContact',
         'sendChatAction',
@@ -160,6 +166,8 @@ class Request
         'getChatAdministrators',
         'getChatMembersCount',
         'getChatMember',
+        'setChatStickerSet',
+        'deleteChatStickerSet',
         'answerCallbackQuery',
         'answerInlineQuery',
         'editMessageText',
@@ -646,6 +654,8 @@ class Request
                 'sendVoice',
                 'sendVideoNote',
                 'sendLocation',
+                'editMessageLiveLocation',
+                'stopMessageLiveLocation',
                 'sendVenue',
                 'sendContact',
                 'sendInvoice',
@@ -654,6 +664,8 @@ class Request
                 'editMessageReplyMarkup',
                 'setChatTitle',
                 'setChatDescription',
+                'setChatStickerSet',
+                'deleteChatStickerSet',
             ];
 
             $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;

@@ -66,6 +66,7 @@ class Message extends Entity
             'forward_from_chat'  => Chat::class,
             'reply_to_message'   => ReplyToMessage::class,
             'entities'           => MessageEntity::class,
+            'caption_entities'   => MessageEntity::class,
             'audio'              => Audio::class,
             'document'           => Document::class,
             'photo'              => PhotoSize::class,
@@ -154,6 +155,21 @@ class Message extends Entity
     public function getEntities()
     {
         $pretty_array = $this->makePrettyObjectArray(MessageEntity::class, 'entities');
+
+        return empty($pretty_array) ? null : $pretty_array;
+    }
+
+    /**
+     * Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+     *
+     * This method overrides the default getCaptionEntities method
+     * and returns a nice array of MessageEntity objects.
+     *
+     * @return null|MessageEntity[]
+     */
+    public function getCaptionEntities()
+    {
+        $pretty_array = $this->makePrettyObjectArray(MessageEntity::class, 'caption_entities');
 
         return empty($pretty_array) ? null : $pretty_array;
     }

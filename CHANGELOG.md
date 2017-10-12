@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 - Finish implementing payments, adding all missing type checks and docblock methods.
+- Implemented new changes for Bot API 3.4 (Live Locations).
 ### Changed
 - [:exclamation:][unreleased-bc-messagegetcommand-return-value] `Message::getCommand()` returns `null` if not a command, instead of `false`.
 ### Deprecated
