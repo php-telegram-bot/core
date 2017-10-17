@@ -5,17 +5,22 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.50.0] - 2017-10-17
+### Added
 - Finish implementing payments, adding all missing type checks and docblock methods.
 - Implemented new changes for Bot API 3.4 (Live Locations).
 ### Changed
-- [:exclamation:][unreleased-bc-messagegetcommand-return-value] `Message::getCommand()` returns `null` if not a command, instead of `false`.
-### Deprecated
-### Removed
+- [:exclamation:][0.50.0-bc-messagegetcommand-return-value] `Message::getCommand()` returns `null` if not a command, instead of `false`.
 ### Fixed
 - SQL update script for version 0.44.1-0.45.0.
 - Issues found by Scrutinizer (Type hints and return values).
 - Check inline keyboard button parameter value correctly. 
-### Security
 
 ## [0.49.0] - 2017-09-17
 ### Added
@@ -173,7 +178,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
+[0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
 [0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
 [0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
 [0.47.0-bc-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
@@ -186,6 +191,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.50.0]: https://github.com/php-telegram-bot/core/compare/0.49.0...0.50.0
 [0.49.0]: https://github.com/php-telegram-bot/core/compare/0.48.0...0.49.0
 [0.48.0]: https://github.com/php-telegram-bot/core/compare/0.47.1...0.48.0
 [0.47.1]: https://github.com/php-telegram-bot/core/compare/0.47.0...0.47.1
