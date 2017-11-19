@@ -655,7 +655,7 @@ class Request
                 'sendVideo',
                 'sendVoice',
                 'sendVideoNote',
-                'sendMediaGroup',      
+                'sendMediaGroup',
                 'sendLocation',
                 'editMessageLiveLocation',
                 'stopMessageLiveLocation',
