@@ -830,7 +830,7 @@ class DB
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
-                    `forward_date`, `reply_to_chat`, `reply_to_message`, `text`, `entities`, `audio`, `document`,
+                    `forward_date`, `reply_to_chat`, `reply_to_message`, `media_group_id`, `text`, `entities`, `audio`, `document`,
                     `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
@@ -838,7 +838,7 @@ class DB
                     `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
-                    :forward_date, :reply_to_chat, :reply_to_message, :text, :entities, :audio, :document,
+                    :forward_date, :reply_to_chat, :reply_to_message, :media_group_id, :text, :entities, :audio, :document,
                     :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
@@ -878,6 +878,7 @@ class DB
             $sth->bindValue(':reply_to_chat', $reply_to_chat_id);
             $sth->bindValue(':reply_to_message', $reply_to_message_id);
 
+            $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':text', $message->getText());
             $sth->bindValue(':entities', $t = self::entitiesArrayToJson($message->getEntities(), null));
             $sth->bindValue(':audio', $message->getAudio());

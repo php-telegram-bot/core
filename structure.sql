@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
+  `media_group_id` TEXT COMMENT 'The unique identifier of a media message group this message belongs to',
   `text` TEXT COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',
   `entities` TEXT COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `audio` TEXT COMMENT 'Audio object. Message is an audio file, information about the file',
