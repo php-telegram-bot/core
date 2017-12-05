@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Implemented new changes for Bot API 3.5 (InputMedia, MediaGroup).
 ### Changed
 ### Deprecated
 ### Removed
