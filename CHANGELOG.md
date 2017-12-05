@@ -5,12 +5,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- Implemented new changes for Bot API 3.5 (InputMedia, MediaGroup).
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.51.0] - 2017-12-05
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.51.0-sql-migration] on your database.
+### Added
+- Implemented new changes for Bot API 3.5 (InputMedia, MediaGroup).
 
 ## [0.50.0] - 2017-10-17
 ### Added
@@ -35,7 +39,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Channel selection when using `DB::selectChats()`.
 
 ## [0.48.0] - 2017-08-26
-**Note:** After updating to this version, you will need to execute the [SQL migration script][0.48.0-sql-migration] on your database.
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.48.0-sql-migration] on your database.
 ### Added
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 - Add new methods, fields and objects for working with stickers (Bot API 3.2).
@@ -70,7 +74,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:exclamation:][0.46.0-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 
 ## [0.45.0] - 2017-06-25
-**Note:** After updating to this version, you will need to execute the [SQL migration script][0.45.0-sql-migration] on your database.
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.45.0-sql-migration] on your database.
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 - Allow setting a custom Guzzle HTTP Client for requests (#511).
@@ -179,6 +183,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.50.0-0.51.0.sql
 [0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
 [0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
 [0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
@@ -192,6 +197,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.51.0]: https://github.com/php-telegram-bot/core/compare/0.50.0...0.51.0
 [0.50.0]: https://github.com/php-telegram-bot/core/compare/0.49.0...0.50.0
 [0.49.0]: https://github.com/php-telegram-bot/core/compare/0.48.0...0.49.0
 [0.48.0]: https://github.com/php-telegram-bot/core/compare/0.47.1...0.48.0
