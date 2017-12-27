@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Entity relations and wrong types for payments.
 ### Security
 
 ## [0.51.0] - 2017-12-05

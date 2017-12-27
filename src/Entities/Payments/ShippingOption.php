@@ -43,18 +43,6 @@ class ShippingOption extends Entity
      */
     public function getPrices()
     {
-        $all_prices = [];
-
-        if ($these_prices = $this->getProperty('prices')) {
-            foreach ($these_prices as $prices) {
-                $new_prices = [];
-                foreach ($prices as $price) {
-                    $new_prices[] = new LabeledPrice($price);
-                }
-                $all_prices[] = $new_prices;
-            }
-        }
-
-        return $all_prices;
+        return $this->makePrettyObjectArray(LabeledPrice::class, 'prices');
     }
 }
