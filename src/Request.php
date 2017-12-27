@@ -74,6 +74,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendInvoice(array $data)             Use this method to send invoices. On success, the sent Message is returned.
  * @method static ServerResponse answerShippingQuery(array $data)     If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
  * @method static ServerResponse answerPreCheckoutQuery(array $data)  Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
+ * @method static ServerResponse sendGame(array $data)                Use this method to send a game. On success, the sent Message is returned.
+ * @method static ServerResponse setGameScore(array $data)            Use this method to set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited Message, otherwise returns True. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
+ * @method static ServerResponse getGameHighScores(array $data)       Use this method to get data for high score tables. Will return the score of the specified user and several of his neighbors in a game. On success, returns an Array of GameHighScore objects.
  */
 class Request
 {
@@ -185,6 +188,9 @@ class Request
         'sendInvoice',
         'answerShippingQuery',
         'answerPreCheckoutQuery',
+        'sendGame',
+        'setGameScore',
+        'getGameHighScores',
     ];
 
     /**
@@ -662,6 +668,8 @@ class Request
                 'sendVenue',
                 'sendContact',
                 'sendInvoice',
+                'sendGame',
+                'setGameScore',
                 'editMessageText',
                 'editMessageCaption',
                 'editMessageReplyMarkup',

@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Telegram Games platform!
 ### Changed
 ### Deprecated
 ### Removed
