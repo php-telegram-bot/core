@@ -22,7 +22,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method string getCallbackData()                 Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
  * @method string getSwitchInlineQuery()            Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
  * @method string getSwitchInlineQueryCurrentChat() Optional. If set, pressing the button will insert the bot‘s username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot’s username will be inserted.
- * @method string getPay()                          Optional. Specify True, to send a Pay button.
+ * @method bool   getPay()                          Optional. Specify True, to send a Pay button.
  *
  * @method $this setText(string $text)                                                     Label text on the button
  * @method $this setUrl(string $url)                                                       Optional. HTTP url to be opened when button is pressed
