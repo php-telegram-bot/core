@@ -360,6 +360,7 @@ class Request
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
+            TelegramLog::error($e);
             $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
