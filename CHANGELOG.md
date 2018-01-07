@@ -9,10 +9,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+### Security
+
+## [0.52.0] - 2018-01-07
+### Fixed
 - Entity relations and wrong types for payments.
 - Allow empty string for `switch_inline_query` and `switch_inline_query_current_chat` (InlineKeyboardButton).
 - Fix empty date entry for User and Chat entities, using the current timestamp instead.
-### Security
 
 ## [0.51.0] - 2017-12-05
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.51.0-sql-migration] on your database.
@@ -200,6 +203,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.52.0]: https://github.com/php-telegram-bot/core/compare/0.51.0...0.52.0
 [0.51.0]: https://github.com/php-telegram-bot/core/compare/0.50.0...0.51.0
 [0.50.0]: https://github.com/php-telegram-bot/core/compare/0.49.0...0.50.0
 [0.49.0]: https://github.com/php-telegram-bot/core/compare/0.48.0...0.49.0
