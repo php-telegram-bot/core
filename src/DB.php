@@ -260,17 +260,13 @@ class DB
     /**
      * Convert from unix timestamp to timestamp
      *
-     * @param int $time Unix timestamp (if null, current timestamp is used)
+     * @param int $time Unix timestamp (if empty, current timestamp is used)
      *
      * @return string
      */
     protected static function getTimestamp($time = null)
     {
-        if ($time === null) {
-            $time = time();
-        }
-
-        return date('Y-m-d H:i:s', $time);
+        return date('Y-m-d H:i:s', $time ?: time());
     }
 
     /**
@@ -362,7 +358,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertUser(User $user, $date, Chat $chat = null)
+    public static function insertUser(User $user, $date = null, Chat $chat = null)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -389,6 +385,7 @@ class DB
             $sth->bindValue(':first_name', $user->getFirstName());
             $sth->bindValue(':last_name', $user->getLastName());
             $sth->bindValue(':language_code', $user->getLanguageCode());
+            $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
 
@@ -429,7 +426,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertChat(Chat $chat, $date, $migrate_to_chat_id = null)
+    public static function insertChat(Chat $chat, $date = null, $migrate_to_chat_id = null)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -466,6 +463,7 @@ class DB
             $sth->bindValue(':title', $chat->getTitle());
             $sth->bindValue(':username', $chat->getUsername());
             $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
+            $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
 
