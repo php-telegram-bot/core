@@ -6,9 +6,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
 ### Deprecated
 ### Removed
 ### Fixed
+- PHPCS fixes for updated CodeSniffer dependency.
 ### Security
 
 ## [0.52.0] - 2018-01-07
