@@ -138,6 +138,13 @@ class Telegram
     protected $run_commands = false;
 
     /**
+     * Yii2's Namespace Integration
+     *
+     * @var boolean
+     */
+    protected $enable_yii_support = FALSE;
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -184,6 +191,11 @@ class Telegram
         $this->mysql_enabled = true;
 
         return $this;
+    }
+    
+    public function enableYiiCommandNamespaceSupport()
+    {
+        $this->enable_yii_support = TRUE;
     }
 
     /**
@@ -263,6 +275,13 @@ class Telegram
 
         foreach ($which as $auth) {
             $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
+            if (class_exists($command_namespace)) {
+                return new $command_namespace($this, $this->update);
+            }
+        }
+  
+        if ($this->enable_yii_support === TRUE) {
+            $command_namespace = 'app\\commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
