@@ -272,16 +272,16 @@ class Telegram
         $which = ['System'];
         $this->isAdmin() && $which[] = 'Admin';
         $which[] = 'User';
-
-        foreach ($which as $auth) {
-            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
+  
+        if ($this->enable_yii_support === TRUE) {
+            $command_namespace = 'app\\commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
         }
-  
-        if ($this->enable_yii_support === TRUE) {
-            $command_namespace = 'app\\commands\\' . $this->ucfirstUnicode($command) . 'Command';
+
+        foreach ($which as $auth) {
+            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
