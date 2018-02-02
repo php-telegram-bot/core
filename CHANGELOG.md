@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Add debug log entry instead of throwing an exception for duplicate updates.
 ### Deprecated
 ### Removed
 ### Fixed
