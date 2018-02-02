@@ -318,14 +318,25 @@ class Telegram
      *
      * @param int|null $limit
      * @param int|null $timeout
+     * @param bool $no_database
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function handleGetUpdates($limit = null, $timeout = null)
+    public function handleGetUpdates($limit = null, $timeout = null, $no_database = false)
     {
         if (empty($this->bot_username)) {
             throw new TelegramException('Bot Username is not defined!');
+        }
+
+        if (!DB::isDbConnected() && !$no_database) {
+            return new ServerResponse(
+                [
+                    'ok'          => false,
+                    'description' => 'getUpdates needs MySQL connection!',
+                ],
+                $this->bot_username
+            );
         }
 
         //Take custom input into account.
