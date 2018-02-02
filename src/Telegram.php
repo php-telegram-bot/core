@@ -469,6 +469,12 @@ class Telegram
         //This is necessary to "require" all the necessary command files!
         $this->getCommandsList();
 
+        //Make sure we don't try to process update that was already processed
+        if (count(DB::selectTelegramUpdate(1, $this->update->getUpdateId())) === 1) {
+            TelegramLog::debug('Duplicate update received, processing aborted!');
+            return Request::emptyResponse();
+        }
+
         DB::insertRequest($this->update);
 
         return $this->executeCommand($command);
