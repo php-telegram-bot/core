@@ -138,6 +138,14 @@ class Telegram
     protected $run_commands = false;
 
     /**
+     * Last update ID
+     * Only used when running getUpdates in a loop without database
+     *
+     * @var integer
+     */
+    protected $last_update_id = -1;
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -320,26 +328,21 @@ class Telegram
             throw new TelegramException('Bot Username is not defined!');
         }
 
-        if (!DB::isDbConnected()) {
-            return new ServerResponse(
-                [
-                    'ok'          => false,
-                    'description' => 'getUpdates needs MySQL connection!',
-                ],
-                $this->bot_username
-            );
-        }
-
         //Take custom input into account.
         if ($custom_input = $this->getCustomInput()) {
             $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
         } else {
-            //DB Query
-            $last_update = DB::selectTelegramUpdate(1);
-            $last_update = reset($last_update);
+            if (DB::isDbConnected()) {
+                //DB Query
+                $last_update = DB::selectTelegramUpdate(1);
+                $last_update = reset($last_update);
 
-            //As explained in the telegram bot api documentation
-            $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
+                //As explained in the telegram bot api documentation
+                $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
+            } else {
+                //Increment variable containing last update_id
+                $offset = $this->last_update_id + 1;
+            }
 
             $response = Request::getUpdates(
                 [
@@ -351,6 +354,15 @@ class Telegram
         }
 
         if ($response->isOk()) {
+            // Set last update_id based on returned updates
+            if (!DB::isDbConnected()) {
+                $result = $response->getResult();
+
+                if (end($result)) {
+                    $this->last_update_id = end($result)->getUpdateId();
+                }
+            }
+
             //Process all updates
             /** @var Update $result */
             foreach ((array) $response->getResult() as $result) {
