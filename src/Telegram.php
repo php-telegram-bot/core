@@ -139,7 +139,7 @@ class Telegram
 
     /**
      * Last update ID
-     * Only used when running getUpdates in a loop without database
+     * Only used when running getUpdates without a database
      *
      * @var integer
      */
@@ -340,7 +340,6 @@ class Telegram
                 //As explained in the telegram bot api documentation
                 $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
             } else {
-                //Increment variable containing last update_id
                 $offset = $this->last_update_id + 1;
             }
 
@@ -354,18 +353,15 @@ class Telegram
         }
 
         if ($response->isOk()) {
-            // Set last update_id based on returned updates
-            if (!DB::isDbConnected()) {
-                $result = $response->getResult();
+            $results = $response->getResult();
 
-                if (end($result)) {
-                    $this->last_update_id = end($result)->getUpdateId();
-                }
+            if (!DB::isDbConnected() && $last_result = end($results)) {
+                $this->last_update_id = $last_result->getUpdateId();
             }
 
             //Process all updates
             /** @var Update $result */
-            foreach ((array) $response->getResult() as $result) {
+            foreach ($results as $result) {
                 $this->processUpdate($result);
             }
         }
