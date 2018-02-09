@@ -8,11 +8,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed.
 - `Telegram::useGetUpdatesWithoutDatabase()` method, enables `Telegram::handleGetUpdates()` to run without a database.
 ### Changed
+- Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
 - Add debug log entry instead of throwing an exception for duplicate updates.
 - `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default).
 ### Deprecated
 ### Removed
 ### Fixed
+- PHPCS fixes for updated CodeSniffer dependency.
 ### Security
 
 ## [0.52.0] - 2018-01-07
