@@ -7,7 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 ### Changed
 - Add debug log entry instead of throwing an exception for duplicate updates.
-- `handleGetUpdates()` can now work without a database connection but only in a loop
+- `handleGetUpdates()` can now work without a database connection
 ### Deprecated
 ### Removed
 ### Fixed

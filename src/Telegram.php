@@ -354,12 +354,13 @@ class Telegram
                 $last_update = DB::selectTelegramUpdate(1);
                 $last_update = reset($last_update);
 
-                //As explained in the telegram bot api documentation
-                $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
-            } else {
-                $offset = $this->last_update_id + 1;
+                $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : -1;
             }
 
+            //As explained in the telegram bot api documentation
+            $offset = $this->last_update_id + 1;
+
+            //Finally, get updates from Telegram!
             $response = Request::getUpdates(
                 [
                     'offset'  => $offset,
@@ -372,14 +373,27 @@ class Telegram
         if ($response->isOk()) {
             $results = $response->getResult();
 
-            if (!DB::isDbConnected() && $last_result = end($results)) {
-                $this->last_update_id = $last_result->getUpdateId();
+            $mark_as_read = false;
+            if (!DB::isDbConnected() && $this->last_update_id <= 0) {
+                $mark_as_read = true;
             }
 
             //Process all updates
             /** @var Update $result */
             foreach ($results as $result) {
                 $this->processUpdate($result);
+                $this->last_update_id = $result->getUpdateId(); //Remember which update was handled after processing each one of them
+            }
+
+            if (!DB::isDbConnected() && $mark_as_read) {
+                //Mark update(s) as read after handling
+                Request::getUpdates(
+                    [
+                        'offset'  => $this->last_update_id + 1,
+                        'limit'   => 1,
+                        'timeout' => $timeout,
+                    ]
+                );
             }
         }
 
