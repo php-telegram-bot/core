@@ -150,7 +150,7 @@ class Telegram
      *
      * @var integer
      */
-    protected $last_update_id = -1;
+    protected $last_update_id = null;
 
     /**
      * Telegram constructor.
@@ -345,22 +345,24 @@ class Telegram
             );
         }
 
+        $offset = 0;
+
         //Take custom input into account.
         if ($custom_input = $this->getCustomInput()) {
             $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
         } else {
             if (DB::isDbConnected()) {
-                //DB Query
+                //Get last update id from the database
                 $last_update = DB::selectTelegramUpdate(1);
                 $last_update = reset($last_update);
 
-                $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : -1;
+                $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;
             }
 
-            //As explained in the telegram bot api documentation
-            $offset = $this->last_update_id + 1;
+            if ($this->last_update_id !== null) {
+                $offset = $this->last_update_id + 1;    //As explained in the telegram bot API documentation
+            }
 
-            //Finally, get updates from Telegram!
             $response = Request::getUpdates(
                 [
                     'offset'  => $offset,
@@ -373,19 +375,13 @@ class Telegram
         if ($response->isOk()) {
             $results = $response->getResult();
 
-            $mark_as_read = false;
-            if (!DB::isDbConnected() && $this->last_update_id <= 0) {
-                $mark_as_read = true;
-            }
-
             //Process all updates
             /** @var Update $result */
             foreach ($results as $result) {
                 $this->processUpdate($result);
-                $this->last_update_id = $result->getUpdateId(); //Remember which update was handled after processing each one of them
             }
 
-            if (!DB::isDbConnected() && $mark_as_read) {
+            if (!DB::isDbConnected() && !$custom_input && $this->last_update_id !== null && $offset === 0) {
                 //Mark update(s) as read after handling
                 Request::getUpdates(
                     [
@@ -454,6 +450,7 @@ class Telegram
     public function processUpdate(Update $update)
     {
         $this->update = $update;
+        $this->last_update_id = $update->getUpdateId();
 
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
