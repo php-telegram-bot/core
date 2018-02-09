@@ -6,9 +6,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 - `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed.
+- `Telegram::useGetUpdatesWithoutDatabase()` method, enables `Telegram::handleGetUpdates()` to run without a database.
 ### Changed
 - Add debug log entry instead of throwing an exception for duplicate updates.
-- `handleGetUpdates()` can now work without a database connection
+- `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default).
 ### Deprecated
 ### Removed
 ### Fixed
