@@ -1014,4 +1014,14 @@ class Telegram
     {
         $this->getupdates_without_database = $enable;
     }
+
+    /**
+     * Return last update id
+     *
+     * @return int
+     */
+    public function getLastUpdateId()
+    {
+        return $this->last_update_id;
+    }
 }
