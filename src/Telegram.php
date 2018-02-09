@@ -138,6 +138,13 @@ class Telegram
     protected $run_commands = false;
 
     /**
+     * Is running getUpdates without DB enabled
+     *
+     * @var bool
+     */
+    protected $getupdates_without_database = false;
+
+    /**
      * Last update ID
      * Only used when running getUpdates without a database
      *
@@ -318,22 +325,21 @@ class Telegram
      *
      * @param int|null $limit
      * @param int|null $timeout
-     * @param bool $no_database
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function handleGetUpdates($limit = null, $timeout = null, $no_database = false)
+    public function handleGetUpdates($limit = null, $timeout = null)
     {
         if (empty($this->bot_username)) {
             throw new TelegramException('Bot Username is not defined!');
         }
 
-        if (!DB::isDbConnected() && !$no_database) {
+        if (!DB::isDbConnected() && !$this->getupdates_without_database) {
             return new ServerResponse(
                 [
                     'ok'          => false,
-                    'description' => 'getUpdates needs MySQL connection!',
+                    'description' => 'getUpdates needs MySQL connection! (This can be overridden - see documentation)',
                 ],
                 $this->bot_username
             );
@@ -983,5 +989,15 @@ class Telegram
     public function isRunCommands()
     {
         return $this->run_commands;
+    }
+
+    /**
+     * Switch to enable running getUpdates without a database
+     *
+     * @param bool $enable
+     */
+    public function useGetUpdatesWithoutDatabase($enable = true)
+    {
+        $this->getupdates_without_database = $enable;
     }
 }
