@@ -138,6 +138,13 @@ class Telegram
     protected $run_commands = false;
 
     /**
+     * If the current message is a user-called command (as opposed to system-called)
+     *
+     * @var boolean
+     */
+    protected $is_user_command = false;
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -160,9 +167,6 @@ class Telegram
         if (!empty($bot_username)) {
             $this->bot_username = $bot_username;
         }
-
-        //Add default system commands path
-        $this->addCommandsPath(BASE_COMMANDS_PATH . '/SystemCommands');
 
         Request::initialize($this);
     }
@@ -235,7 +239,7 @@ class Telegram
 
                     require_once $file->getPathname();
 
-                    $command_obj = $this->getCommandObject($command);
+                    $command_obj = $this->getCommandObject($command_name);
                     if ($command_obj instanceof Command) {
                         $commands[$command_name] = $command_obj;
                     }
@@ -262,6 +266,15 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
+            // Allow only "generic" system commands if a user calls a system command, to allow (custom) fallbacks.
+            // The problem here is, that the system command gets autoloaded already, so even if it's not in the
+            // custom commands paths, it is still available and there is no way of knowing if it's an override or not.
+            // Downside: `/generic` and `/genericmessage` can still be called by user.
+            // @todo Implement proper command system...
+            if ($auth === 'System' && $this->is_user_command && !in_array($command, ['genericmessage', 'generic'], true)) {
+                continue;
+            }
+
             $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
@@ -419,18 +432,16 @@ class Telegram
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
 
+        $this->is_user_command = false;
+
         $update_type = $this->update->getUpdateType();
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
 
-            //Load admin commands
-            if ($this->isAdmin()) {
-                $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
-            }
-
             $type = $message->getType();
             if ($type === 'command') {
-                $command = $message->getCommand();
+                $this->is_user_command = true;
+                $command               = $message->getCommand();
             } elseif (in_array($type, [
                 'new_chat_members',
                 'left_chat_member',
@@ -451,6 +462,15 @@ class Telegram
             }
         } else {
             $command = $this->getCommandFromType($update_type);
+        }
+
+        //Load admin commands
+        if ($update_type === 'message' && $this->isAdmin()) {
+            $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
+        }
+        //Only load System Commands if the command hasn't been called by a user
+        if (!$this->is_user_command) {
+            $this->addCommandsPath(BASE_COMMANDS_PATH . '/SystemCommands', false);
         }
 
         //Make sure we have an up-to-date command list

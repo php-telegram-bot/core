@@ -31,22 +31,16 @@ class GenericCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
-        //$message = $this->getMessage();
-        //$chat_id = $message->getChat()->getId();
-        //$user_id = $message->getFrom()->getId();
-        //$command = $message->getCommand();
-        //$text = trim($message->getText(true));
-
-        return parent::execute();
+        return Request::emptyResponse();
     }
 }

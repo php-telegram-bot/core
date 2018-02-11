@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 - PHPCS fixes for updated CodeSniffer dependency.
 ### Security
+- Don't allow a user to call System Commands directly.
 
 ## [0.52.0] - 2018-01-07
 ### Fixed
