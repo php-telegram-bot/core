@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
 - Add debug log entry instead of throwing an exception for duplicate updates.
 ### Deprecated
+- [:exclamation:][unreleased-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more).
 ### Removed
 ### Fixed
 - PHPCS fixes for updated CodeSniffer dependency.
@@ -193,6 +194,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
 [0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.50.0-0.51.0.sql
 [0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
 [0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
