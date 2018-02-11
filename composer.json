@@ -41,13 +41,13 @@
     },
     "scripts": {
         "check-code": [
-            "./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/ tests/ --report-width=150"
+            "\"vendor/bin/phpcs\" --standard=phpcs.xml -snp --encoding=utf-8 src/ tests/ --report-width=150"
         ],
         "test": [
-            "./vendor/bin/phpunit"
+            "\"vendor/bin/phpunit\""
         ],
         "test-cov": [
-            "./vendor/bin/phpunit --coverage-clover build/logs/clover.xml"
+            "\"vendor/bin/phpunit\" --coverage-clover build/logs/clover.xml"
         ],
         "test-cov-upload": [
             "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml"
