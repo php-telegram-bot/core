@@ -14,6 +14,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - PHPCS fixes for updated CodeSniffer dependency.
+- Send messages correctly via `/sendtochannel`.
 ### Security
 
 ## [0.52.0] - 2018-01-07
