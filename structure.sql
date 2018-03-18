@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `migrate_to_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
   `migrate_from_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
   `pinned_message` TEXT NULL COMMENT 'Message object. Specified message was pinned',
+  `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
 
   PRIMARY KEY (`chat_id`, `id`),
   KEY `user_id` (`user_id`),
