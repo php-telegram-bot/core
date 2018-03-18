@@ -186,7 +186,7 @@ The bot can handle updates with **Webhook** or **getUpdates** method:
 | ---- | :----: | :----: |
 | Description | Telegram sends the updates directly to your host | You have to fetch Telegram updates manually |
 | Host with https | Required | Not required |
-| MySQL | Not required | Required  |
+| MySQL | Not required | ([Not](#getupdates-without-database)) Required  |
 
 
 ## Webhook installation
@@ -257,9 +257,9 @@ $result = $telegram->setWebhook($hook_url, ['certificate' => '/path/to/certifica
 
 Edit [*unset.php*][unset.php] with your bot credentials and execute it.
 
-### getUpdates installation
+## getUpdates installation
 
-The MySQL database must be enabled for the getUpdates method!
+For best performance, the MySQL database should be enabled for the `getUpdates` method!
 
 Create [*getUpdatesCLI.php*][getUpdatesCLI.php] with the following contents:
 ```php
@@ -299,6 +299,13 @@ $ chmod +x getUpdatesCLI.php
 Lastly, run it!
 ```bash
 $ ./getUpdatesCLI.php
+```
+
+### getUpdates without database
+
+If you choose to / or are obliged to use the `getUpdates` method without a database, you can replace the `$telegram->useMySQL(...);` line above with:
+```php
+$telegram->useGetUpdatesWithoutDatabase();
 ```
 
 ## Support
