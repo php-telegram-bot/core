@@ -290,13 +290,7 @@ class SendtochannelCommand extends AdminCommand
             $data['longitude'] = $message->getLocation()->getLongitude();
         }
 
-        $callback_path     = 'Longman\TelegramBot\Request';
-        $callback_function = 'send' . ucfirst($type);
-        if (!method_exists($callback_path, $callback_function)) {
-            throw new TelegramException('Methods: ' . $callback_function . ' not found in class Request.');
-        }
-
-        return $callback_path::$callback_function($data);
+        return Request::send('send' . ucfirst($type), $data);
     }
 
     /**

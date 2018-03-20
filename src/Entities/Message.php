@@ -54,6 +54,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Message           getPinnedMessage()         Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice           getInvoice()               Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment getSuccessfulPayment()     Optional. Message is a service message about a successful payment, information about the payment.
+ * @method string            getConnectedWebsite()      Optional. The domain name of the website on which the user has logged in.
  */
 class Message extends Entity
 {

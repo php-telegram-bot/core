@@ -99,7 +99,9 @@ class InlineKeyboardButtonTest extends TestCase
         new InlineKeyboardButton(['text' => 'message', 'url' => 'url_value']);
         new InlineKeyboardButton(['text' => 'message', 'callback_data' => 'callback_data_value']);
         new InlineKeyboardButton(['text' => 'message', 'switch_inline_query' => 'switch_inline_query_value']);
+        new InlineKeyboardButton(['text' => 'message', 'switch_inline_query' => '']); // Allow empty string.
         new InlineKeyboardButton(['text' => 'message', 'switch_inline_query_current_chat' => 'switch_inline_query_current_chat_value']);
+        new InlineKeyboardButton(['text' => 'message', 'switch_inline_query_current_chat' => '']); // Allow empty string.
         new InlineKeyboardButton(['text' => 'message', 'callback_game' => new CallbackGame([])]);
         new InlineKeyboardButton(['text' => 'message', 'pay' => true]);
     }

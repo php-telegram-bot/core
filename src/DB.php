@@ -260,17 +260,13 @@ class DB
     /**
      * Convert from unix timestamp to timestamp
      *
-     * @param int $time Unix timestamp (if null, current timestamp is used)
+     * @param int $time Unix timestamp (if empty, current timestamp is used)
      *
      * @return string
      */
     protected static function getTimestamp($time = null)
     {
-        if ($time === null) {
-            $time = time();
-        }
-
-        return date('Y-m-d H:i:s', $time);
+        return date('Y-m-d H:i:s', $time ?: time());
     }
 
     /**
@@ -362,7 +358,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertUser(User $user, $date, Chat $chat = null)
+    public static function insertUser(User $user, $date = null, Chat $chat = null)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -389,6 +385,7 @@ class DB
             $sth->bindValue(':first_name', $user->getFirstName());
             $sth->bindValue(':last_name', $user->getLastName());
             $sth->bindValue(':language_code', $user->getLanguageCode());
+            $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
 
@@ -429,7 +426,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertChat(Chat $chat, $date, $migrate_to_chat_id = null)
+    public static function insertChat(Chat $chat, $date = null, $migrate_to_chat_id = null)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -466,6 +463,7 @@ class DB
             $sth->bindValue(':title', $chat->getTitle());
             $sth->bindValue(':username', $chat->getUsername());
             $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
+            $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
 
@@ -493,10 +491,6 @@ class DB
 
         $update_id   = $update->getUpdateId();
         $update_type = $update->getUpdateType();
-
-        if (count(self::selectTelegramUpdate(1, $update_id)) === 1) {
-            throw new TelegramException('Duplicate update received!');
-        }
 
         // @todo Make this simpler: if ($message = $update->getMessage()) ...
         if ($update_type === 'message') {
@@ -835,7 +829,7 @@ class DB
                     `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`,
-                    `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`
+                    `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`, `connected_website`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_date, :reply_to_chat, :reply_to_message, :media_group_id, :text, :entities, :audio, :document,
@@ -843,7 +837,7 @@ class DB
                     :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created,
-                    :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message
+                    :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message, :connected_website
                 )
             ');
 
@@ -904,6 +898,7 @@ class DB
             $sth->bindValue(':migrate_from_chat_id', $message->getMigrateFromChatId());
             $sth->bindValue(':migrate_to_chat_id', $message->getMigrateToChatId());
             $sth->bindValue(':pinned_message', $message->getPinnedMessage());
+            $sth->bindValue(':connected_website', $message->getConnectedWebsite());
 
             return $sth->execute();
         } catch (PDOException $e) {

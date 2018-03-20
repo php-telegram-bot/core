@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.51.0';
+    protected $version = '0.52.0';
 
     /**
      * Telegram API key
@@ -136,6 +136,21 @@ class Telegram
      * @var boolean
      */
     protected $run_commands = false;
+
+    /**
+     * Is running getUpdates without DB enabled
+     *
+     * @var bool
+     */
+    protected $getupdates_without_database = false;
+
+    /**
+     * Last update ID
+     * Only used when running getUpdates without a database
+     *
+     * @var integer
+     */
+    protected $last_update_id = null;
 
     /**
      * Telegram constructor.
@@ -320,26 +335,33 @@ class Telegram
             throw new TelegramException('Bot Username is not defined!');
         }
 
-        if (!DB::isDbConnected()) {
+        if (!DB::isDbConnected() && !$this->getupdates_without_database) {
             return new ServerResponse(
                 [
                     'ok'          => false,
-                    'description' => 'getUpdates needs MySQL connection!',
+                    'description' => 'getUpdates needs MySQL connection! (This can be overridden - see documentation)',
                 ],
                 $this->bot_username
             );
         }
 
+        $offset = 0;
+
         //Take custom input into account.
         if ($custom_input = $this->getCustomInput()) {
             $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
         } else {
-            //DB Query
-            $last_update = DB::selectTelegramUpdate(1);
-            $last_update = reset($last_update);
+            if (DB::isDbConnected()) {
+                //Get last update id from the database
+                $last_update = DB::selectTelegramUpdate(1);
+                $last_update = reset($last_update);
 
-            //As explained in the telegram bot api documentation
-            $offset = isset($last_update['id']) ? $last_update['id'] + 1 : null;
+                $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;
+            }
+
+            if ($this->last_update_id !== null) {
+                $offset = $this->last_update_id + 1;    //As explained in the telegram bot API documentation
+            }
 
             $response = Request::getUpdates(
                 [
@@ -351,10 +373,23 @@ class Telegram
         }
 
         if ($response->isOk()) {
+            $results = $response->getResult();
+
             //Process all updates
             /** @var Update $result */
-            foreach ((array) $response->getResult() as $result) {
+            foreach ($results as $result) {
                 $this->processUpdate($result);
+            }
+
+            if (!DB::isDbConnected() && !$custom_input && $this->last_update_id !== null && $offset === 0) {
+                //Mark update(s) as read after handling
+                Request::getUpdates(
+                    [
+                        'offset'  => $this->last_update_id + 1,
+                        'limit'   => 1,
+                        'timeout' => $timeout,
+                    ]
+                );
             }
         }
 
@@ -415,6 +450,7 @@ class Telegram
     public function processUpdate(Update $update)
     {
         $this->update = $update;
+        $this->last_update_id = $update->getUpdateId();
 
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
@@ -456,6 +492,13 @@ class Telegram
         //Make sure we have an up-to-date command list
         //This is necessary to "require" all the necessary command files!
         $this->getCommandsList();
+
+        //Make sure we don't try to process update that was already processed
+        $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());
+        if ($last_id && count($last_id) === 1) {
+            TelegramLog::debug('Duplicate update received, processing aborted!');
+            return Request::emptyResponse();
+        }
 
         DB::insertRequest($this->update);
 
@@ -855,9 +898,8 @@ class Telegram
      */
     protected function ucfirstUnicode($str, $encoding = 'UTF-8')
     {
-        return
-            mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding)
-            . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
+        return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding)
+               . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
     }
 
     /**
@@ -958,5 +1000,25 @@ class Telegram
     public function isRunCommands()
     {
         return $this->run_commands;
+    }
+
+    /**
+     * Switch to enable running getUpdates without a database
+     *
+     * @param bool $enable
+     */
+    public function useGetUpdatesWithoutDatabase($enable = true)
+    {
+        $this->getupdates_without_database = $enable;
+    }
+
+    /**
+     * Return last update id
+     *
+     * @return int
+     */
+    public function getLastUpdateId()
+    {
+        return $this->last_update_id;
     }
 }
