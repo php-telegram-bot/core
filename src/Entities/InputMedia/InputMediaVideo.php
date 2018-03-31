@@ -19,26 +19,29 @@ use Longman\TelegramBot\Entities\Entity;
  *
  * <code>
  * $data = [
- *   'media'    => '123abc',
- *   'caption'  => 'Video caption',
- *   'width'    => 800,
- *   'heidht'   => 600,
- *   'duration' => 42
+ *   'media'              => '123abc',
+ *   'caption'            => 'Video caption (streamable)',
+ *   'width'              => 800,
+ *   'height'             => 600,
+ *   'duration'           => 42,
+ *   'supports_streaming' => true
  * ];
  * </code>
  *
- * @method string getType()     Type of the result, must be video
- * @method string getMedia()    File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
- * @method string getCaption()  Optional. Caption of the video to be sent, 0-200 characters
- * @method int    getWidth()    Optional. Video width
- * @method int    getHeight()   Optional. Video height
- * @method int    getDuration() Optional. Video duration
+ * @method string getType()              Type of the result, must be video
+ * @method string getMedia()             File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
+ * @method string getCaption()           Optional. Caption of the video to be sent, 0-200 characters
+ * @method int    getWidth()             Optional. Video width
+ * @method int    getHeight()            Optional. Video height
+ * @method int    getDuration()          Optional. Video duration
+ * @method bool   getSupportsStreaming() Optional. Pass True, if the uploaded video is suitable for streaming
  *
- * @method $this setMedia(string $media)     File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
- * @method $this setCaption(string $caption) Optional. Caption of the video to be sent, 0-200 characters
- * @method $this setWidth(int $width)        Optional. Video width
- * @method $this setHeight(int $height)      Optional. Video height
- * @method $this setDuration(int $duration)  Optional. Video duration
+ * @method $this setMedia(string $media)                        File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
+ * @method $this setCaption(string $caption)                    Optional. Caption of the video to be sent, 0-200 characters
+ * @method $this setWidth(int $width)                           Optional. Video width
+ * @method $this setHeight(int $height)                         Optional. Video height
+ * @method $this setDuration(int $duration)                     Optional. Video duration
+ * @method $this setSupportsStreaming(bool $supports_streaming) Optional. Pass True, if the uploaded video is suitable for streaming
  */
 class InputMediaVideo extends Entity implements InputMedia
 {
