@@ -10,12 +10,12 @@
 
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
-use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Commands\AdminCommand;
+use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 
 class SendtochannelCommand extends AdminCommand
 {
@@ -37,7 +37,7 @@ class SendtochannelCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $version = '0.2.0';
+    protected $version = '0.3.0';
 
     /**
      * @var bool
@@ -64,8 +64,8 @@ class SendtochannelCommand extends AdminCommand
         $user_id = $message->getFrom()->getId();
 
         $type = $message->getType();
-        // 'Cast' the command type into message to protect the machine state
-        // if the commmad is recalled when the conversation is already started
+        // 'Cast' the command type to message to protect the machine state
+        // if the command is recalled when the conversation is already started
         in_array($type, ['command', 'text'], true) && $type = 'message';
 
         $text           = trim($message->getText(true));
@@ -89,6 +89,15 @@ class SendtochannelCommand extends AdminCommand
             $notes['last_message_id'] = $message->getMessageId();
         }
 
+        $yes_no_keyboard = new Keyboard(
+            [
+                'keyboard'          => [['Yes', 'No']],
+                'resize_keyboard'   => true,
+                'one_time_keyboard' => true,
+                'selective'         => true,
+            ]
+        );
+
         switch ($state) {
             case -1:
                 // getConfig has not been configured asking for channel to administer
@@ -96,9 +105,13 @@ class SendtochannelCommand extends AdminCommand
                     $notes['state'] = -1;
                     $this->conversation->update();
 
-                    $data['text']         = 'Insert the channel name: (@yourchannel)';
-                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
-                    $result               = Request::sendMessage($data);
+                    $result = $this->replyToChat(
+                        'Insert the channel name or ID (_@yourchannel_ or _-12345_)',
+                        [
+                            'parse_mode'   => 'markdown',
+                            'reply_markup' => Keyboard::remove(['selective' => true]),
+                        ]
+                    );
 
                     break;
                 }
@@ -111,25 +124,29 @@ class SendtochannelCommand extends AdminCommand
             default:
             case 0:
                 // getConfig has been configured choose channel
-                if ($type !== 'message' || !in_array($text, $channels, true)) {
+                if ($type !== 'message' || $text === '') {
                     $notes['state'] = 0;
                     $this->conversation->update();
 
-                    $keyboard = [];
-                    foreach ($channels as $channel) {
-                        $keyboard[] = [$channel];
-                    }
-                    $data['reply_markup'] = new Keyboard(
+                    $keyboard = array_map(function ($channel) {
+                        return [$channel];
+                    }, $channels);
+
+                    $result = $this->replyToChat(
+                        'Choose a channel from the keyboard' . PHP_EOL .
+                        '_or_ insert the channel name or ID (_@yourchannel_ or _-12345_)',
                         [
-                            'keyboard'          => $keyboard,
-                            'resize_keyboard'   => true,
-                            'one_time_keyboard' => true,
-                            'selective'         => true,
+                            'parse_mode'   => 'markdown',
+                            'reply_markup' => new Keyboard(
+                                [
+                                    'keyboard'          => $keyboard,
+                                    'resize_keyboard'   => true,
+                                    'one_time_keyboard' => true,
+                                    'selective'         => true,
+                                ]
+                            ),
                         ]
                     );
-
-                    $data['text'] = 'Select a channel from the keyboard:';
-                    $result       = Request::sendMessage($data);
                     break;
                 }
                 $notes['channel']         = $text;
@@ -142,9 +159,10 @@ class SendtochannelCommand extends AdminCommand
                     $notes['state'] = 1;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
-                    $data['text']         = 'Insert the content you want to share: text, photo, audio...';
-                    $result               = Request::sendMessage($data);
+                    $result = $this->replyToChat(
+                        'Insert the content you want to share: text, photo, audio...',
+                        ['reply_markup' => Keyboard::remove(['selective' => true])]
+                    );
                     break;
                 }
                 $notes['last_message_id'] = $message->getMessageId();
@@ -156,22 +174,20 @@ class SendtochannelCommand extends AdminCommand
                     $notes['state'] = 2;
                     $this->conversation->update();
 
-                    // Execute this just with object that allow caption
-                    if (in_array($notes['message_type'], ['video', 'photo'], true)) {
-                        $data['reply_markup'] = new Keyboard(
-                            [
-                                'keyboard'          => [['Yes', 'No']],
-                                'resize_keyboard'   => true,
-                                'one_time_keyboard' => true,
-                                'selective'         => true,
-                            ]
-                        );
-
-                        $data['text'] = 'Would you like to insert a caption?';
+                    // Grab any existing caption.
+                    if ($caption = $message->getCaption()) {
+                        $notes['caption'] = $caption;
+                        $text             = 'No';
+                    } elseif (in_array($notes['message_type'], ['video', 'photo'], true)) {
+                        $text = 'Would you like to insert a caption?';
                         if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
-                            $data['text'] .= PHP_EOL . 'Type Yes or No';
+                            $text .= PHP_EOL . 'Type Yes or No';
                         }
-                        $result = Request::sendMessage($data);
+
+                        $result = $this->replyToChat(
+                            $text,
+                            ['reply_markup' => $yes_no_keyboard]
+                        );
                         break;
                     }
                 }
@@ -183,21 +199,26 @@ class SendtochannelCommand extends AdminCommand
                     $notes['state'] = 3;
                     $this->conversation->update();
 
-                    $data['text']         = 'Insert caption:';
-                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
-                    $result               = Request::sendMessage($data);
+                    $result = $this->replyToChat(
+                        'Insert caption:',
+                        ['reply_markup' => Keyboard::remove(['selective' => true])]
+                    );
                     break;
                 }
                 $notes['last_message_id'] = $message->getMessageId();
-                $notes['caption']         = $text;
+                if (isset($notes['caption'])) {
+                    // If caption has already been send with the file, no need to ask for it.
+                    $notes['set_caption'] = true;
+                } else {
+                    $notes['caption'] = $text;
+                }
             // no break
             case 4:
                 if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
                     $notes['state'] = 4;
                     $this->conversation->update();
 
-                    $data['text'] = 'Message will look like this:';
-                    $result       = Request::sendMessage($data);
+                    $result = $this->replyToChat('Message will look like this:');
 
                     if ($notes['message_type'] !== 'command') {
                         if ($notes['set_caption']) {
@@ -205,14 +226,7 @@ class SendtochannelCommand extends AdminCommand
                         }
                         $this->sendBack(new Message($notes['message'], $this->telegram->getBotUsername()), $data);
 
-                        $data['reply_markup'] = new Keyboard(
-                            [
-                                'keyboard'          => [['Yes', 'No']],
-                                'resize_keyboard'   => true,
-                                'one_time_keyboard' => true,
-                                'selective'         => true,
-                            ]
-                        );
+                        $data['reply_markup'] = $yes_no_keyboard;
 
                         $data['text'] = 'Would you like to post it?';
                         if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
@@ -230,13 +244,14 @@ class SendtochannelCommand extends AdminCommand
                 $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
                 if ($notes['post_message']) {
-                    $data['text'] = $this->publish(
+                    $data['parse_mode'] = 'markdown';
+                    $data['text']       = $this->publish(
                         new Message($notes['message'], $this->telegram->getBotUsername()),
                         $notes['channel'],
                         $notes['caption']
                     );
                 } else {
-                    $data['text'] = 'Abort by user, message not sent..';
+                    $data['text'] = 'Aborted by user, message not sent..';
                 }
 
                 $this->conversation->stop();
@@ -294,28 +309,37 @@ class SendtochannelCommand extends AdminCommand
     }
 
     /**
-     * Publish a message to a channel and return success or failure message
+     * Publish a message to a channel and return success or failure message in markdown format
      *
      * @param \Longman\TelegramBot\Entities\Message $message
-     * @param int                                   $channel
+     * @param string|int                            $channel_id
      * @param string|null                           $caption
      *
      * @return string
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    protected function publish(Message $message, $channel, $caption = null)
+    protected function publish(Message $message, $channel_id, $caption = null)
     {
-        $data = [
-            'chat_id' => $channel,
+        $res = $this->sendBack($message, [
+            'chat_id' => $channel_id,
             'caption' => $caption,
-        ];
+        ]);
 
-        if ($this->sendBack($message, $data)->isOk()) {
-            $response = 'Message sent successfully to: ' . $channel;
+        if ($res->isOk()) {
+            /** @var Chat $channel */
+            $channel          = $res->getResult()->getChat();
+            $escaped_username = $channel->getUsername() ? $this->getMessage()->escapeMarkdown($channel->getUsername()) : '';
+
+            $response = sprintf(
+                'Message successfully sent to *%s*%s',
+                filter_var($channel->getTitle(), FILTER_SANITIZE_SPECIAL_CHARS),
+                $escaped_username ? " (@{$escaped_username})" : ''
+            );
         } else {
-            $response = 'Message not sent to: ' . $channel . PHP_EOL .
-                        '- Does the channel exist?' . PHP_EOL .
-                        '- Is the bot an admin of the channel?';
+            $escaped_username = $this->getMessage()->escapeMarkdown($channel_id);
+            $response         = "Message not sent to *{$escaped_username}*" . PHP_EOL .
+                                '- Does the channel exist?' . PHP_EOL .
+                                '- Is the bot an admin of the channel?';
         }
 
         return $response;
@@ -332,23 +356,20 @@ class SendtochannelCommand extends AdminCommand
     public function executeNoDb()
     {
         $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
         $text    = trim($message->getText(true));
 
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => 'Usage: ' . $this->getUsage(),
-        ];
-
-        if ($text !== '') {
-            $channels      = (array) $this->getConfig('your_channel');
-            $first_channel = $channels[0];
-            $data['text']  = $this->publish(
-                new Message($message->getRawData(), $this->telegram->getBotUsername()),
-                $first_channel
-            );
+        if ($text === '') {
+            return $this->replyToChat('Usage: ' . $this->getUsage());
         }
 
-        return Request::sendMessage($data);
+        $channels = array_filter((array) $this->getConfig('your_channel'));
+        if (empty($channels)) {
+            return $this->replyToChat('No channels defined in the command config!');
+        }
+
+        return $this->replyToChat($this->publish(
+            new Message($message->getRawData(), $this->telegram->getBotUsername()),
+            reset($channels)
+        ), ['parse_mode' => 'markdown']);
     }
 }

@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
 - Add debug log entry instead of throwing an exception for duplicate updates.
 - `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default).
+- Improved `/sendtochannel` and `/sendtoall` commands, using new message helpers.
 ### Deprecated
 ### Removed
 ### Fixed
