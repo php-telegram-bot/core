@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot;
 
-define('BASE_PATH', __DIR__);
+defined('BASE_PATH') or define('BASE_PATH', __DIR__);
 define('BASE_COMMANDS_PATH', BASE_PATH . '/Commands');
 
 use Exception;
