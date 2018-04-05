@@ -7,7 +7,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/p1ratrulezzz/php-telegram-bot-core/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 [![Code Quality](https://scrutinizer-ci.com/g/p1ratrulezzz/php-telegram-bot-core/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 
-[![Packagist](https://img.shields.io/packagist/v/symfony/symfony.svg)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
+[![Latest Stable Version](https://poser.pugx.org/p1ratrulezzz/telegram-bot/v/stable)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
 
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
