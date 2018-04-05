@@ -15,10 +15,16 @@
             "email": "akalongman@gmail.com",
             "homepage": "http://longman.me",
             "role": "Developer"
+        },
+        {
+            "name": "P1ratRuleZZZ",
+            "email": "developer@p1ratrulezzz.me",
+            "homepage": "http://jazinbaz.in",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php": "^5.5|^7.0",
+        "php": "^5.6|^7.0",
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-mbstring": "*",

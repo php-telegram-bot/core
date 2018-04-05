@@ -25,12 +25,15 @@ use RegexIterator;
 
 class Telegram
 {
+    const COMMAND_SUFFIX = 'Command';
+    const COMMAND_SUFFIX_PREPROCESS = 'Command';
+
     /**
      * Version
      *
      * @var string
      */
-    protected $version = '0.53.0';
+    protected $version = '0.60.0';
 
     /**
      * Telegram API key
@@ -152,6 +155,8 @@ class Telegram
      */
     protected $last_update_id = null;
 
+    protected $bootstrap_level = 0;
+
     /**
      * Telegram constructor.
      *
@@ -236,7 +241,7 @@ class Telegram
                     new RecursiveIteratorIterator(
                         new RecursiveDirectoryIterator($path)
                     ),
-                    '/^.+Command.php$/'
+                    "/^.+Command.php$/"
                 );
 
                 foreach ($files as $file) {
@@ -244,9 +249,10 @@ class Telegram
                     $command      = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
                     $command_name = strtolower($command);
 
-                    if (array_key_exists($command_name, $commands)) {
-                        continue;
-                    }
+                    // @fixme: Check if there is any impact here
+//                    if (array_key_exists($command_name, $commands)) {
+//                         continue;
+//                    }
 
                     require_once $file->getPathname();
 
@@ -270,11 +276,18 @@ class Telegram
      *
      * @return \Longman\TelegramBot\Commands\Command|null
      */
-    public function getCommandObject($command)
+    public function getCommandObject($command, $scope = null)
     {
-        $which = ['System'];
-        $this->isAdmin() && $which[] = 'Admin';
-        $which[] = 'User';
+        $which = [];
+        if ($scope !== null) {
+            $which = is_array($scope) ? $scope : [$scope];
+        }
+        else {
+            $which[] = 'CustomSystem';
+            $which[] = 'System';
+            $this->isAdmin() && $which[] = 'Admin';
+            $which[] = 'User';
+        }
 
         foreach ($which as $auth) {
             $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
@@ -420,7 +433,11 @@ class Telegram
             throw new TelegramException('Invalid JSON!');
         }
 
-        if ($response = $this->processUpdate(new Update($post, $this->bot_username))) {
+        $update = new Update($post, $this->bot_username);
+
+        $preprocess_response = $this->preProcessUpdate($update);
+
+        if ($response = $this->processUpdate($update)) {
             return $response->isOk();
         }
 
@@ -439,16 +456,7 @@ class Telegram
         return $this->ucfirstUnicode(str_replace('_', '', $type));
     }
 
-    /**
-     * Process bot Update request
-     *
-     * @param \Longman\TelegramBot\Entities\Update $update
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function processUpdate(Update $update)
-    {
+    protected function getCommandFromUpdate(Update $update) {
         $this->update = $update;
         $this->last_update_id = $update->getUpdateId();
 
@@ -458,11 +466,6 @@ class Telegram
         $update_type = $this->update->getUpdateType();
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
-
-            //Load admin commands
-            if ($this->isAdmin()) {
-                $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
-            }
 
             $type = $message->getType();
             if ($type === 'command') {
@@ -489,9 +492,47 @@ class Telegram
             $command = $this->getCommandFromType($update_type);
         }
 
-        //Make sure we have an up-to-date command list
-        //This is necessary to "require" all the necessary command files!
+        return $command;
+    }
+
+    public function preProcessUpdate(Update $update) {
+        $command = $this->getCommandFromUpdate($update);
+
+        $this->addCommandsPath('Commands/PreprocessCommands');
+
+        //Load admin commands
+        if ($this->isAdmin()) {
+            $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
+        }
+
+        // Load all commands here once.
         $this->getCommandsList();
+
+        //Make sure we don't try to process update that was already processed
+        $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());
+        if ($last_id && count($last_id) === 1) {
+            TelegramLog::debug('Duplicate update received, processing aborted!');
+            return Request::emptyResponse();
+        }
+
+        return $this->executeCommand($command, 'Preprocess');
+    }
+
+    /**
+     * Process bot Update request
+     *
+     * @param \Longman\TelegramBot\Entities\Update $update
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function processUpdate(Update $update)
+    {
+        $this->update = $update;
+        $this->last_update_id = $update->getUpdateId();
+
+        //If all else fails, it's a generic message.
+        $command = $this->getCommandFromUpdate($update);
 
         //Make sure we don't try to process update that was already processed
         $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());
@@ -513,10 +554,10 @@ class Telegram
      * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function executeCommand($command)
+    public function executeCommand($command, $scope = NULL)
     {
         $command     = strtolower($command);
-        $command_obj = $this->getCommandObject($command);
+        $command_obj = $this->getCommandObject($command, $scope);
 
         if (!$command_obj || !$command_obj->isEnabled()) {
             //Failsafe in case the Generic command can't be found
