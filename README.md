@@ -9,11 +9,12 @@
 
 [![Latest Stable Version](https://poser.pugx.org/p1ratrulezzz/telegram-bot/v/stable)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
 
-[![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Latest Unstable Version](https://poser.pugx.org/p1ratrulezzz/telegram-bot/v/unstable)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
+
+[![Total Downloads](https://poser.pugx.org/p1ratrulezzz/telegram-bot/downloads)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
+
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
-
 
 
 A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
