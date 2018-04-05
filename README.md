@@ -1,6 +1,6 @@
 # PHP Telegram Bot
 
-[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-32a2da.svg)](https://telegram.me/p1ratrulezzz)
+[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-P1ratRuleZZZ-blue.svg)](https://telegram.me/p1ratrulezzz)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](#donate)
 
 [![Build Status](https://travis-ci.org/p1ratrulezzz/php-telegram-bot-core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
