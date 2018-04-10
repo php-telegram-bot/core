@@ -1,17 +1,20 @@
 # PHP Telegram Bot
 
-[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-32a2da.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
+[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-P1ratRuleZZZ-blue.svg)](https://telegram.me/p1ratrulezzz)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](#donate)
 
-[![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
-[![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
-[![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Build Status](https://travis-ci.org/p1ratrulezzz/php-telegram-bot-core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
+[![Code Coverage](https://scrutinizer-ci.com/g/p1ratrulezzz/php-telegram-bot-core/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
+[![Code Quality](https://scrutinizer-ci.com/g/p1ratrulezzz/php-telegram-bot-core/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
+
+[![Latest Stable Version](https://poser.pugx.org/p1ratrulezzz/telegram-bot/v/stable)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
+
+[![Latest Unstable Version](https://poser.pugx.org/p1ratrulezzz/telegram-bot/v/unstable)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
+
+[![Total Downloads](https://poser.pugx.org/p1ratrulezzz/telegram-bot/downloads)](https://packagist.org/packages/p1ratrulezzz/telegram-bot)
+
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
-
 
 
 A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
