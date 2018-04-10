@@ -4,7 +4,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.53.0] - 2018-04-01
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.53.0-sql-migration] on your database.
 ### Added
 - Implemented new changes for Bot API 3.6 (streamable InputMediaVideo, connected website).
 - `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed.
@@ -14,12 +22,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
 - Add debug log entry instead of throwing an exception for duplicate updates.
 - `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default).
-### Deprecated
-### Removed
+- Improved `/sendtochannel` and `/sendtoall` commands, using new message helpers.
 ### Fixed
 - PHPCS fixes for updated CodeSniffer dependency.
 - Send messages correctly via `/sendtochannel`.
-### Security
 
 ## [0.52.0] - 2018-01-07
 ### Fixed
@@ -199,7 +205,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.52.0-unreleased.sql
+[0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.52.0-0.53.0.sql
 [0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.50.0-0.51.0.sql
 [0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
 [0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
@@ -214,6 +220,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.53.0]: https://github.com/php-telegram-bot/core/compare/0.52.0...0.53.0
 [0.52.0]: https://github.com/php-telegram-bot/core/compare/0.51.0...0.52.0
 [0.51.0]: https://github.com/php-telegram-bot/core/compare/0.50.0...0.51.0
 [0.50.0]: https://github.com/php-telegram-bot/core/compare/0.49.0...0.50.0
