@@ -49,6 +49,12 @@ abstract class Command
     protected $update;
 
     /**
+     * Synonyms of a command.
+     * @var array
+     */
+    protected $names = [];
+
+    /**
      * Name
      *
      * @var string
