@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
+  `media_group_id` TEXT COMMENT 'The unique identifier of a media message group this message belongs to',
   `text` TEXT COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',
   `entities` TEXT COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `audio` TEXT COMMENT 'Audio object. Message is an audio file, information about the file',
@@ -100,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `migrate_to_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
   `migrate_from_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
   `pinned_message` TEXT NULL COMMENT 'Message object. Specified message was pinned',
+  `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
 
   PRIMARY KEY (`chat_id`, `id`),
   KEY `user_id` (`user_id`),

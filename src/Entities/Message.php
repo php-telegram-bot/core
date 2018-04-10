@@ -29,6 +29,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method int               getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
  * @method Message           getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method int               getEditDate()              Optional. Date the message was last edited in Unix time
+ * @method string            getMediaGroupId()          Optional. The unique identifier of a media message group this message belongs to
  * @method string            getAuthorSignature()       Optional. Signature of the post author for messages in channels
  * @method Audio             getAudio()                 Optional. Message is an audio file, information about the file
  * @method Document          getDocument()              Optional. Message is a general file, information about the file
@@ -51,6 +52,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Message           getPinnedMessage()         Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice           getInvoice()               Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment getSuccessfulPayment()     Optional. Message is a service message about a successful payment, information about the payment.
+ * @method string            getConnectedWebsite()      Optional. The domain name of the website on which the user has logged in.
  */
 class Message extends Entity
 {

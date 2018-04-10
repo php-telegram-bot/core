@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\InlineQuery\InlineQueryResult;
+use Longman\TelegramBot\Request;
 
 /**
  * Class InlineQuery
