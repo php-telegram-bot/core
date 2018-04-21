@@ -9,7 +9,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6.4-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
 
 

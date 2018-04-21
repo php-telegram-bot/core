@@ -18,10 +18,11 @@
         }
     ],
     "require": {
-        "php": "^5.5|^7.0",
+        "php": ">=5.6.4|^7.0",
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-mbstring": "*",
+        "monolog/monolog": "^1.23",
         "monolog/monolog": "^1.23",
         "guzzlehttp/guzzle": "^6.3"
     },
