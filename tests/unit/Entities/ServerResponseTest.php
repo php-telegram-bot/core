@@ -79,7 +79,7 @@ class ServerResponseTest extends TestCase
         $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertFalse($server->isOk());
-        self::assertNull($server->getResult());
+        self::assertEquals([], $server->getResult());
         self::assertEquals('400', $server->getErrorCode());
         self::assertEquals('Error: Bad Request: wrong chat id', $server->getDescription());
     }
@@ -115,7 +115,7 @@ class ServerResponseTest extends TestCase
         $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertFalse($server->isOk());
-        self::assertNull($server->getResult());
+        self::assertEquals([], $server->getResult());
         self::assertEquals(400, $server->getErrorCode());
         self::assertEquals('Error: Bad request: htttps://domain.host.org/dir/hook.php', $server->getDescription());
     }

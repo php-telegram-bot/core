@@ -114,11 +114,11 @@ class Response
     /**
      * Return result
      *
-     * @return mixed
+     * @return array
      */
     public function getResult()
     {
-        return isset($this->result) ? $this->result : null;
+        return isset($this->result) ? $this->result : [];
     }
 
     /**
