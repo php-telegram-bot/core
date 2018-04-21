@@ -165,13 +165,6 @@ class Client
     private static $client;
 
     /**
-     * Input value of the request
-     *
-     * @var string
-     */
-    private static $input;
-
-    /**
      * Request limiter
      *
      * @var boolean
@@ -300,31 +293,6 @@ class Client
     }
 
     /**
-     * Set input from custom input or stdin and return it
-     *
-     * @return string
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function getInput()
-    {
-        // First check if a custom input has been set, else get the PHP input.
-        if (! ($input = self::$telegram->getCustomInput())) {
-            $input = file_get_contents('php://input');
-        }
-
-        // Make sure we have a string to work with.
-        if (! is_string($input)) {
-            throw new TelegramException('Input must be a string!');
-        }
-
-        self::$input = $input;
-
-        TelegramLog::update(self::$input);
-
-        return self::$input;
-    }
-
-    /**
      * Generate general fake server response
      *
      * @param array $data Data to add to fake response
@@ -333,11 +301,11 @@ class Client
      */
     public static function generateGeneralFakeServerResponse(array $data = [])
     {
-        //PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
-        //Maybe this is not the best possible implementation
+        // PARAM BINDED IN PHPUNIT TEST FOR TestServerResponse.php
+        // Maybe this is not the best possible implementation
 
-        //No value set in $data ie testing setWebhook
-        //Provided $data['chat_id'] ie testing sendMessage
+        // No value set in $data ie testing setWebhook
+        // Provided $data['chat_id'] ie testing sendMessage
 
         $fake_response = ['ok' => true]; // :)
 
@@ -421,14 +389,14 @@ class Client
             );
             $result = (string) $response->getBody();
 
-            //Logging getUpdates Update
+            // Logging getUpdates Update
             if ($action === 'getUpdates') {
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
             $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
-            //Logging verbose debug output
+            // Logging verbose debug output
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
 
@@ -596,11 +564,11 @@ class Client
         $text = $data['text'];
 
         do {
-            //Chop off and send the first message
+            // Chop off and send the first message
             $data['text'] = mb_substr($text, 0, 4096);
             $response = self::send('sendMessage', $data);
 
-            //Prepare the next message
+            // Prepare the next message
             $text = mb_substr($text, 4096);
         } while (mb_strlen($text, 'UTF-8') > 0);
 
