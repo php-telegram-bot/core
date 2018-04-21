@@ -14,7 +14,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\File;
-use Longman\TelegramBot\Http\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
