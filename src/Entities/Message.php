@@ -27,7 +27,8 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method int               getForwardFromMessageId()  Optional. For forwarded channel posts, identifier of the original message in the channel
  * @method string            getForwardSignature()      Optional. For messages forwarded from channels, signature of the post author if present
  * @method int               getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
- * @method Message           getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
+ * @method Message           getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not
+ *     contain further reply_to_message fields even if it itself is a reply.
  * @method int               getEditDate()              Optional. Date the message was last edited in Unix time
  * @method string            getMediaGroupId()          Optional. The unique identifier of a media message group this message belongs to
  * @method string            getAuthorSignature()       Optional. Signature of the post author for messages in channels
@@ -41,15 +42,25 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Contact           getContact()               Optional. Message is a shared contact, information about the contact
  * @method Location          getLocation()              Optional. Message is a shared location, information about the location
  * @method Venue             getVenue()                 Optional. Message is a venue, information about the venue
- * @method User              getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot itself)
+ * @method User              getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot
+ *     itself)
  * @method string            getNewChatTitle()          Optional. A chat title was changed to this value
  * @method bool              getDeleteChatPhoto()       Optional. Service message: the chat photo was deleted
  * @method bool              getGroupChatCreated()      Optional. Service message: the group has been created
- * @method bool              getSupergroupChatCreated() Optional. Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can’t be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup.
- * @method bool              getChannelChatCreated()    Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can’t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
- * @method int               getMigrateToChatId()       Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
- * @method int               getMigrateFromChatId()     Optional. The supergroup has been migrated from a group with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
- * @method Message           getPinnedMessage()         Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
+ * @method bool              getSupergroupChatCreated() Optional. Service message: the supergroup has been created. This field can't be received in a message
+ *     coming through updates, because bot can’t be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to
+ *     a very first message in a directly created supergroup.
+ * @method bool              getChannelChatCreated()    Optional. Service message: the channel has been created. This field can't be received in a message
+ *     coming through updates, because bot can’t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a
+ *     very first message in a channel.
+ * @method int               getMigrateToChatId()       Optional. The group has been migrated to a supergroup with the specified identifier. This number may be
+ *     greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64
+ *     bit integer or double-precision float type are safe for storing this identifier.
+ * @method int               getMigrateFromChatId()     Optional. The supergroup has been migrated from a group with the specified identifier. This number may
+ *     be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed
+ *     64 bit integer or double-precision float type are safe for storing this identifier.
+ * @method Message           getPinnedMessage()         Optional. Specified message was pinned. Note that the Message object in this field will not contain
+ *     further reply_to_message fields even if it is itself a reply.
  * @method Invoice           getInvoice()               Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment getSuccessfulPayment()     Optional. Message is a service message about a successful payment, information about the payment.
  * @method string            getConnectedWebsite()      Optional. The domain name of the website on which the user has logged in.
@@ -91,7 +102,7 @@ class Message extends Entity
     /**
      * Message constructor
      *
-     * @param array  $data
+     * @param array $data
      * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -188,7 +199,7 @@ class Message extends Entity
             return null;
         }
 
-        $no_EOL   = strtok($text, PHP_EOL);
+        $no_EOL = strtok($text, PHP_EOL);
         $no_space = strtok($text, ' ');
 
         //try to understand which separator \n or space divide /command from text
@@ -214,7 +225,7 @@ class Message extends Entity
 
         //check if command is followed by bot username
         $split_cmd = explode('@', $full_command);
-        if (!isset($split_cmd[1])) {
+        if (! isset($split_cmd[1])) {
             //command is not followed by name
             return $full_command;
         }
