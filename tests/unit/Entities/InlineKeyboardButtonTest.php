@@ -95,6 +95,8 @@ class InlineKeyboardButtonTest extends TestCase
         new InlineKeyboardButton(['text' => 'message', 'switch_inline_query_current_chat' => 'switch_inline_query_current_chat_value']);
         new InlineKeyboardButton(['text' => 'message', 'switch_inline_query_current_chat' => '']); // Allow empty string.
         new InlineKeyboardButton(['text' => 'message', 'pay' => true]);
+
+        $this->assertTrue(true);
     }
 
     public function testInlineKeyboardButtonCouldBe()

@@ -8,15 +8,19 @@
 
 namespace Longman\TelegramBot\Http;
 
+use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\ChatMember;
+use Longman\TelegramBot\Entities\File;
+use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\User;
+use Longman\TelegramBot\Entities\UserProfilePhotos;
+use Longman\TelegramBot\Entities\WebhookInfo;
+
 /**
  * Class ServerResponse
  *
  * @link https://core.telegram.org/bots/api#making-requests
- *
- * @method bool   getOk()          If the request was successful
- * @method mixed  getResult()      The result of the query
- * @method int    getErrorCode()   Error code of the unsuccessful request
- * @method string getDescription() Human-readable description of the result / unsuccessful request
  *
  * @todo method ResponseParameters getParameters()  Field which can help to automatically handle the error
  */
@@ -25,7 +29,7 @@ class ServerResponse
     /**
      * ServerResponse constructor.
      *
-     * @param array  $data
+     * @param array $data
      * @param string $bot_username
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -36,7 +40,7 @@ class ServerResponse
         unset($data['raw_data']);
         $data['raw_data'] = $data;
 
-        $is_ok  = isset($data['ok']) ? (bool) $data['ok'] : false;
+        $is_ok = isset($data['ok']) ? (bool) $data['ok'] : false;
         $result = isset($data['result']) ? $data['result'] : null;
 
         if ($is_ok && is_array($result)) {
@@ -94,7 +98,47 @@ class ServerResponse
      */
     public function isOk()
     {
-        return (bool) $this->getOk();
+        return $this->getOk();
+    }
+
+    /**
+     * If response is ok
+     *
+     * @return bool
+     */
+    public function getOk()
+    {
+        return isset($this->ok) ? (bool) $this->ok : false;
+    }
+
+    /**
+     * Return result
+     *
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return isset($this->result) ? $this->result : null;
+    }
+
+    /**
+     * Return error code
+     *
+     * @return int
+     */
+    public function getErrorCode()
+    {
+        return isset($this->error_code) ? $this->error_code : null;
+    }
+
+    /**
+     * Return human-readable description of the result / unsuccessful request
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return isset($this->description) ? $this->description : null;
     }
 
     /**
@@ -122,7 +166,7 @@ class ServerResponse
     /**
      * Create and return the object of the received result
      *
-     * @param array  $result
+     * @param array $result
      * @param string $bot_username
      *
      * @return \Longman\TelegramBot\Entities\Chat|\Longman\TelegramBot\Entities\ChatMember|\Longman\TelegramBot\Entities\File|\Longman\TelegramBot\Entities\Message|\Longman\TelegramBot\Entities\User|\Longman\TelegramBot\Entities\UserProfilePhotos|\Longman\TelegramBot\Entities\WebhookInfo
@@ -134,16 +178,15 @@ class ServerResponse
         $result['raw_data'] = null;
 
         $result_object_types = [
-            'total_count' => 'UserProfilePhotos', //Response from getUserProfilePhotos
-            'file_id'     => 'File',              //Response from getFile
-            'title'       => 'Chat',              //Response from getChat
-            'username'    => 'User',              //Response from getMe
-            'user'        => 'ChatMember',        //Response from getChatMember
-            'url'         => 'WebhookInfo',       //Response from getWebhookInfo
+            'total_count' => UserProfilePhotos::class, //Response from getUserProfilePhotos
+            'file_id'     => File::class,              //Response from getFile
+            'title'       => Chat::class,              //Response from getChat
+            'username'    => User::class,              //Response from getMe
+            'user'        => ChatMember::class,        //Response from getChatMember
+            'url'         => WebhookInfo::class,       //Response from getWebhookInfo
         ];
         foreach ($result_object_types as $type => $object_class) {
             if (isset($result[$type])) {
-                $object_class = __NAMESPACE__ . '\\' . $object_class;
 
                 return new $object_class($result);
             }
@@ -156,7 +199,7 @@ class ServerResponse
     /**
      * Create and return the objects array of the received result
      *
-     * @param array  $result
+     * @param array $result
      * @param string $bot_username
      *
      * @return null|\Longman\TelegramBot\Entities\ChatMember[]|\Longman\TelegramBot\Entities\Update[]
@@ -185,4 +228,5 @@ class ServerResponse
 
         return $results;
     }
+
 }

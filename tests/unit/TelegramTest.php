@@ -41,7 +41,7 @@ class TelegramTest extends TestCase
 
         // Create a few dummy custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
-            mkdir($custom_path);
+            @mkdir($custom_path);
         }
     }
 
@@ -49,7 +49,7 @@ class TelegramTest extends TestCase
     {
         // Clean up the custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
-            rmdir($custom_path);
+            @rmdir($custom_path);
         }
     }
 
@@ -143,5 +143,12 @@ class TelegramTest extends TestCase
         $commands = $this->telegram->getCommandsList();
         $this->assertInternalType('array', $commands);
         $this->assertNotCount(0, $commands);
+    }
+
+    public function testContainer()
+    {
+        $telegram = new Telegram(self::$dummy_api_key, 'testbot');
+
+        $this->assertInstanceOf(\Illuminate\Container\Container::class, $telegram);
     }
 }

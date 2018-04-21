@@ -44,6 +44,8 @@ class KeyboardButtonTest extends TestCase
         new KeyboardButton(['text' => 'message']);
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
+
+        $this->assertTrue(true);
     }
 
     public function testInlineKeyboardButtonCouldBe()
