@@ -23,7 +23,7 @@ use Longman\TelegramBot\Http\Client;
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
  * @link            https://github.com/php-telegram-bot/core
  */
-class ServerResponseTest extends TestCase
+class ResponseTest extends TestCase
 {
     public function sendMessageOk()
     {
@@ -95,7 +95,7 @@ class ServerResponseTest extends TestCase
         $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertTrue($server->isOk());
-        self::assertTrue($server->getResult());
+        self::assertEquals([], $server->getResult());
         self::assertNull($server->getErrorCode());
         self::assertEquals('Webhook was set', $server->getDescription());
     }
@@ -264,7 +264,7 @@ class ServerResponseTest extends TestCase
         $server = new Response($fake_response, 'testbot');
 
         self::assertTrue($server->isOk());
-        self::assertTrue($server->getResult());
+        self::assertEquals([], $server->getResult());
         self::assertNull($server->getErrorCode());
         self::assertEquals('', $server->getDescription());
 

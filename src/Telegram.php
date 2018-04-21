@@ -323,7 +323,7 @@ class Telegram
             }
         }
 
-        throw new TelegramException('Command ' . $command . ' does not found');
+        return null;
     }
 
     /**
