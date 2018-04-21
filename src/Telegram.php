@@ -417,14 +417,14 @@ class Telegram extends Container
         $this->update = $update;
         $this->last_update_id = $update->getUpdateId();
 
-        //If all else fails, it's a generic message.
+        // If all else fails, it's a generic message.
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
 
-            //Load admin commands
+            // Load admin commands
             if ($this->isAdmin()) {
                 $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/AdminCommands', false);
             }
@@ -454,11 +454,11 @@ class Telegram extends Container
             $command = $this->getCommandFromType($update_type);
         }
 
-        //Make sure we have an up-to-date command list
-        //This is necessary to "require" all the necessary command files!
+        // Make sure we have an up-to-date command list
+        // This is necessary to "require" all the necessary command files!
         $this->getCommandsList();
 
-        //Make sure we don't try to process update that was already processed
+        // Make sure we don't try to process update that was already processed
         $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());
         if ($last_id && count($last_id) === 1) {
             TelegramLog::debug('Duplicate update received, processing aborted!');
@@ -485,24 +485,24 @@ class Telegram extends Container
         $command_obj = $this->getCommandObject($command);
 
         if (! $command_obj || ! $command_obj->isEnabled()) {
-            //Failsafe in case the Generic command can't be found
+            // Failsafe in case the Generic command can't be found
             if ($command === 'generic') {
                 throw new TelegramException('Generic command missing!');
             }
 
-            //Handle a generic command or non existing one
+            // Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('generic');
         } else {
-            //Botan.io integration, make sure only the actual command user executed is reported
+            // Botan.io integration, make sure only the actual command user executed is reported
             if ($this->botan_enabled) {
                 Botan::lock($command);
             }
 
-            //execute() method is executed after preExecute()
-            //This is to prevent executing a DB query without a valid connection
+            // execute() method is executed after preExecute()
+            // This is to prevent executing a DB query without a valid connection
             $this->last_command_response = $command_obj->preExecute();
 
-            //Botan.io integration, send report after executing the command
+            // Botan.io integration, send report after executing the command
             if ($this->botan_enabled) {
                 Botan::track($this->update, $command);
             }
