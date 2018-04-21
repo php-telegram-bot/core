@@ -57,10 +57,10 @@ class DB
     /**
      * Initialize
      *
-     * @param array    $credentials  Database connection details
-     * @param Telegram $telegram     Telegram object to connect with this object
-     * @param string   $table_prefix Table prefix
-     * @param string   $encoding     Database character encoding
+     * @param array $credentials Database connection details
+     * @param Telegram $telegram Telegram object to connect with this object
+     * @param string $table_prefix Table prefix
+     * @param string $encoding Database character encoding
      *
      * @return PDO PDO database object
      * @throws TelegramException
@@ -75,7 +75,7 @@ class DB
             throw new TelegramException('MySQL credentials not provided!');
         }
 
-        $dsn     = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         $options = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
         try {
             $pdo = new PDO($dsn, $credentials['user'], $credentials['password'], $options);
@@ -84,10 +84,10 @@ class DB
             throw new TelegramException($e->getMessage());
         }
 
-        self::$pdo               = $pdo;
-        self::$telegram          = $telegram;
+        self::$pdo = $pdo;
+        self::$telegram = $telegram;
         self::$mysql_credentials = $credentials;
-        self::$table_prefix      = $table_prefix;
+        self::$table_prefix = $table_prefix;
 
         self::defineTables();
 
@@ -99,9 +99,9 @@ class DB
      *
      * Let you use the class with an external already existing Pdo Mysql connection.
      *
-     * @param PDO      $external_pdo_connection PDO database object
-     * @param Telegram $telegram                Telegram object to connect with this object
-     * @param string   $table_prefix            Table prefix
+     * @param PDO $external_pdo_connection PDO database object
+     * @param Telegram $telegram Telegram object to connect with this object
+     * @param string $table_prefix Table prefix
      *
      * @return PDO PDO database object
      * @throws TelegramException
@@ -115,10 +115,10 @@ class DB
             throw new TelegramException('MySQL external connection not provided!');
         }
 
-        self::$pdo               = $external_pdo_connection;
-        self::$telegram          = $telegram;
+        self::$pdo = $external_pdo_connection;
+        self::$telegram = $telegram;
         self::$mysql_credentials = [];
-        self::$table_prefix      = $table_prefix;
+        self::$table_prefix = $table_prefix;
 
         self::defineTables();
 
@@ -144,7 +144,7 @@ class DB
         ];
         foreach ($tables as $table) {
             $table_name = 'TB_' . strtoupper($table);
-            if (!defined($table_name)) {
+            if (! defined($table_name)) {
                 define($table_name, self::$table_prefix . $table);
             }
         }
@@ -173,15 +173,15 @@ class DB
     /**
      * Fetch update(s) from DB
      *
-     * @param int    $limit Limit the number of updates to fetch
-     * @param string $id    Check for unique update id
+     * @param int $limit Limit the number of updates to fetch
+     * @param string $id Check for unique update id
      *
      * @return array|bool Fetched data or false if not connected
      * @throws TelegramException
      */
     public static function selectTelegramUpdate($limit = null, $id = null)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -228,7 +228,7 @@ class DB
      */
     public static function selectMessages($limit = null)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -275,13 +275,13 @@ class DB
      * @todo Find a better way, as json_* functions are very heavy
      *
      * @param array|null $entities
-     * @param mixed      $default
+     * @param mixed $default
      *
      * @return mixed
      */
     public static function entitiesArrayToJson($entities, $default = null)
     {
-        if (!is_array($entities)) {
+        if (! is_array($entities)) {
             return $default;
         }
 
@@ -322,7 +322,7 @@ class DB
             throw new TelegramException('message_id, inline_query_id, chosen_inline_result_id, callback_query_id, edited_message_id are all null');
         }
 
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -351,16 +351,16 @@ class DB
     /**
      * Insert users and save their connection to chats
      *
-     * @param User   $user
+     * @param User $user
      * @param string $date
-     * @param Chat   $chat
+     * @param Chat $chat
      *
      * @return bool If the insert was successful
      * @throws TelegramException
      */
     public static function insertUser(User $user, $date = null, Chat $chat = null)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -419,7 +419,7 @@ class DB
     /**
      * Insert chat
      *
-     * @param Chat   $chat
+     * @param Chat $chat
      * @param string $date
      * @param string $migrate_to_chat_id
      *
@@ -428,7 +428,7 @@ class DB
      */
     public static function insertChat(Chat $chat, $date = null, $migrate_to_chat_id = null)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -446,7 +446,7 @@ class DB
                     `updated_at`                     = VALUES(`updated_at`)
             ');
 
-            $chat_id   = $chat->getId();
+            $chat_id = $chat->getId();
             $chat_type = $chat->getType();
 
             if ($migrate_to_chat_id !== null) {
@@ -485,11 +485,11 @@ class DB
      */
     public static function insertRequest(Update $update)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
-        $update_id   = $update->getUpdateId();
+        $update_id = $update->getUpdateId();
         $update_type = $update->getUpdateType();
 
         // @todo Make this simpler: if ($message = $update->getMessage()) ...
@@ -498,7 +498,7 @@ class DB
 
             if (self::insertMessageRequest($message)) {
                 $message_id = $message->getMessageId();
-                $chat_id    = $message->getChat()->getId();
+                $chat_id = $message->getChat()->getId();
 
                 return self::insertTelegramUpdate(
                     $update_id,
@@ -506,12 +506,12 @@ class DB
                     $message_id
                 );
             }
-        } elseif ($update_type === 'edited_message') {
+        } else if ($update_type === 'edited_message') {
             $edited_message = $update->getEditedMessage();
 
             if (self::insertEditedMessageRequest($edited_message)) {
                 $edited_message_local_id = self::$pdo->lastInsertId();
-                $chat_id                 = $edited_message->getChat()->getId();
+                $chat_id = $edited_message->getChat()->getId();
 
                 return self::insertTelegramUpdate(
                     $update_id,
@@ -523,12 +523,12 @@ class DB
                     $edited_message_local_id
                 );
             }
-        } elseif ($update_type === 'channel_post') {
+        } else if ($update_type === 'channel_post') {
             $channel_post = $update->getChannelPost();
 
             if (self::insertMessageRequest($channel_post)) {
                 $message_id = $channel_post->getMessageId();
-                $chat_id    = $channel_post->getChat()->getId();
+                $chat_id = $channel_post->getChat()->getId();
 
                 return self::insertTelegramUpdate(
                     $update_id,
@@ -536,12 +536,12 @@ class DB
                     $message_id
                 );
             }
-        } elseif ($update_type === 'edited_channel_post') {
+        } else if ($update_type === 'edited_channel_post') {
             $edited_channel_post = $update->getEditedChannelPost();
 
             if (self::insertEditedMessageRequest($edited_channel_post)) {
                 $edited_channel_post_local_id = self::$pdo->lastInsertId();
-                $chat_id                      = $edited_channel_post->getChat()->getId();
+                $chat_id = $edited_channel_post->getChat()->getId();
 
                 return self::insertTelegramUpdate(
                     $update_id,
@@ -553,7 +553,7 @@ class DB
                     $edited_channel_post_local_id
                 );
             }
-        } elseif ($update_type === 'inline_query') {
+        } else if ($update_type === 'inline_query') {
             $inline_query = $update->getInlineQuery();
 
             if (self::insertInlineQueryRequest($inline_query)) {
@@ -566,7 +566,7 @@ class DB
                     $inline_query_id
                 );
             }
-        } elseif ($update_type === 'chosen_inline_result') {
+        } else if ($update_type === 'chosen_inline_result') {
             $chosen_inline_result = $update->getChosenInlineResult();
 
             if (self::insertChosenInlineResultRequest($chosen_inline_result)) {
@@ -580,7 +580,7 @@ class DB
                     $chosen_inline_result_local_id
                 );
             }
-        } elseif ($update_type === 'callback_query') {
+        } else if ($update_type === 'callback_query') {
             $callback_query = $update->getCallbackQuery();
 
             if (self::insertCallbackQueryRequest($callback_query)) {
@@ -610,7 +610,7 @@ class DB
      */
     public static function insertInlineQueryRequest(InlineQuery $inline_query)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -622,7 +622,7 @@ class DB
                 (:id, :user_id, :location, :query, :offset, :created_at)
             ');
 
-            $date    = self::getTimestamp();
+            $date = self::getTimestamp();
             $user_id = null;
 
             $user = $inline_query->getFrom();
@@ -654,7 +654,7 @@ class DB
      */
     public static function insertChosenInlineResultRequest(ChosenInlineResult $chosen_inline_result)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -666,7 +666,7 @@ class DB
                 (:result_id, :user_id, :location, :inline_message_id, :query, :created_at)
             ');
 
-            $date    = self::getTimestamp();
+            $date = self::getTimestamp();
             $user_id = null;
 
             $user = $chosen_inline_result->getFrom();
@@ -698,7 +698,7 @@ class DB
      */
     public static function insertCallbackQueryRequest(CallbackQuery $callback_query)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -710,7 +710,7 @@ class DB
                 (:id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at)
             ');
 
-            $date    = self::getTimestamp();
+            $date = self::getTimestamp();
             $user_id = null;
 
             $user = $callback_query->getFrom();
@@ -719,11 +719,11 @@ class DB
                 self::insertUser($user, $date);
             }
 
-            $message    = $callback_query->getMessage();
-            $chat_id    = null;
+            $message = $callback_query->getMessage();
+            $chat_id = null;
             $message_id = null;
             if ($message instanceof Message) {
-                $chat_id    = $message->getChat()->getId();
+                $chat_id = $message->getChat()->getId();
                 $message_id = $message->getMessageId();
 
                 $is_message = self::$pdo->query('
@@ -767,7 +767,7 @@ class DB
      */
     public static function insertMessageRequest(Message $message)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -795,16 +795,16 @@ class DB
         if ($forward_from_chat instanceof Chat) {
             self::insertChat($forward_from_chat, $forward_date);
             $forward_from_chat = $forward_from_chat->getId();
-            $forward_date      = self::getTimestamp($message->getForwardDate());
+            $forward_date = self::getTimestamp($message->getForwardDate());
         }
 
         // New and left chat member
         $new_chat_members_ids = null;
-        $left_chat_member_id  = null;
+        $left_chat_member_id = null;
 
         $new_chat_members = $message->getNewChatMembers();
         $left_chat_member = $message->getLeftChatMember();
-        if (!empty($new_chat_members)) {
+        if (! empty($new_chat_members)) {
             foreach ($new_chat_members as $new_chat_member) {
                 if ($new_chat_member instanceof User) {
                     // Insert the new chat user
@@ -813,7 +813,7 @@ class DB
                 }
             }
             $new_chat_members_ids = implode(',', $new_chat_members_ids);
-        } elseif ($left_chat_member instanceof User) {
+        } else if ($left_chat_member instanceof User) {
             // Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
             $left_chat_member_id = $left_chat_member->getId();
@@ -847,7 +847,7 @@ class DB
             }
             $chat_id = $chat->getId();
 
-            $reply_to_message    = $message->getReplyToMessage();
+            $reply_to_message = $message->getReplyToMessage();
             $reply_to_message_id = null;
             if ($reply_to_message instanceof ReplyToMessage) {
                 $reply_to_message_id = $reply_to_message->getMessageId();
@@ -915,7 +915,7 @@ class DB
      */
     public static function insertEditedMessageRequest(Message $edited_message)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -968,7 +968,7 @@ class DB
      */
     public static function selectChats($select_chats_params)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -984,7 +984,7 @@ class DB
             'text'        => null,
         ], $select_chats_params);
 
-        if (!$select['groups'] && !$select['users'] && !$select['supergroups'] && !$select['channels']) {
+        if (! $select['groups'] && ! $select['users'] && ! $select['supergroups'] && ! $select['channels']) {
             return false;
         }
 
@@ -1008,10 +1008,10 @@ class DB
             }
 
             // Building parts of query
-            $where  = [];
+            $where = [];
             $tokens = [];
 
-            if (!$select['groups'] || !$select['users'] || !$select['supergroups'] || !$select['channels']) {
+            if (! $select['groups'] || ! $select['users'] || ! $select['supergroups'] || ! $select['channels']) {
                 $chat_or_user = [];
 
                 $select['groups'] && $chat_or_user[] = TB_CHAT . '.`type` = "group"';
@@ -1023,24 +1023,24 @@ class DB
             }
 
             if (null !== $select['date_from']) {
-                $where[]              = TB_CHAT . '.`updated_at` >= :date_from';
+                $where[] = TB_CHAT . '.`updated_at` >= :date_from';
                 $tokens[':date_from'] = $select['date_from'];
             }
 
             if (null !== $select['date_to']) {
-                $where[]            = TB_CHAT . '.`updated_at` <= :date_to';
+                $where[] = TB_CHAT . '.`updated_at` <= :date_to';
                 $tokens[':date_to'] = $select['date_to'];
             }
 
             if (null !== $select['chat_id']) {
-                $where[]            = TB_CHAT . '.`id` = :chat_id';
+                $where[] = TB_CHAT . '.`id` = :chat_id';
                 $tokens[':chat_id'] = $select['chat_id'];
             }
 
             if (null !== $select['text']) {
                 $text_like = '%' . strtolower($select['text']) . '%';
                 if ($select['users']) {
-                    $where[]          = '(
+                    $where[] = '(
                         LOWER(' . TB_CHAT . '.`title`) LIKE :text1
                         OR LOWER(' . TB_USER . '.`first_name`) LIKE :text2
                         OR LOWER(' . TB_USER . '.`last_name`) LIKE :text3
@@ -1051,12 +1051,12 @@ class DB
                     $tokens[':text3'] = $text_like;
                     $tokens[':text4'] = $text_like;
                 } else {
-                    $where[]         = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
+                    $where[] = 'LOWER(' . TB_CHAT . '.`title`) LIKE :text';
                     $tokens[':text'] = $text_like;
                 }
             }
 
-            if (!empty($where)) {
+            if (! empty($where)) {
                 $query .= ' WHERE ' . implode(' AND ', $where);
             }
 
@@ -1075,14 +1075,14 @@ class DB
      * Get Telegram API request count for current chat / message
      *
      * @param integer $chat_id
-     * @param string  $inline_message_id
+     * @param string $inline_message_id
      *
      * @return array|bool Array containing TOTAL and CURRENT fields or false on invalid arguments
      * @throws TelegramException
      */
     public static function getTelegramRequestCount($chat_id = null, $inline_message_id = null)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -1093,7 +1093,7 @@ class DB
                 (SELECT COUNT(*) FROM `' . TB_REQUEST_LIMITER . '` WHERE `created_at` >= :created_at_minute AND `chat_id` = :chat_id_2) AS LIMIT_PER_MINUTE
             ');
 
-            $date        = self::getTimestamp();
+            $date = self::getTimestamp();
             $date_minute = self::getTimestamp(strtotime('-1 minute'));
 
             $sth->bindValue(':chat_id_1', $chat_id);
@@ -1115,14 +1115,14 @@ class DB
      * Insert Telegram API request in db
      *
      * @param string $method
-     * @param array  $data
+     * @param array $data
      *
      * @return bool If the insert was successful
      * @throws TelegramException
      */
     public static function insertTelegramRequest($method, $data)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -1133,7 +1133,7 @@ class DB
                 (:method, :chat_id, :inline_message_id, :created_at);
             ');
 
-            $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;
+            $chat_id = isset($data['chat_id']) ? $data['chat_id'] : null;
             $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
 
             $sth->bindValue(':chat_id', $chat_id);
@@ -1151,15 +1151,15 @@ class DB
      * Bulk update the entries of any table
      *
      * @param string $table
-     * @param array  $fields_values
-     * @param array  $where_fields_values
+     * @param array $fields_values
+     * @param array $where_fields_values
      *
      * @return bool
      * @throws TelegramException
      */
     public static function update($table, array $fields_values, array $where_fields_values)
     {
-        if (empty($fields_values) || !self::isDbConnected()) {
+        if (empty($fields_values) || ! self::isDbConnected()) {
             return false;
         }
 
@@ -1169,15 +1169,15 @@ class DB
 
             // Fields with values to update
             foreach ($fields_values as $field => $value) {
-                $token          = ':' . count($tokens);
-                $fields[]       = "`{$field}` = {$token}";
+                $token = ':' . count($tokens);
+                $fields[] = "`{$field}` = {$token}";
                 $tokens[$token] = $value;
             }
 
             // Where conditions
             foreach ($where_fields_values as $field => $value) {
-                $token          = ':' . count($tokens);
-                $where[]        = "`{$field}` = {$token}";
+                $token = ':' . count($tokens);
+                $where[] = "`{$field}` = {$token}";
                 $tokens[$token] = $value;
             }
 
