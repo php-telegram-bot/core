@@ -103,13 +103,19 @@ class DebugCommand extends AdminCommand
             if (empty($request->json()->all())) {
                 $debug_info[] = $webhook_info_title . ' `Using getUpdates method, not Webhook.`';
             } else {
-                $webhook_info_result = json_decode(Client::getWebhookInfo(), true)['result'];
+                /** @var \Longman\TelegramBot\Http\Response $response */
+                $response = Client::getWebhookInfo();
+
+                /** @var \Longman\TelegramBot\Entities\WebhookInfo $result */
+                $result = $response->getResult();
+
+                $webhook_info_result = $result->getRawData();
                 // Add a human-readable error date string if necessary.
                 if (isset($webhook_info_result['last_error_date'])) {
                     $webhook_info_result['last_error_date_string'] = date('Y-m-d H:i:s', $webhook_info_result['last_error_date']);
                 }
 
-                $webhook_info_result_str = json_encode($webhook_info_result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                $webhook_info_result_str = json_encode($webhook_info_result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 $debug_info[] = $webhook_info_title;
                 $debug_info[] = sprintf(
                     '```' . PHP_EOL . '%s```',
