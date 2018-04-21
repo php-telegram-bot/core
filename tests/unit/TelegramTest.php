@@ -149,7 +149,7 @@ class TelegramTest extends TestCase
     {
         $telegram = new Telegram(self::$dummy_api_key, 'testbot');
 
-        $this->assertInstanceOf(\Illuminate\Container\Container::class, $telegram);
+        $this->assertInstanceOf(\Illuminate\Container\Container::class, $telegram->getContainer());
     }
 
     public function testCustom()

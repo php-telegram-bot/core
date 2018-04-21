@@ -28,7 +28,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
 
-class Telegram extends Container
+class Telegram
 {
     /**
      * Version
@@ -188,7 +188,7 @@ class Telegram extends Container
             $this->bot_username = $bot_username;
         }
 
-        $this->registerBaseBindings();
+        $this->registerContainer();
 
         //Add default system commands path
         $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/SystemCommands');
@@ -197,17 +197,25 @@ class Telegram extends Container
     }
 
     /**
-     * Register the basic bindings into the container.
+     * Register the container.
      *
      * @return void
      */
-    protected function registerBaseBindings()
+    protected function registerContainer()
     {
-        static::setInstance($this);
+        $this->container = Container::getInstance();
 
-        $this->instance('app', $this);
+        $this->container->instance(Telegram::class, $this);
+    }
 
-        $this->instance(Telegram::class, $this);
+    /**
+     * Get container instance.
+     *
+     * @return \Illuminate\Container\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     /**
@@ -364,7 +372,7 @@ class Telegram extends Container
         }
 
         /** @var \Longman\TelegramBot\Console\Kernel $kernel */
-        $kernel = $this->make(ConsoleKernel::class);
+        $kernel = $this->getContainer()->make(ConsoleKernel::class);
 
         $response = $kernel->handle(Request::capture(), $limit, $timeout);
 
@@ -374,7 +382,7 @@ class Telegram extends Container
     /**
      * Handle bot request from webhook
      *
-     * @return bool
+     * @return \Longman\TelegramBot\Http\Response
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
@@ -385,7 +393,7 @@ class Telegram extends Container
         }
 
         /** @var \Longman\TelegramBot\Http\Kernel $kernel */
-        $kernel = $this->make(Kernel::class);
+        $kernel = $this->getContainer()->make(Kernel::class);
 
         $response = $kernel->handle(Request::capture());
 

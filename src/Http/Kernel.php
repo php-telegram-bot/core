@@ -49,10 +49,6 @@ class Kernel
 
         $update = new Update($params->all(), $this->app->getBotUsername());
 
-        if ($response = $this->app->processUpdate($update)) {
-            return $response->isOk();
-        }
-
-        return $response;
+        return $this->app->processUpdate($update);
     }
 }
