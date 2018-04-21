@@ -47,6 +47,7 @@ class Kernel
      * @param null $timeout
      * @return \Longman\TelegramBot\Http\Response
      *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handle(Request $request, $limit = null, $timeout = null)
     {
