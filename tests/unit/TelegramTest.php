@@ -152,6 +152,24 @@ class TelegramTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Container\Container::class, $telegram->getContainer());
     }
 
+    public function testHandleResponse()
+    {
+        $telegram = new Telegram(self::$dummy_api_key, 'testbot');
+
+        $response = $telegram->handle();
+
+        $this->assertInstanceOf(\Longman\TelegramBot\Http\Response::class, $response);
+    }
+
+    public function testHandleUpdatedResponse()
+    {
+        $telegram = new Telegram(self::$dummy_api_key, 'testbot');
+
+        $response = $telegram->handleGetUpdates();
+
+        $this->assertInstanceOf(\Longman\TelegramBot\Http\Response::class, $response);
+    }
+
     public function testCustom()
     {
         $telegram = new Telegram(self::$dummy_api_key, 'testbot');

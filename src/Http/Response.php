@@ -227,18 +227,4 @@ class Response
 
         return $results;
     }
-
-    /**
-     * Return an empty Server Response
-     *
-     * No request to telegram are sent, this function is used in commands that
-     * don't need to fire a message after execution
-     *
-     * @return \Longman\TelegramBot\Http\Response
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function createEmpty()
-    {
-        return new static(['ok' => true, 'result' => true]);
-    }
 }
