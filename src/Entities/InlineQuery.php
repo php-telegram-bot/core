@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\InlineQuery\InlineQueryResult;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Class InlineQuery
@@ -41,7 +41,7 @@ class InlineQuery extends Entity
      * Answer this inline query with the passed results.
      *
      * @param InlineQueryResult[] $results
-     * @param array               $data
+     * @param array $data
      *
      * @return ServerResponse
      */

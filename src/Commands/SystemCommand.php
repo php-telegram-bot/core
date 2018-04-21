@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Commands;
 
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 abstract class SystemCommand extends Command
 {

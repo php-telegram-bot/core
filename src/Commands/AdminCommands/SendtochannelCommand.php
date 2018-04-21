@@ -15,7 +15,7 @@ use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 class SendtochannelCommand extends AdminCommand
 {
@@ -68,7 +68,7 @@ class SendtochannelCommand extends AdminCommand
         // if the command is recalled when the conversation is already started
         in_array($type, ['command', 'text'], true) && $type = 'message';
 
-        $text           = trim($message->getText(true));
+        $text = trim($message->getText(true));
         $text_yes_or_no = ($text === 'Yes' || $text === 'No');
 
         $data = [
@@ -79,13 +79,13 @@ class SendtochannelCommand extends AdminCommand
         $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
         $notes = &$this->conversation->notes;
-        !is_array($notes) && $notes = [];
+        ! is_array($notes) && $notes = [];
 
         $channels = (array) $this->getConfig('your_channel');
         if (isset($notes['state'])) {
             $state = $notes['state'];
         } else {
-            $state                    = (count($channels) === 0) ? -1 : 0;
+            $state = (count($channels) === 0) ? -1 : 0;
             $notes['last_message_id'] = $message->getMessageId();
         }
 
@@ -115,7 +115,7 @@ class SendtochannelCommand extends AdminCommand
 
                     break;
                 }
-                $notes['channel']         = $text;
+                $notes['channel'] = $text;
                 $notes['last_message_id'] = $message->getMessageId();
                 // Jump to state 1
                 goto insert;
@@ -149,7 +149,7 @@ class SendtochannelCommand extends AdminCommand
                     );
                     break;
                 }
-                $notes['channel']         = $text;
+                $notes['channel'] = $text;
                 $notes['last_message_id'] = $message->getMessageId();
 
             // no break
@@ -166,21 +166,21 @@ class SendtochannelCommand extends AdminCommand
                     break;
                 }
                 $notes['last_message_id'] = $message->getMessageId();
-                $notes['message']         = $message->getRawData();
-                $notes['message_type']    = $type;
+                $notes['message'] = $message->getRawData();
+                $notes['message_type'] = $type;
             // no break
             case 2:
-                if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
+                if (! $text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
                     $notes['state'] = 2;
                     $this->conversation->update();
 
                     // Grab any existing caption.
                     if ($caption = $message->getCaption()) {
                         $notes['caption'] = $caption;
-                        $text             = 'No';
-                    } elseif (in_array($notes['message_type'], ['video', 'photo'], true)) {
+                        $text = 'No';
+                    } else if (in_array($notes['message_type'], ['video', 'photo'], true)) {
                         $text = 'Would you like to insert a caption?';
-                        if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
+                        if (! $text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
                             $text .= PHP_EOL . 'Type Yes or No';
                         }
 
@@ -191,7 +191,7 @@ class SendtochannelCommand extends AdminCommand
                         break;
                     }
                 }
-                $notes['set_caption']     = ($text === 'Yes');
+                $notes['set_caption'] = ($text === 'Yes');
                 $notes['last_message_id'] = $message->getMessageId();
             // no break
             case 3:
@@ -214,7 +214,7 @@ class SendtochannelCommand extends AdminCommand
                 }
             // no break
             case 4:
-                if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
+                if (! $text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
                     $notes['state'] = 4;
                     $this->conversation->update();
 
@@ -229,7 +229,7 @@ class SendtochannelCommand extends AdminCommand
                         $data['reply_markup'] = $yes_no_keyboard;
 
                         $data['text'] = 'Would you like to post it?';
-                        if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
+                        if (! $text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
                             $data['text'] .= PHP_EOL . 'Type Yes or No';
                         }
                         $result = Request::sendMessage($data);
@@ -237,7 +237,7 @@ class SendtochannelCommand extends AdminCommand
                     break;
                 }
 
-                $notes['post_message']    = ($text === 'Yes');
+                $notes['post_message'] = ($text === 'Yes');
                 $notes['last_message_id'] = $message->getMessageId();
             // no break
             case 5:
@@ -245,7 +245,7 @@ class SendtochannelCommand extends AdminCommand
 
                 if ($notes['post_message']) {
                     $data['parse_mode'] = 'markdown';
-                    $data['text']       = $this->publish(
+                    $data['text'] = $this->publish(
                         new Message($notes['message'], $this->telegram->getBotUsername()),
                         $notes['channel'],
                         $notes['caption']
@@ -273,7 +273,7 @@ class SendtochannelCommand extends AdminCommand
      * @todo Looking for a more significant name
      *
      * @param \Longman\TelegramBot\Entities\Message $message
-     * @param array                                 $data
+     * @param array $data
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -285,23 +285,23 @@ class SendtochannelCommand extends AdminCommand
 
         if ($type === 'message') {
             $data['text'] = $message->getText(true);
-        } elseif ($type === 'audio') {
-            $data['audio']     = $message->getAudio()->getFileId();
-            $data['duration']  = $message->getAudio()->getDuration();
+        } else if ($type === 'audio') {
+            $data['audio'] = $message->getAudio()->getFileId();
+            $data['duration'] = $message->getAudio()->getDuration();
             $data['performer'] = $message->getAudio()->getPerformer();
-            $data['title']     = $message->getAudio()->getTitle();
-        } elseif ($type === 'document') {
+            $data['title'] = $message->getAudio()->getTitle();
+        } else if ($type === 'document') {
             $data['document'] = $message->getDocument()->getFileId();
-        } elseif ($type === 'photo') {
+        } else if ($type === 'photo') {
             $data['photo'] = $message->getPhoto()[0]->getFileId();
-        } elseif ($type === 'sticker') {
+        } else if ($type === 'sticker') {
             $data['sticker'] = $message->getSticker()->getFileId();
-        } elseif ($type === 'video') {
+        } else if ($type === 'video') {
             $data['video'] = $message->getVideo()->getFileId();
-        } elseif ($type === 'voice') {
+        } else if ($type === 'voice') {
             $data['voice'] = $message->getVoice()->getFileId();
-        } elseif ($type === 'location') {
-            $data['latitude']  = $message->getLocation()->getLatitude();
+        } else if ($type === 'location') {
+            $data['latitude'] = $message->getLocation()->getLatitude();
             $data['longitude'] = $message->getLocation()->getLongitude();
         }
 
@@ -312,8 +312,8 @@ class SendtochannelCommand extends AdminCommand
      * Publish a message to a channel and return success or failure message in markdown format
      *
      * @param \Longman\TelegramBot\Entities\Message $message
-     * @param string|int                            $channel_id
-     * @param string|null                           $caption
+     * @param string|int $channel_id
+     * @param string|null $caption
      *
      * @return string
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -327,7 +327,7 @@ class SendtochannelCommand extends AdminCommand
 
         if ($res->isOk()) {
             /** @var Chat $channel */
-            $channel          = $res->getResult()->getChat();
+            $channel = $res->getResult()->getChat();
             $escaped_username = $channel->getUsername() ? $this->getMessage()->escapeMarkdown($channel->getUsername()) : '';
 
             $response = sprintf(
@@ -337,9 +337,9 @@ class SendtochannelCommand extends AdminCommand
             );
         } else {
             $escaped_username = $this->getMessage()->escapeMarkdown($channel_id);
-            $response         = "Message not sent to *{$escaped_username}*" . PHP_EOL .
-                                '- Does the channel exist?' . PHP_EOL .
-                                '- Is the bot an admin of the channel?';
+            $response = "Message not sent to *{$escaped_username}*" . PHP_EOL .
+                '- Does the channel exist?' . PHP_EOL .
+                '- Is the bot an admin of the channel?';
         }
 
         return $response;
@@ -356,7 +356,7 @@ class SendtochannelCommand extends AdminCommand
     public function executeNoDb()
     {
         $message = $this->getMessage();
-        $text    = trim($message->getText(true));
+        $text = trim($message->getText(true));
 
         if ($text === '') {
             return $this->replyToChat('Usage: ' . $this->getUsage());

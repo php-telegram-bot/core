@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Admin "/sendtoall" command
@@ -75,7 +75,7 @@ class SendtoallCommand extends AdminCommand
             return $this->replyToChat('No users or chats found.');
         }
 
-        $total  = 0;
+        $total = 0;
         $failed = 0;
 
         $text = 'Message sent to:' . PHP_EOL;
@@ -88,7 +88,7 @@ class SendtoallCommand extends AdminCommand
 
                 /** @var Message $message */
                 $message = $result->getResult();
-                $chat    = $message->getChat();
+                $chat = $message->getChat();
                 if ($chat->isPrivateChat()) {
                     $name = $chat->getFirstName();
                     $type = 'user';

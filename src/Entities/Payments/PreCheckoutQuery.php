@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities\Payments;
 
 use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\User;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Class PreCheckoutQuery
@@ -45,7 +45,7 @@ class PreCheckoutQuery extends Entity
     /**
      * Answer this pre-checkout query.
      *
-     * @param bool  $ok
+     * @param bool $ok
      * @param array $data
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse

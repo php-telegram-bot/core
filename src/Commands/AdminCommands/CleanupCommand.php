@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 use Longman\TelegramBot\TelegramLog;
 use PDOException;
 
@@ -108,13 +108,13 @@ class CleanupCommand extends AdminCommand
      */
     private function getSettings($custom_time = '')
     {
-        $tables_to_clean      = self::$default_tables_to_clean;
+        $tables_to_clean = self::$default_tables_to_clean;
         $user_tables_to_clean = $this->getConfig('tables_to_clean');
         if (is_array($user_tables_to_clean)) {
             $tables_to_clean = $user_tables_to_clean;
         }
 
-        $clean_older_than      = self::$default_clean_older_than;
+        $clean_older_than = self::$default_clean_older_than;
         $user_clean_older_than = $this->getConfig('clean_older_than');
         if (is_array($user_clean_older_than)) {
             $clean_older_than = array_merge($clean_older_than, $user_clean_older_than);
@@ -122,7 +122,7 @@ class CleanupCommand extends AdminCommand
 
         // Convert numeric-only values to days.
         array_walk($clean_older_than, function (&$time) use ($custom_time) {
-            if (!empty($custom_time)) {
+            if (! empty($custom_time)) {
                 $time = $custom_time;
             }
             if (is_numeric($time)) {
@@ -143,7 +143,7 @@ class CleanupCommand extends AdminCommand
      */
     private function getQueries($settings)
     {
-        if (empty($settings) || !is_array($settings)) {
+        if (empty($settings) || ! is_array($settings)) {
             throw new TelegramException('Settings variable is not an array or is empty!');
         }
 
@@ -352,7 +352,7 @@ class CleanupCommand extends AdminCommand
     {
         $message = $this->getMessage();
         $user_id = $message->getFrom()->getId();
-        $text    = $message->getText(true);
+        $text = $message->getText(true);
 
         $data = [
             'chat_id'    => $user_id,
@@ -360,7 +360,7 @@ class CleanupCommand extends AdminCommand
         ];
 
         $settings = $this->getSettings($text);
-        $queries  = $this->getQueries($settings);
+        $queries = $this->getQueries($settings);
 
         $infos = [];
         foreach ($settings['tables_to_clean'] as $table) {
@@ -378,7 +378,7 @@ class CleanupCommand extends AdminCommand
         Request::sendMessage($data);
 
         $rows = 0;
-        $pdo  = DB::getPdo();
+        $pdo = DB::getPdo();
         try {
             $pdo->beginTransaction();
 

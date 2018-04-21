@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 class ChatsCommand extends AdminCommand
 {
@@ -53,7 +53,7 @@ class ChatsCommand extends AdminCommand
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text    = trim($message->getText(true));
+        $text = trim($message->getText(true));
 
         $results = DB::selectChats([
             'groups'      => true,
@@ -63,14 +63,14 @@ class ChatsCommand extends AdminCommand
             'text'        => ($text === '' || $text === '*') ? null : $text //Text to search in user/group name
         ]);
 
-        $user_chats       = 0;
-        $group_chats      = 0;
+        $user_chats = 0;
+        $group_chats = 0;
         $supergroup_chats = 0;
-        $channel_chats    = 0;
+        $channel_chats = 0;
 
         if ($text === '') {
             $text_back = '';
-        } elseif ($text === '*') {
+        } else if ($text === '*') {
             $text_back = 'List of all bot chats:' . PHP_EOL;
         } else {
             $text_back = 'Chat search results:' . PHP_EOL;
@@ -80,7 +80,7 @@ class ChatsCommand extends AdminCommand
             foreach ($results as $result) {
                 //Initialize a chat object
                 $result['id'] = $result['chat_id'];
-                $chat         = new Chat($result);
+                $chat = new Chat($result);
 
                 $whois = $chat->getId();
                 if ($this->telegram->getCommandObject('whois')) {
@@ -94,19 +94,19 @@ class ChatsCommand extends AdminCommand
                     }
 
                     ++$user_chats;
-                } elseif ($chat->isSuperGroup()) {
+                } else if ($chat->isSuperGroup()) {
                     if ($text !== '') {
                         $text_back .= '- S ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
                     }
 
                     ++$supergroup_chats;
-                } elseif ($chat->isGroupChat()) {
+                } else if ($chat->isGroupChat()) {
                     if ($text !== '') {
                         $text_back .= '- G ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
                     }
 
                     ++$group_chats;
-                } elseif ($chat->isChannel()) {
+                } else if ($chat->isChannel()) {
                     if ($text !== '') {
                         $text_back .= '- C ' . $chat->getTitle() . ' [' . $whois . ']' . PHP_EOL;
                     }

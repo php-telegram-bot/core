@@ -11,9 +11,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\InlineQuery\InlineQueryResultArticle;
-use Longman\TelegramBot\Entities\InputMessageContent\InputTextMessageContent;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Inline query command

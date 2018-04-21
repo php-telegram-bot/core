@@ -16,7 +16,7 @@ use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 use Longman\TelegramBot\Telegram;
 
 /**

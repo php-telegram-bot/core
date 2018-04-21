@@ -14,7 +14,7 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * @package         TelegramTest
@@ -41,8 +41,8 @@ class ServerResponseTest extends TestCase
 
     public function testSendMessageOk()
     {
-        $result        = $this->sendMessageOk();
-        $server        = new ServerResponse(json_decode($result, true), 'testbot');
+        $result = $this->sendMessageOk();
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
         $server_result = $server->getResult();
 
         self::assertTrue($server->isOk());
@@ -220,8 +220,8 @@ class ServerResponseTest extends TestCase
 
     public function testGetUserProfilePhotos()
     {
-        $result        = $this->getUserProfilePhotos();
-        $server        = new ServerResponse(json_decode($result, true), 'testbot');
+        $result = $this->getUserProfilePhotos();
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
         $server_result = $server->getResult();
 
         $photos = $server_result->getPhotos();

@@ -17,7 +17,7 @@ use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Entities\UserProfilePhotos;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Admin "/whois" command

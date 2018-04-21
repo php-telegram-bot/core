@@ -10,9 +10,9 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Generic message command

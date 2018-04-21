@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Admin "/debug" command
@@ -54,7 +54,7 @@ class DebugCommand extends AdminCommand
 
         $data = ['chat_id' => $chat->getId()];
 
-        if ($text !== 'glasnost' && !$chat->isPrivateChat()) {
+        if ($text !== 'glasnost' && ! $chat->isPrivateChat()) {
             $data['text'] = 'Only available in a private chat.';
 
             return Request::sendMessage($data);
