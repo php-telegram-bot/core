@@ -47,6 +47,9 @@
         "check-code": [
             "\"vendor/bin/phpcs\" --standard=phpcs.xml -snp --encoding=utf-8 src/ tests/ --report-width=150"
         ],
+        "fix-code": [
+            "\"vendor/bin/phpcbf\" --standard=phpcs.xml -snp --encoding=utf-8 src/ tests/ --report-width=150"
+        ],
         "test": [
             "\"vendor/bin/phpunit\""
         ],
