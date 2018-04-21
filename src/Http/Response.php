@@ -24,7 +24,7 @@ use Longman\TelegramBot\Entities\WebhookInfo;
  *
  * @todo method ResponseParameters getParameters()  Field which can help to automatically handle the error
  */
-class ServerResponse
+class Response
 {
     /**
      * ServerResponse constructor.

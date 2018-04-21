@@ -13,7 +13,7 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Http\ServerResponse;
+use Longman\TelegramBot\Http\Response;
 use Longman\TelegramBot\Http\Client;
 
 /**
@@ -42,7 +42,7 @@ class ServerResponseTest extends TestCase
     public function testSendMessageOk()
     {
         $result = $this->sendMessageOk();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
         $server_result = $server->getResult();
 
         self::assertTrue($server->isOk());
@@ -76,7 +76,7 @@ class ServerResponseTest extends TestCase
     public function testSendMessageFail()
     {
         $result = $this->sendMessageFail();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertFalse($server->isOk());
         self::assertNull($server->getResult());
@@ -92,7 +92,7 @@ class ServerResponseTest extends TestCase
     public function testSetWebhookOk()
     {
         $result = $this->setWebhookOk();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertTrue($server->isOk());
         self::assertTrue($server->getResult());
@@ -112,7 +112,7 @@ class ServerResponseTest extends TestCase
     public function testSetWebhookFail()
     {
         $result = $this->setWebhookFail();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertFalse($server->isOk());
         self::assertNull($server->getResult());
@@ -172,7 +172,7 @@ class ServerResponseTest extends TestCase
     public function testGetUpdatesArray()
     {
         $result = $this->getUpdatesArray();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertCount(4, $server->getResult());
         self::assertInstanceOf('\Longman\TelegramBot\Entities\Update', $server->getResult()[0]);
@@ -186,7 +186,7 @@ class ServerResponseTest extends TestCase
     public function testGetUpdatesEmpty()
     {
         $result = $this->getUpdatesEmpty();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertEmpty($server->getResult());
     }
@@ -221,7 +221,7 @@ class ServerResponseTest extends TestCase
     public function testGetUserProfilePhotos()
     {
         $result = $this->getUserProfilePhotos();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
         $server_result = $server->getResult();
 
         $photos = $server_result->getPhotos();
@@ -251,7 +251,7 @@ class ServerResponseTest extends TestCase
     public function testGetFile()
     {
         $result = $this->getFile();
-        $server = new ServerResponse(json_decode($result, true), 'testbot');
+        $server = new Response(json_decode($result, true), 'testbot');
 
         self::assertInstanceOf('\Longman\TelegramBot\Entities\File', $server->getResult());
     }
@@ -261,7 +261,7 @@ class ServerResponseTest extends TestCase
         //setWebhook ok
         $fake_response = Client::generateGeneralFakeServerResponse();
 
-        $server = new ServerResponse($fake_response, 'testbot');
+        $server = new Response($fake_response, 'testbot');
 
         self::assertTrue($server->isOk());
         self::assertTrue($server->getResult());
@@ -271,7 +271,7 @@ class ServerResponseTest extends TestCase
         //sendMessage ok
         $fake_response = Client::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
 
-        $server = new ServerResponse($fake_response, 'testbot');
+        $server = new Response($fake_response, 'testbot');
 
         /** @var Message $server_result */
         $server_result = $server->getResult();

@@ -37,9 +37,9 @@ class Kernel
     /**
      * Handle an incoming HTTP request.
      *
-     * @param  \Longman\TelegramBot\Request2 $request
+     * @param  \Longman\TelegramBot\Http\Request $request
      *
-     * @return \Longman\TelegramBot\Response
+     * @return \Longman\TelegramBot\Http\Response
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */

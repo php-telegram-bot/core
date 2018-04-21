@@ -20,7 +20,7 @@ abstract class SystemCommand extends Command
      * Although system commands should just work and return a successful ServerResponse,
      * each system command can override this method to add custom functionality.
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      */
     public function execute()
     {

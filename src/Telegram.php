@@ -16,12 +16,12 @@ defined('TB_BASE_COMMANDS_PATH') || define('TB_BASE_COMMANDS_PATH', TB_BASE_PATH
 use Exception;
 use Illuminate\Container\Container;
 use Longman\TelegramBot\Commands\Command;
+use Longman\TelegramBot\Console\Kernel as ConsoleKernel;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Http\Kernel;
 use Longman\TelegramBot\Http\Client;
+use Longman\TelegramBot\Http\Kernel;
 use Longman\TelegramBot\Http\Request;
-use Longman\TelegramBot\Http\ServerResponse;
 use PDO;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -130,7 +130,7 @@ class Telegram extends Container
     /**
      * ServerResponse of the last Command execution
      *
-     * @var \Longman\TelegramBot\Http\ServerResponse
+     * @var \Longman\TelegramBot\Http\Response
      */
     protected $last_command_response;
 
@@ -153,7 +153,7 @@ class Telegram extends Container
      *
      * @var bool
      */
-    protected $getupdates_without_database = false;
+    public $getupdates_without_database = false;
 
     /**
      * Last update ID
@@ -161,7 +161,7 @@ class Telegram extends Container
      *
      * @var integer
      */
-    protected $last_update_id = null;
+    public $last_update_id = null;
 
     /**
      * Telegram constructor.
@@ -340,7 +340,7 @@ class Telegram extends Container
     /**
      * Get the ServerResponse of the last Command execution
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      */
     public function getLastCommandResponse()
     {
@@ -353,7 +353,7 @@ class Telegram extends Container
      * @param int|null $limit
      * @param int|null $timeout
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleGetUpdates($limit = null, $timeout = null)
@@ -362,63 +362,10 @@ class Telegram extends Container
             throw new TelegramException('Bot Username is not defined!');
         }
 
-        if (! DB::isDbConnected() && ! $this->getupdates_without_database) {
-            return new ServerResponse(
-                [
-                    'ok'          => false,
-                    'description' => 'getUpdates needs MySQL connection! (This can be overridden - see documentation)',
-                ],
-                $this->bot_username
-            );
-        }
+        /** @var \Longman\TelegramBot\Console\Kernel $kernel */
+        $kernel = $this->make(ConsoleKernel::class);
 
-        $offset = 0;
-
-        //Take custom input into account.
-        if ($custom_input = $this->getCustomInput()) {
-            $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
-        } else {
-            if (DB::isDbConnected()) {
-                //Get last update id from the database
-                $last_update = DB::selectTelegramUpdate(1);
-                $last_update = reset($last_update);
-
-                $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;
-            }
-
-            if ($this->last_update_id !== null) {
-                $offset = $this->last_update_id + 1;    //As explained in the telegram bot API documentation
-            }
-
-            $response = Client::getUpdates(
-                [
-                    'offset'  => $offset,
-                    'limit'   => $limit,
-                    'timeout' => $timeout,
-                ]
-            );
-        }
-
-        if ($response->isOk()) {
-            $results = $response->getResult();
-
-            //Process all updates
-            /** @var Update $result */
-            foreach ($results as $result) {
-                $this->processUpdate($result);
-            }
-
-            if (! DB::isDbConnected() && ! $custom_input && $this->last_update_id !== null && $offset === 0) {
-                //Mark update(s) as read after handling
-                Client::getUpdates(
-                    [
-                        'offset'  => $this->last_update_id + 1,
-                        'limit'   => 1,
-                        'timeout' => $timeout,
-                    ]
-                );
-            }
-        }
+        $response = $kernel->handle(Request::capture(), $limit, $timeout);
 
         return $response;
     }
@@ -461,7 +408,7 @@ class Telegram extends Container
      *
      * @param \Longman\TelegramBot\Entities\Update $update
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function processUpdate(Update $update)
@@ -833,7 +780,7 @@ class Telegram extends Container
      */
     public function getVersion()
     {
-        return $this->version;
+        return self::VERSION;
     }
 
     /**
@@ -842,7 +789,7 @@ class Telegram extends Container
      * @param string $url
      * @param array $data Optional parameters.
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function setWebhook($url, array $data = [])

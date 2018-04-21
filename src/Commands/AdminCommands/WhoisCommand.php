@@ -52,7 +52,7 @@ class WhoisCommand extends AdminCommand
     /**
      * Command execute method
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()

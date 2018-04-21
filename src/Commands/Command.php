@@ -143,7 +143,7 @@ abstract class Command
     /**
      * Pre-execute command
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function preExecute()
@@ -176,7 +176,7 @@ abstract class Command
     /**
      * Execute command
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     abstract public function execute();
@@ -184,7 +184,7 @@ abstract class Command
     /**
      * Execution if MySQL is required but not available
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function executeNoDb()
@@ -393,7 +393,7 @@ abstract class Command
      * @param string $text
      * @param array  $data
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      */
     public function replyToChat($text, array $data = [])
     {
@@ -413,7 +413,7 @@ abstract class Command
      * @param string $text
      * @param array  $data
      *
-     * @return \Longman\TelegramBot\Http\ServerResponse
+     * @return \Longman\TelegramBot\Http\Response
      */
     public function replyToUser($text, array $data = [])
     {
