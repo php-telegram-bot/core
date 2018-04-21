@@ -17,6 +17,7 @@ use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Http\Client;
+use Longman\TelegramBot\Http\Response;
 use Longman\TelegramBot\Telegram;
 
 /**
@@ -167,7 +168,7 @@ abstract class Command
                 ]);
             }
 
-            return Client::emptyResponse();
+            return new Response(['ok' => true, 'result' => true]);
         }
 
         return $this->execute();
@@ -404,7 +405,7 @@ abstract class Command
             ], $data));
         }
 
-        return Client::emptyResponse();
+        return new Response(['ok' => true, 'result' => true]);
     }
 
     /**
@@ -424,6 +425,6 @@ abstract class Command
             ], $data));
         }
 
-        return Client::emptyResponse();
+        return new Response(['ok' => true, 'result' => true]);
     }
 }

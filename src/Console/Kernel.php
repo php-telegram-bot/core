@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Console;
 
 use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Http\Client;
 use Longman\TelegramBot\Http\Request;
 use Longman\TelegramBot\Http\Response;
@@ -57,18 +56,18 @@ class Kernel
                     'ok'          => false,
                     'description' => 'getUpdates needs MySQL connection! (This can be overridden - see documentation)',
                 ],
-                $this->bot_username
+                $this->app->getBotUsername()
             );
         }
 
         $offset = 0;
 
-        //Take custom input into account.
+        // Take custom input into account.
         if ($custom_input = $this->app->getCustomInput()) {
             $response = new Response(json_decode($custom_input, true), $this->app->getBotUsername());
         } else {
             if (DB::isDbConnected()) {
-                //Get last update id from the database
+                // Get last update id from the database
                 $last_update = DB::selectTelegramUpdate(1);
                 $last_update = reset($last_update);
 
@@ -91,14 +90,14 @@ class Kernel
         if ($response->isOk()) {
             $results = $response->getResult();
 
-            //Process all updates
-            /** @var Update $result */
+            // Process all updates
+            /** @var \Longman\TelegramBot\Entities\Update $result */
             foreach ($results as $result) {
                 $this->app->processUpdate($result);
             }
 
             if (! DB::isDbConnected() && ! $custom_input && $this->app->last_update_id !== null && $offset === 0) {
-                //Mark update(s) as read after handling
+                // Mark update(s) as read after handling
                 Client::getUpdates(
                     [
                         'offset'  => $this->app->last_update_id + 1,

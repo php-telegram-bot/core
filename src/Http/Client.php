@@ -626,20 +626,6 @@ class Client
     }
 
     /**
-     * Return an empty Server Response
-     *
-     * No request to telegram are sent, this function is used in commands that
-     * don't need to fire a message after execution
-     *
-     * @return \Longman\TelegramBot\Http\Response
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public static function emptyResponse()
-    {
-        return new Response(['ok' => true, 'result' => true], null);
-    }
-
-    /**
      * Send message to all active chats
      *
      * @param string $callback_function

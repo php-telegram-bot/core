@@ -22,6 +22,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Http\Client;
 use Longman\TelegramBot\Http\Kernel;
 use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Response;
 use PDO;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -462,7 +463,7 @@ class Telegram extends Container
         if ($last_id && count($last_id) === 1) {
             TelegramLog::debug('Duplicate update received, processing aborted!');
 
-            return Client::emptyResponse();
+            return new Response(['ok' => true, 'result' => true]);
         }
 
         DB::insertRequest($this->update);

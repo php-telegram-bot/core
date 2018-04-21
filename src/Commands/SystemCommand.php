@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot\Commands;
 
 use Longman\TelegramBot\Http\Client;
+use Longman\TelegramBot\Http\Response;
 
 abstract class SystemCommand extends Command
 {
@@ -25,6 +26,6 @@ abstract class SystemCommand extends Command
     public function execute()
     {
         //System command, return empty ServerResponse by default
-        return Client::emptyResponse();
+        return new Response(['ok' => true, 'result' => true]);
     }
 }
