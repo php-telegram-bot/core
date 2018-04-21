@@ -61,6 +61,9 @@
         "test-cov": [
             "\"vendor/bin/phpunit\" --coverage-clover build/logs/clover.xml"
         ],
+        "test-cov-html": [
+            "\"vendor/bin/phpunit\" --coverage-html build/html"
+        ],
         "test-cov-upload": [
             "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml"
         ]
