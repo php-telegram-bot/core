@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\InlineQuery\InlineQueryResult;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Class InlineQuery
@@ -47,7 +47,7 @@ class InlineQuery extends Entity
      */
     public function answer(array $results, array $data = [])
     {
-        return Request::answerCallbackQuery(array_merge([
+        return Client::answerCallbackQuery(array_merge([
             'callback_query_id' => $this->getId(),
             'results'           => $results,
         ], $data));

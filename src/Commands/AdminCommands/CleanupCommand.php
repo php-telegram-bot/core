@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 use Longman\TelegramBot\TelegramLog;
 use PDOException;
 
@@ -339,7 +339,7 @@ class CleanupCommand extends AdminCommand
             'text'       => '*No database connection!*',
         ];
 
-        return Request::sendMessage($data);
+        return Client::sendMessage($data);
     }
 
     /**
@@ -375,7 +375,7 @@ class CleanupCommand extends AdminCommand
 
         $data['text'] = 'Cleaning up tables:' . PHP_EOL . implode(PHP_EOL, $infos);
 
-        Request::sendMessage($data);
+        Client::sendMessage($data);
 
         $rows = 0;
         $pdo = DB::getPdo();
@@ -395,7 +395,7 @@ class CleanupCommand extends AdminCommand
             $pdo->rollBack();   // rollback changes on exception (useful if you want to track down error - you can't replicate it when some of the data is already deleted...)
 
             $data['text'] = '*Database cleanup failed!* _(check your error logs)_';
-            Request::sendMessage($data);
+            Client::sendMessage($data);
 
             throw new TelegramException($e->getMessage());
         }
@@ -406,6 +406,6 @@ class CleanupCommand extends AdminCommand
             $data['text'] = '*No data to clean!*';
         }
 
-        return Request::sendMessage($data);
+        return Client::sendMessage($data);
     }
 }

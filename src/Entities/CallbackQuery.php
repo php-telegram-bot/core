@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Class CallbackQuery.
@@ -46,7 +46,7 @@ class CallbackQuery extends Entity
      */
     public function answer(array $data = [])
     {
-        return Request::answerCallbackQuery(array_merge([
+        return Client::answerCallbackQuery(array_merge([
             'callback_query_id' => $this->getId(),
         ], $data));
     }

@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Inline query command
@@ -45,6 +45,6 @@ class InlinequeryCommand extends SystemCommand
         //$user_id      = $inline_query->getFrom()->getId();
         //$query        = $inline_query->getQuery();
 
-        return Request::answerInlineQuery(['inline_query_id' => $this->getUpdate()->getInlineQuery()->getId()]);
+        return Client::answerInlineQuery(['inline_query_id' => $this->getUpdate()->getInlineQuery()->getId()]);
     }
 }

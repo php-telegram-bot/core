@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Callback query command
@@ -56,7 +56,7 @@ class CallbackqueryCommand extends SystemCommand
             $callback($this->getUpdate()->getCallbackQuery());
         }
 
-        return Request::answerCallbackQuery(['callback_query_id' => $this->getUpdate()->getCallbackQuery()->getId()]);
+        return Client::answerCallbackQuery(['callback_query_id' => $this->getUpdate()->getCallbackQuery()->getId()]);
     }
 
     /**

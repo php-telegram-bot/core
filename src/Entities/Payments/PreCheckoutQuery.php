@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities\Payments;
 
 use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\User;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Class PreCheckoutQuery
@@ -52,7 +52,7 @@ class PreCheckoutQuery extends Entity
      */
     public function answer($ok, array $data = [])
     {
-        return Request::answerPreCheckoutQuery(array_merge([
+        return Client::answerPreCheckoutQuery(array_merge([
             'pre_checkout_query_id' => $this->getId(),
             'ok'                    => $ok,
         ], $data));

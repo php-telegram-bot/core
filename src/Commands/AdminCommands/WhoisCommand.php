@@ -17,7 +17,7 @@ use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Entities\UserProfilePhotos;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Admin "/whois" command
@@ -141,7 +141,7 @@ class WhoisCommand extends AdminCommand
                     //Code from Whoami command
                     $limit    = 10;
                     $offset   = null;
-                    $response = Request::getUserProfilePhotos(
+                    $response = Client::getUserProfilePhotos(
                         [
                             'user_id' => $user_id,
                             'limit'   => $limit,
@@ -163,7 +163,7 @@ class WhoisCommand extends AdminCommand
                             $data['photo']   = $file_id;
                             $data['caption'] = $text;
 
-                            return Request::sendPhoto($data);
+                            return Client::sendPhoto($data);
                         }
                     }
                 } elseif ($chat->isGroupChat()) {
@@ -182,6 +182,6 @@ class WhoisCommand extends AdminCommand
 
         $data['text'] = $text;
 
-        return Request::sendMessage($data);
+        return Client::sendMessage($data);
     }
 }

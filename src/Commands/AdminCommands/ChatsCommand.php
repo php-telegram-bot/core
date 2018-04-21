@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 class ChatsCommand extends AdminCommand
 {
@@ -135,6 +135,6 @@ class ChatsCommand extends AdminCommand
             'text'    => $text_back,
         ];
 
-        return Request::sendMessage($data);
+        return Client::sendMessage($data);
     }
 }

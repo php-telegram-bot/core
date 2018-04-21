@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities\Payments;
 
 use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\User;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Class ShippingQuery
@@ -49,7 +49,7 @@ class ShippingQuery extends Entity
      */
     public function answer($ok, array $data = [])
     {
-        return Request::answerShippingQuery(array_merge([
+        return Client::answerShippingQuery(array_merge([
             'shipping_query_id' => $this->getId(),
             'ok'                => $ok,
         ], $data));

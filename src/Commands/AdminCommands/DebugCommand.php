@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Admin "/debug" command
@@ -57,7 +57,7 @@ class DebugCommand extends AdminCommand
         if ($text !== 'glasnost' && ! $chat->isPrivateChat()) {
             $data['text'] = 'Only available in a private chat.';
 
-            return Request::sendMessage($data);
+            return Client::sendMessage($data);
         }
 
         $debug_info = [];
@@ -95,10 +95,10 @@ class DebugCommand extends AdminCommand
         $webhook_info_title = '*Webhook Info:*';
         try {
             // Check if we're actually using the Webhook method.
-            if (Request::getInput() === '') {
+            if (Client::getInput() === '') {
                 $debug_info[] = $webhook_info_title . ' `Using getUpdates method, not Webhook.`';
             } else {
-                $webhook_info_result = json_decode(Request::getWebhookInfo(), true)['result'];
+                $webhook_info_result = json_decode(Client::getWebhookInfo(), true)['result'];
                 // Add a human-readable error date string if necessary.
                 if (isset($webhook_info_result['last_error_date'])) {
                     $webhook_info_result['last_error_date_string'] = date('Y-m-d H:i:s', $webhook_info_result['last_error_date']);
@@ -118,6 +118,6 @@ class DebugCommand extends AdminCommand
         $data['parse_mode'] = 'Markdown';
         $data['text'] = implode(PHP_EOL, $debug_info);
 
-        return Request::sendMessage($data);
+        return Client::sendMessage($data);
     }
 }

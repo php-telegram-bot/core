@@ -14,7 +14,7 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Http\ServerResponse;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * @package         TelegramTest
@@ -259,7 +259,7 @@ class ServerResponseTest extends TestCase
     public function testSetGeneralTestFakeResponse()
     {
         //setWebhook ok
-        $fake_response = Request::generateGeneralFakeServerResponse();
+        $fake_response = Client::generateGeneralFakeServerResponse();
 
         $server = new ServerResponse($fake_response, 'testbot');
 
@@ -269,7 +269,7 @@ class ServerResponseTest extends TestCase
         self::assertEquals('', $server->getDescription());
 
         //sendMessage ok
-        $fake_response = Request::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
+        $fake_response = Client::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
 
         $server = new ServerResponse($fake_response, 'testbot');
 

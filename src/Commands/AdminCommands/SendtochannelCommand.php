@@ -15,7 +15,7 @@ use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 class SendtochannelCommand extends AdminCommand
 {
@@ -232,7 +232,7 @@ class SendtochannelCommand extends AdminCommand
                         if (! $text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
                             $data['text'] .= PHP_EOL . 'Type Yes or No';
                         }
-                        $result = Request::sendMessage($data);
+                        $result = Client::sendMessage($data);
                     }
                     break;
                 }
@@ -255,7 +255,7 @@ class SendtochannelCommand extends AdminCommand
                 }
 
                 $this->conversation->stop();
-                $result = Request::sendMessage($data);
+                $result = Client::sendMessage($data);
         }
 
         return $result;
@@ -305,7 +305,7 @@ class SendtochannelCommand extends AdminCommand
             $data['longitude'] = $message->getLocation()->getLongitude();
         }
 
-        return Request::send('send' . ucfirst($type), $data);
+        return Client::send('send' . ucfirst($type), $data);
     }
 
     /**

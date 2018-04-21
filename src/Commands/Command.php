@@ -16,7 +16,7 @@ use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 use Longman\TelegramBot\Telegram;
 
 /**
@@ -156,7 +156,7 @@ abstract class Command
             $message = $this->getMessage();
 
             if ($user = $message->getFrom()) {
-                return Request::sendMessage([
+                return Client::sendMessage([
                     'chat_id'    => $user->getId(),
                     'parse_mode' => 'Markdown',
                     'text'       => sprintf(
@@ -167,7 +167,7 @@ abstract class Command
                 ]);
             }
 
-            return Request::emptyResponse();
+            return Client::emptyResponse();
         }
 
         return $this->execute();
@@ -198,7 +198,7 @@ abstract class Command
             'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
         ];
 
-        return Request::sendMessage($data);
+        return Client::sendMessage($data);
     }
 
     /**
@@ -375,7 +375,7 @@ abstract class Command
 
             if (!$chat->isPrivateChat()) {
                 // Delete the falsely called command message.
-                Request::deleteMessage([
+                Client::deleteMessage([
                     'chat_id'    => $chat->getId(),
                     'message_id' => $message->getMessageId(),
                 ]);
@@ -398,13 +398,13 @@ abstract class Command
     public function replyToChat($text, array $data = [])
     {
         if ($message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost()) {
-            return Request::sendMessage(array_merge([
+            return Client::sendMessage(array_merge([
                 'chat_id' => $message->getChat()->getId(),
                 'text'    => $text,
             ], $data));
         }
 
-        return Request::emptyResponse();
+        return Client::emptyResponse();
     }
 
     /**
@@ -418,12 +418,12 @@ abstract class Command
     public function replyToUser($text, array $data = [])
     {
         if ($message = $this->getMessage() ?: $this->getEditedMessage()) {
-            return Request::sendMessage(array_merge([
+            return Client::sendMessage(array_merge([
                 'chat_id' => $message->getFrom()->getId(),
                 'text'    => $text,
             ], $data));
         }
 
-        return Request::emptyResponse();
+        return Client::emptyResponse();
     }
 }

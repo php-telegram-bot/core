@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Generic message command
@@ -47,7 +47,7 @@ class GenericmessageCommand extends SystemCommand
     public function executeNoDb()
     {
         //Do nothing
-        return Request::emptyResponse();
+        return Client::emptyResponse();
     }
 
     /**
@@ -69,6 +69,6 @@ class GenericmessageCommand extends SystemCommand
             return $this->telegram->executeCommand($command);
         }
 
-        return Request::emptyResponse();
+        return Client::emptyResponse();
     }
 }

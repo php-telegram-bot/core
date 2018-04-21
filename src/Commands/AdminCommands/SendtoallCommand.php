@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Http\ServerResponse;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Admin "/sendtoall" command
@@ -60,7 +60,7 @@ class SendtoallCommand extends AdminCommand
         }
 
         /** @var ServerResponse[] $results */
-        $results = Request::sendToActiveChats(
+        $results = Client::sendToActiveChats(
             'sendMessage',     //callback function to execute (see Request.php methods)
             ['text' => $text], //Param to evaluate the request
             [

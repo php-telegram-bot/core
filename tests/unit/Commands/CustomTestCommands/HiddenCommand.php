@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Http\Request;
+use Longman\TelegramBot\Http\Client;
 
 /**
  * Test "/hidden" command to test $show_in_help
@@ -51,6 +51,6 @@ class HiddenCommand extends UserCommand
      */
     public function execute()
     {
-        return Request::emptyResponse();
+        return Client::emptyResponse();
     }
 }
