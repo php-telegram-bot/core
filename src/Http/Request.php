@@ -12,7 +12,6 @@ namespace Longman\TelegramBot\Http;
 
 use Illuminate\Http\Request as LaravelRequest;
 
-
 class Request extends LaravelRequest
 {
 

@@ -19,7 +19,7 @@ use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 
 /**
- * Class Request
+ * Class Client
  *
  * @method static ServerResponse getUpdates(array $data)              Use this method to receive incoming updates using long polling (wiki). An Array of Update
  *     objects is returned.

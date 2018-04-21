@@ -187,7 +187,6 @@ class ServerResponse
         ];
         foreach ($result_object_types as $type => $object_class) {
             if (isset($result[$type])) {
-
                 return new $object_class($result);
             }
         }
@@ -228,5 +227,4 @@ class ServerResponse
 
         return $results;
     }
-
 }
