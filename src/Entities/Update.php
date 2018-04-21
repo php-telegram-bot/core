@@ -18,7 +18,9 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  *
  * @link https://core.telegram.org/bots/api#update
  *
- * @method int                 getUpdateId()           The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you’re using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order.
+ * @method int                 getUpdateId()           The update's unique identifier. Update identifiers start from a certain positive number and increase
+ *     sequentially. This ID becomes especially handy if you’re using Webhooks, since it allows you to ignore repeated updates or to restore the correct update
+ *     sequence, should they get out of order.
  * @method Message             getMessage()            Optional. New incoming message of any kind — text, photo, sticker, etc.
  * @method Message             getEditedMessage()      Optional. New version of a message that is known to the bot and was edited
  * @method Message             getChannelPost()        Optional. New post in the channel, can be any kind — text, photo, sticker, etc.
@@ -31,21 +33,31 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  */
 class Update extends Entity
 {
+    const TYPE_MESSAGE = 'message';
+    const TYPE_EDITED_MESSAGE = 'edited_message';
+    const TYPE_CHANNEL_POST = 'channel_post';
+    const TYPE_EDITED_CHANNEL_POST = 'edited_channel_post';
+    const TYPE_INLINE_QUERY = 'inline_query';
+    const TYPE_CHOSEN_INLINE_QUERY = 'chosen_inline_result';
+    const TYPE_CALLBACK_QUERY = 'callback_query';
+    const TYPE_SHIPPING_QUERY = 'shipping_query';
+    const TYPE_PRE_CHECKOUT_QUERY = 'pre_checkout_query';
+
     /**
      * {@inheritdoc}
      */
     protected function subEntities()
     {
         return [
-            'message'              => Message::class,
-            'edited_message'       => EditedMessage::class,
-            'channel_post'         => ChannelPost::class,
-            'edited_channel_post'  => EditedChannelPost::class,
-            'inline_query'         => InlineQuery::class,
-            'chosen_inline_result' => ChosenInlineResult::class,
-            'callback_query'       => CallbackQuery::class,
-            'shipping_query'       => ShippingQuery::class,
-            'pre_checkout_query'   => PreCheckoutQuery::class,
+            self::TYPE_MESSAGE             => Message::class,
+            self::TYPE_EDITED_MESSAGE      => EditedMessage::class,
+            self::TYPE_CHANNEL_POST        => ChannelPost::class,
+            self::TYPE_EDITED_CHANNEL_POST => EditedChannelPost::class,
+            self::TYPE_INLINE_QUERY        => InlineQuery::class,
+            self::TYPE_CHOSEN_INLINE_QUERY => ChosenInlineResult::class,
+            self::TYPE_CALLBACK_QUERY      => CallbackQuery::class,
+            self::TYPE_SHIPPING_QUERY      => ShippingQuery::class,
+            self::TYPE_PRE_CHECKOUT_QUERY  => PreCheckoutQuery::class,
         ];
     }
 
@@ -56,17 +68,8 @@ class Update extends Entity
      */
     public function getUpdateType()
     {
-        $types = [
-            'message',
-            'edited_message',
-            'channel_post',
-            'edited_channel_post',
-            'inline_query',
-            'chosen_inline_result',
-            'callback_query',
-            'shipping_query',
-            'pre_checkout_query',
-        ];
+        $types = array_keys($this->subEntities());
+
         foreach ($types as $type) {
             if ($this->getProperty($type)) {
                 return $type;
@@ -90,6 +93,7 @@ class Update extends Entity
             // Instead of just getting the property as an array,
             // use the __call method to get the correct Entity object.
             $method = 'get' . str_replace('_', '', ucwords($update_type, '_'));
+
             return $this->$method();
         }
 
