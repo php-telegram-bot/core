@@ -481,6 +481,7 @@ class Client
 
         $bot_username = self::$telegram->getBotUsername();
 
+        // @TODO: Refactor testing and remove this
         if (defined('PHPUNIT_TESTSUITE')) {
             $fake_response = self::generateGeneralFakeServerResponse($data);
 
@@ -491,7 +492,9 @@ class Client
 
         self::limitTelegramRequests($action, $data);
 
-        $response = json_decode(self::execute($action, $data), true);
+        $result = self::execute($action, $data);
+
+        $response = json_decode($result, true);
 
         if (null === $response) {
             throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');

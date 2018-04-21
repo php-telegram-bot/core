@@ -18,7 +18,7 @@ use Longman\TelegramBot\Entities\UserProfilePhotos;
 use Longman\TelegramBot\Entities\WebhookInfo;
 
 /**
- * Class ServerResponse
+ * Class Response
  *
  * @link https://core.telegram.org/bots/api#making-requests
  *
@@ -26,8 +26,29 @@ use Longman\TelegramBot\Entities\WebhookInfo;
  */
 class Response
 {
+    /** @var bool */
+    protected $ok = false;
+
+    /** @var string */
+    protected $description;
+
+    /** @var array */
+    protected $result;
+
+    /** @var int */
+    protected $error_code;
+
+    /** @var array */
+    protected $parameters;
+
+    /** @var array */
+    protected $raw_data;
+
+    /** @var string */
+    protected $bot_username;
+
     /**
-     * ServerResponse constructor.
+     * Response constructor.
      *
      * @param array $data
      * @param string $bot_username
@@ -36,44 +57,31 @@ class Response
      */
     public function __construct(array $data, $bot_username = '')
     {
-        // Make sure we don't double-save the raw_data
-        unset($data['raw_data']);
-        $data['raw_data'] = $data;
+        $this->raw_data = $data;
 
-        $is_ok = isset($data['ok']) ? (bool) $data['ok'] : false;
+        $this->ok = $data['ok'];
+
+        if (isset($data['description'])) {
+            $this->description = $data['description'];
+        }
+
+        if (isset($data['error_code'])) {
+            $this->error_code = $data['error_code'];
+        }
+
+        if (isset($data['parameters'])) {
+            $this->parameters = $data['parameters'];
+        }
+
+        $this->bot_username = $bot_username;
+
         $result = isset($data['result']) ? $data['result'] : null;
-
-        if ($is_ok && is_array($result)) {
+        if ($this->ok && is_array($result)) {
             if ($this->isAssoc($result)) {
-                $data['result'] = $this->createResultObject($result, $bot_username);
+                $this->result = $this->createResultObject($result, $bot_username);
             } else {
-                $data['result'] = $this->createResultObjects($result, $bot_username);
+                $this->result = $this->createResultObjects($result, $bot_username);
             }
-        }
-
-        //Make sure we're not raw_data inception-ing
-        if (array_key_exists('raw_data', $data)) {
-            if ($data['raw_data'] === null) {
-                unset($data['raw_data']);
-            }
-        } else {
-            $data['raw_data'] = $data;
-        }
-
-        $data['bot_username'] = $bot_username;
-
-        $this->assignMemberVariables($data);
-    }
-
-    /**
-     * Helper to set member variables
-     *
-     * @param array $data
-     */
-    protected function assignMemberVariables(array $data)
-    {
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
         }
     }
 
@@ -98,17 +106,7 @@ class Response
      */
     public function isOk()
     {
-        return $this->getOk();
-    }
-
-    /**
-     * If response is ok
-     *
-     * @return bool
-     */
-    public function getOk()
-    {
-        return isset($this->ok) ? (bool) $this->ok : false;
+        return $this->ok;
     }
 
     /**
@@ -118,7 +116,7 @@ class Response
      */
     public function getResult()
     {
-        return isset($this->result) ? $this->result : [];
+        return ! empty($this->result) ? $this->result : [];
     }
 
     /**
@@ -128,7 +126,7 @@ class Response
      */
     public function getErrorCode()
     {
-        return isset($this->error_code) ? $this->error_code : null;
+        return ! empty($this->error_code) ? $this->error_code : null;
     }
 
     /**
@@ -138,29 +136,21 @@ class Response
      */
     public function getDescription()
     {
-        return isset($this->description) ? $this->description : null;
+        return ! empty($this->description) ? $this->description : null;
     }
 
     /**
-     * Print error
+     * Get error
      *
      * @see https://secure.php.net/manual/en/function.print-r.php
      *
-     * @param bool $return
-     *
-     * @return bool|string
+     * @return string
      */
-    public function printError($return = false)
+    public function getError()
     {
         $error = sprintf('Error N: %s, Description: %s', $this->getErrorCode(), $this->getDescription());
 
-        if ($return) {
-            return $error;
-        }
-
-        echo $error;
-
-        return true;
+        return $error;
     }
 
     /**
@@ -172,26 +162,23 @@ class Response
      * @return \Longman\TelegramBot\Entities\Chat|\Longman\TelegramBot\Entities\ChatMember|\Longman\TelegramBot\Entities\File|\Longman\TelegramBot\Entities\Message|\Longman\TelegramBot\Entities\User|\Longman\TelegramBot\Entities\UserProfilePhotos|\Longman\TelegramBot\Entities\WebhookInfo
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    private function createResultObject($result, $bot_username)
+    protected function createResultObject($result, $bot_username)
     {
-        // We don't need to save the raw_data of the response object!
-        $result['raw_data'] = null;
-
         $result_object_types = [
-            'total_count' => UserProfilePhotos::class, //Response from getUserProfilePhotos
-            'file_id'     => File::class,              //Response from getFile
-            'title'       => Chat::class,              //Response from getChat
-            'username'    => User::class,              //Response from getMe
-            'user'        => ChatMember::class,        //Response from getChatMember
-            'url'         => WebhookInfo::class,       //Response from getWebhookInfo
+            'total_count' => UserProfilePhotos::class, // Response from getUserProfilePhotos
+            'file_id'     => File::class,              // Response from getFile
+            'title'       => Chat::class,              // Response from getChat
+            'username'    => User::class,              // Response from getMe
+            'user'        => ChatMember::class,        // Response from getChatMember
+            'url'         => WebhookInfo::class,       // Response from getWebhookInfo
         ];
         foreach ($result_object_types as $type => $object_class) {
             if (isset($result[$type])) {
-                return new $object_class($result);
+                return new $object_class($result, $bot_username);
             }
         }
 
-        //Response from sendMessage
+        // Response from sendMessage
         return new Message($result, $bot_username);
     }
 
@@ -204,11 +191,11 @@ class Response
      * @return null|\Longman\TelegramBot\Entities\ChatMember[]|\Longman\TelegramBot\Entities\Update[]
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    private function createResultObjects($result, $bot_username)
+    protected function createResultObjects($result, $bot_username)
     {
         $results = [];
         if (isset($result[0]['user'])) {
-            //Response from getChatAdministrators
+            // Response from getChatAdministrators
             foreach ($result as $user) {
                 // We don't need to save the raw_data of the response object!
                 $user['raw_data'] = null;
@@ -216,7 +203,7 @@ class Response
                 $results[] = new ChatMember($user);
             }
         } else {
-            //Get Update
+            // Get Update
             foreach ($result as $update) {
                 // We don't need to save the raw_data of the response object!
                 $update['raw_data'] = null;
