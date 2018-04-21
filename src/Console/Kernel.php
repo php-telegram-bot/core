@@ -62,30 +62,25 @@ class Kernel
 
         $offset = 0;
 
-        // Take custom input into account.
-        if ($custom_input = $this->app->getCustomInput()) {
-            $response = new Response(json_decode($custom_input, true), $this->app->getBotUsername());
-        } else {
-            if (DB::isDbConnected()) {
-                // Get last update id from the database
-                $last_update = DB::selectTelegramUpdate(1);
-                $last_update = reset($last_update);
+        if (DB::isDbConnected()) {
+            // Get last update id from the database
+            $last_update = DB::selectTelegramUpdate(1);
+            $last_update = reset($last_update);
 
-                $this->app->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;
-            }
-
-            if ($this->app->last_update_id !== null) {
-                $offset = $this->app->last_update_id + 1;    //As explained in the telegram bot API documentation
-            }
-
-            $response = Client::getUpdates(
-                [
-                    'offset'  => $offset,
-                    'limit'   => $limit,
-                    'timeout' => $timeout,
-                ]
-            );
+            $this->app->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;
         }
+
+        if ($this->app->last_update_id !== null) {
+            $offset = $this->app->last_update_id + 1;    //As explained in the telegram bot API documentation
+        }
+
+        $response = Client::getUpdates(
+            [
+                'offset'  => $offset,
+                'limit'   => $limit,
+                'timeout' => $timeout,
+            ]
+        );
 
         if ($response->isOk()) {
             $results = $response->getResult();
