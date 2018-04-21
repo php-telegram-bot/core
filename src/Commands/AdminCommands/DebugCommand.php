@@ -10,9 +10,11 @@
 
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
+use Exception;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Http\Client;
+use Longman\TelegramBot\Http\Request;
 
 /**
  * Admin "/debug" command
@@ -94,8 +96,11 @@ class DebugCommand extends AdminCommand
 
         $webhook_info_title = '*Webhook Info:*';
         try {
+            /** @var \Longman\TelegramBot\Http\Request $request */
+            $request = $this->getTelegram()->getContainer()->make(Request::class);
+
             // Check if we're actually using the Webhook method.
-            if (Client::getInput() === '') {
+            if (empty($request->json()->all())) {
                 $debug_info[] = $webhook_info_title . ' `Using getUpdates method, not Webhook.`';
             } else {
                 $webhook_info_result = json_decode(Client::getWebhookInfo(), true)['result'];
@@ -111,7 +116,7 @@ class DebugCommand extends AdminCommand
                     $webhook_info_result_str
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $debug_info[] = $webhook_info_title . sprintf(' `Failed to get webhook info! (%s)`', $e->getMessage());
         }
 

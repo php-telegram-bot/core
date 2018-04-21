@@ -83,7 +83,7 @@ class ChatsCommand extends AdminCommand
                 $chat = new Chat($result);
 
                 $whois = $chat->getId();
-                if ($this->telegram->getCommandObject('whois')) {
+                if ($this->telegram->createCommandObject('whois')) {
                     // We can't use '-' in command because part of it will become unclickable
                     $whois = '/whois' . str_replace('-', 'g', $chat->getId());
                 }
