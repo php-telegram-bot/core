@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Http\ServerResponse;
 use Longman\TelegramBot\Http\Request;
 
 /**
@@ -48,7 +48,7 @@ class SendtoallCommand extends AdminCommand
     /**
      * Execute command
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return \Longman\TelegramBot\Http\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()

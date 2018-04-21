@@ -42,7 +42,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * Execution if MySQL is required but not available
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return \Longman\TelegramBot\Http\ServerResponse
      */
     public function executeNoDb()
     {
@@ -53,7 +53,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * Execute command
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return \Longman\TelegramBot\Http\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()

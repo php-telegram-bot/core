@@ -54,7 +54,7 @@ class SendtochannelCommand extends AdminCommand
     /**
      * Command execute method
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse|mixed
+     * @return \Longman\TelegramBot\Http\ServerResponse|mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
@@ -275,7 +275,7 @@ class SendtochannelCommand extends AdminCommand
      * @param \Longman\TelegramBot\Entities\Message $message
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return \Longman\TelegramBot\Http\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendBack(Message $message, array $data)

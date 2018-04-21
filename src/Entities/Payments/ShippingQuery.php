@@ -45,7 +45,7 @@ class ShippingQuery extends Entity
      * @param bool $ok
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return \Longman\TelegramBot\Http\ServerResponse
      */
     public function answer($ok, array $data = [])
     {

@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace Longman\TelegramBot\Http;
 
 /**
  * Class ServerResponse
@@ -20,7 +20,7 @@ namespace Longman\TelegramBot\Entities;
  *
  * @todo method ResponseParameters getParameters()  Field which can help to automatically handle the error
  */
-class ServerResponse extends Entity
+class ServerResponse
 {
     /**
      * ServerResponse constructor.
@@ -47,7 +47,30 @@ class ServerResponse extends Entity
             }
         }
 
-        parent::__construct($data, $bot_username);
+        //Make sure we're not raw_data inception-ing
+        if (array_key_exists('raw_data', $data)) {
+            if ($data['raw_data'] === null) {
+                unset($data['raw_data']);
+            }
+        } else {
+            $data['raw_data'] = $data;
+        }
+
+        $data['bot_username'] = $bot_username;
+
+        $this->assignMemberVariables($data);
+    }
+
+    /**
+     * Helper to set member variables
+     *
+     * @param array $data
+     */
+    protected function assignMemberVariables(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
     }
 
     /**

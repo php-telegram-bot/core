@@ -13,7 +13,7 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Http\ServerResponse;
 use Longman\TelegramBot\Http\Request;
 
 /**
