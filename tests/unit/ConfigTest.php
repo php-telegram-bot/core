@@ -56,7 +56,7 @@ class ConfigTest extends TestCase
         $this->assertEquals($paths, $config->getCommandsPaths());
     }
 
-    public function testAddAdmins()
+    public function testAdmins()
     {
         $config = new Config();
 
@@ -67,4 +67,25 @@ class ConfigTest extends TestCase
         $this->assertEquals($admins, $config->getAdmins());
     }
 
+    public function testUploadPath()
+    {
+        $config = new Config();
+
+        $path = '/some/path';
+
+        $config->setUploadPath($path);
+
+        $this->assertEquals($path, $config->getUploadPath());
+    }
+
+    public function testDownloadPath()
+    {
+        $config = new Config();
+
+        $path = '/some/path';
+
+        $config->setDownloadPath($path);
+
+        $this->assertEquals($path, $config->getDownloadPath());
+    }
 }

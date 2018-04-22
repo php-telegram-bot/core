@@ -27,7 +27,7 @@ class Config extends Repository
         $paths = $this->get('commands.paths', []);
 
         if (! is_dir($path)) {
-            TelegramLog::error('Commands path "%s" does not exist.', $path);
+            Logger::error('Commands path "%s" does not exist.', $path);
         } else if (! in_array($path, $paths, true)) {
             if ($before) {
                 array_unshift($paths, $path);
@@ -76,7 +76,7 @@ class Config extends Repository
         $admins = $this->get('admins', []);
 
         if (! is_int($admin_id) || $admin_id <= 0) {
-            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
+            Logger::error('Invalid value "%s" for admin.', $admin_id);
         } else if (! in_array($admin_id, $admins, true)) {
             $admins[] = $admin_id;
         }
@@ -106,5 +106,49 @@ class Config extends Repository
     public function getAdmins()
     {
         return $this->get('admins', []);
+    }
+
+    /**
+     * Set custom upload path
+     *
+     * @param string $path Custom upload path
+     *
+     * @return void
+     */
+    public function setUploadPath($path)
+    {
+        $this->set('upload_path', $path);
+    }
+
+    /**
+     * Get custom upload path
+     *
+     * @return string
+     */
+    public function getUploadPath()
+    {
+        return $this->get('upload_path', '');
+    }
+
+    /**
+     * Set custom download path
+     *
+     * @param string $path Custom download path
+     *
+     * @return void
+     */
+    public function setDownloadPath($path)
+    {
+        $this->set('download_path', $path);
+    }
+
+    /**
+     * Get custom download path
+     *
+     * @return string
+     */
+    public function getDownloadPath()
+    {
+        return $this->get('download_path', '');
     }
 }
