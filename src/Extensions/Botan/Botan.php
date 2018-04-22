@@ -8,12 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace Longman\TelegramBot\Extensions\Botan;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\TelegramLog;
 
 /**
  * Class Botan
@@ -55,10 +56,17 @@ class Botan
     public static $command = '';
 
     /**
+     * Enabled
+     *
+     * @var bool
+     */
+    protected static $enabled = false;
+
+    /**
      * Initialize Botan
      *
      * @param  string $token
-     * @param  array  $options
+     * @param  array $options
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
@@ -74,7 +82,7 @@ class Botan
 
         $options = array_merge($options_default, $options);
 
-        if (!is_numeric($options['timeout'])) {
+        if (! is_numeric($options['timeout'])) {
             throw new TelegramException('Timeout must be a number!');
         }
 
@@ -102,7 +110,7 @@ class Botan
      * Track function
      *
      * @param \Longman\TelegramBot\Entities\Update $update
-     * @param string                               $command
+     * @param string $command
      *
      * @return bool|string
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -145,7 +153,7 @@ class Botan
                     if ($entity->getType() === 'bot_command' && $entity->getOffset() === 0) {
                         if ($command === 'generic') {
                             $command = 'Generic';
-                        } elseif ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
+                        } else if ($command === 'genericmessage') {  // This should not happen as it equals normal message but leaving it as a fail-safe
                             $command = 'Generic Message';
                         } else {
                             $command = '/' . $command;
@@ -190,7 +198,7 @@ class Botan
 
         $responseData = json_decode($result, true);
 
-        if (!$responseData || $responseData['status'] !== 'accepted') {
+        if (! $responseData || $responseData['status'] !== 'accepted') {
             TelegramLog::debug('Botan.io stats report failed: %s', $result ?: 'empty response');
 
             return false;
@@ -202,7 +210,7 @@ class Botan
     /**
      * Url Shortener function
      *
-     * @param string  $url
+     * @param string $url
      * @param integer $user_id
      *
      * @return string
@@ -246,5 +254,26 @@ class Botan
         BotanDB::insertShortUrl($url, $user_id, $result);
 
         return $result;
+    }
+
+    /**
+     * Return enabled status
+     *
+     * @return bool
+     */
+    public static function isEnabled()
+    {
+        return self::$enabled;
+    }
+
+    /**
+     * Set enabled status
+     *
+     * @param $enabled bool
+     * @return void
+     */
+    public static function setEnabled($enabled)
+    {
+        self::$enabled = $enabled;
     }
 }

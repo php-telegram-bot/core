@@ -8,9 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace Longman\TelegramBot\Extensions\Botan;
 
 use Exception;
+use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -23,7 +24,7 @@ class BotanDB extends DB
      */
     public static function initializeBotanDb()
     {
-        if (!defined('TB_BOTAN_SHORTENER')) {
+        if (! defined('TB_BOTAN_SHORTENER')) {
             define('TB_BOTAN_SHORTENER', self::$table_prefix . 'botan_shortener');
         }
     }
@@ -39,7 +40,7 @@ class BotanDB extends DB
      */
     public static function selectShortUrl($url, $user_id)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 
@@ -75,7 +76,7 @@ class BotanDB extends DB
      */
     public static function insertShortUrl($url, $user_id, $short_url)
     {
-        if (!self::isDbConnected()) {
+        if (! self::isDbConnected()) {
             return false;
         }
 

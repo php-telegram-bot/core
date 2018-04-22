@@ -19,6 +19,7 @@ use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Console\Kernel as ConsoleKernel;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Extensions\Botan\Botan;
 use Longman\TelegramBot\Http\Client;
 use Longman\TelegramBot\Http\Kernel;
 use Longman\TelegramBot\Http\Request;
@@ -113,13 +114,6 @@ class Telegram
      * @var \Longman\TelegramBot\Http\Response
      */
     protected $last_command_response;
-
-    /**
-     * Botan.io integration
-     *
-     * @var boolean
-     */
-    protected $botan_enabled = false;
 
     /**
      * Check if runCommands() is running in this session
@@ -500,7 +494,7 @@ class Telegram
             $this->last_command_response = $this->executeCommand('generic');
         } else {
             // Botan.io integration, make sure only the actual command user executed is reported
-            if ($this->botan_enabled) {
+            if (Botan::isEnabled()) {
                 Botan::lock($command);
             }
 
@@ -509,7 +503,7 @@ class Telegram
             $this->last_command_response = $command_obj->preExecute();
 
             // Botan.io integration, send report after executing the command
-            if ($this->botan_enabled) {
+            if (Botan::isEnabled()) {
                 Botan::track($this->update, $command);
             }
         }
@@ -872,7 +866,7 @@ class Telegram
     public function enableBotan($token, array $options = [])
     {
         Botan::initializeBotan($token, $options);
-        $this->botan_enabled = true;
+        Botan::setEnabled(true);
 
         return $this;
     }
@@ -905,7 +899,7 @@ class Telegram
         }
 
         $this->run_commands = true;
-        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
+        Botan::setEnabled(false);   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
         $result = Client::getMe();
 
