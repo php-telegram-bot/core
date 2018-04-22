@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities;
 
 use Exception;
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Logger;
 
 /**
  * Class Entity

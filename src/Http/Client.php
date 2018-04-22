@@ -16,7 +16,7 @@ use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Logger;
 
 /**
  * Class Client
@@ -380,7 +380,7 @@ class Client
 
         $result = null;
         $request_params = self::setUpRequestParams($data);
-        $request_params['debug'] = TelegramLog::getDebugLogTempStream();
+        $request_params['debug'] = Logger::getDebugLogTempStream();
 
         try {
             $response = self::$client->post(
@@ -391,13 +391,13 @@ class Client
 
             // Logging getUpdates Update
             if ($action === 'getUpdates') {
-                TelegramLog::update($result);
+                Logger::update($result);
             }
         } catch (RequestException $e) {
             $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             // Logging verbose debug output
-            TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
+            Logger::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
 
         return $result;
@@ -427,7 +427,7 @@ class Client
             throw new TelegramException('Directory ' . $file_dir . ' can\'t be created');
         }
 
-        $debug_handle = TelegramLog::getDebugLogTempStream();
+        $debug_handle = Logger::getDebugLogTempStream();
 
         try {
             self::$client->get(
@@ -440,7 +440,7 @@ class Client
             return ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream('Verbose HTTP File Download Request output:' . PHP_EOL . '%s' . PHP_EOL);
+            Logger::endDebugLogTempStream('Verbose HTTP File Download Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
     }
 

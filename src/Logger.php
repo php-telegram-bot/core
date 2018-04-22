@@ -13,9 +13,9 @@ namespace Longman\TelegramBot;
 use Longman\TelegramBot\Exception\TelegramLogException;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Monolog\Logger as MonologLogger;
 
-class TelegramLog
+class Logger
 {
     /**
      * Monolog instance
@@ -66,7 +66,7 @@ class TelegramLog
      *
      * @return \Monolog\Logger
      */
-    public static function initialize(Logger $external_monolog = null)
+    public static function initialize(MonologLogger $external_monolog = null)
     {
         if (self::$monolog === null) {
             if ($external_monolog !== null) {
@@ -81,7 +81,7 @@ class TelegramLog
                     }
                 }
             } else {
-                self::$monolog = new Logger('bot_log');
+                self::$monolog = new MonologLogger('bot_log');
             }
         }
 
@@ -107,7 +107,7 @@ class TelegramLog
         self::$error_log_path = $path;
 
         return self::$monolog->pushHandler(
-            (new StreamHandler(self::$error_log_path, Logger::ERROR))
+            (new StreamHandler(self::$error_log_path, MonologLogger::ERROR))
                 ->setFormatter(new LineFormatter(null, null, true))
         );
     }
@@ -131,7 +131,7 @@ class TelegramLog
         self::$debug_log_path = $path;
 
         return self::$monolog->pushHandler(
-            (new StreamHandler(self::$debug_log_path, Logger::DEBUG))
+            (new StreamHandler(self::$debug_log_path, MonologLogger::DEBUG))
                 ->setFormatter(new LineFormatter(null, null, true))
         );
     }
@@ -186,10 +186,10 @@ class TelegramLog
         self::$update_log_path = $path;
 
         if (self::$monolog_update === null) {
-            self::$monolog_update = new Logger('bot_update_log');
+            self::$monolog_update = new MonologLogger('bot_update_log');
 
             self::$monolog_update->pushHandler(
-                (new StreamHandler(self::$update_log_path, Logger::INFO))
+                (new StreamHandler(self::$update_log_path, MonologLogger::INFO))
                     ->setFormatter(new LineFormatter('%message%' . PHP_EOL))
             );
         }

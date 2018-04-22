@@ -71,7 +71,7 @@ class Kernel
         }
 
         if ($this->app->last_update_id !== null) {
-            $offset = $this->app->last_update_id + 1;    //As explained in the telegram bot API documentation
+            $offset = $this->app->last_update_id + 1;    // As explained in the telegram bot API documentation
         }
 
         $response = Client::getUpdates(
@@ -91,7 +91,7 @@ class Kernel
                 $this->app->processUpdate($result);
             }
 
-            if (! DB::isDbConnected() && ! $custom_input && $this->app->last_update_id !== null && $offset === 0) {
+            if (! DB::isDbConnected() && $this->app->last_update_id !== null && $offset === 0) {
                 // Mark update(s) as read after handling
                 Client::getUpdates(
                     [

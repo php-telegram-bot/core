@@ -14,7 +14,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Logger;
 
 /**
  * Class Botan
@@ -167,7 +167,7 @@ class Botan
         }
 
         if (empty($event_name)) {
-            TelegramLog::error('Botan.io stats report failed, no suitable update object found!');
+            Logger::error('Botan.io stats report failed, no suitable update object found!');
 
             return false;
         }
@@ -199,7 +199,7 @@ class Botan
         $responseData = json_decode($result, true);
 
         if (! $responseData || $responseData['status'] !== 'accepted') {
-            TelegramLog::debug('Botan.io stats report failed: %s', $result ?: 'empty response');
+            Logger::debug('Botan.io stats report failed: %s', $result ?: 'empty response');
 
             return false;
         }
@@ -246,7 +246,7 @@ class Botan
         }
 
         if (filter_var($result, FILTER_VALIDATE_URL) === false) {
-            TelegramLog::debug('Botan.io URL shortening failed for "%s": %s', $url, $result ?: 'empty response');
+            Logger::debug('Botan.io URL shortening failed for "%s": %s', $url, $result ?: 'empty response');
 
             return $url;
         }

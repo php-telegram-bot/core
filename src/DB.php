@@ -31,28 +31,35 @@ class DB
      *
      * @var array
      */
-    static protected $mysql_credentials = [];
+    protected static $mysql_credentials = [];
 
     /**
      * PDO object
      *
      * @var PDO
      */
-    static protected $pdo;
+    protected static $pdo;
 
     /**
      * Table prefix
      *
      * @var string
      */
-    static protected $table_prefix;
+    protected static $table_prefix;
 
     /**
      * Telegram class object
      *
      * @var Telegram
      */
-    static protected $telegram;
+    protected static $telegram;
+
+    /**
+     * Enabled
+     *
+     * @var bool
+     */
+    protected static $enabled = false;
 
     /**
      * Initialize
@@ -1188,5 +1195,26 @@ class DB
         } catch (Exception $e) {
             throw new TelegramException($e->getMessage());
         }
+    }
+
+    /**
+     * Return enabled status
+     *
+     * @return bool
+     */
+    public static function isEnabled()
+    {
+        return self::$enabled;
+    }
+
+    /**
+     * Set enabled status
+     *
+     * @param $enabled bool
+     * @return void
+     */
+    public static function setEnabled($enabled)
+    {
+        self::$enabled = $enabled;
     }
 }

@@ -74,27 +74,6 @@ class Telegram
     protected $update;
 
     /**
-     * Upload path
-     *
-     * @var string
-     */
-    protected $upload_path;
-
-    /**
-     * Download path
-     *
-     * @var string
-     */
-    protected $download_path;
-
-    /**
-     * MySQL integration
-     *
-     * @var boolean
-     */
-    protected $mysql_enabled = false;
-
-    /**
      * PDO object
      *
      * @var \PDO
@@ -228,8 +207,8 @@ class Telegram
     public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
     {
         $this->pdo = DB::initialize($credential, $this, $table_prefix, $encoding);
+        DB::setEnabled(true);
         ConversationDB::initializeConversation();
-        $this->mysql_enabled = true;
 
         return $this;
     }
@@ -246,8 +225,8 @@ class Telegram
     public function enableExternalMySql($external_pdo_connection, $table_prefix = null)
     {
         $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
+        DB::setEnabled(true);
         ConversationDB::initializeConversation();
-        $this->mysql_enabled = true;
 
         return $this;
     }
@@ -461,7 +440,7 @@ class Telegram
         // Make sure we don't try to process update that was already processed
         $last_id = DB::selectTelegramUpdate(1, $update->getUpdateId());
         if ($last_id && count($last_id) === 1) {
-            TelegramLog::debug('Duplicate update received, processing aborted!');
+            Logger::debug('Duplicate update received, processing aborted!');
 
             return new Response(['ok' => true, 'result' => true]);
         }
@@ -597,20 +576,6 @@ class Telegram
     }
 
     /**
-     * Check if user required the db connection
-     *
-     * @return bool
-     */
-    public function isDbEnabled()
-    {
-        if ($this->mysql_enabled) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Add a single custom commands path
      *
      * @param string $path Custom commands path to add
@@ -660,7 +625,7 @@ class Telegram
      */
     public function setUploadPath($path)
     {
-        $this->upload_path = $path;
+        $this->getConfig()->setUploadPath($path);
 
         return $this;
     }
@@ -672,7 +637,7 @@ class Telegram
      */
     public function getUploadPath()
     {
-        return $this->upload_path;
+        return $this->getConfig()->getUploadPath();
     }
 
     /**
@@ -684,7 +649,7 @@ class Telegram
      */
     public function setDownloadPath($path)
     {
-        $this->download_path = $path;
+        $this->getConfig()->setDownloadPath($path);
 
         return $this;
     }
@@ -696,7 +661,7 @@ class Telegram
      */
     public function getDownloadPath()
     {
-        return $this->download_path;
+        return $this->getConfig()->getDownloadPath();
     }
 
     /**

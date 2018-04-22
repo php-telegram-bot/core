@@ -14,7 +14,7 @@ use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Http\Client;
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Logger;
 use PDOException;
 
 /**
@@ -386,7 +386,7 @@ class CleanupCommand extends AdminCommand
                 if ($dbq = $pdo->query($query)) {
                     $rows += $dbq->rowCount();
                 } else {
-                    TelegramLog::error('Error while executing query: ' . $query);
+                    Logger::error('Error while executing query: ' . $query);
                 }
             }
 

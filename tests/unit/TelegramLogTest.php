@@ -10,7 +10,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -36,7 +36,7 @@ class TelegramLogTest extends TestCase
     protected function setUp()
     {
         // Make sure no monolog instance is set before each test.
-        TestHelpers::setStaticProperty('Longman\TelegramBot\TelegramLog', 'monolog', null);
+        TestHelpers::setStaticProperty('Longman\TelegramBot\Logger', 'monolog', null);
     }
 
     protected function tearDown()
@@ -52,7 +52,7 @@ class TelegramLogTest extends TestCase
      */
     public function testNewInstanceWithoutErrorPath()
     {
-        TelegramLog::initErrorLog('');
+        Logger::initErrorLog('');
     }
 
     /**
@@ -60,7 +60,7 @@ class TelegramLogTest extends TestCase
      */
     public function testNewInstanceWithoutDebugPath()
     {
-        TelegramLog::initDebugLog('');
+        Logger::initDebugLog('');
     }
 
     /**
@@ -68,17 +68,17 @@ class TelegramLogTest extends TestCase
      */
     public function testNewInstanceWithoutUpdatePath()
     {
-        TelegramLog::initUpdateLog('');
+        Logger::initUpdateLog('');
     }
 
     public function testErrorStream()
     {
         $file = self::$logfiles['error'];
         $this->assertFileNotExists($file);
-        TelegramLog::initErrorLog($file);
-        TelegramLog::error('my error');
-        TelegramLog::error('my 50% error');
-        TelegramLog::error('my %s error', 'placeholder');
+        Logger::initErrorLog($file);
+        Logger::error('my error');
+        Logger::error('my 50% error');
+        Logger::error('my %s error', 'placeholder');
         $this->assertFileExists($file);
         $error_log = file_get_contents($file);
         $this->assertContains('bot_log.ERROR: my error', $error_log);
@@ -90,10 +90,10 @@ class TelegramLogTest extends TestCase
     {
         $file = self::$logfiles['debug'];
         $this->assertFileNotExists($file);
-        TelegramLog::initDebugLog($file);
-        TelegramLog::debug('my debug');
-        TelegramLog::debug('my 50% debug');
-        TelegramLog::debug('my %s debug', 'placeholder');
+        Logger::initDebugLog($file);
+        Logger::debug('my debug');
+        Logger::debug('my 50% debug');
+        Logger::debug('my %s debug', 'placeholder');
         $this->assertFileExists($file);
         $debug_log = file_get_contents($file);
         $this->assertContains('bot_log.DEBUG: my debug', $debug_log);
@@ -105,10 +105,10 @@ class TelegramLogTest extends TestCase
     {
         $file = self::$logfiles['update'];
         $this->assertFileNotExists($file);
-        TelegramLog::initUpdateLog($file);
-        TelegramLog::update('my update');
-        TelegramLog::update('my 50% update');
-        TelegramLog::update('my %s update', 'placeholder');
+        Logger::initUpdateLog($file);
+        Logger::update('my update');
+        Logger::update('my 50% update');
+        Logger::update('my %s update', 'placeholder');
         $this->assertFileExists($file);
         $debug_log = file_get_contents($file);
         $this->assertContains('my update', $debug_log);
@@ -125,13 +125,13 @@ class TelegramLogTest extends TestCase
         $external_monolog->pushHandler(new StreamHandler($file, Logger::ERROR));
         $external_monolog->pushHandler(new StreamHandler($file, Logger::DEBUG));
 
-        TelegramLog::initialize($external_monolog);
-        TelegramLog::error('my error');
-        TelegramLog::error('my 50% error');
-        TelegramLog::error('my %s error', 'placeholder');
-        TelegramLog::debug('my debug');
-        TelegramLog::debug('my 50% debug');
-        TelegramLog::debug('my %s debug', 'placeholder');
+        Logger::initialize($external_monolog);
+        Logger::error('my error');
+        Logger::error('my 50% error');
+        Logger::error('my %s error', 'placeholder');
+        Logger::debug('my debug');
+        Logger::debug('my 50% debug');
+        Logger::debug('my %s debug', 'placeholder');
 
         $this->assertFileExists($file);
         $file_contents = file_get_contents($file);
