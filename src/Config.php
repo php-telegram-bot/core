@@ -15,49 +15,96 @@ use Illuminate\Config\Repository;
 class Config extends Repository
 {
     /**
-     * Config data.
+     * Add a single custom commands path
      *
-     * @var array
-     */
-    protected $data;
-
-    /**
-     * Create a new config instance.
+     * @param string $path Custom commands path to add
+     * @param bool $before If the path should be prepended or appended to the list
      *
-     * @param array $data
+     * @return void
      */
-    public function __construct(array $data)
+    public function addCommandsPath($path, $before = true)
     {
-        $this->data = $data;
-    }
+        $paths = $this->get('commands.paths', []);
 
-    /**
-     * Get config parameter
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return array|mixed|null
-     */
-    public function get($key = null, $default = null)
-    {
-        $array = $this->data;
-
-        if ($key === null) {
-            return $array;
-        }
-
-        if (array_key_exists($key, $array)) {
-            return $array[$key];
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (is_array($array) && array_key_exists($segment, $array)) {
-                $array = $array[$segment];
+        if (! is_dir($path)) {
+            TelegramLog::error('Commands path "%s" does not exist.', $path);
+        } else if (! in_array($path, $paths, true)) {
+            if ($before) {
+                array_unshift($paths, $path);
             } else {
-                return $default;
+                $paths[] = $path;
             }
         }
 
-        return $array;
+        $this->set('commands.paths', $paths);
+    }
+
+    /**
+     * Add multiple custom commands paths
+     *
+     * @param array $paths Custom commands paths to add
+     * @param bool $before If the paths should be prepended or appended to the list
+     *
+     * @return void
+     */
+    public function addCommandsPaths(array $paths, $before = true)
+    {
+        foreach ($paths as $path) {
+            $this->addCommandsPath($path, $before);
+        }
+    }
+
+    /**
+     * Return the list of commands paths
+     *
+     * @return array
+     */
+    public function getCommandsPaths()
+    {
+        return $this->get('commands.paths', []);
+    }
+
+    /**
+     * Enable a single Admin account
+     *
+     * @param integer $admin_id Single admin id
+     *
+     * @return void
+     */
+    public function addAdmin($admin_id)
+    {
+        $admins = $this->get('admins', []);
+
+        if (! is_int($admin_id) || $admin_id <= 0) {
+            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
+        } else if (! in_array($admin_id, $admins, true)) {
+            $admins[] = $admin_id;
+        }
+
+        $this->set('admins', $admins);
+    }
+
+    /**
+     * Enable a list of Admin Accounts
+     *
+     * @param array $admin_ids List of admin ids
+     *
+     * @return void
+     */
+    public function addAdmins(array $admin_ids)
+    {
+        foreach ($admin_ids as $admin_id) {
+            $this->addAdmin($admin_id);
+        }
+    }
+
+    /**
+     * Get list of admins
+     *
+     * @return array
+     */
+    public function getAdmins()
+    {
+        return $this->get('admins', []);
     }
 }

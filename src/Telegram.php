@@ -66,13 +66,6 @@ class Telegram
     protected $container;
 
     /**
-     * Custom commands paths
-     *
-     * @var array
-     */
-    protected $commands_paths = [];
-
-    /**
      * Current Update object
      *
      * @var \Longman\TelegramBot\Entities\Update
@@ -113,13 +106,6 @@ class Telegram
      * @var array
      */
     protected $commands_config = [];
-
-    /**
-     * Admins list
-     *
-     * @var array
-     */
-    protected $admins_list = [];
 
     /**
      * ServerResponse of the last Command execution
@@ -183,7 +169,9 @@ class Telegram
 
         $this->registerContainer();
 
-        //Add default system commands path
+        $this->initializeConfig();
+
+        // Add default system commands path
         $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/SystemCommands');
 
         Client::initialize($this);
@@ -199,17 +187,28 @@ class Telegram
         $this->container = Container::getInstance();
 
         $this->container->instance(Telegram::class, $this);
+    }
 
-        $config = new Config([
-            'commands' => [
-                'paths' => [
-                    TB_BASE_COMMANDS_PATH . '/SystemCommands',
-                ],
-            ],
-        ]);
-        dump($config);
-        die;
+    /**
+     * Initialize config.
+     *
+     * @return void
+     */
+    protected function initializeConfig()
+    {
+        $config = new Config();
+
         $this->container->instance(Config::class, $config);
+    }
+
+    /**
+     * Get config.
+     *
+     * @return \Longman\TelegramBot\Config
+     */
+    public function getConfig()
+    {
+        return $this->container->make(Config::class);
     }
 
     /**
@@ -269,7 +268,8 @@ class Telegram
     {
         $commands = [];
 
-        foreach ($this->commands_paths as $path) {
+        $command_paths = $this->getConfig()->getCommandsPaths();
+        foreach ($command_paths as $path) {
             try {
                 // Get all "*Command.php" files
                 $files = new RegexIterator(
@@ -538,11 +538,7 @@ class Telegram
      */
     public function enableAdmin($admin_id)
     {
-        if (! is_int($admin_id) || $admin_id <= 0) {
-            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
-        } else if (! in_array($admin_id, $this->admins_list, true)) {
-            $this->admins_list[] = $admin_id;
-        }
+        $this->getConfig()->addAdmin($admin_id);
 
         return $this;
     }
@@ -556,9 +552,7 @@ class Telegram
      */
     public function enableAdmins(array $admin_ids)
     {
-        foreach ($admin_ids as $admin_id) {
-            $this->enableAdmin($admin_id);
-        }
+        $this->getConfig()->addAdmins($admin_ids);
 
         return $this;
     }
@@ -570,7 +564,7 @@ class Telegram
      */
     public function getAdminList()
     {
-        return $this->admins_list;
+        return $this->getConfig()->getAdmins();
     }
 
     /**
@@ -604,7 +598,8 @@ class Telegram
             }
         }
 
-        return ($user_id === null) ? false : in_array($user_id, $this->admins_list, true);
+        $admins = $this->getConfig()->getAdmins();
+        return ($user_id === null) ? false : in_array($user_id, $admins, true);
     }
 
     /**
@@ -631,15 +626,7 @@ class Telegram
      */
     public function addCommandsPath($path, $before = true)
     {
-        if (! is_dir($path)) {
-            TelegramLog::error('Commands path "%s" does not exist.', $path);
-        } else if (! in_array($path, $this->commands_paths, true)) {
-            if ($before) {
-                array_unshift($this->commands_paths, $path);
-            } else {
-                $this->commands_paths[] = $path;
-            }
-        }
+        $this->getConfig()->addCommandsPath($path, $before);
 
         return $this;
     }
@@ -654,9 +641,7 @@ class Telegram
      */
     public function addCommandsPaths(array $paths, $before = true)
     {
-        foreach ($paths as $path) {
-            $this->addCommandsPath($path, $before);
-        }
+        $this->getConfig()->addCommandsPaths($paths, $before);
 
         return $this;
     }
@@ -668,7 +653,8 @@ class Telegram
      */
     public function getCommandsPaths()
     {
-        return $this->commands_paths;
+
+        return $this->getConfig()->getCommandsPaths();
     }
 
     /**

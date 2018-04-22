@@ -10,75 +10,61 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
-class ConfigTest extends AbstractTestCase
+use Longman\TelegramBot\Config;
+
+class ConfigTest extends TestCase
 {
-
-    /**
-     * @test
-     */
-    public function get_config_array()
+    public function testAddCommandsPathsBefore()
     {
-        $configData = [
-            'locales' => [
-                'ka' => [
-                    'name' => 'Georgian',
-                ],
-            ],
-        ];
-        $config = $this->getConfig($configData);
+        $config = new Config();
 
-        $this->assertEquals($configData, $config->get());
+        $paths = [
+            '/tmp/php-telegram-bot-custom-commands-config-1',
+            '/tmp/php-telegram-bot-custom-commands-config-2',
+            '/tmp/php-telegram-bot-custom-commands-config-3',
+        ];
+        foreach ($paths as $path) {
+            mkdir($path);
+        }
+
+        $config->addCommandsPaths($paths);
+        foreach ($paths as $path) {
+            rmdir($path);
+        }
+
+        $this->assertEquals(array_reverse($paths), $config->getCommandsPaths());
     }
 
-    /**
-     * @test
-     */
-    public function set_get()
+    public function testAddCommandsPathsAfter()
     {
-        $config = [
-            'locales' => [
-                'ka' => [
-                    'name' => 'Georgian',
-                ],
-            ],
-        ];
-        $config = $this->getConfig($config);
+        $config = new Config();
 
-        $this->assertEquals('Georgian', $config->get('locales.ka.name'));
+        $paths = [
+            '/tmp/php-telegram-bot-custom-commands-config-1',
+            '/tmp/php-telegram-bot-custom-commands-config-2',
+            '/tmp/php-telegram-bot-custom-commands-config-3',
+        ];
+        foreach ($paths as $path) {
+            mkdir($path);
+        }
+
+        $config->addCommandsPaths($paths, false);
+        foreach ($paths as $path) {
+            rmdir($path);
+        }
+
+        $this->assertEquals($paths, $config->getCommandsPaths());
     }
 
-    /**
-     * @test
-     */
-    public function get_default_value()
+    public function testAddAdmins()
     {
-        $config = [
-            'locales' => [
-                'ka' => [
-                    'name' => 'Georgian',
-                ],
-            ],
-        ];
-        $config = $this->getConfig($config);
+        $config = new Config();
 
-        $this->assertEquals('Thai', $config->get('locales.th.name', 'Thai'));
+        $admins = [1, 2, 3];
+
+        $config->addAdmins($admins);
+
+        $this->assertEquals($admins, $config->getAdmins());
     }
 
-    /**
-     * @test
-     */
-    public function table_name()
-    {
-        $config = [
-            'db' => [
-                'autosave' => true,
-                'connection' => 'mysql',
-                'texts_table' => 'texts',
-            ],
-        ];
-
-        $config = $this->getConfig($config);
-
-        $this->assertEquals('texts', $config->get('db.texts_table'));
-    }
 }

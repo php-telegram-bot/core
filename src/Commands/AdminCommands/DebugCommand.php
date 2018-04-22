@@ -68,6 +68,8 @@ class DebugCommand extends AdminCommand
         $debug_info[] = sprintf('*Download path:* `%s`', $this->telegram->getDownloadPath() ?: '`_Not set_`');
         $debug_info[] = sprintf('*Upload path:* `%s`', $this->telegram->getUploadPath() ?: '`_Not set_`');
 
+        $config = $this->telegram->getConfig();
+
         // Commands paths.
         $debug_info[] = '*Commands paths:*';
         $debug_info[] = sprintf(
