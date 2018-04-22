@@ -66,13 +66,6 @@ class Telegram
     protected $container;
 
     /**
-     * Raw request data (json) for webhook methods
-     *
-     * @var string
-     */
-    protected $input;
-
-    /**
      * Custom commands paths
      *
      * @var array
@@ -206,6 +199,17 @@ class Telegram
         $this->container = Container::getInstance();
 
         $this->container->instance(Telegram::class, $this);
+
+        $config = new Config([
+            'commands' => [
+                'paths' => [
+                    TB_BASE_COMMANDS_PATH . '/SystemCommands',
+                ],
+            ],
+        ]);
+        dump($config);
+        die;
+        $this->container->instance(Config::class, $config);
     }
 
     /**
@@ -324,30 +328,6 @@ class Telegram
         }
 
         return null;
-    }
-
-    /**
-     * Set custom input string for debug purposes
-     *
-     * @param string $input (json format)
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setCustomInput($input)
-    {
-        $this->input = $input;
-
-        return $this;
-    }
-
-    /**
-     * Get custom input string for debug purposes
-     *
-     * @return string
-     */
-    public function getCustomInput()
-    {
-        return $this->input;
     }
 
     /**
