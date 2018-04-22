@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Monolog\Logger as MonologLogger;
 
 /**
  * @package         TelegramTest
@@ -21,7 +21,7 @@ use Monolog\Logger;
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
  * @link            https://github.com/php-telegram-bot/core
  */
-class TelegramLogTest extends TestCase
+class LoggerTest extends TestCase
 {
     /**
      * @var array Dummy logfile paths
@@ -121,9 +121,9 @@ class TelegramLogTest extends TestCase
         $file = self::$logfiles['external'];
         $this->assertFileNotExists($file);
 
-        $external_monolog = new Logger('bot_update_log');
-        $external_monolog->pushHandler(new StreamHandler($file, Logger::ERROR));
-        $external_monolog->pushHandler(new StreamHandler($file, Logger::DEBUG));
+        $external_monolog = new MonologLogger('bot_update_log');
+        $external_monolog->pushHandler(new StreamHandler($file, MonologLogger::ERROR));
+        $external_monolog->pushHandler(new StreamHandler($file, MonologLogger::DEBUG));
 
         Logger::initialize($external_monolog);
         Logger::error('my error');
