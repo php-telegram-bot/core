@@ -10,8 +10,8 @@
 
 namespace Longman\TelegramBot;
 
-define('BASE_PATH', __DIR__);
-define('BASE_COMMANDS_PATH', BASE_PATH . '/Commands');
+defined('TB_BASE_PATH') || define('TB_BASE_PATH', __DIR__);
+defined('TB_BASE_COMMANDS_PATH') || define('TB_BASE_COMMANDS_PATH', TB_BASE_PATH . '/Commands');
 
 use Exception;
 use Longman\TelegramBot\Commands\Command;
@@ -177,7 +177,7 @@ class Telegram
         }
 
         //Add default system commands path
-        $this->addCommandsPath(BASE_COMMANDS_PATH . '/SystemCommands');
+        $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/SystemCommands');
 
         Request::initialize($this);
     }
@@ -461,7 +461,7 @@ class Telegram
 
             //Load admin commands
             if ($this->isAdmin()) {
-                $this->addCommandsPath(BASE_COMMANDS_PATH . '/AdminCommands', false);
+                $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/AdminCommands', false);
             }
 
             $type = $message->getType();
