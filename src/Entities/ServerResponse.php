@@ -112,6 +112,7 @@ class ServerResponse extends Entity
 
         $result_object_types = [
             'total_count' => 'UserProfilePhotos', //Response from getUserProfilePhotos
+            'stickers'    => 'StickerSet',        //Response from getStickerSet
             'file_id'     => 'File',              //Response from getFile
             'title'       => 'Chat',              //Response from getChat
             'username'    => 'User',              //Response from getMe
