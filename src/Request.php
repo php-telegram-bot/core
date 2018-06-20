@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\InvalidBotTokenException;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -463,7 +464,13 @@ class Request
             throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
         }
 
-        return new ServerResponse($response, $bot_username);
+        $response = new ServerResponse($response, $bot_username);
+
+        if (!$response->isOk() && $response->getErrorCode() === 401 && $response->getDescription() === 'Unauthorized') {
+            throw new InvalidBotTokenException();
+        }
+
+        return $response;
     }
 
     /**
