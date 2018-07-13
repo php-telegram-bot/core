@@ -368,7 +368,10 @@ See the [*ImageCommand.php*][ImageCommand.php] for a full example.
 #### Send Chat Action
 
 ```php
-Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
+Request::sendChatAction([
+        'chat_id' => $chat_id, 
+        'action' => Longman\TelegramBot\Telegram::ACTION_TYPING
+]);
 ```
 
 #### getUserProfilePhoto
