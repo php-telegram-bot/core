@@ -204,7 +204,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $bot_api_key  = 'your:bot_api_key';
 $bot_username = 'username_bot';
-$hook_url = 'https://your-domain/path/to/hook.php';
+$hook_url     = 'https://your-domain/path/to/hook.php';
 
 try {
     // Create Telegram API object
@@ -269,6 +269,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $bot_api_key  = 'your:bot_api_key';
 $bot_username = 'username_bot';
+
 $mysql_credentials = [
    'host'     => 'localhost',
    'user'     => 'dbuser',
@@ -327,7 +328,10 @@ All methods are implemented according to Telegram API (20 January 2016).
 Messages longer than 4096 characters are split up into multiple messages.
 
 ```php
-$result = Request::sendMessage(['chat_id' => $chat_id, 'text' => 'Your utf8 text 😜 ...']);
+$result = Request::sendMessage([
+    'chat_id' => $chat_id,
+    'text'    => 'Your utf8 text 😜 ...',
+]);
 ```
 
 #### Send Photo
@@ -335,31 +339,28 @@ $result = Request::sendMessage(['chat_id' => $chat_id, 'text' => 'Your utf8 text
 To send a local photo, add it properly to the `$data` parameter using the file path:
 
 ```php
-$data = [
+$result = Request::sendPhoto([
     'chat_id' => $chat_id,
     'photo'   => Request::encodeFile('/path/to/pic.jpg'),
-];
-$result = Request::sendPhoto($data);
+]);
 ```
 
 If you know the `file_id` of a previously uploaded file, just use it directly in the data array:
 
 ```php
-$data = [
+$result = Request::sendPhoto([
     'chat_id' => $chat_id,
-    'photo'   => $file_id,
-];
-$result = Request::sendPhoto($data);
+    'photo'   => 'AAQCCBNtIhAoAAss4tLEZ3x6HzqVAAqC',
+]);
 ```
 
 To send a remote photo, use the direct URL instead:
 
 ```php
-$data = [
+$result = Request::sendPhoto([
     'chat_id' => $chat_id,
     'photo'   => 'https://example.com/path/to/pic.jpg',
-];
-$result = Request::sendPhoto($data);
+]);
 ```
 
 *sendAudio*, *sendDocument*, *sendSticker*, *sendVideo*, *sendVoice* and *sendVideoNote* all work in the same way, just check the [API documentation](https://core.telegram.org/bots/api#sendphoto) for the exact usage.
@@ -369,8 +370,8 @@ See the [*ImageCommand.php*][ImageCommand.php] for a full example.
 
 ```php
 Request::sendChatAction([
-        'chat_id' => $chat_id, 
-        'action' => Longman\TelegramBot\Telegram::ACTION_TYPING
+    'chat_id' => $chat_id,
+    'action'  => 'typing',
 ]);
 ```
 
@@ -505,10 +506,14 @@ With this method you can set some command specific parameters, for example:
 
 ```php
 // Google geocode/timezone API key for /date command
-$telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
+$telegram->setCommandConfig('date', [
+    'google_api_key' => 'your_google_api_key_here',
+]);
 
 // OpenWeatherMap API key for /weather command
-$telegram->setCommandConfig('weather', ['owm_api_key' => 'your_owm_api_key_here']);
+$telegram->setCommandConfig('weather', [
+    'owm_api_key' => 'your_owm_api_key_here',
+]);
 ```
 
 ### Admin Commands
@@ -532,7 +537,10 @@ You can specify one or more admins with this option:
 $telegram->enableAdmin(your_telegram_user_id);
 
 // Multiple admins
-$telegram->enableAdmins([your_telegram_user_id, other_telegram_user_id]);
+$telegram->enableAdmins([
+    your_telegram_user_id,
+    other_telegram_user_id,
+]);
 ```
 Telegram user id can be retrieved with the [*/whoami*][WhoamiCommand.php] command.
 
@@ -543,11 +551,21 @@ To enable this feature follow these steps:
 - Enable admin interface for your user as explained in the admin section above.
 - Enter your channel name as a parameter for the [*/sendtochannel*][SendtochannelCommand.php] command:
 ```php
-$telegram->setCommandConfig('sendtochannel', ['your_channel' => ['@type_here_your_channel']]);
+$telegram->setCommandConfig('sendtochannel', [
+    'your_channel' => [
+        '@type_here_your_channel',
+    ]
+]);
 ```
 - If you want to manage more channels:
 ```php
-$telegram->setCommandConfig('sendtochannel', ['your_channel' => ['@type_here_your_channel', '@type_here_another_channel', '@and_so_on']]);
+$telegram->setCommandConfig('sendtochannel', [
+    'your_channel' => [
+        '@type_here_your_channel',
+        '@type_here_another_channel',
+        '@and_so_on',
+    ]
+]);
 ```
 - Enjoy!
 
