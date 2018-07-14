@@ -75,7 +75,11 @@ class DB
             throw new TelegramException('MySQL credentials not provided!');
         }
 
-        $dsn     = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        if (!empty($credentials['port'])) {
+            $dsn .= ';port=' . $credentials['port'];
+        }
+
         $options = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
         try {
             $pdo = new PDO($dsn, $credentials['user'], $credentials['password'], $options);
