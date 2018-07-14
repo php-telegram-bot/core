@@ -25,7 +25,6 @@ use RegexIterator;
 
 class Telegram
 {
-
     /**
      * Version
      *
