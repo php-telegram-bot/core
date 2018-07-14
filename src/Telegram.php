@@ -27,56 +27,6 @@ class Telegram
 {
 
     /**
-     * Typing chat action
-     */
-    const ACTION_TYPING = 'typing';
-
-    /**
-     * Upload Photo chat action
-     */
-    const ACTION_UPLOAD_PHOTO = 'upload_photo';
-
-    /**
-     * Record Video chat action
-     */
-    const ACTION_RECORD_VIDEO = 'record_video';
-
-    /**
-     * Upload Video chat action
-     */
-    const ACTION_UPLOAD_VIDEO = 'upload_video';
-
-    /**
-     * Record Audio chat action
-     */
-    const ACTION_RECORD_AUDIO = 'record_audio';
-
-    /**
-     * Upload Audio chat action
-     */
-    const ACTION_UPLOAD_AUDIO = 'upload_audio';
-
-    /**
-     * Upload Document chat action
-     */
-    const ACTION_UPLOAD_DOCUMENT = 'upload_document';
-
-    /**
-     * Find Location chat action
-     */
-    const ACTION_FIND_LOCATION = 'find_location';
-
-    /**
-     * Record Video Note chat action
-     */
-    const ACTION_RECORD_VIDEO_NOTE = 'record_video_note';
-
-    /**
-     * Upload Video note chat action
-     */
-    const ACTION_UPLOAD_VIDEO_NOTE = 'record_video_note';
-
-    /**
      * Version
      *
      * @var string
