@@ -371,7 +371,7 @@ See the [*ImageCommand.php*][ImageCommand.php] for a full example.
 ```php
 Request::sendChatAction([
     'chat_id' => $chat_id,
-    'action'  => 'typing',
+    'action'  => Longman\TelegramBot\ChatAction::TYPING,
 ]);
 ```
 
