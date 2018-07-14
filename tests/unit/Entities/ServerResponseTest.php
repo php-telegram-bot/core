@@ -298,4 +298,71 @@ class ServerResponseTest extends TestCase
 
         //... they are not finished...
     }
+    
+    public function getStickerSet()
+    {
+        return '{
+            "ok":true,
+            "result":{
+                "name":"stickerset_name",
+                "title":"Some name",
+                "contains_masks":false,
+                "stickers":[
+                    {
+                        "width":512,
+                        "height":324,
+                        "emoji":"\ud83d\ude33",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABOKTFsZAASfA4t3pp1_VlH1AAIC","file_size":3120,"width":128,"height":81},
+                        "file_id":"CAADBAADzAIAAph_7gOATSb9ehxv5QI",
+                        "file_size":14246
+                    },
+                    {
+                        "width":419,
+                        "height":512,
+                        "emoji":"\u2764",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABMj8qoZAASePUHuDSJ2uGIKAAIC","file_size":3500,"width":105,"height":128},
+                        "file_id":"CAADBAADzQIAAph_7gNPFguft4qtjAI",
+                        "file_size":17814
+                    },
+                    {
+                        "width":512,
+                        "height":276,
+                        "emoji":"\ud83d\ude36",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABMiaWcZAATNUEPkYkd0Fh2JBAABAg","file_size":2642,"file_path":"thumbnails\/file_8.jpg","width":128,"height":69},
+                        "file_id":"CAADBAADzwIAAph_7gOClxA3gK5wqAI",
+                        "file_size":12258
+                    },
+                    {
+                        "width":512,
+                        "height":327,
+                        "emoji":"\ud83d\udcbb",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABPC3d8ZAAQUJJnFB1VfII2RAAIC","file_size":3824,"file_path":"thumbnails\/file_10.jpg","width":128,"height":82},
+                        "file_id":"CAADBAAD0QIAAph_7gO-vBJGkTeWqwI",
+                        "file_size":18282
+                    }
+                ]
+            }
+        }';
+    }
+    
+    public function testGetStickerSet()
+    {
+        $result = $this->getStickerSet();
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
+
+        $server_result = $server->getResult();
+        
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\StickerSet', $server_result);
+        self::assertEquals('stickerset_name', $server_result->getName());
+        self::assertEquals('Some name', $server_result->getTitle());
+        self::assertFalse($server_result->getContainsMasks());
+        
+        $stickers = $server_result->getStickers();
+        self::assertCount(4, $stickers);
+        self::assertInstanceOf('\Longman\TelegramBot\Entities\Sticker', $stickers[0]);
+    }
 }
