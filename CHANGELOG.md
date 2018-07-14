@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Telegram Games platform!
 ### Changed
 - [:exclamation:][unreleased-bc-rename-constants] Rename and ensure no redefinition of constants: `BASE_PATH` -> `TB_BASE_PATH`, `BASE_COMMANDS_PATH` -> `TB_BASE_COMMANDS_PATH`.
 ### Deprecated
@@ -18,7 +19,6 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Implemented new changes for Bot API 3.6 (streamable InputMediaVideo, connected website).
 - `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed.
 - `Telegram::useGetUpdatesWithoutDatabase()` method, enables `Telegram::handleGetUpdates()` to run without a database.
-- Telegram Games platform!
 ### Changed
 - Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
 - Add debug log entry instead of throwing an exception for duplicate updates.
