@@ -272,6 +272,7 @@ $bot_username = 'username_bot';
 
 $mysql_credentials = [
    'host'     => 'localhost',
+   'port'     => 3306, // optional
    'user'     => 'dbuser',
    'password' => 'dbpass',
    'database' => 'dbname',
@@ -412,6 +413,7 @@ If you want to save messages/users/chats for further usage in commands, create a
 ```php
 $mysql_credentials = [
    'host'     => 'localhost',
+   'port'     => 3306, // optional
    'user'     => 'dbuser',
    'password' => 'dbpass',
    'database' => 'dbname',

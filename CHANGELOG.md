@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - `ChatAction` class to simplify chat action selection.
 - Telegram Games platform!
+- Ability to set custom MySQL port.
 ### Changed
 - [:exclamation:][unreleased-bc-rename-constants] Rename and ensure no redefinition of constants: `BASE_PATH` -> `TB_BASE_PATH`, `BASE_COMMANDS_PATH` -> `TB_BASE_COMMANDS_PATH`.
 ### Deprecated
