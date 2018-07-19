@@ -464,6 +464,8 @@ class Request
 
         self::limitTelegramRequests($action, $data);
 
+        self::sendChatActionIfNecessary($action, $data);
+
         $raw_response = self::execute($action, $data);
         $response = json_decode($raw_response, true);
 
@@ -716,5 +718,52 @@ class Request
                 DB::insertTelegramRequest($action, $data);
             }
         }
+    }
+
+
+
+    private static function sendChatActionIfNecessary($action, $data)
+    {
+
+        if (!isset($data['sendChatAction'])) {
+            return false;
+        }
+
+        if ($data['sendChatAction'] === true) {
+            return false;
+        }
+
+        $chatAction = null;
+        switch ($action) {
+            case 'sendMessage':
+                $chatAction = ChatAction::TYPING;
+                break;
+            case 'sendPhoto':
+                $chatAction = ChatAction::UPLOAD_PHOTO;
+                break;
+            case 'sendAudio':
+                $chatAction = ChatAction::UPLOAD_AUDIO;
+                break;
+            case 'sendDocument':
+                $chatAction = ChatAction::UPLOAD_DOCUMENT;
+                break;
+            case 'sendVideo':
+                $chatAction = ChatAction::UPLOAD_VIDEO;
+                break;
+            case 'sendVoice':
+                $chatAction = ChatAction::RECORD_AUDIO;
+                break;
+            case 'sendVideoNote':
+                $chatAction = ChatAction::UPLOAD_VIDEO_NOTE;
+                break;
+            case 'sendLocation':
+                $chatAction = ChatAction::FIND_LOCATION;
+                break;
+            default:
+                $chatAction = ChatAction::TYPING;
+                break;
+        }
+        $data['chatAction'] = $chatAction;
+        self::sendChatAction($data);
     }
 }

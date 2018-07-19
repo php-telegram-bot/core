@@ -376,6 +376,16 @@ Request::sendChatAction([
 ]);
 ```
 
+By set `sendChatAction` in your command, proper chat action will be send:
+```php
+$result = Request::sendPhoto([
+    'chat_id' => $chat_id,
+    'sendChatAction' => true,
+    'photo'   => 'https://example.com/path/to/pic.jpg',
+]);
+```
+
+
 #### getUserProfilePhoto
 
 Retrieve the user photo, see [*WhoamiCommand.php*][WhoamiCommand.php] for a full example.
