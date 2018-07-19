@@ -10,6 +10,7 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\Games\Game;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 
@@ -33,6 +34,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method string            getAuthorSignature()       Optional. Signature of the post author for messages in channels
  * @method Audio             getAudio()                 Optional. Message is an audio file, information about the file
  * @method Document          getDocument()              Optional. Message is a general file, information about the file
+ * @method Game              getGame()                  Optional. Message is a game, information about the game.
  * @method Sticker           getSticker()               Optional. Message is a sticker, information about the sticker
  * @method Video             getVideo()                 Optional. Message is a video, information about the video
  * @method Voice             getVoice()                 Optional. Message is a voice message, information about the file
@@ -71,6 +73,7 @@ class Message extends Entity
             'caption_entities'   => MessageEntity::class,
             'audio'              => Audio::class,
             'document'           => Document::class,
+            'game'               => Game::class,
             'photo'              => PhotoSize::class,
             'sticker'            => Sticker::class,
             'video'              => Video::class,

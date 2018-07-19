@@ -272,6 +272,7 @@ $bot_username = 'username_bot';
 
 $mysql_credentials = [
    'host'     => 'localhost',
+   'port'     => 3306, // optional
    'user'     => 'dbuser',
    'password' => 'dbpass',
    'database' => 'dbname',
@@ -375,6 +376,16 @@ Request::sendChatAction([
 ]);
 ```
 
+By set `sendChatAction` in your command, proper chat action will be send:
+```php
+$result = Request::sendPhoto([
+    'chat_id' => $chat_id,
+    'sendChatAction' => true,
+    'photo'   => 'https://example.com/path/to/pic.jpg',
+]);
+```
+
+
 #### getUserProfilePhoto
 
 Retrieve the user photo, see [*WhoamiCommand.php*][WhoamiCommand.php] for a full example.
@@ -412,6 +423,7 @@ If you want to save messages/users/chats for further usage in commands, create a
 ```php
 $mysql_credentials = [
    'host'     => 'localhost',
+   'port'     => 3306, // optional
    'user'     => 'dbuser',
    'password' => 'dbpass',
    'database' => 'dbname',
