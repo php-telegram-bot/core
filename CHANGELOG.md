@@ -5,15 +5,20 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- `ChatAction` class to simplify chat action selection.
-- Telegram Games platform!
-- Ability to set custom MySQL port.
 ### Changed
-- [:exclamation:][unreleased-bc-rename-constants] Rename and ensure no redefinition of constants: `BASE_PATH` -> `TB_BASE_PATH`, `BASE_COMMANDS_PATH` -> `TB_BASE_COMMANDS_PATH`.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.54.0] - 2018-07-21
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.54.0-sql-migration] on your database.
+### Added
+- `ChatAction` class to simplify chat action selection.
+- Telegram Games platform!
+- Ability to set custom MySQL port.
+### Changed
+- [:exclamation:][0.54.0-bc-rename-constants] Rename and ensure no redefinition of constants: `BASE_PATH` -> `TB_BASE_PATH`, `BASE_COMMANDS_PATH` -> `TB_BASE_COMMANDS_PATH`.
 
 ## [0.53.0] - 2018-04-01
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.53.0-sql-migration] on your database.
@@ -208,10 +213,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.52.0-0.53.0.sql
-[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.50.0-0.51.0.sql
+[0.54.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.53.0-0.54.0.sql
+[0.54.0-bc-rename-constants]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#rename-constants
+[0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.52.0-0.53.0.sql
+[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.50.0-0.51.0.sql
 [0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
-[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
+[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.47.1-0.48.0.sql
 [0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
 [0.47.0-bc-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
 [0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
@@ -223,6 +230,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0
 [0.53.0]: https://github.com/php-telegram-bot/core/compare/0.52.0...0.53.0
 [0.52.0]: https://github.com/php-telegram-bot/core/compare/0.51.0...0.52.0
 [0.51.0]: https://github.com/php-telegram-bot/core/compare/0.50.0...0.51.0
