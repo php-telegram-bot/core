@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\Games;
-
-use Longman\TelegramBot\Entities\Entity;
+namespace Longman\TelegramBot\Entities;
 
 /**
  * Class Animation
@@ -20,6 +18,9 @@ use Longman\TelegramBot\Entities\Entity;
  * @link https://core.telegram.org/bots/api#animation
  *
  * @method string    getFileId()   Unique file identifier
+ * @method int       getWidth()    Video width as defined by sender
+ * @method int       getHeight()   Video height as defined by sender
+ * @method int       getDuration() Duration of the video in seconds as defined by sender
  * @method PhotoSize getThumb()    Optional. Animation thumbnail as defined by sender
  * @method string    getFileName() Optional. Original animation filename as defined by sender
  * @method string    getMimeType() Optional. MIME type of the file as defined by sender
