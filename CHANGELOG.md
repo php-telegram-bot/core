@@ -6,7 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
-- Bot API 4.0 (without Passport)
+- Bot API 4.0
 ### Changed
 - [:exclamation:][unreleased-bc-move-animation-out-of-games-namespace] Move Animation entity out of Games namespace.
 ### Deprecated
