@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `entities` TEXT COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `audio` TEXT COMMENT 'Audio object. Message is an audio file, information about the file',
   `document` TEXT COMMENT 'Document object. Message is a general file, information about the file',
-  `animation` TEXT COMMENT 'Optional. Message is an animation, information about the animation',
+  `animation` TEXT COMMENT 'Message is an animation, information about the animation',
   `game` TEXT COMMENT 'Game object. Message is a game, information about the game',
   `photo` TEXT COMMENT 'Array of PhotoSize objects. Message is a photo, available sizes of the photo',
   `sticker` TEXT COMMENT 'Sticker object. Message is a sticker, information about the sticker',
@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `migrate_from_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
   `pinned_message` TEXT NULL COMMENT 'Message object. Specified message was pinned',
   `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
+  `passport_data` TEXT NULL COMMENT 'Telegram Passport data',
 
   PRIMARY KEY (`chat_id`, `id`),
   KEY `user_id` (`user_id`),
