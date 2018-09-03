@@ -1,1 +1,11 @@
+ALTER TABLE `chat` ADD COLUMN `first_name` CHAR(255) DEFAULT NULL COMMENT 'First name of the other party in a private chat' AFTER `username`;
+ALTER TABLE `chat` ADD COLUMN `last_name` CHAR(255) DEFAULT NULL COMMENT 'Last name of the other party in a private chat' AFTER `first_name`;
 ALTER TABLE `message` ADD COLUMN `animation` TEXT NULL COMMENT 'Optional. Message is an animation, information about the animation' AFTER `document`;
+ALTER TABLE `message` ADD COLUMN `forward_signature` TEXT COMMENT 'For messages forwarded from channels, signature of the post author if present' AFTER `forward_from_message_id`;
+ALTER TABLE `message` ADD COLUMN `edit_date` bigint UNSIGNED DEFAULT NULL COMMENT 'Optional. Date the message was last edited in Unix time' AFTER `reply_to_message`;
+ALTER TABLE `message` ADD COLUMN `author_signature` TEXT COMMENT 'Signature of the post author for messages in channels' AFTER `media_group_id`;
+ALTER TABLE `message` ADD COLUMN `caption_entities` TEXT COMMENT 'For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption';
+ALTER TABLE `message` ADD COLUMN `invoice` TEXT NULL COMMENT 'Message is an invoice for a payment, information about the invoice' AFTER `pinned_message`;
+ALTER TABLE `message` ADD COLUMN `successful_payment` TEXT NULL COMMENT 'Message is a service message about a successful payment, information about the payment' AFTER `invoice`;
+ALTER TABLE `callback_query` ADD COLUMN `chat_instance` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent' AFTER `inline_message_id`;
+ALTER TABLE `callback_query` ADD COLUMN `game_short_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Short name of a Game to be returned, serves as the unique identifier for the game' AFTER `data`;

@@ -439,13 +439,15 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `username`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :all_members_are_administrators, :created_at, :updated_at, :old_id)
+                (:id, :type, :title, :username, :first_name, :last_name, :all_members_are_administrators, :created_at, :updated_at, :old_id)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = VALUES(`type`),
                     `title`                          = VALUES(`title`),
                     `username`                       = VALUES(`username`),
+                    `first_name`                     = VALUES(`first_name`),
+                    `last_name`                      = VALUES(`last_name`),
                     `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
                     `updated_at`                     = VALUES(`updated_at`)
             ');
@@ -466,6 +468,8 @@ class DB
             $sth->bindValue(':type', $chat_type);
             $sth->bindValue(':title', $chat->getTitle());
             $sth->bindValue(':username', $chat->getUsername());
+            $sth->bindValue(':first_name', $chat->getFirstName());
+            $sth->bindValue(':last_name', $chat->getLastName());
             $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
@@ -709,9 +713,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CALLBACK_QUERY . '`
-                (`id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `data`, `created_at`)
+                (`id`, `user_id`, `chat_id`, `message_id`, `inline_message_id`, `chat_instance`, `data`, `game_short_name`, `created_at`)
                 VALUES
-                (:id, :user_id, :chat_id, :message_id, :inline_message_id, :data, :created_at)
+                (:id, :user_id, :chat_id, :message_id, :inline_message_id, :chat_instance, :data, :game_short_name, :created_at)
             ');
 
             $date    = self::getTimestamp();
@@ -750,7 +754,9 @@ class DB
             $sth->bindValue(':chat_id', $chat_id);
             $sth->bindValue(':message_id', $message_id);
             $sth->bindValue(':inline_message_id', $callback_query->getInlineMessageId());
+            $sth->bindValue(':chat_instance', $callback_query->getChatInstance());
             $sth->bindValue(':data', $callback_query->getData());
+            $sth->bindValue(':game_short_name', $callback_query->getGameShortName());
             $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
@@ -828,20 +834,20 @@ class DB
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
-                    `forward_date`, `reply_to_chat`, `reply_to_message`, `media_group_id`, `text`, `entities`, `audio`, `document`,
+                    `forward_signature`, `forward_date`, `reply_to_chat`, `reply_to_message`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`, `audio`, `document`,
                     `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`,
-                    `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`, `connected_website`
+                    `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`, `invoice`, `successful_payment`, `connected_website`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
-                    :forward_date, :reply_to_chat, :reply_to_message, :media_group_id, :text, :entities, :audio, :document,
+                    :forward_signature, :forward_date, :reply_to_chat, :reply_to_message, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities, :audio, :document,
                     :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created,
-                    :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message, :connected_website
+                    :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message, :invoice, :successful_payment, :connected_website
                 )
             ');
 
@@ -867,6 +873,7 @@ class DB
             $sth->bindValue(':forward_from', $forward_from);
             $sth->bindValue(':forward_from_chat', $forward_from_chat);
             $sth->bindValue(':forward_from_message_id', $message->getForwardFromMessageId());
+            $sth->bindValue(':forward_signature', $message->getForwardSignature());
             $sth->bindValue(':forward_date', $forward_date);
 
             $reply_to_chat_id = null;
@@ -876,14 +883,17 @@ class DB
             $sth->bindValue(':reply_to_chat', $reply_to_chat_id);
             $sth->bindValue(':reply_to_message', $reply_to_message_id);
 
+            $sth->bindValue(':edit_date', $message->getEditDate());
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
+            $sth->bindValue(':author_signature', $message->getAuthorSignature());
             $sth->bindValue(':text', $message->getText());
-            $sth->bindValue(':entities', $t = self::entitiesArrayToJson($message->getEntities(), null));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities(), null));
+            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities(), null));
             $sth->bindValue(':audio', $message->getAudio());
             $sth->bindValue(':document', $message->getDocument());
             $sth->bindValue(':animation', $message->getAnimation());
             $sth->bindValue(':game', $message->getGame());
-            $sth->bindValue(':photo', $t = self::entitiesArrayToJson($message->getPhoto(), null));
+            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto(), null));
             $sth->bindValue(':sticker', $message->getSticker());
             $sth->bindValue(':video', $message->getVideo());
             $sth->bindValue(':voice', $message->getVoice());
@@ -895,7 +905,7 @@ class DB
             $sth->bindValue(':new_chat_members', $new_chat_members_ids);
             $sth->bindValue(':left_chat_member', $left_chat_member_id);
             $sth->bindValue(':new_chat_title', $message->getNewChatTitle());
-            $sth->bindValue(':new_chat_photo', $t = self::entitiesArrayToJson($message->getNewChatPhoto(), null));
+            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto(), null));
             $sth->bindValue(':delete_chat_photo', $message->getDeleteChatPhoto());
             $sth->bindValue(':group_chat_created', $message->getGroupChatCreated());
             $sth->bindValue(':supergroup_chat_created', $message->getSupergroupChatCreated());
@@ -903,6 +913,8 @@ class DB
             $sth->bindValue(':migrate_from_chat_id', $message->getMigrateFromChatId());
             $sth->bindValue(':migrate_to_chat_id', $message->getMigrateToChatId());
             $sth->bindValue(':pinned_message', $message->getPinnedMessage());
+            $sth->bindValue(':invoice', $message->getInvoice());
+            $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
 
             return $sth->execute();
