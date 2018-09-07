@@ -17,6 +17,8 @@ use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
+use Longman\TelegramBot\Entities\Payments\ShippingQuery;
 use Longman\TelegramBot\Entities\ReplyToMessage;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
@@ -141,7 +143,9 @@ class DB
             'edited_message',
             'inline_query',
             'message',
+            'pre_checkout_query',
             'request_limiter',
+            'shipping_query',
             'telegram_update',
             'user',
             'user_chat',
@@ -300,30 +304,36 @@ class DB
     /**
      * Insert entry to telegram_update table
      *
-     * @todo Add missing values! See https://core.telegram.org/bots/api#update
-     *
-     * @param string $id
-     * @param string $chat_id
-     * @param string $message_id
-     * @param string $inline_query_id
-     * @param string $chosen_inline_result_id
-     * @param string $callback_query_id
-     * @param string $edited_message_id
+     * @param string      $update_id
+     * @param string|null $chat_id
+     * @param string|null $message_id
+     * @param string|null $edited_message_id
+     * @param string|null $channel_post_id
+     * @param string|null $edited_channel_post_id
+     * @param string|null $inline_query_id
+     * @param string|null $chosen_inline_result_id
+     * @param string|null $callback_query_id
+     * @param string|null $shipping_query_id
+     * @param string|null $pre_checkout_query_id
      *
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertTelegramUpdate(
-        $id,
+    protected static function insertTelegramUpdate(
+        $update_id,
         $chat_id = null,
         $message_id = null,
+        $edited_message_id = null,
+        $channel_post_id = null,
+        $edited_channel_post_id = null,
         $inline_query_id = null,
         $chosen_inline_result_id = null,
         $callback_query_id = null,
-        $edited_message_id = null
+        $shipping_query_id = null,
+        $pre_checkout_query_id = null
     ) {
-        if ($message_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $edited_message_id === null) {
-            throw new TelegramException('message_id, inline_query_id, chosen_inline_result_id, callback_query_id, edited_message_id are all null');
+        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null) {
+            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id are all null');
         }
 
         if (!self::isDbConnected()) {
@@ -333,18 +343,22 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
-                (`id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `edited_message_id`)
+                (`id`, `chat_id`, `message_id`, `edited_message_id`, `channel_post_id`, `edited_channel_post_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `shipping_query_id`, `pre_checkout_query_id`)
                 VALUES
-                (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id)
+                (:id, :chat_id, :message_id, :edited_message_id, :channel_post_id, :edited_channel_post_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :shipping_query_id, :pre_checkout_query_id)
             ');
 
-            $sth->bindValue(':id', $id);
+            $sth->bindValue(':id', $update_id);
             $sth->bindValue(':chat_id', $chat_id);
             $sth->bindValue(':message_id', $message_id);
             $sth->bindValue(':edited_message_id', $edited_message_id);
+            $sth->bindValue(':channel_post_id', $channel_post_id);
+            $sth->bindValue(':edited_channel_post_id', $edited_channel_post_id);
             $sth->bindValue(':inline_query_id', $inline_query_id);
             $sth->bindValue(':chosen_inline_result_id', $chosen_inline_result_id);
             $sth->bindValue(':callback_query_id', $callback_query_id);
+            $sth->bindValue(':shipping_query_id', $shipping_query_id);
+            $sth->bindValue(':pre_checkout_query_id', $pre_checkout_query_id);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -497,115 +511,56 @@ class DB
             return false;
         }
 
-        $update_id   = $update->getUpdateId();
-        $update_type = $update->getUpdateType();
+        $chat_id                 = null;
+        $message_id              = null;
+        $edited_message_id       = null;
+        $channel_post_id         = null;
+        $edited_channel_post_id  = null;
+        $inline_query_id         = null;
+        $chosen_inline_result_id = null;
+        $callback_query_id       = null;
+        $shipping_query_id       = null;
+        $pre_checkout_query_id   = null;
 
-        // @todo Make this simpler: if ($message = $update->getMessage()) ...
-        if ($update_type === 'message') {
-            $message = $update->getMessage();
-
-            if (self::insertMessageRequest($message)) {
-                $message_id = $message->getMessageId();
-                $chat_id    = $message->getChat()->getId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    $chat_id,
-                    $message_id
-                );
-            }
-        } elseif ($update_type === 'edited_message') {
-            $edited_message = $update->getEditedMessage();
-
-            if (self::insertEditedMessageRequest($edited_message)) {
-                $edited_message_local_id = self::$pdo->lastInsertId();
-                $chat_id                 = $edited_message->getChat()->getId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    $chat_id,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $edited_message_local_id
-                );
-            }
-        } elseif ($update_type === 'channel_post') {
-            $channel_post = $update->getChannelPost();
-
-            if (self::insertMessageRequest($channel_post)) {
-                $message_id = $channel_post->getMessageId();
-                $chat_id    = $channel_post->getChat()->getId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    $chat_id,
-                    $message_id
-                );
-            }
-        } elseif ($update_type === 'edited_channel_post') {
-            $edited_channel_post = $update->getEditedChannelPost();
-
-            if (self::insertEditedMessageRequest($edited_channel_post)) {
-                $edited_channel_post_local_id = self::$pdo->lastInsertId();
-                $chat_id                      = $edited_channel_post->getChat()->getId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    $chat_id,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $edited_channel_post_local_id
-                );
-            }
-        } elseif ($update_type === 'inline_query') {
-            $inline_query = $update->getInlineQuery();
-
-            if (self::insertInlineQueryRequest($inline_query)) {
-                $inline_query_id = $inline_query->getId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    null,
-                    null,
-                    $inline_query_id
-                );
-            }
-        } elseif ($update_type === 'chosen_inline_result') {
-            $chosen_inline_result = $update->getChosenInlineResult();
-
-            if (self::insertChosenInlineResultRequest($chosen_inline_result)) {
-                $chosen_inline_result_local_id = self::$pdo->lastInsertId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    null,
-                    null,
-                    null,
-                    $chosen_inline_result_local_id
-                );
-            }
-        } elseif ($update_type === 'callback_query') {
-            $callback_query = $update->getCallbackQuery();
-
-            if (self::insertCallbackQueryRequest($callback_query)) {
-                $callback_query_id = $callback_query->getId();
-
-                return self::insertTelegramUpdate(
-                    $update_id,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $callback_query_id
-                );
-            }
+        if (($message = $update->getMessage()) && self::insertMessageRequest($message)) {
+            $chat_id    = $message->getChat()->getId();
+            $message_id = $message->getMessageId();
+        } elseif (($edited_message = $update->getEditedMessage()) && self::insertEditedMessageRequest($edited_message)) {
+            $chat_id           = $edited_message->getChat()->getId();
+            $edited_message_id = self::$pdo->lastInsertId();
+        } elseif (($channel_post = $update->getChannelPost()) && self::insertMessageRequest($channel_post)) {
+            $chat_id         = $channel_post->getChat()->getId();
+            $channel_post_id = $channel_post->getMessageId();
+        } elseif (($edited_channel_post = $update->getEditedChannelPost()) && self::insertEditedMessageRequest($edited_channel_post)) {
+            $chat_id                = $edited_channel_post->getChat()->getId();
+            $edited_channel_post_id = self::$pdo->lastInsertId();
+        } elseif (($inline_query = $update->getInlineQuery()) && self::insertInlineQueryRequest($inline_query)) {
+            $inline_query_id = $inline_query->getId();
+        } elseif (($chosen_inline_result = $update->getChosenInlineResult()) && self::insertChosenInlineResultRequest($chosen_inline_result)) {
+            $chosen_inline_result_id = self::$pdo->lastInsertId();
+        } elseif (($callback_query = $update->getCallbackQuery()) && self::insertCallbackQueryRequest($callback_query)) {
+            $callback_query_id = $callback_query->getId();
+        } elseif (($shipping_query = $update->getShippingQuery()) && self::insertShippingQueryRequest($shipping_query)) {
+            $shipping_query_id = $shipping_query->getId();
+        } elseif (($pre_checkout_query = $update->getPreCheckoutQuery()) && self::insertPreCheckoutQueryRequest($pre_checkout_query)) {
+            $pre_checkout_query_id = $pre_checkout_query->getId();
+        } else {
+            return false;
         }
 
-        return false;
+        return self::insertTelegramUpdate(
+            $update->getUpdateId(),
+            $chat_id,
+            $message_id,
+            $edited_message_id,
+            $channel_post_id,
+            $edited_channel_post_id,
+            $inline_query_id,
+            $chosen_inline_result_id,
+            $callback_query_id,
+            $shipping_query_id,
+            $pre_checkout_query_id
+        );
     }
 
     /**
@@ -766,9 +721,96 @@ class DB
     }
 
     /**
-     * Insert Message request in db
+     * Insert shipping query request into database
      *
-     * @todo Complete with new fields: https://core.telegram.org/bots/api#message
+     * @param ShippingQuery $shipping_query
+     *
+     * @return bool If the insert was successful
+     * @throws TelegramException
+     */
+    public static function insertShippingQueryRequest(ShippingQuery $shipping_query)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_SHIPPING_QUERY . '`
+                (`id`, `user_id`, `chat_id`, `invoice_payload`, `shipping_address`, `created_at`)
+                VALUES
+                (:id, :user_id, :chat_id, :invoice_payload, :shipping_address, :created_at)
+            ');
+
+            $date    = self::getTimestamp();
+            $user_id = null;
+
+            $user = $shipping_query->getFrom();
+            if ($user instanceof User) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
+            }
+
+            $sth->bindValue(':id', $shipping_query->getId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':invoice_payload', $shipping_query->getInvoicePayload());
+            $sth->bindValue(':shipping_address', $shipping_query->getShippingAddress());
+            $sth->bindValue(':created_at', $date);
+
+            return $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Insert pre checkout query request into database
+     *
+     * @param PreCheckoutQuery $pre_checkout_query
+     *
+     * @return bool If the insert was successful
+     * @throws TelegramException
+     */
+    public static function insertPreCheckoutQueryRequest(PreCheckoutQuery $pre_checkout_query)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_PRE_CHECKOUT_QUERY . '`
+                (`id`, `user_id`, `currency`, `total_amount`, `invoice_payload`, `shipping_option_id`, `order_info`, `created_at`)
+                VALUES
+                (:id, :user_id, :currency, :total_amount, :invoice_payload, :shipping_option_id, :order_info, :created_at)
+            ');
+
+            $date    = self::getTimestamp();
+            $user_id = null;
+
+            $user = $pre_checkout_query->getFrom();
+            if ($user instanceof User) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
+            }
+
+            $sth->bindValue(':id', $pre_checkout_query->getId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':currency', $pre_checkout_query->getCurrency());
+            $sth->bindValue(':total_amount', $pre_checkout_query->getTotalAmount());
+            $sth->bindValue(':invoice_payload', $pre_checkout_query->getInvoicePayload());
+            $sth->bindValue(':shipping_option_id', $pre_checkout_query->getShippingOptionId());
+            $sth->bindValue(':order_info', $pre_checkout_query->getOrderInfo());
+            $sth->bindValue(':created_at', $date);
+
+            return $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Insert Message request in db
      *
      * @param Message $message
      *

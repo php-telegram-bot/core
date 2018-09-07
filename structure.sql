@@ -132,26 +132,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS `callback_query` (
-  `id` bigint UNSIGNED COMMENT 'Unique identifier for this query',
-  `user_id` bigint NULL COMMENT 'Unique user identifier',
-  `chat_id` bigint NULL COMMENT 'Unique chat identifier',
-  `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
-  `inline_message_id` CHAR(255) NULL DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
-  `chat_instance` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent',
-  `data` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Data associated with the callback button',
-  `game_short_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Short name of a Game to be returned, serves as the unique identifier for the game',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `chat_id` (`chat_id`),
-  KEY `message_id` (`message_id`),
-
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
 CREATE TABLE IF NOT EXISTS `edited_message` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
   `chat_id` bigint COMMENT 'Unique chat identifier',
@@ -172,27 +152,88 @@ CREATE TABLE IF NOT EXISTS `edited_message` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `callback_query` (
+  `id` bigint UNSIGNED COMMENT 'Unique identifier for this query',
+  `user_id` bigint NULL COMMENT 'Unique user identifier',
+  `chat_id` bigint NULL COMMENT 'Unique chat identifier',
+  `message_id` bigint UNSIGNED COMMENT 'Unique message identifier',
+  `inline_message_id` CHAR(255) NULL DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
+  `chat_instance` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent',
+  `data` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Data associated with the callback button',
+  `game_short_name` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Short name of a Game to be returned, serves as the unique identifier for the game',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `message_id` (`message_id`),
+
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `shipping_query` (
+  `id` bigint UNSIGNED COMMENT 'Unique query identifier',
+  `user_id` bigint COMMENT 'User who sent the query',
+  `invoice_payload` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Bot specified invoice payload',
+  `shipping_address` CHAR(255) NOT NULL DEFAULT '' COMMENT 'User specified shipping address',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `pre_checkout_query` (
+  `id` bigint UNSIGNED COMMENT 'Unique query identifier',
+  `user_id` bigint COMMENT 'User who sent the query',
+  `currency` CHAR(3) COMMENT 'Three-letter ISO 4217 currency code',
+  `total_amount` bigint COMMENT 'Total price in the smallest units of the currency',
+  `invoice_payload` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Bot specified invoice payload',
+  `shipping_option_id` CHAR(255) NULL COMMENT 'Identifier of the shipping option chosen by the user',
+  `order_info` TEXT NULL COMMENT 'Order info provided by the user',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'Update''s unique identifier',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming message of any kind - text, photo, sticker, etc.',
   `edited_message_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New version of a message that is known to the bot and was edited',
+  `channel_post_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming channel post of any kind - text, photo, sticker, etc.',
+  `edited_channel_post_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New version of a channel post that is known to the bot and was edited',
   `inline_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming inline query',
   `chosen_inline_result_id` bigint UNSIGNED DEFAULT NULL COMMENT 'The result of an inline query that was chosen by a user and sent to their chat partner',
   `callback_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming callback query',
+  `shipping_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming shipping query. Only for invoices with flexible price',
+  `pre_checkout_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming pre-checkout query. Contains full information about checkout',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`chat_id`, `message_id`),
+  KEY `edited_message_id` (`edited_message_id`),
+  KEY `channel_post_id` (`channel_post_id`),
+  KEY `edited_channel_post_id` (`edited_channel_post_id`),
   KEY `inline_query_id` (`inline_query_id`),
   KEY `chosen_inline_result_id` (`chosen_inline_result_id`),
   KEY `callback_query_id` (`callback_query_id`),
-  KEY `edited_message_id` (`edited_message_id`),
+  KEY `shipping_query_id` (`shipping_query_id`),
+  KEY `pre_checkout_query_id` (`pre_checkout_query_id`),
 
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
+  FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`),
+  FOREIGN KEY (`chat_id`, `channel_post_id`) REFERENCES `message` (`chat_id`, `id`),
+  FOREIGN KEY (`edited_channel_post_id`) REFERENCES `edited_message` (`id`),
   FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
   FOREIGN KEY (`chosen_inline_result_id`) REFERENCES `chosen_inline_result` (`id`),
   FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`),
-  FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`)
+  FOREIGN KEY (`shipping_query_id`) REFERENCES `shipping_query` (`id`),
+  FOREIGN KEY (`pre_checkout_query_id`) REFERENCES `pre_checkout_query` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
