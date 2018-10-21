@@ -603,9 +603,7 @@ class Request
         array $data,
         array $select_chats_params
     ) {
-        if (!method_exists(Request::class, $callback_function)) {
-            throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
-        }
+        self::ensureValidAction($callback_function);
 
         $chats = DB::selectChats($select_chats_params);
 
@@ -613,7 +611,7 @@ class Request
         if (is_array($chats)) {
             foreach ($chats as $row) {
                 $data['chat_id'] = $row['chat_id'];
-                $results[]       = call_user_func(Request::class . '::' . $callback_function, $data);
+                $results[]       = self::send($callback_function, $data);
             }
         }
 

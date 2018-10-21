@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- `sendToActiveChats` now works correctly for any valid Request action.
 ### Security
 
 ## [0.54.0] - 2018-07-21
