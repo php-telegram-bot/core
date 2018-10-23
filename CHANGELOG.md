@@ -14,6 +14,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [0.54.1] - 2018-10-23
+### Fixed
+- `sendToActiveChats` now works correctly for any valid Request action.
+
 ## [0.54.0] - 2018-07-21
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.54.0-sql-migration] on your database.
 ### Added
@@ -235,6 +239,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
 [0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0
 [0.53.0]: https://github.com/php-telegram-bot/core/compare/0.52.0...0.53.0
 [0.52.0]: https://github.com/php-telegram-bot/core/compare/0.51.0...0.52.0
