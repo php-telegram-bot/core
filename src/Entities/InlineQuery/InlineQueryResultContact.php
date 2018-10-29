@@ -37,6 +37,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getPhoneNumber()         Contact's phone number
  * @method string               getFirstName()           Contact's first name
  * @method string               getLastName()            Optional. Contact's last name
+ * @method string               getVcard()               Optional. Additional data about the contact in the form of a vCard, 0-2048 bytes
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the contact
  * @method string               getThumbUrl()            Optional. Url of the thumbnail for the result
@@ -47,6 +48,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setPhoneNumber(string $phone_number)                               Contact's phone number
  * @method $this setFirstName(string $first_name)                                   Contact's first name
  * @method $this setLastName(string $last_name)                                     Optional. Contact's last name
+ * @method $this setVcard(string $vcard)                                            Optional. Additional data about the contact in the form of a vCard, 0-2048 bytes
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the contact
  * @method $this setThumbUrl(string $thumb_url)                                     Optional. Url of the thumbnail for the result

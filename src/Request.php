@@ -31,6 +31,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendDocument(array $data)            Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendSticker(array $data)             Use this method to send .webp stickers. On success, the sent Message is returned.
  * @method static ServerResponse sendVideo(array $data)               Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+ * @method static ServerResponse sendAnimation(array $data)           Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendVoice(array $data)               Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendVideoNote(array $data)           Use this method to send video messages. On success, the sent Message is returned.
  * @method static ServerResponse sendMediaGroup(array $data)          Use this method to send a group of photos or videos as an album. On success, an array of the sent Messages is returned.
@@ -145,6 +146,7 @@ class Request
         'sendDocument',
         'sendSticker',
         'sendVideo',
+        'sendAnimation',
         'sendVoice',
         'sendVideoNote',
         'sendMediaGroup',
@@ -666,6 +668,7 @@ class Request
                 'sendDocument',
                 'sendSticker',
                 'sendVideo',
+                'sendAnimation',
                 'sendVoice',
                 'sendVideoNote',
                 'sendMediaGroup',

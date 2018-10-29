@@ -364,7 +364,7 @@ $result = Request::sendPhoto([
 ]);
 ```
 
-*sendAudio*, *sendDocument*, *sendSticker*, *sendVideo*, *sendVoice* and *sendVideoNote* all work in the same way, just check the [API documentation](https://core.telegram.org/bots/api#sendphoto) for the exact usage.
+*sendAudio*, *sendDocument*, *sendAnimation*, *sendSticker*, *sendVideo*, *sendVoice* and *sendVideoNote* all work in the same way, just check the [API documentation](https://core.telegram.org/bots/api#sendphoto) for the exact usage.
 See the [*ImageCommand.php*][ImageCommand.php] for a full example.
 
 #### Send Chat Action

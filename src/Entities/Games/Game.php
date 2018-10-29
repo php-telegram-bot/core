@@ -10,8 +10,10 @@
 
 namespace Longman\TelegramBot\Entities\Games;
 
+use Longman\TelegramBot\Entities\Animation;
 use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\MessageEntity;
+use Longman\TelegramBot\Entities\PhotoSize;
 
 /**
  * Class Game
@@ -45,7 +47,7 @@ class Game extends Entity
      * This method overrides the default getPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|PhotoSize[]
+     * @return null|\Longman\TelegramBot\Entities\PhotoSize[]
      */
     public function getPhoto()
     {
@@ -60,7 +62,7 @@ class Game extends Entity
      * This method overrides the default getTextEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return null|MessageEntity[]
+     * @return null|\Longman\TelegramBot\Entities\MessageEntity[]
      */
     public function getTextEntities()
     {
