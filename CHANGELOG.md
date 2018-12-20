@@ -6,15 +6,23 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
-- Bot API 4.0 (without Passport)
 - Added missing API fields to Entities and DB.
 - Created database tables for `shipping_query` and `pre_checkout_query`.
 ### Changed
-- [:exclamation:][unreleased-bc-move-animation-out-of-games-namespace] Move Animation entity out of Games namespace.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.55.0] - 2018-12-20
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.55.0-sql-migration] on your database.
+### Added
+- Bot API 4.0 and 4.1 (Telegram Passport)
+- Test PHP 7.3 with Travis.
+### Changed
+- [:exclamation:][0.55.0-bc-move-animation-out-of-games-namespace] Move Animation entity out of Games namespace.
+### Fixed
+- Added missing `video_note` to `Message` types.
 
 ## [0.54.1] - 2018-10-23
 ### Fixed
@@ -222,8 +230,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.0-unreleased.sql
-[unreleased-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.55.0-unreleased.sql
+[0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
+[0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
 [0.54.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.53.0-0.54.0.sql
 [0.54.0-bc-rename-constants]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#rename-constants
 [0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.52.0-0.53.0.sql
@@ -241,6 +250,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
 [0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
 [0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0
 [0.53.0]: https://github.com/php-telegram-bot/core/compare/0.52.0...0.53.0

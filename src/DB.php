@@ -880,16 +880,16 @@ class DB
                     `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
-                    `supergroup_chat_created`, `channel_chat_created`,
-                    `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`, `invoice`, `successful_payment`, `connected_website`
+                    `supergroup_chat_created`, `channel_chat_created`, `migrate_from_chat_id`, `migrate_to_chat_id`,
+                    `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_date, :reply_to_chat, :reply_to_message, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities, :audio, :document,
                     :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
-                    :supergroup_chat_created, :channel_chat_created,
-                    :migrate_from_chat_id, :migrate_to_chat_id, :pinned_message, :invoice, :successful_payment, :connected_website
+                    :supergroup_chat_created, :channel_chat_created, :migrate_from_chat_id, :migrate_to_chat_id,
+                    :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data
                 )
             ');
 
@@ -958,6 +958,7 @@ class DB
             $sth->bindValue(':invoice', $message->getInvoice());
             $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
+            $sth->bindValue(':passport_data', $message->getPassportData());
 
             return $sth->execute();
         } catch (PDOException $e) {
