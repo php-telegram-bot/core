@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Added missing `video_note` to `Message` types.
 ### Security
 
 ## [0.54.1] - 2018-10-23

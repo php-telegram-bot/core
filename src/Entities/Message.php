@@ -291,6 +291,7 @@ class Message extends Entity
             'sticker',
             'video',
             'voice',
+            'video_note',
             'contact',
             'location',
             'venue',
