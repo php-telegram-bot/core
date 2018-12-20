@@ -13,6 +13,7 @@ namespace Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Entities\Games\Game;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
+use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
 
 /**
  * Class Message
@@ -56,6 +57,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Invoice           getInvoice()               Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment getSuccessfulPayment()     Optional. Message is a service message about a successful payment, information about the payment.
  * @method string            getConnectedWebsite()      Optional. The domain name of the website on which the user has logged in.
+ * @method PassportData      getPassportData()          Optional. Telegram Passport data
  */
 class Message extends Entity
 {
@@ -90,6 +92,7 @@ class Message extends Entity
             'pinned_message'     => Message::class,
             'invoice'            => Invoice::class,
             'successful_payment' => SuccessfulPayment::class,
+            'passport_data'      => PassportData::class,
         ];
     }
 
@@ -304,6 +307,7 @@ class Message extends Entity
             'pinned_message',
             'invoice',
             'successful_payment',
+            'passport_data',
         ];
 
         $is_command = strlen($this->getCommand()) > 0;
