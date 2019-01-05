@@ -65,6 +65,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse answerInlineQuery(array $data)       Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse editMessageText(array $data)         Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageCaption(array $data)      Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse editMessageMedia(array $data)        Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageReplyMarkup(array $data)  Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse deleteMessage(array $data)           Use this method to delete a message, including service messages, with certain limitations. Returns True on success.
  * @method static ServerResponse getStickerSet(array $data)           Use this method to get a sticker set. On success, a StickerSet object is returned.
@@ -181,6 +182,7 @@ class Request
         'answerInlineQuery',
         'editMessageText',
         'editMessageCaption',
+        'editMessageMedia',
         'editMessageReplyMarkup',
         'deleteMessage',
         'getStickerSet',
@@ -684,6 +686,7 @@ class Request
                 'setGameScore',
                 'editMessageText',
                 'editMessageCaption',
+                'editMessageMedia',
                 'editMessageReplyMarkup',
                 'setChatTitle',
                 'setChatDescription',
