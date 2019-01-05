@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Return correct message type.
 ### Security
 
 ## [0.55.0] - 2018-12-20

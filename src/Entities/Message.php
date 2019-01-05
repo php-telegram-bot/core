@@ -313,7 +313,7 @@ class Message extends Entity
 
         $is_command = strlen($this->getCommand()) > 0;
         foreach ($types as $type) {
-            if ($this->getProperty($type)) {
+            if ($this->getProperty($type) !== null) {
                 if ($is_command && $type === 'text') {
                     return 'command';
                 }
