@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods.
 ### Changed
 ### Deprecated
 ### Removed
