@@ -5,13 +5,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- Return correct message type.
 ### Security
+
+## [0.55.1] - 2019-01-06
+### Added
+- Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods.
+### Fixed
+- Return correct message type.
 
 ## [0.55.0] - 2018-12-20
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.55.0-sql-migration] on your database.
@@ -248,6 +252,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
 [0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
 [0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
 [0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0
