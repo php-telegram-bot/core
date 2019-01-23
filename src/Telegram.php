@@ -61,6 +61,13 @@ class Telegram
     protected $input;
 
     /**
+     * Custom commands namespace
+     *
+     * @var string
+     */
+    protected $commands_namespace = '';
+
+    /**
      * Custom commands paths
      *
      * @var array
@@ -177,6 +184,7 @@ class Telegram
         }
 
         //Add default system commands path
+        $this->commands_namespace = __NAMESPACE__ . '\\Commands\\';
         $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/SystemCommands');
 
         Request::initialize($this);
@@ -215,6 +223,19 @@ class Telegram
         $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
         ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
+
+        return $this;
+    }
+
+    /**
+     * Set Custom Namespace
+     *
+     * @param string $namespace
+     * @return \Longman\TelegramBot\Telegram
+     */
+    public function setCommandsNamespace(string $namespace)
+    {
+        $this->commands_namespace = $namespace;
 
         return $this;
     }
@@ -277,7 +298,7 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
-            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
+            $command_namespace = $this->commands_namespace . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
@@ -650,6 +671,19 @@ class Telegram
     }
 
     /**
+     * Set commands path to given array
+     *
+     * @param array $paths  Custom commands paths to set
+     * @return \Longman\TelegramBot\Telegram
+     */
+    public function setCommandsPath(array $paths)
+    {
+        $this->commands_paths = $paths;
+
+        return $this;
+    }
+
+    /**
      * Add a single custom commands path
      *
      * @param string $path   Custom commands path to add
@@ -924,6 +958,7 @@ class Telegram
      *
      * @param  array $options
      *
+     * @throws TelegramException
      * @return \Longman\TelegramBot\Telegram
      */
     public function enableLimiter(array $options = [])
