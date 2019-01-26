@@ -481,6 +481,7 @@ class Telegram
                 'pinned_message',
                 'invoice',
                 'successful_payment',
+                'contact',
             ], true)
             ) {
                 $command = $this->getCommandFromType($type);
