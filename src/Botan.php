@@ -18,6 +18,8 @@ use Longman\TelegramBot\Exception\TelegramException;
 /**
  * Class Botan
  *
+ * @deprecated Botan.io service is no longer working
+ *
  * Integration with http://botan.io statistics service for Telegram bots
  */
 class Botan
@@ -64,6 +66,8 @@ class Botan
      */
     public static function initializeBotan($token, array $options = [])
     {
+        trigger_error('Longman\TelegramBot\Botan::initializeBotan is deprecated and will be removed in future release.', E_USER_DEPRECATED);
+
         if (empty($token)) {
             throw new TelegramException('Botan token is empty!');
         }

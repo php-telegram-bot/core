@@ -124,13 +124,6 @@ class Telegram
     protected $last_command_response;
 
     /**
-     * Botan.io integration
-     *
-     * @var boolean
-     */
-    protected $botan_enabled = false;
-
-    /**
      * Check if runCommands() is running in this session
      *
      * @var boolean
@@ -527,19 +520,9 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('generic');
         } else {
-            //Botan.io integration, make sure only the actual command user executed is reported
-            if ($this->botan_enabled) {
-                Botan::lock($command);
-            }
-
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
             $this->last_command_response = $command_obj->preExecute();
-
-            //Botan.io integration, send report after executing the command
-            if ($this->botan_enabled) {
-                Botan::track($this->update, $command);
-            }
         }
 
         return $this->last_command_response;
@@ -905,16 +888,16 @@ class Telegram
     /**
      * Enable Botan.io integration
      *
+     * @deprecated Botan.io service is no longer working
+     *
      * @param  string $token
      * @param  array  $options
      *
      * @return \Longman\TelegramBot\Telegram
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function enableBotan($token, array $options = [])
     {
-        Botan::initializeBotan($token, $options);
-        $this->botan_enabled = true;
+        trigger_error('Longman\TelegramBot\Telegram::enableBotan is deprecated and will be removed in future release.', E_USER_DEPRECATED);
 
         return $this;
     }
@@ -947,7 +930,6 @@ class Telegram
         }
 
         $this->run_commands  = true;
-        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
         $result = Request::getMe();
 
