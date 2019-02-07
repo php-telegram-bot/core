@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 ### Changed
 ### Deprecated
+- Botan.io service has been discontinued.
 ### Removed
 ### Fixed
 ### Security
