@@ -25,6 +25,12 @@ use Longman\TelegramBot\Request;
  */
 class ServerResponseTest extends TestCase
 {
+    protected function setUp()
+    {
+        // Make sure the current action in the Request class is unset.
+        TestHelpers::setStaticProperty(Request::class, 'current_action', null);
+    }
+
     public function sendMessageOk()
     {
         return '{
@@ -193,6 +199,7 @@ class ServerResponseTest extends TestCase
 
     public function getUserProfilePhotos()
     {
+        TestHelpers::setStaticProperty(Request::class, 'current_action', 'getUserProfilePhotos');
         return '{
             "ok":true,
             "result":{
@@ -238,6 +245,7 @@ class ServerResponseTest extends TestCase
 
     public function getFile()
     {
+        TestHelpers::setStaticProperty(Request::class, 'current_action', 'getFile');
         return '{
             "ok":true,
             "result":{
@@ -301,6 +309,7 @@ class ServerResponseTest extends TestCase
     
     public function getStickerSet()
     {
+        TestHelpers::setStaticProperty(Request::class, 'current_action', 'getStickerSet');
         return '{
             "ok":true,
             "result":{
