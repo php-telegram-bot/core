@@ -129,6 +129,13 @@ class Request
     private static $limiter_interval;
 
     /**
+     * Get the current action that is being executed
+     *
+     * @var string
+     */
+    private static $current_action;
+
+    /**
      * Available actions to send
      *
      * This is basically the list of all methods listed on the official API documentation.
@@ -401,6 +408,16 @@ class Request
     }
 
     /**
+     * Get the current action that's being executed
+     *
+     * @return string
+     */
+    public static function getCurrentAction()
+    {
+        return self::$current_action;
+    }
+
+    /**
      * Execute HTTP Request
      *
      * @param string $action Action to execute
@@ -432,7 +449,7 @@ class Request
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
-            $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
+            $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
@@ -529,8 +546,11 @@ class Request
 
         self::limitTelegramRequests($action, $data);
 
+        // Remember which action is currently being executed.
+        self::$current_action = $action;
+
         $raw_response = self::execute($action, $data);
-        $response = json_decode($raw_response, true);
+        $response     = json_decode($raw_response, true);
 
         if (null === $response) {
             TelegramLog::debug($raw_response);
@@ -542,6 +562,9 @@ class Request
         if (!$response->isOk() && $response->getErrorCode() === 401 && $response->getDescription() === 'Unauthorized') {
             throw new InvalidBotTokenException();
         }
+
+        // Reset current action after completion.
+        self::$current_action = null;
 
         return $response;
     }

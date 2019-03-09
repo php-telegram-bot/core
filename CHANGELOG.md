@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Botan.io service has been discontinued.
 ### Removed
 ### Fixed
+- Return correct objects for requests.
 ### Security
 
 ## [0.55.1] - 2019-01-06
