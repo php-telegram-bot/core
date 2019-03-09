@@ -12,7 +12,9 @@ namespace Longman\TelegramBot;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Stream;
 use Longman\TelegramBot\Entities\File;
+use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\InvalidBotTokenException;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -324,21 +326,78 @@ class Request
         $has_resource = false;
         $multipart    = [];
 
-        // Convert any nested arrays into JSON strings.
-        array_walk($data, function (&$item) {
-            is_array($item) && $item = json_encode($item);
-        });
+        foreach ($data as $key => &$item) {
+            if ($key === 'media') {
+                // Magical media input helper.
+                $item = self::mediaInputHelper($item, $has_resource, $multipart);
+            } elseif (is_array($item)) {
+                // Convert any nested arrays into JSON strings.
+                $item = json_encode($item);
+            }
 
-        //Reformat data array in multipart way if it contains a resource
-        foreach ($data as $key => $item) {
-            $has_resource |= (is_resource($item) || $item instanceof \GuzzleHttp\Psr7\Stream);
+            // Reformat data array in multipart way if it contains a resource
+            $has_resource |= (is_resource($item) || $item instanceof Stream);
             $multipart[]  = ['name' => $key, 'contents' => $item];
         }
+
         if ($has_resource) {
             return ['multipart' => $multipart];
         }
 
         return ['form_params' => $data];
+    }
+
+    /**
+     * Magical input media helper to simplify passing media.
+     *
+     * This allows the following:
+     * Request::editMessageMedia([
+     *     ...
+     *     'media' => new InputMediaPhoto([
+     *         'caption' => 'Caption!',
+     *         'media'   => Request::encodeFile($local_photo),
+     *     ]),
+     * ]);
+     * and
+     * Request::sendMediaGroup([
+     *     'media'   => [
+     *         new InputMediaPhoto(['media' => Request::encodeFile($photo_1)]),
+     *         new InputMediaPhoto(['media' => Request::encodeFile($photo_2)]),
+     *         new InputMediaVideo(['media' => Request::encodeFile($video_1)]),
+     *     ],
+     * ]);
+     *
+     * @param mixed $item
+     * @param bool  $has_resource
+     * @param array $multipart
+     *
+     * @return mixed
+     */
+    private static function mediaInputHelper($item, &$has_resource, array &$multipart)
+    {
+        $was_array = is_array($item);
+        $was_array || $item = [$item];
+
+        foreach ($item as $media_item) {
+            if (!($media_item instanceof InputMedia)) {
+                continue;
+            }
+
+            $media = $media_item->getMedia();
+            if (is_resource($media) || $media instanceof Stream) {
+                $has_resource = true;
+                $rnd_key      = uniqid('media_', false);
+                $multipart[]  = ['name' => $rnd_key, 'contents' => $media];
+
+                // We're literally overwriting the passed media data!
+                $media_item->media             = 'attach://' . $rnd_key;
+                $media_item->raw_data['media'] = 'attach://' . $rnd_key;
+            }
+        }
+
+        $was_array || $item = reset($item);
+
+        return json_encode($item);
     }
 
     /**
