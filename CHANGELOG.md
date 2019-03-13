@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 - Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods.
+- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`.
 ### Changed
 ### Deprecated
 - Botan.io service has been discontinued.

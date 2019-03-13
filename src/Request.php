@@ -223,6 +223,30 @@ class Request
     ];
 
     /**
+     * Available fields for InputFile helper
+     *
+     * This is basically the list of all fields that allow InputFile objects
+     * for which input can be simplified by providing local path directly  as string.
+     *
+     * @var array
+     */
+    private static $input_file_fields = [
+        'setWebhook'          => ['certificate'],
+        'sendPhoto'           => ['photo'],
+        'sendAudio'           => ['audio', 'thumb'],
+        'sendDocument'        => ['document', 'thumb'],
+        'sendVideo'           => ['video', 'thumb'],
+        'sendAnimation'       => ['animation', 'thumb'],
+        'sendVoice'           => ['voice', 'thumb'],
+        'sendVideoNote'       => ['video_note', 'thumb'],
+        'setChatPhoto'        => ['photo'],
+        'sendSticker'         => ['sticker'],
+        'uploadStickerFile'   => ['png_sticker'],
+        'createNewStickerSet' => ['png_sticker'],
+        'addStickerToSet'     => ['png_sticker'],
+    ];
+
+    /**
      * Initialize
      *
      * @param \Longman\TelegramBot\Telegram $telegram
@@ -327,6 +351,7 @@ class Request
      * @param array $data
      *
      * @return array
+     * @throws TelegramException
      */
     private static function setUpRequestParams(array $data)
     {
@@ -337,6 +362,10 @@ class Request
             if ($key === 'media') {
                 // Magical media input helper.
                 $item = self::mediaInputHelper($item, $has_resource, $multipart);
+            } elseif (array_key_exists(self::$current_action, self::$input_file_fields) && in_array($key, self::$input_file_fields[self::$current_action], true)) {
+                if (is_string($item) && file_exists($item)) {
+                    $item = new Stream(self::encodeFile($item));
+                }
             } elseif (is_array($item)) {
                 // Convert any nested arrays into JSON strings.
                 $item = json_encode($item);
