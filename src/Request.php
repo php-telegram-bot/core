@@ -363,6 +363,7 @@ class Request
                 // Magical media input helper.
                 $item = self::mediaInputHelper($item, $has_resource, $multipart);
             } elseif (array_key_exists(self::$current_action, self::$input_file_fields) && in_array($key, self::$input_file_fields[self::$current_action], true)) {
+                // Allow absolute paths to local files.
                 if (is_string($item) && file_exists($item)) {
                     $item = new Stream(self::encodeFile($item));
                 }
@@ -397,9 +398,17 @@ class Request
      * and
      * Request::sendMediaGroup([
      *     'media'   => [
-     *         new InputMediaPhoto(['media' => Request::encodeFile($photo_1)]),
-     *         new InputMediaPhoto(['media' => Request::encodeFile($photo_2)]),
-     *         new InputMediaVideo(['media' => Request::encodeFile($video_1)]),
+     *         new InputMediaPhoto(['media' => Request::encodeFile($local_photo_1)]),
+     *         new InputMediaPhoto(['media' => Request::encodeFile($local_photo_2)]),
+     *         new InputMediaVideo(['media' => Request::encodeFile($local_video_1)]),
+     *     ],
+     * ]);
+     * and even
+     * Request::sendMediaGroup([
+     *     'media'   => [
+     *         new InputMediaPhoto(['media' => $local_photo_1]),
+     *         new InputMediaPhoto(['media' => $local_photo_2]),
+     *         new InputMediaVideo(['media' => $local_video_1]),
      *     ],
      * ]);
      *
@@ -420,6 +429,12 @@ class Request
             }
 
             $media = $media_item->getMedia();
+
+            // Allow absolute paths to local files.
+            if (is_string($media) && file_exists($media)) {
+                $media = new Stream(self::encodeFile($media));
+            }
+
             if (is_resource($media) || $media instanceof Stream) {
                 $has_resource = true;
                 $rnd_key      = uniqid('media_', false);
