@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation.
 ### Removed
 ### Fixed
+- Constraint errors in `/cleanup` command.
 ### Security
 
 ## [0.55.1] - 2019-01-06
