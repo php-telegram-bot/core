@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - All Message field types dynamically search for an existing Command class that can handle them.
 ### Deprecated
 - Botan.io service has been discontinued.
+- Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation.
 ### Removed
 ### Fixed
 ### Security
