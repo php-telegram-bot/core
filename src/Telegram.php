@@ -445,46 +445,35 @@ class Telegram
         $this->update = $update;
         $this->last_update_id = $update->getUpdateId();
 
+        //Load admin commands
+        if ($this->isAdmin()) {
+            $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/AdminCommands', false);
+        }
+
+        //Make sure we have an up-to-date command list
+        //This is necessary to "require" all the necessary command files!
+        $this->getCommandsList();
+
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
-
-            //Load admin commands
-            if ($this->isAdmin()) {
-                $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/AdminCommands', false);
-            }
-
-            $type = $message->getType();
+            $type    = $message->getType();
             if ($type === 'command') {
                 $command = $message->getCommand();
-            } elseif (in_array($type, [
-                'new_chat_members',
-                'left_chat_member',
-                'new_chat_title',
-                'new_chat_photo',
-                'delete_chat_photo',
-                'group_chat_created',
-                'supergroup_chat_created',
-                'channel_chat_created',
-                'migrate_to_chat_id',
-                'migrate_from_chat_id',
-                'pinned_message',
-                'invoice',
-                'successful_payment',
-            ], true)
-            ) {
-                $command = $this->getCommandFromType($type);
+            } else {
+                // Let's check if the message object has the type field we're looking for
+                // and if a fitting command class is available.
+                $command_tmp = $this->getCommandFromType($type);
+                if ($this->getCommandObject($command_tmp) !== null) {
+                    $command = $command_tmp;
+                }
             }
         } else {
             $command = $this->getCommandFromType($update_type);
         }
-
-        //Make sure we have an up-to-date command list
-        //This is necessary to "require" all the necessary command files!
-        $this->getCommandsList();
 
         //Make sure we don't try to process update that was already processed
         $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());

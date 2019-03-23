@@ -164,6 +164,7 @@ class CleanupCommand extends AdminCommand
                     SELECT `id`
                     FROM `%4$s`
                     WHERE `chat_id` = `%4$s`.`id`
+                    AND `updated_at` < \'%1$s\'
                   )
                   AND (
                     `message_id` IS NOT NULL
@@ -301,20 +302,38 @@ class CleanupCommand extends AdminCommand
         if (in_array('message', $tables_to_clean, true)) {
             $queries[] = sprintf(
                 'DELETE FROM `%1$s`
-                WHERE `date` < \'%2$s\'
-                  AND `id` NOT IN (
-                    SELECT `message_id`
-                    FROM `%3$s`
-                    WHERE `message_id` = `%1$s`.`id`
-                  )
-                  AND `id` NOT IN (
-                    SELECT `message_id`
-                    FROM `%4$s`
-                    WHERE `message_id` = `%1$s`.`id`
-                  )
+                WHERE id IN (
+                    SELECT id
+                    FROM (
+                        SELECT id
+                        FROM  `message`
+                        WHERE `date` < \'%2$s\'
+                          AND `id` NOT IN (
+                            SELECT `message_id`
+                            FROM `%3$s`
+                            WHERE `message_id` = `%1$s`.`id`
+                          )
+                          AND `id` NOT IN (
+                            SELECT `message_id`
+                            FROM `%4$s`
+                            WHERE `message_id` = `%1$s`.`id`
+                          )
+                          AND `id` NOT IN (
+                            SELECT `message_id`
+                            FROM `%5$s`
+                            WHERE `message_id` = `%1$s`.`id`
+                          )
+                          AND `id` NOT IN (
+                            SELECT a.`reply_to_message` FROM `%1$s` a
+                            INNER JOIN `%1$s` b ON b.`id` = a.`reply_to_message` AND b.`chat_id` = a.`reply_to_chat`
+                          )
+                        ORDER BY `id` DESC
+                     ) a
+                 )
             ',
                 TB_MESSAGE,
                 $clean_older_than['message'],
+                TB_EDITED_MESSAGE,
                 TB_TELEGRAM_UPDATE,
                 TB_CALLBACK_QUERY
             );

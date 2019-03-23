@@ -15,6 +15,8 @@ use Longman\TelegramBot\Request;
 
 /**
  * Start command
+ *
+ * @todo Remove due to deprecation!
  */
 class StartCommand extends SystemCommand
 {
@@ -49,6 +51,8 @@ class StartCommand extends SystemCommand
         //$message = $this->getMessage();
         //$chat_id = $message->getChat()->getId();
         //$user_id = $message->getFrom()->getId();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

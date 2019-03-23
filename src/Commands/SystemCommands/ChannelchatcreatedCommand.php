@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Channel chat created command
+ *
+ * @todo Remove due to deprecation!
  */
 class ChannelchatcreatedCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class ChannelchatcreatedCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$channel_chat_created = $message->getChannelChatCreated();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }
