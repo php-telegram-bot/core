@@ -12,7 +12,9 @@ namespace Longman\TelegramBot;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Stream;
 use Longman\TelegramBot\Entities\File;
+use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\InvalidBotTokenException;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -127,6 +129,13 @@ class Request
     private static $limiter_interval;
 
     /**
+     * Get the current action that is being executed
+     *
+     * @var string
+     */
+    private static $current_action;
+
+    /**
      * Available actions to send
      *
      * This is basically the list of all methods listed on the official API documentation.
@@ -211,6 +220,30 @@ class Request
         'deleteWebhook',
         'getWebhookInfo',
         'getMe',
+    ];
+
+    /**
+     * Available fields for InputFile helper
+     *
+     * This is basically the list of all fields that allow InputFile objects
+     * for which input can be simplified by providing local path directly  as string.
+     *
+     * @var array
+     */
+    private static $input_file_fields = [
+        'setWebhook'          => ['certificate'],
+        'sendPhoto'           => ['photo'],
+        'sendAudio'           => ['audio', 'thumb'],
+        'sendDocument'        => ['document', 'thumb'],
+        'sendVideo'           => ['video', 'thumb'],
+        'sendAnimation'       => ['animation', 'thumb'],
+        'sendVoice'           => ['voice', 'thumb'],
+        'sendVideoNote'       => ['video_note', 'thumb'],
+        'setChatPhoto'        => ['photo'],
+        'sendSticker'         => ['sticker'],
+        'uploadStickerFile'   => ['png_sticker'],
+        'createNewStickerSet' => ['png_sticker'],
+        'addStickerToSet'     => ['png_sticker'],
     ];
 
     /**
@@ -318,27 +351,114 @@ class Request
      * @param array $data
      *
      * @return array
+     * @throws TelegramException
      */
     private static function setUpRequestParams(array $data)
     {
         $has_resource = false;
         $multipart    = [];
 
-        // Convert any nested arrays into JSON strings.
-        array_walk($data, function (&$item) {
-            is_array($item) && $item = json_encode($item);
-        });
+        foreach ($data as $key => &$item) {
+            if ($key === 'media') {
+                // Magical media input helper.
+                $item = self::mediaInputHelper($item, $has_resource, $multipart);
+            } elseif (array_key_exists(self::$current_action, self::$input_file_fields) && in_array($key, self::$input_file_fields[self::$current_action], true)) {
+                // Allow absolute paths to local files.
+                if (is_string($item) && file_exists($item)) {
+                    $item = new Stream(self::encodeFile($item));
+                }
+            } elseif (is_array($item)) {
+                // Convert any nested arrays into JSON strings.
+                $item = json_encode($item);
+            }
 
-        //Reformat data array in multipart way if it contains a resource
-        foreach ($data as $key => $item) {
-            $has_resource |= (is_resource($item) || $item instanceof \GuzzleHttp\Psr7\Stream);
+            // Reformat data array in multipart way if it contains a resource
+            $has_resource |= (is_resource($item) || $item instanceof Stream);
             $multipart[]  = ['name' => $key, 'contents' => $item];
         }
+
         if ($has_resource) {
             return ['multipart' => $multipart];
         }
 
         return ['form_params' => $data];
+    }
+
+    /**
+     * Magical input media helper to simplify passing media.
+     *
+     * This allows the following:
+     * Request::editMessageMedia([
+     *     ...
+     *     'media' => new InputMediaPhoto([
+     *         'caption' => 'Caption!',
+     *         'media'   => Request::encodeFile($local_photo),
+     *     ]),
+     * ]);
+     * and
+     * Request::sendMediaGroup([
+     *     'media'   => [
+     *         new InputMediaPhoto(['media' => Request::encodeFile($local_photo_1)]),
+     *         new InputMediaPhoto(['media' => Request::encodeFile($local_photo_2)]),
+     *         new InputMediaVideo(['media' => Request::encodeFile($local_video_1)]),
+     *     ],
+     * ]);
+     * and even
+     * Request::sendMediaGroup([
+     *     'media'   => [
+     *         new InputMediaPhoto(['media' => $local_photo_1]),
+     *         new InputMediaPhoto(['media' => $local_photo_2]),
+     *         new InputMediaVideo(['media' => $local_video_1]),
+     *     ],
+     * ]);
+     *
+     * @param mixed $item
+     * @param bool  $has_resource
+     * @param array $multipart
+     *
+     * @return mixed
+     */
+    private static function mediaInputHelper($item, &$has_resource, array &$multipart)
+    {
+        $was_array = is_array($item);
+        $was_array || $item = [$item];
+
+        foreach ($item as $media_item) {
+            if (!($media_item instanceof InputMedia)) {
+                continue;
+            }
+
+            $media = $media_item->getMedia();
+
+            // Allow absolute paths to local files.
+            if (is_string($media) && file_exists($media)) {
+                $media = new Stream(self::encodeFile($media));
+            }
+
+            if (is_resource($media) || $media instanceof Stream) {
+                $has_resource = true;
+                $rnd_key      = uniqid('media_', false);
+                $multipart[]  = ['name' => $rnd_key, 'contents' => $media];
+
+                // We're literally overwriting the passed media data!
+                $media_item->media             = 'attach://' . $rnd_key;
+                $media_item->raw_data['media'] = 'attach://' . $rnd_key;
+            }
+        }
+
+        $was_array || $item = reset($item);
+
+        return json_encode($item);
+    }
+
+    /**
+     * Get the current action that's being executed
+     *
+     * @return string
+     */
+    public static function getCurrentAction()
+    {
+        return self::$current_action;
     }
 
     /**
@@ -373,7 +493,7 @@ class Request
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
-            $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
+            $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
@@ -470,8 +590,11 @@ class Request
 
         self::limitTelegramRequests($action, $data);
 
+        // Remember which action is currently being executed.
+        self::$current_action = $action;
+
         $raw_response = self::execute($action, $data);
-        $response = json_decode($raw_response, true);
+        $response     = json_decode($raw_response, true);
 
         if (null === $response) {
             TelegramLog::debug($raw_response);
@@ -483,6 +606,9 @@ class Request
         if (!$response->isOk() && $response->getErrorCode() === 401 && $response->getDescription() === 'Unauthorized') {
             throw new InvalidBotTokenException();
         }
+
+        // Reset current action after completion.
+        self::$current_action = null;
 
         return $response;
     }

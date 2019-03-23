@@ -5,6 +5,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods.
+- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`.
 ### Changed
 - All Message field types dynamically search for an existing Command class that can handle them.
 ### Deprecated
@@ -13,6 +15,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - Constraint errors in `/cleanup` command.
+- Return correct objects for requests.
 ### Security
 
 ## [0.55.1] - 2019-01-06
