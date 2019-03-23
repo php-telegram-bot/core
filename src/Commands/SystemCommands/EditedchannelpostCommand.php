@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Edited channel post command
+ *
+ * @todo Remove due to deprecation!
  */
 class EditedchannelpostCommand extends SystemCommand
 {
@@ -41,6 +43,8 @@ class EditedchannelpostCommand extends SystemCommand
     public function execute()
     {
         //$edited_channel_post = $this->getUpdate()->getEditedChannelPost();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }
