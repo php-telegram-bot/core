@@ -5,20 +5,26 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods.
-- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`.
 ### Changed
-- All Message field types dynamically search for an existing Command class that can handle them.
-- Upgrade dependencies.
 ### Deprecated
-- Botan.io service has been discontinued.
-- Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation.
 ### Removed
 ### Fixed
-- Constraint errors in `/cleanup` command.
-- Return correct objects for requests.
-- PHPCS: static before visibility declaration.
 ### Security
+
+## [0.56.0] - 2019-04-15
+### Added
+- Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods. (#934)
+- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`. (#934)
+### Changed
+- All Message field types dynamically search for an existing Command class that can handle them. (#940)
+- Upgrade dependencies. (#945)
+### Deprecated
+- Botan.io service has been discontinued. (#925)
+- Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation. (#940)
+### Fixed
+- Constraint errors in `/cleanup` command. (#930)
+- Return correct objects for requests. (#934)
+- PHPCS: static before visibility declaration. (#945)
 
 ## [0.55.1] - 2019-01-06
 ### Added
@@ -261,6 +267,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
 [0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
 [0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
 [0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
