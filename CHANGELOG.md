@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`.
 ### Changed
 - All Message field types dynamically search for an existing Command class that can handle them.
+- Upgrade dependencies.
 ### Deprecated
 - Botan.io service has been discontinued.
 - Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation.
@@ -16,6 +17,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 - Constraint errors in `/cleanup` command.
 - Return correct objects for requests.
+- PHPCS: static before visibility declaration.
 ### Security
 
 ## [0.55.1] - 2019-01-06
