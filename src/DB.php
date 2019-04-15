@@ -31,28 +31,28 @@ class DB
      *
      * @var array
      */
-    static protected $mysql_credentials = [];
+    protected static $mysql_credentials = [];
 
     /**
      * PDO object
      *
      * @var PDO
      */
-    static protected $pdo;
+    protected static $pdo;
 
     /**
      * Table prefix
      *
      * @var string
      */
-    static protected $table_prefix;
+    protected static $table_prefix;
 
     /**
      * Telegram class object
      *
      * @var Telegram
      */
-    static protected $telegram;
+    protected static $telegram;
 
     /**
      * Initialize
