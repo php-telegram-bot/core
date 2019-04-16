@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- `getIsMember()` method to `ChatMember` entity.
 ### Changed
 ### Deprecated
 ### Removed
