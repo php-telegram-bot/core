@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Missing DB table name specifier in `/cleanup` command. (#947)
 ### Security
 
 ## [0.56.0] - 2019-04-15
