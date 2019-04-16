@@ -306,7 +306,7 @@ class CleanupCommand extends AdminCommand
                     SELECT id
                     FROM (
                         SELECT id
-                        FROM  `message`
+                        FROM  `%1$s`
                         WHERE `date` < \'%2$s\'
                           AND `id` NOT IN (
                             SELECT `message_id`
