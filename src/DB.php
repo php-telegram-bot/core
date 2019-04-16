@@ -828,7 +828,8 @@ class DB
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
-                    `forward_date`, `reply_to_chat`, `reply_to_message`, `media_group_id`, `text`, `entities`, `audio`, `document`,
+                    `forward_signature`, `forward_sender_name`, `forward_date`,
+                    `reply_to_chat`, `reply_to_message`, `media_group_id`, `text`, `entities`, `audio`, `document`,
                     `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
@@ -836,7 +837,8 @@ class DB
                     `migrate_from_chat_id`, `migrate_to_chat_id`, `pinned_message`, `connected_website`, `passport_data`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
-                    :forward_date, :reply_to_chat, :reply_to_message, :media_group_id, :text, :entities, :audio, :document,
+                    :forward_signature, :forward_sender_name, :forward_date,
+                    :reply_to_chat, :reply_to_message, :media_group_id, :text, :entities, :audio, :document,
                     :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
@@ -867,6 +869,8 @@ class DB
             $sth->bindValue(':forward_from', $forward_from);
             $sth->bindValue(':forward_from_chat', $forward_from_chat);
             $sth->bindValue(':forward_from_message_id', $message->getForwardFromMessageId());
+            $sth->bindValue(':forward_signature', $message->getForwardSignature());
+            $sth->bindValue(':forward_sender_name', $message->getForwardSenderName());
             $sth->bindValue(':forward_date', $forward_date);
 
             $reply_to_chat_id = null;
