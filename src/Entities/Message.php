@@ -46,6 +46,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Contact           getContact()               Optional. Message is a shared contact, information about the contact
  * @method Location          getLocation()              Optional. Message is a shared location, information about the location
  * @method Venue             getVenue()                 Optional. Message is a venue, information about the venue
+ * @method Poll              getPoll()                  Optional. Message is a native poll, information about the poll
  * @method User              getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot itself)
  * @method string            getNewChatTitle()          Optional. A chat title was changed to this value
  * @method bool              getDeleteChatPhoto()       Optional. Service message: the chat photo was deleted
@@ -87,6 +88,7 @@ class Message extends Entity
             'contact'            => Contact::class,
             'location'           => Location::class,
             'venue'              => Venue::class,
+            'poll'               => Poll::class,
             'new_chat_members'   => User::class,
             'left_chat_member'   => User::class,
             'new_chat_photo'     => PhotoSize::class,
@@ -296,6 +298,7 @@ class Message extends Entity
             'contact',
             'location',
             'venue',
+            'poll',
             'new_chat_members',
             'left_chat_member',
             'new_chat_title',

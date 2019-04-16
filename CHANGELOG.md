@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
+- Bot API 4.2 (Polls).
 - `getIsMember()` method to `ChatMember` entity.
 - `getForwardSenderName()` method to `Message` entity.
 - `forward_sender_name` (and forgotten `forward_signature`) DB fields.
