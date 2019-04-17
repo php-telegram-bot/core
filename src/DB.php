@@ -17,6 +17,7 @@ use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Poll;
 use Longman\TelegramBot\Entities\ReplyToMessage;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
@@ -141,6 +142,7 @@ class DB
             'edited_message',
             'inline_query',
             'message',
+            'poll',
             'request_limiter',
             'telegram_update',
             'user',
@@ -309,6 +311,7 @@ class DB
      * @param string $chosen_inline_result_id
      * @param string $callback_query_id
      * @param string $edited_message_id
+     * @param string $poll_id
      *
      * @return bool If the insert was successful
      * @throws TelegramException
@@ -320,10 +323,11 @@ class DB
         $inline_query_id = null,
         $chosen_inline_result_id = null,
         $callback_query_id = null,
-        $edited_message_id = null
+        $edited_message_id = null,
+        $poll_id = null
     ) {
-        if ($message_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $edited_message_id === null) {
-            throw new TelegramException('message_id, inline_query_id, chosen_inline_result_id, callback_query_id, edited_message_id are all null');
+        if ($message_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $edited_message_id === null && $poll_id === null) {
+            throw new TelegramException('message_id, inline_query_id, chosen_inline_result_id, callback_query_id, edited_message_id, poll_id are all null');
         }
 
         if (!self::isDbConnected()) {
@@ -333,9 +337,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
-                (`id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `edited_message_id`)
+                (`id`, `chat_id`, `message_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `edited_message_id`, `poll_id`)
                 VALUES
-                (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id)
+                (:id, :chat_id, :message_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :edited_message_id, :poll_id)
             ');
 
             $sth->bindValue(':id', $id);
@@ -345,6 +349,7 @@ class DB
             $sth->bindValue(':inline_query_id', $inline_query_id);
             $sth->bindValue(':chosen_inline_result_id', $chosen_inline_result_id);
             $sth->bindValue(':callback_query_id', $callback_query_id);
+            $sth->bindValue(':poll_id', $poll_id);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -599,6 +604,23 @@ class DB
                     $callback_query_id
                 );
             }
+        } elseif ($update_type === 'poll') {
+            $poll = $update->getPoll();
+
+            if (self::insertPollRequest($poll)) {
+                $poll_id = $poll->getId();
+
+                return self::insertTelegramUpdate(
+                    $update_id,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $poll_id
+                );
+            }
         }
 
         return false;
@@ -752,6 +774,43 @@ class DB
             $sth->bindValue(':inline_message_id', $callback_query->getInlineMessageId());
             $sth->bindValue(':data', $callback_query->getData());
             $sth->bindValue(':created_at', $date);
+
+            return $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Insert poll request into database
+     *
+     * @param Poll $poll
+     *
+     * @return bool If the insert was successful
+     * @throws TelegramException
+     */
+    public static function insertPollRequest(Poll $poll)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_POLL . '`
+                (`id`, `question`, `options`, `is_closed`, `created_at`)
+                VALUES
+                (:id, :question, :options, :is_closed, :created_at)
+                ON DUPLICATE KEY UPDATE
+                    `options`   = VALUES(`options`),
+                    `is_closed` = VALUES(`is_closed`)
+            ');
+
+            $sth->bindValue(':id', $poll->getId());
+            $sth->bindValue(':question', $poll->getQuestion());
+            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions(), null));
+            $sth->bindValue(':is_closed', $poll->getIsClosed());
+            $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
         } catch (PDOException $e) {

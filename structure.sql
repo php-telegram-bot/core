@@ -65,6 +65,16 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `poll` (
+  `id` bigint UNSIGNED COMMENT 'Unique poll identifier',
+  `question` char(255) NOT NULL COMMENT 'Poll question',
+  `options` text NOT NULL COMMENT 'List of poll options',
+  `is_closed` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll is closed',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
