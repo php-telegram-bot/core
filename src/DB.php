@@ -745,9 +745,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_SHIPPING_QUERY . '`
-                (`id`, `user_id`, `chat_id`, `invoice_payload`, `shipping_address`, `created_at`)
+                (`id`, `user_id`, `invoice_payload`, `shipping_address`, `created_at`)
                 VALUES
-                (:id, :user_id, :chat_id, :invoice_payload, :shipping_address, :created_at)
+                (:id, :user_id, :invoice_payload, :shipping_address, :created_at)
             ');
 
             $date    = self::getTimestamp();
