@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Chosen inline result command
+ *
+ * @todo Remove due to deprecation!
  */
 class ChoseninlineresultCommand extends SystemCommand
 {
@@ -44,6 +46,8 @@ class ChoseninlineresultCommand extends SystemCommand
         //$update = $this->getUpdate();
         //$inline_query = $update->getChosenInlineResult();
         //$query = $inline_query->getQuery();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

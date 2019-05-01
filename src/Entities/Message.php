@@ -28,6 +28,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Chat              getForwardFromChat()       Optional. For messages forwarded from a channel, information about the original channel
  * @method int               getForwardFromMessageId()  Optional. For forwarded channel posts, identifier of the original message in the channel
  * @method string            getForwardSignature()      Optional. For messages forwarded from channels, signature of the post author if present
+ * @method string            getForwardSenderName()     Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
  * @method int               getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
  * @method Message           getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method int               getEditDate()              Optional. Date the message was last edited in Unix time
@@ -45,6 +46,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Contact           getContact()               Optional. Message is a shared contact, information about the contact
  * @method Location          getLocation()              Optional. Message is a shared location, information about the location
  * @method Venue             getVenue()                 Optional. Message is a venue, information about the venue
+ * @method Poll              getPoll()                  Optional. Message is a native poll, information about the poll
  * @method User              getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot itself)
  * @method string            getNewChatTitle()          Optional. A chat title was changed to this value
  * @method bool              getDeleteChatPhoto()       Optional. Service message: the chat photo was deleted
@@ -86,6 +88,7 @@ class Message extends Entity
             'contact'            => Contact::class,
             'location'           => Location::class,
             'venue'              => Venue::class,
+            'poll'               => Poll::class,
             'new_chat_members'   => User::class,
             'left_chat_member'   => User::class,
             'new_chat_photo'     => PhotoSize::class,
@@ -295,6 +298,7 @@ class Message extends Entity
             'contact',
             'location',
             'venue',
+            'poll',
             'new_chat_members',
             'left_chat_member',
             'new_chat_title',
@@ -313,7 +317,7 @@ class Message extends Entity
 
         $is_command = strlen($this->getCommand()) > 0;
         foreach ($types as $type) {
-            if ($this->getProperty($type)) {
+            if ($this->getProperty($type) !== null) {
                 if ($is_command && $type === 'text') {
                     return 'command';
                 }

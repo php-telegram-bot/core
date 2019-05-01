@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Edited message command
+ *
+ * @todo Remove due to deprecation!
  */
 class EditedmessageCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class EditedmessageCommand extends SystemCommand
     {
         //$update = $this->getUpdate();
         //$edited_message = $update->getEditedMessage();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

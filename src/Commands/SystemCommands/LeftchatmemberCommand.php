@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Left chat member command
+ *
+ * @todo Remove due to deprecation!
  */
 class LeftchatmemberCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class LeftchatmemberCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$member = $message->getLeftChatMember();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

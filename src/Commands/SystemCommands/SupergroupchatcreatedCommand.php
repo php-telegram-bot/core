@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Super group chat created command
+ *
+ * @todo Remove due to deprecation!
  */
 class SupergroupchatcreatedCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class SupergroupchatcreatedCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$supergroup_chat_created = $message->getSuperGroupChatCreated();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

@@ -6,13 +6,39 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
+- Bot API 4.2 (Polls).
+- `getIsMember()` method to `ChatMember` entity.
+- `getForwardSenderName()` method to `Message` entity.
+- `forward_sender_name` (and forgotten `forward_signature`) DB fields.
 - Added missing API fields to Entities and DB.
 - Created database tables for `shipping_query` and `pre_checkout_query`.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+- Missing DB table name specifier in `/cleanup` command. (#947)
 ### Security
+
+## [0.56.0] - 2019-04-15
+### Added
+- Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods. (#934)
+- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`. (#934)
+### Changed
+- All Message field types dynamically search for an existing Command class that can handle them. (#940)
+- Upgrade dependencies. (#945)
+### Deprecated
+- Botan.io service has been discontinued. (#925)
+- Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation. (#940)
+### Fixed
+- Constraint errors in `/cleanup` command. (#930)
+- Return correct objects for requests. (#934)
+- PHPCS: static before visibility declaration. (#945)
+
+## [0.55.1] - 2019-01-06
+### Added
+- Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods.
+### Fixed
+- Return correct message type.
 
 ## [0.55.0] - 2018-12-20
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.55.0-sql-migration] on your database.
@@ -230,7 +256,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.55.0-unreleased.sql
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
 [0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
 [0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
 [0.54.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.53.0-0.54.0.sql
@@ -250,6 +276,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
+[0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
 [0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
 [0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
 [0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0

@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.55.0';
+    protected $version = '0.56.0';
 
     /**
      * Telegram API key
@@ -122,13 +122,6 @@ class Telegram
      * @var \Longman\TelegramBot\Entities\ServerResponse
      */
     protected $last_command_response;
-
-    /**
-     * Botan.io integration
-     *
-     * @var boolean
-     */
-    protected $botan_enabled = false;
 
     /**
      * Check if runCommands() is running in this session
@@ -452,46 +445,35 @@ class Telegram
         $this->update = $update;
         $this->last_update_id = $update->getUpdateId();
 
+        //Load admin commands
+        if ($this->isAdmin()) {
+            $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/AdminCommands', false);
+        }
+
+        //Make sure we have an up-to-date command list
+        //This is necessary to "require" all the necessary command files!
+        $this->getCommandsList();
+
         //If all else fails, it's a generic message.
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
-
-            //Load admin commands
-            if ($this->isAdmin()) {
-                $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/AdminCommands', false);
-            }
-
-            $type = $message->getType();
+            $type    = $message->getType();
             if ($type === 'command') {
                 $command = $message->getCommand();
-            } elseif (in_array($type, [
-                'new_chat_members',
-                'left_chat_member',
-                'new_chat_title',
-                'new_chat_photo',
-                'delete_chat_photo',
-                'group_chat_created',
-                'supergroup_chat_created',
-                'channel_chat_created',
-                'migrate_to_chat_id',
-                'migrate_from_chat_id',
-                'pinned_message',
-                'invoice',
-                'successful_payment',
-            ], true)
-            ) {
-                $command = $this->getCommandFromType($type);
+            } else {
+                // Let's check if the message object has the type field we're looking for
+                // and if a fitting command class is available.
+                $command_tmp = $this->getCommandFromType($type);
+                if ($this->getCommandObject($command_tmp) !== null) {
+                    $command = $command_tmp;
+                }
             }
         } else {
             $command = $this->getCommandFromType($update_type);
         }
-
-        //Make sure we have an up-to-date command list
-        //This is necessary to "require" all the necessary command files!
-        $this->getCommandsList();
 
         //Make sure we don't try to process update that was already processed
         $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());
@@ -527,19 +509,9 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('generic');
         } else {
-            //Botan.io integration, make sure only the actual command user executed is reported
-            if ($this->botan_enabled) {
-                Botan::lock($command);
-            }
-
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
             $this->last_command_response = $command_obj->preExecute();
-
-            //Botan.io integration, send report after executing the command
-            if ($this->botan_enabled) {
-                Botan::track($this->update, $command);
-            }
         }
 
         return $this->last_command_response;
@@ -905,16 +877,16 @@ class Telegram
     /**
      * Enable Botan.io integration
      *
+     * @deprecated Botan.io service is no longer working
+     *
      * @param  string $token
      * @param  array  $options
      *
      * @return \Longman\TelegramBot\Telegram
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function enableBotan($token, array $options = [])
     {
-        Botan::initializeBotan($token, $options);
-        $this->botan_enabled = true;
+        trigger_error('Longman\TelegramBot\Telegram::enableBotan is deprecated and will be removed in future release.', E_USER_DEPRECATED);
 
         return $this;
     }
@@ -947,7 +919,6 @@ class Telegram
         }
 
         $this->run_commands  = true;
-        $this->botan_enabled = false;   // Force disable Botan.io integration, we don't want to track self-executed commands!
 
         $result = Request::getMe();
 

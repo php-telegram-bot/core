@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Migrate from chat id command
+ *
+ * @todo Remove due to deprecation!
  */
 class MigratefromchatidCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class MigratefromchatidCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$migrate_from_chat_id = $message->getMigrateFromChatId();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

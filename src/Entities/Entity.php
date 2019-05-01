@@ -12,7 +12,7 @@ namespace Longman\TelegramBot\Entities;
 
 use Exception;
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 
 /**
  * Class Entity
@@ -149,7 +149,7 @@ abstract class Entity
             }
         } elseif ($action === 'set') {
             // Limit setters to specific classes.
-            if ($this instanceof InlineEntity || $this instanceof Keyboard || $this instanceof KeyboardButton) {
+            if ($this instanceof InlineEntity || $this instanceof InputMedia || $this instanceof Keyboard || $this instanceof KeyboardButton) {
                 $this->$property_name = $args[0];
 
                 return $this;

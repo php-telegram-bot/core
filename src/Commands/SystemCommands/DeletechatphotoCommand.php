@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Delete chat photo command
+ *
+ * @todo Remove due to deprecation!
  */
 class DeletechatphotoCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class DeletechatphotoCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$delete_chat_photo = $message->getDeleteChatPhoto();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }
