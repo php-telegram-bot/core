@@ -549,7 +549,7 @@ class DB
             $shipping_query_id = $shipping_query->getId();
         } elseif (($pre_checkout_query = $update->getPreCheckoutQuery()) && self::insertPreCheckoutQueryRequest($pre_checkout_query)) {
             $pre_checkout_query_id = $pre_checkout_query->getId();
-        } elseif (($poll = $update->getPoll()) && self::insertPoll($poll)) {
+        } elseif (($poll = $update->getPoll()) && self::insertPollRequest($poll)) {
             $poll_id = $poll->getId();
         } else {
             return false;
@@ -844,7 +844,7 @@ class DB
 
             $sth->bindValue(':id', $poll->getId());
             $sth->bindValue(':question', $poll->getQuestion());
-            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions(), null));
+            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions()));
             $sth->bindValue(':is_closed', $poll->getIsClosed());
             $sth->bindValue(':created_at', self::getTimestamp());
 
@@ -922,20 +922,20 @@ class DB
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_signature`, `forward_sender_name`, `forward_date`,
-                    `reply_to_chat`, `reply_to_message`, `media_group_id`, `text`, `entities`, `audio`, `document`,
-                    `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
+                    `reply_to_chat`, `reply_to_message`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
+                    `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `poll`, `new_chat_members`, `left_chat_member`,
-                    `new_chat_title`,`new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
-                    `supergroup_chat_created`, `channel_chat_created`, `migrate_from_chat_id`, `migrate_to_chat_id`,
+                    `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
+                    `supergroup_chat_created`, `channel_chat_created`, `migrate_to_chat_id`, `migrate_from_chat_id`,
                     `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date,
-                    :reply_to_chat, :reply_to_message, :media_group_id, :text, :entities, :audio, :document,
-                    :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
+                    :reply_to_chat, :reply_to_message, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
+                    :audio, :document, :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :poll, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
-                    :supergroup_chat_created, :channel_chat_created, :migrate_from_chat_id, :migrate_to_chat_id,
+                    :supergroup_chat_created, :channel_chat_created, :migrate_to_chat_id, :migrate_from_chat_id,
                     :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data
                 )
             ');
@@ -977,13 +977,13 @@ class DB
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':author_signature', $message->getAuthorSignature());
             $sth->bindValue(':text', $message->getText());
-            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities(), null));
-            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities(), null));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities()));
+            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities()));
             $sth->bindValue(':audio', $message->getAudio());
             $sth->bindValue(':document', $message->getDocument());
             $sth->bindValue(':animation', $message->getAnimation());
             $sth->bindValue(':game', $message->getGame());
-            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto(), null));
+            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto()));
             $sth->bindValue(':sticker', $message->getSticker());
             $sth->bindValue(':video', $message->getVideo());
             $sth->bindValue(':voice', $message->getVoice());
@@ -996,13 +996,13 @@ class DB
             $sth->bindValue(':new_chat_members', $new_chat_members_ids);
             $sth->bindValue(':left_chat_member', $left_chat_member_id);
             $sth->bindValue(':new_chat_title', $message->getNewChatTitle());
-            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto(), null));
+            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto()));
             $sth->bindValue(':delete_chat_photo', $message->getDeleteChatPhoto());
             $sth->bindValue(':group_chat_created', $message->getGroupChatCreated());
             $sth->bindValue(':supergroup_chat_created', $message->getSupergroupChatCreated());
             $sth->bindValue(':channel_chat_created', $message->getChannelChatCreated());
-            $sth->bindValue(':migrate_from_chat_id', $message->getMigrateFromChatId());
             $sth->bindValue(':migrate_to_chat_id', $message->getMigrateToChatId());
+            $sth->bindValue(':migrate_from_chat_id', $message->getMigrateFromChatId());
             $sth->bindValue(':pinned_message', $message->getPinnedMessage());
             $sth->bindValue(':invoice', $message->getInvoice());
             $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
@@ -1059,7 +1059,7 @@ class DB
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':edit_date', $edit_date);
             $sth->bindValue(':text', $edited_message->getText());
-            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities(), null));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities()));
             $sth->bindValue(':caption', $edited_message->getCaption());
 
             return $sth->execute();
@@ -1216,7 +1216,7 @@ class DB
             $sth->execute();
 
             return $sth->fetch();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -1252,7 +1252,7 @@ class DB
             $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }
@@ -1295,7 +1295,7 @@ class DB
             $sql .= count($where) > 0 ? ' WHERE ' . implode(' AND ', $where) : '';
 
             return self::$pdo->prepare($sql)->execute($tokens);
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
     }

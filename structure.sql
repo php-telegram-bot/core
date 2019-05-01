@@ -67,16 +67,6 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS `poll` (
-  `id` bigint UNSIGNED COMMENT 'Unique poll identifier',
-  `question` char(255) NOT NULL COMMENT 'Poll question',
-  `options` text NOT NULL COMMENT 'List of poll options',
-  `is_closed` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll is closed',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
 CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
@@ -110,7 +100,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   `location` TEXT COMMENT 'Location object. Message is a shared location, information about the location',
   `venue` TEXT COMMENT 'Venue object. Message is a Venue, information about the Venue',
   `poll` TEXT COMMENT 'Poll object. Message is a native poll, information about the poll',
-  `caption` TEXT COMMENT  'For message with caption, the actual UTF-8 text of the caption',
   `new_chat_members` TEXT COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
   `left_chat_member` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
   `new_chat_title` CHAR(255) DEFAULT NULL COMMENT 'A chat title was changed to this value',
