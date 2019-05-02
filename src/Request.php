@@ -12,8 +12,11 @@ namespace Longman\TelegramBot;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Stream;
 use Longman\TelegramBot\Entities\File;
+use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\InvalidBotTokenException;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -30,6 +33,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendDocument(array $data)            Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendSticker(array $data)             Use this method to send .webp stickers. On success, the sent Message is returned.
  * @method static ServerResponse sendVideo(array $data)               Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+ * @method static ServerResponse sendAnimation(array $data)           Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendVoice(array $data)               Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendVideoNote(array $data)           Use this method to send video messages. On success, the sent Message is returned.
  * @method static ServerResponse sendMediaGroup(array $data)          Use this method to send a group of photos or videos as an album. On success, an array of the sent Messages is returned.
@@ -38,6 +42,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse stopMessageLiveLocation(array $data) Use this method to stop updating a live location message sent by the bot or via the bot (for inline bots) before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
  * @method static ServerResponse sendVenue(array $data)               Use this method to send information about a venue. On success, the sent Message is returned.
  * @method static ServerResponse sendContact(array $data)             Use this method to send phone contacts. On success, the sent Message is returned.
+ * @method static ServerResponse sendPoll(array $data)                Use this method to send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
  * @method static ServerResponse sendChatAction(array $data)          Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
  * @method static ServerResponse getUserProfilePhotos(array $data)    Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
  * @method static ServerResponse getFile(array $data)                 Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
@@ -63,7 +68,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse answerInlineQuery(array $data)       Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse editMessageText(array $data)         Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageCaption(array $data)      Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse editMessageMedia(array $data)        Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageReplyMarkup(array $data)  Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse stopPoll(array $data)                Use this method to stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.
  * @method static ServerResponse deleteMessage(array $data)           Use this method to delete a message, including service messages, with certain limitations. Returns True on success.
  * @method static ServerResponse getStickerSet(array $data)           Use this method to get a sticker set. On success, a StickerSet object is returned.
  * @method static ServerResponse uploadStickerFile(array $data)       Use this method to upload a .png file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
@@ -74,6 +81,10 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendInvoice(array $data)             Use this method to send invoices. On success, the sent Message is returned.
  * @method static ServerResponse answerShippingQuery(array $data)     If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
  * @method static ServerResponse answerPreCheckoutQuery(array $data)  Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
+ * @method static ServerResponse setPassportDataErrors(array $data)   Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success. Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
+ * @method static ServerResponse sendGame(array $data)                Use this method to send a game. On success, the sent Message is returned.
+ * @method static ServerResponse setGameScore(array $data)            Use this method to set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited Message, otherwise returns True. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
+ * @method static ServerResponse getGameHighScores(array $data)       Use this method to get data for high score tables. Will return the score of the specified user and several of his neighbors in a game. On success, returns an Array of GameHighScore objects.
  */
 class Request
 {
@@ -120,6 +131,13 @@ class Request
     private static $limiter_interval;
 
     /**
+     * Get the current action that is being executed
+     *
+     * @var string
+     */
+    private static $current_action;
+
+    /**
      * Available actions to send
      *
      * This is basically the list of all methods listed on the official API documentation.
@@ -141,6 +159,7 @@ class Request
         'sendDocument',
         'sendSticker',
         'sendVideo',
+        'sendAnimation',
         'sendVoice',
         'sendVideoNote',
         'sendMediaGroup',
@@ -149,6 +168,7 @@ class Request
         'stopMessageLiveLocation',
         'sendVenue',
         'sendContact',
+        'sendPoll',
         'sendChatAction',
         'getUserProfilePhotos',
         'getFile',
@@ -174,7 +194,9 @@ class Request
         'answerInlineQuery',
         'editMessageText',
         'editMessageCaption',
+        'editMessageMedia',
         'editMessageReplyMarkup',
+        'stopPoll',
         'deleteMessage',
         'getStickerSet',
         'uploadStickerFile',
@@ -185,6 +207,10 @@ class Request
         'sendInvoice',
         'answerShippingQuery',
         'answerPreCheckoutQuery',
+        'setPassportDataErrors',
+        'sendGame',
+        'setGameScore',
+        'getGameHighScores',
     ];
 
     /**
@@ -198,6 +224,30 @@ class Request
         'deleteWebhook',
         'getWebhookInfo',
         'getMe',
+    ];
+
+    /**
+     * Available fields for InputFile helper
+     *
+     * This is basically the list of all fields that allow InputFile objects
+     * for which input can be simplified by providing local path directly  as string.
+     *
+     * @var array
+     */
+    private static $input_file_fields = [
+        'setWebhook'          => ['certificate'],
+        'sendPhoto'           => ['photo'],
+        'sendAudio'           => ['audio', 'thumb'],
+        'sendDocument'        => ['document', 'thumb'],
+        'sendVideo'           => ['video', 'thumb'],
+        'sendAnimation'       => ['animation', 'thumb'],
+        'sendVoice'           => ['voice', 'thumb'],
+        'sendVideoNote'       => ['video_note', 'thumb'],
+        'setChatPhoto'        => ['photo'],
+        'sendSticker'         => ['sticker'],
+        'uploadStickerFile'   => ['png_sticker'],
+        'createNewStickerSet' => ['png_sticker'],
+        'addStickerToSet'     => ['png_sticker'],
     ];
 
     /**
@@ -305,27 +355,114 @@ class Request
      * @param array $data
      *
      * @return array
+     * @throws TelegramException
      */
     private static function setUpRequestParams(array $data)
     {
         $has_resource = false;
         $multipart    = [];
 
-        // Convert any nested arrays into JSON strings.
-        array_walk($data, function (&$item) {
-            is_array($item) && $item = json_encode($item);
-        });
+        foreach ($data as $key => &$item) {
+            if ($key === 'media') {
+                // Magical media input helper.
+                $item = self::mediaInputHelper($item, $has_resource, $multipart);
+            } elseif (array_key_exists(self::$current_action, self::$input_file_fields) && in_array($key, self::$input_file_fields[self::$current_action], true)) {
+                // Allow absolute paths to local files.
+                if (is_string($item) && file_exists($item)) {
+                    $item = new Stream(self::encodeFile($item));
+                }
+            } elseif (is_array($item)) {
+                // Convert any nested arrays into JSON strings.
+                $item = json_encode($item);
+            }
 
-        //Reformat data array in multipart way if it contains a resource
-        foreach ($data as $key => $item) {
-            $has_resource |= (is_resource($item) || $item instanceof \GuzzleHttp\Psr7\Stream);
+            // Reformat data array in multipart way if it contains a resource
+            $has_resource |= (is_resource($item) || $item instanceof Stream);
             $multipart[]  = ['name' => $key, 'contents' => $item];
         }
+
         if ($has_resource) {
             return ['multipart' => $multipart];
         }
 
         return ['form_params' => $data];
+    }
+
+    /**
+     * Magical input media helper to simplify passing media.
+     *
+     * This allows the following:
+     * Request::editMessageMedia([
+     *     ...
+     *     'media' => new InputMediaPhoto([
+     *         'caption' => 'Caption!',
+     *         'media'   => Request::encodeFile($local_photo),
+     *     ]),
+     * ]);
+     * and
+     * Request::sendMediaGroup([
+     *     'media'   => [
+     *         new InputMediaPhoto(['media' => Request::encodeFile($local_photo_1)]),
+     *         new InputMediaPhoto(['media' => Request::encodeFile($local_photo_2)]),
+     *         new InputMediaVideo(['media' => Request::encodeFile($local_video_1)]),
+     *     ],
+     * ]);
+     * and even
+     * Request::sendMediaGroup([
+     *     'media'   => [
+     *         new InputMediaPhoto(['media' => $local_photo_1]),
+     *         new InputMediaPhoto(['media' => $local_photo_2]),
+     *         new InputMediaVideo(['media' => $local_video_1]),
+     *     ],
+     * ]);
+     *
+     * @param mixed $item
+     * @param bool  $has_resource
+     * @param array $multipart
+     *
+     * @return mixed
+     */
+    private static function mediaInputHelper($item, &$has_resource, array &$multipart)
+    {
+        $was_array = is_array($item);
+        $was_array || $item = [$item];
+
+        foreach ($item as $media_item) {
+            if (!($media_item instanceof InputMedia)) {
+                continue;
+            }
+
+            $media = $media_item->getMedia();
+
+            // Allow absolute paths to local files.
+            if (is_string($media) && file_exists($media)) {
+                $media = new Stream(self::encodeFile($media));
+            }
+
+            if (is_resource($media) || $media instanceof Stream) {
+                $has_resource = true;
+                $rnd_key      = uniqid('media_', false);
+                $multipart[]  = ['name' => $rnd_key, 'contents' => $media];
+
+                // We're literally overwriting the passed media data!
+                $media_item->media             = 'attach://' . $rnd_key;
+                $media_item->raw_data['media'] = 'attach://' . $rnd_key;
+            }
+        }
+
+        $was_array || $item = reset($item);
+
+        return json_encode($item);
+    }
+
+    /**
+     * Get the current action that's being executed
+     *
+     * @return string
+     */
+    public static function getCurrentAction()
+    {
+        return self::$current_action;
     }
 
     /**
@@ -360,7 +497,7 @@ class Request
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
-            $result = ($e->getResponse()) ? (string) $e->getResponse()->getBody() : '';
+            $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
@@ -457,13 +594,27 @@ class Request
 
         self::limitTelegramRequests($action, $data);
 
-        $response = json_decode(self::execute($action, $data), true);
+        // Remember which action is currently being executed.
+        self::$current_action = $action;
+
+        $raw_response = self::execute($action, $data);
+        $response     = json_decode($raw_response, true);
 
         if (null === $response) {
-            throw new TelegramException('Telegram returned an invalid response! Please review your bot name and API key.');
+            TelegramLog::debug($raw_response);
+            throw new TelegramException('Telegram returned an invalid response!');
         }
 
-        return new ServerResponse($response, $bot_username);
+        $response = new ServerResponse($response, $bot_username);
+
+        if (!$response->isOk() && $response->getErrorCode() === 401 && $response->getDescription() === 'Unauthorized') {
+            throw new InvalidBotTokenException();
+        }
+
+        // Reset current action after completion.
+        self::$current_action = null;
+
+        return $response;
     }
 
     /**
@@ -588,9 +739,7 @@ class Request
         array $data,
         array $select_chats_params
     ) {
-        if (!method_exists(Request::class, $callback_function)) {
-            throw new TelegramException('Method "' . $callback_function . '" not found in class Request.');
-        }
+        self::ensureValidAction($callback_function);
 
         $chats = DB::selectChats($select_chats_params);
 
@@ -598,7 +747,7 @@ class Request
         if (is_array($chats)) {
             foreach ($chats as $row) {
                 $data['chat_id'] = $row['chat_id'];
-                $results[]       = call_user_func(Request::class . '::' . $callback_function, $data);
+                $results[]       = self::send($callback_function, $data);
             }
         }
 
@@ -653,6 +802,7 @@ class Request
                 'sendDocument',
                 'sendSticker',
                 'sendVideo',
+                'sendAnimation',
                 'sendVoice',
                 'sendVideoNote',
                 'sendMediaGroup',
@@ -661,14 +811,20 @@ class Request
                 'stopMessageLiveLocation',
                 'sendVenue',
                 'sendContact',
+                'sendPoll',
                 'sendInvoice',
+                'sendGame',
+                'setGameScore',
                 'editMessageText',
                 'editMessageCaption',
+                'editMessageMedia',
                 'editMessageReplyMarkup',
+                'stopPoll',
                 'setChatTitle',
                 'setChatDescription',
                 'setChatStickerSet',
                 'deleteChatStickerSet',
+                'setPassportDataErrors',
             ];
 
             $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;

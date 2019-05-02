@@ -15,6 +15,8 @@ use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * Class BotanDB
+ *
+ * @deprecated Botan.io service is no longer working
  */
 class BotanDB extends DB
 {

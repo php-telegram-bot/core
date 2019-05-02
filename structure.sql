@@ -65,6 +65,16 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `poll` (
+  `id` bigint UNSIGNED COMMENT 'Unique poll identifier',
+  `question` char(255) NOT NULL COMMENT 'Poll question',
+  `options` text NOT NULL COMMENT 'List of poll options',
+  `is_closed` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll is closed',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
@@ -73,6 +83,8 @@ CREATE TABLE IF NOT EXISTS `message` (
   `forward_from` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
   `forward_from_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
   `forward_from_message_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier of the original message in the channel',
+  `forward_signature` TEXT NULL DEFAULT NULL COMMENT 'For messages forwarded from channels, signature of the post author if present',
+  `forward_sender_name` TEXT NULL DEFAULT NULL COMMENT 'Sender''s name for messages forwarded from users who disallow adding a link to their account in forwarded messages',
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
@@ -81,6 +93,8 @@ CREATE TABLE IF NOT EXISTS `message` (
   `entities` TEXT COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
   `audio` TEXT COMMENT 'Audio object. Message is an audio file, information about the file',
   `document` TEXT COMMENT 'Document object. Message is a general file, information about the file',
+  `animation` TEXT COMMENT 'Message is an animation, information about the animation',
+  `game` TEXT COMMENT 'Game object. Message is a game, information about the game',
   `photo` TEXT COMMENT 'Array of PhotoSize objects. Message is a photo, available sizes of the photo',
   `sticker` TEXT COMMENT 'Sticker object. Message is a sticker, information about the sticker',
   `video` TEXT COMMENT 'Video object. Message is a video, information about the video',
@@ -89,6 +103,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `contact` TEXT COMMENT 'Contact object. Message is a shared contact, information about the contact',
   `location` TEXT COMMENT 'Location object. Message is a shared location, information about the location',
   `venue` TEXT COMMENT 'Venue object. Message is a Venue, information about the Venue',
+  `poll` TEXT COMMENT 'Poll object. Message is a native poll, information about the poll',
   `caption` TEXT COMMENT  'For message with caption, the actual UTF-8 text of the caption',
   `new_chat_members` TEXT COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
   `left_chat_member` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
@@ -101,6 +116,8 @@ CREATE TABLE IF NOT EXISTS `message` (
   `migrate_to_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
   `migrate_from_chat_id` bigint NULL DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
   `pinned_message` TEXT NULL COMMENT 'Message object. Specified message was pinned',
+  `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
+  `passport_data` TEXT NULL COMMENT 'Telegram Passport data',
 
   PRIMARY KEY (`chat_id`, `id`),
   KEY `user_id` (`user_id`),

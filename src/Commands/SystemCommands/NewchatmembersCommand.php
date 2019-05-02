@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * New chat members command
+ *
+ * @todo Remove due to deprecation!
  */
 class NewchatmembersCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class NewchatmembersCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$members = $message->getNewChatMembers();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

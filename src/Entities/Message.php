@@ -10,8 +10,10 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\Games\Game;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
+use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
 
 /**
  * Class Message
@@ -26,6 +28,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Chat              getForwardFromChat()       Optional. For messages forwarded from a channel, information about the original channel
  * @method int               getForwardFromMessageId()  Optional. For forwarded channel posts, identifier of the original message in the channel
  * @method string            getForwardSignature()      Optional. For messages forwarded from channels, signature of the post author if present
+ * @method string            getForwardSenderName()     Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
  * @method int               getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
  * @method Message           getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method int               getEditDate()              Optional. Date the message was last edited in Unix time
@@ -33,6 +36,8 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method string            getAuthorSignature()       Optional. Signature of the post author for messages in channels
  * @method Audio             getAudio()                 Optional. Message is an audio file, information about the file
  * @method Document          getDocument()              Optional. Message is a general file, information about the file
+ * @method Animation         getAnimation()             Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
+ * @method Game              getGame()                  Optional. Message is a game, information about the game.
  * @method Sticker           getSticker()               Optional. Message is a sticker, information about the sticker
  * @method Video             getVideo()                 Optional. Message is a video, information about the video
  * @method Voice             getVoice()                 Optional. Message is a voice message, information about the file
@@ -41,6 +46,7 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Contact           getContact()               Optional. Message is a shared contact, information about the contact
  * @method Location          getLocation()              Optional. Message is a shared location, information about the location
  * @method Venue             getVenue()                 Optional. Message is a venue, information about the venue
+ * @method Poll              getPoll()                  Optional. Message is a native poll, information about the poll
  * @method User              getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot itself)
  * @method string            getNewChatTitle()          Optional. A chat title was changed to this value
  * @method bool              getDeleteChatPhoto()       Optional. Service message: the chat photo was deleted
@@ -52,6 +58,8 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
  * @method Message           getPinnedMessage()         Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice           getInvoice()               Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment getSuccessfulPayment()     Optional. Message is a service message about a successful payment, information about the payment.
+ * @method string            getConnectedWebsite()      Optional. The domain name of the website on which the user has logged in.
+ * @method PassportData      getPassportData()          Optional. Telegram Passport data
  */
 class Message extends Entity
 {
@@ -70,6 +78,8 @@ class Message extends Entity
             'caption_entities'   => MessageEntity::class,
             'audio'              => Audio::class,
             'document'           => Document::class,
+            'animation'          => Animation::class,
+            'game'               => Game::class,
             'photo'              => PhotoSize::class,
             'sticker'            => Sticker::class,
             'video'              => Video::class,
@@ -78,12 +88,14 @@ class Message extends Entity
             'contact'            => Contact::class,
             'location'           => Location::class,
             'venue'              => Venue::class,
+            'poll'               => Poll::class,
             'new_chat_members'   => User::class,
             'left_chat_member'   => User::class,
             'new_chat_photo'     => PhotoSize::class,
             'pinned_message'     => Message::class,
             'invoice'            => Invoice::class,
             'successful_payment' => SuccessfulPayment::class,
+            'passport_data'      => PassportData::class,
         ];
     }
 
@@ -276,13 +288,17 @@ class Message extends Entity
             'text',
             'audio',
             'document',
+            'animation',
+            'game',
             'photo',
             'sticker',
             'video',
             'voice',
+            'video_note',
             'contact',
             'location',
             'venue',
+            'poll',
             'new_chat_members',
             'left_chat_member',
             'new_chat_title',
@@ -296,11 +312,12 @@ class Message extends Entity
             'pinned_message',
             'invoice',
             'successful_payment',
+            'passport_data',
         ];
 
         $is_command = strlen($this->getCommand()) > 0;
         foreach ($types as $type) {
-            if ($this->getProperty($type)) {
+            if ($this->getProperty($type) !== null) {
                 if ($is_command && $type === 'text') {
                     return 'command';
                 }

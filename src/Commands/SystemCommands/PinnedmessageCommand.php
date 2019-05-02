@@ -14,6 +14,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Pinned message command
+ *
+ * @todo Remove due to deprecation!
  */
 class PinnedmessageCommand extends SystemCommand
 {
@@ -42,6 +44,8 @@ class PinnedmessageCommand extends SystemCommand
     {
         //$message = $this->getMessage();
         //$pinned_message = $message->getPinnedMessage();
+
+        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

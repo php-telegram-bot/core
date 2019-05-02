@@ -4,17 +4,79 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
+- Bot API 4.2 (Polls).
+- `getIsMember()` method to `ChatMember` entity.
+- `getForwardSenderName()` method to `Message` entity.
+- `forward_sender_name` (and forgotten `forward_signature`) DB fields.
 ### Changed
-- Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
-- Add debug log entry instead of throwing an exception for duplicate updates.
 ### Deprecated
 - [:exclamation:][unreleased-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more).
 ### Removed
 ### Fixed
-- PHPCS fixes for updated CodeSniffer dependency.
+- Missing DB table name specifier in `/cleanup` command. (#947)
 ### Security
 - Don't allow a user to call System Commands directly.
+
+## [0.56.0] - 2019-04-15
+### Added
+- Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods. (#934)
+- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`. (#934)
+### Changed
+- All Message field types dynamically search for an existing Command class that can handle them. (#940)
+- Upgrade dependencies. (#945)
+### Deprecated
+- Botan.io service has been discontinued. (#925)
+- Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation. (#940)
+### Fixed
+- Constraint errors in `/cleanup` command. (#930)
+- Return correct objects for requests. (#934)
+- PHPCS: static before visibility declaration. (#945)
+
+## [0.55.1] - 2019-01-06
+### Added
+- Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods.
+### Fixed
+- Return correct message type.
+
+## [0.55.0] - 2018-12-20
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.55.0-sql-migration] on your database.
+### Added
+- Bot API 4.0 and 4.1 (Telegram Passport)
+- Test PHP 7.3 with Travis.
+### Changed
+- [:exclamation:][0.55.0-bc-move-animation-out-of-games-namespace] Move Animation entity out of Games namespace.
+### Fixed
+- Added missing `video_note` to `Message` types.
+
+## [0.54.1] - 2018-10-23
+### Fixed
+- `sendToActiveChats` now works correctly for any valid Request action.
+
+## [0.54.0] - 2018-07-21
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.54.0-sql-migration] on your database.
+### Added
+- `ChatAction` class to simplify chat action selection.
+- Telegram Games platform!
+- Ability to set custom MySQL port.
+### Changed
+- [:exclamation:][0.54.0-bc-rename-constants] Rename and ensure no redefinition of constants: `BASE_PATH` -> `TB_BASE_PATH`, `BASE_COMMANDS_PATH` -> `TB_BASE_COMMANDS_PATH`.
+
+## [0.53.0] - 2018-04-01
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.53.0-sql-migration] on your database.
+### Added
+- Implemented new changes for Bot API 3.6 (streamable InputMediaVideo, connected website).
+- `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed.
+- `Telegram::useGetUpdatesWithoutDatabase()` method, enables `Telegram::handleGetUpdates()` to run without a database.
+### Changed
+- Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
+- Add debug log entry instead of throwing an exception for duplicate updates.
+- `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default).
+- Improved `/sendtochannel` and `/sendtoall` commands, using new message helpers.
+### Fixed
+- PHPCS fixes for updated CodeSniffer dependency.
+- Send messages correctly via `/sendtochannel`.
 
 ## [0.52.0] - 2018-01-07
 ### Fixed
@@ -194,10 +256,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
 [unreleased-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
-[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.50.0-0.51.0.sql
+[0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
+[0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
+[0.54.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.53.0-0.54.0.sql
+[0.54.0-bc-rename-constants]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#rename-constants
+[0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.52.0-0.53.0.sql
+[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.50.0-0.51.0.sql
 [0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
-[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
+[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.47.1-0.48.0.sql
 [0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
 [0.47.0-bc-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
 [0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
@@ -209,6 +277,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
+[0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
+[0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
+[0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
+[0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0
+[0.53.0]: https://github.com/php-telegram-bot/core/compare/0.52.0...0.53.0
 [0.52.0]: https://github.com/php-telegram-bot/core/compare/0.51.0...0.52.0
 [0.51.0]: https://github.com/php-telegram-bot/core/compare/0.50.0...0.51.0
 [0.50.0]: https://github.com/php-telegram-bot/core/compare/0.49.0...0.50.0
