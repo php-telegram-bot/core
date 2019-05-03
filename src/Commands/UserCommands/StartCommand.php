@@ -14,8 +14,6 @@ use Longman\TelegramBot\Commands\UserCommand;
 
 /**
  * Start command
- *
- * @todo Remove due to deprecation!
  */
 class StartCommand extends UserCommand
 {
@@ -37,7 +35,7 @@ class StartCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
 
     /**
      * Command execute method
@@ -50,8 +48,6 @@ class StartCommand extends UserCommand
         //$message = $this->getMessage();
         //$chat_id = $message->getChat()->getId();
         //$user_id = $message->getFrom()->getId();
-
-        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

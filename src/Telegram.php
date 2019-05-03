@@ -274,15 +274,23 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
-            // Allow only "generic" system command if a user calls a system command,
-            // as this is the fallback command anyway and to allow a custom fallback.
+            // Allow only "generic" and "start" system commands to be called by user.
+            // generic: as this is the fallback command anyway and to allow a custom fallback.
+            //          DOWNSIDE is that no User or Admin '/generic' command is possible.
+            // start:   to allow backwards compatibility.
             // @todo Implement proper command system...
-            if ($auth === 'System' && $this->is_user_command && $command !== 'generic') {
+            if ($auth === 'System' && $this->is_user_command && !in_array($command, ['start', 'generic'], true)) {
                 continue;
             }
 
             $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
+                // For backwards compatibility, but throw deprecation error.
+                // @todo Remove deprecation.
+                if ($auth === 'System' && $command === 'start') {
+                    trigger_error($command_namespace . ' is deprecated and will be removed and handled by ' . \Longman\TelegramBot\Commands\UserCommands\StartCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
+                }
+
                 return new $command_namespace($this, $this->update);
             }
         }
