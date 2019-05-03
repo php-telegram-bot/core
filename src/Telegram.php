@@ -274,12 +274,10 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
-            // Allow only "generic" system commands if a user calls a system command, to allow (custom) fallbacks.
-            // The problem here is, that the system command gets autoloaded already, so even if it's not in the
-            // custom commands paths, it is still available and there is no way of knowing if it's an override or not.
-            // Downside: `/generic` and `/genericmessage` can still be called by user.
+            // Allow only "generic" system command if a user calls a system command,
+            // as this is the fallback command anyway and to allow a custom fallback.
             // @todo Implement proper command system...
-            if ($auth === 'System' && $this->is_user_command && !in_array($command, ['genericmessage', 'generic'], true)) {
+            if ($auth === 'System' && $this->is_user_command && $command !== 'generic') {
                 continue;
             }
 
