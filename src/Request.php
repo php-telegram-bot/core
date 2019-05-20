@@ -42,6 +42,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse stopMessageLiveLocation(array $data) Use this method to stop updating a live location message sent by the bot or via the bot (for inline bots) before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
  * @method static ServerResponse sendVenue(array $data)               Use this method to send information about a venue. On success, the sent Message is returned.
  * @method static ServerResponse sendContact(array $data)             Use this method to send phone contacts. On success, the sent Message is returned.
+ * @method static ServerResponse sendPoll(array $data)                Use this method to send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
  * @method static ServerResponse sendChatAction(array $data)          Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
  * @method static ServerResponse getUserProfilePhotos(array $data)    Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
  * @method static ServerResponse getFile(array $data)                 Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
@@ -69,6 +70,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse editMessageCaption(array $data)      Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageMedia(array $data)        Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageReplyMarkup(array $data)  Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse stopPoll(array $data)                Use this method to stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.
  * @method static ServerResponse deleteMessage(array $data)           Use this method to delete a message, including service messages, with certain limitations. Returns True on success.
  * @method static ServerResponse getStickerSet(array $data)           Use this method to get a sticker set. On success, a StickerSet object is returned.
  * @method static ServerResponse uploadStickerFile(array $data)       Use this method to upload a .png file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
@@ -166,6 +168,7 @@ class Request
         'stopMessageLiveLocation',
         'sendVenue',
         'sendContact',
+        'sendPoll',
         'sendChatAction',
         'getUserProfilePhotos',
         'getFile',
@@ -193,6 +196,7 @@ class Request
         'editMessageCaption',
         'editMessageMedia',
         'editMessageReplyMarkup',
+        'stopPoll',
         'deleteMessage',
         'getStickerSet',
         'uploadStickerFile',
@@ -807,6 +811,7 @@ class Request
                 'stopMessageLiveLocation',
                 'sendVenue',
                 'sendContact',
+                'sendPoll',
                 'sendInvoice',
                 'sendGame',
                 'setGameScore',
@@ -814,6 +819,7 @@ class Request
                 'editMessageCaption',
                 'editMessageMedia',
                 'editMessageReplyMarkup',
+                'stopPoll',
                 'setChatTitle',
                 'setChatDescription',
                 'setChatStickerSet',
