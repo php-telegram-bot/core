@@ -12,6 +12,7 @@ namespace Longman\TelegramBot;
 
 defined('TB_BASE_PATH') || define('TB_BASE_PATH', __DIR__);
 defined('TB_BASE_COMMANDS_PATH') || define('TB_BASE_COMMANDS_PATH', TB_BASE_PATH . '/Commands');
+defined('TB_BASE_COMMANDS_NAMESPACE') || define('TB_BASE_COMMANDS_NAMESPACE', __NAMESPACE__ . '\\Commands');
 
 use Exception;
 use Longman\TelegramBot\Commands\Command;
@@ -270,7 +271,7 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
-            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
+            $command_namespace = TB_BASE_COMMANDS_NAMESPACE . '\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
