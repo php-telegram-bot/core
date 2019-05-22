@@ -10,6 +10,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `getIsMember()` method to `ChatMember` entity.
 - `getForwardSenderName()` method to `Message` entity.
 - `forward_sender_name` (and forgotten `forward_signature`) DB fields.
+- Added missing API fields to Entities and DB.
+- Created database tables for `shipping_query` and `pre_checkout_query`.
 ### Changed
 ### Deprecated
 ### Removed
