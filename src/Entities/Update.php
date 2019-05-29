@@ -28,6 +28,7 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  * @method CallbackQuery       getCallbackQuery()      Optional. New incoming callback query
  * @method ShippingQuery       getShippingQuery()      Optional. New incoming shipping query. Only for invoices with flexible price
  * @method PreCheckoutQuery    getPreCheckoutQuery()   Optional. New incoming pre-checkout query. Contains full information about checkout
+ * @method Poll                getPoll()               Optional. New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
  */
 class Update extends Entity
 {
@@ -46,6 +47,7 @@ class Update extends Entity
             'callback_query'       => CallbackQuery::class,
             'shipping_query'       => ShippingQuery::class,
             'pre_checkout_query'   => PreCheckoutQuery::class,
+            'poll'                 => Poll::class,
         ];
     }
 
@@ -66,6 +68,7 @@ class Update extends Entity
             'callback_query',
             'shipping_query',
             'pre_checkout_query',
+            'poll',
         ];
         foreach ($types as $type) {
             if ($this->getProperty($type)) {

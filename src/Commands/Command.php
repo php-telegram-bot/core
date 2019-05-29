@@ -15,6 +15,9 @@ use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
+use Longman\TelegramBot\Entities\Payments\ShippingQuery;
+use Longman\TelegramBot\Entities\Poll;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
@@ -31,6 +34,9 @@ use Longman\TelegramBot\Telegram;
  * @method InlineQuery         getInlineQuery()        Optional. New incoming inline query
  * @method ChosenInlineResult  getChosenInlineResult() Optional. The result of an inline query that was chosen by a user and sent to their chat partner.
  * @method CallbackQuery       getCallbackQuery()      Optional. New incoming callback query
+ * @method ShippingQuery       getShippingQuery()      Optional. New incoming shipping query. Only for invoices with flexible price
+ * @method PreCheckoutQuery    getPreCheckoutQuery()   Optional. New incoming pre-checkout query. Contains full information about checkout
+ * @method Poll                getPoll()               Optional. New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
  */
 abstract class Command
 {
