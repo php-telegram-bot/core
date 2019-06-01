@@ -5,7 +5,6 @@ ALTER TABLE `message` ADD COLUMN `forward_sender_name` TEXT NULL DEFAULT NULL CO
 ALTER TABLE `message` ADD COLUMN `edit_date` bigint UNSIGNED DEFAULT NULL COMMENT 'Date the message was last edited in Unix time' AFTER `reply_to_message`;
 ALTER TABLE `message` ADD COLUMN `author_signature` TEXT COMMENT 'Signature of the post author for messages in channels' AFTER `media_group_id`;
 ALTER TABLE `message` ADD COLUMN `caption_entities` TEXT COMMENT 'For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption';
-ALTER TABLE `message` ADD COLUMN `animation` TEXT NULL COMMENT 'Message is an animation, information about the animation' AFTER `document`;
 ALTER TABLE `message` ADD COLUMN `poll` TEXT COMMENT 'Poll object. Message is a native poll, information about the poll' AFTER `venue`;
 ALTER TABLE `message` ADD COLUMN `invoice` TEXT NULL COMMENT 'Message is an invoice for a payment, information about the invoice' AFTER `pinned_message`;
 ALTER TABLE `message` ADD COLUMN `successful_payment` TEXT NULL COMMENT 'Message is a service message about a successful payment, information about the payment' AFTER `invoice`;
