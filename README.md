@@ -12,7 +12,7 @@
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
 
-
+![Telegram Bot API Logo](assets/logo/512px/logo_plain.png)
 
 A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
 
