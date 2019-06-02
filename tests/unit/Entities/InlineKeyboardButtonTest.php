@@ -33,7 +33,7 @@ class InlineKeyboardButtonTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage You must use only one of these fields: url, callback_data, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!
+     * @expectedExceptionMessage You must use only one of these fields: url, login_url, callback_data, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!
      */
     public function testInlineKeyboardButtonNoParameterFail()
     {
@@ -42,7 +42,7 @@ class InlineKeyboardButtonTest extends TestCase
 
     /**
      * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage You must use only one of these fields: url, callback_data, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!
+     * @expectedExceptionMessage You must use only one of these fields: url, login_url, callback_data, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!
      */
     public function testInlineKeyboardButtonTooManyParametersFail()
     {

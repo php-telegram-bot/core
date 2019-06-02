@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Bot API 4.3 (Seamless Telegram Login, `LoginUrl`)
 ### Changed
 ### Deprecated
 ### Removed
