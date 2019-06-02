@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 - Bot API 4.3 (Seamless Telegram Login, `LoginUrl`)
+- `reply_markup` field to `Message` entity.
 ### Changed
 ### Deprecated
 ### Removed
