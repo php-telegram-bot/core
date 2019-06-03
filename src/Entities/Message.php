@@ -315,6 +315,7 @@ class Message extends Entity
             'invoice',
             'successful_payment',
             'passport_data',
+            'reply_markup',
         ];
 
         $is_command = strlen($this->getCommand()) > 0;
