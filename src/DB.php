@@ -25,6 +25,10 @@ use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Exception\TelegramException;
 use PDO;
 use PDOException;
+use Phinx\Config\Config;
+use Phinx\Migration\Manager;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class DB
 {
@@ -1298,5 +1302,51 @@ class DB
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
+    }
+
+    /**
+     * Run DB migrations using Phinx.
+     *
+     * @return bool
+     */
+    public static function runMigrations()
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        // Need to require autoloader to get Phinx classes loaded.
+        require_once __DIR__ . '/../vendor/autoload.php';
+
+        $config = new Config([
+            'paths'        => [
+                'migrations' => __DIR__ . '/../utils/db-migrations',
+            ],
+            'environments' => [
+                'default_migration_table' => self::$table_prefix . 'phinx_migrations',
+                'default_database'        => 'core',
+                'core'                    => [
+                    'connection'   => self::getPdo(),
+                    'table_prefix' => self::$table_prefix,
+                    'name'         => self::$mysql_credentials['database'],
+                ],
+            ],
+        ]);
+
+        $manager = new Manager($config, $input = new ArgvInput(), $output = new ConsoleOutput());
+
+        $output->writeln(date('Y-m-d H:i:s') . ' - Migration started.');
+
+        switch ($input->getFirstArgument()) {
+            case 'rollback':
+                $manager->rollback('core');
+                break;
+            default:
+                $manager->migrate('core');
+        }
+
+        $output->writeln(date('Y-m-d H:i:s') . ' - Migration completed.');
+
+        return true;
     }
 }
