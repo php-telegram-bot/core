@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Database migrations using [Phinx].
 ### Changed
 ### Deprecated
 ### Removed
@@ -280,6 +281,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
 [example-bot]: https://github.com/php-telegram-bot/example-bot
+[Phinx]: https://github.com/cakephp/phinx
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
 [0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
