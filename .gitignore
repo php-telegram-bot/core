@@ -6,7 +6,7 @@
 .idea
 .phpintel
 composer.phar
-
+.env
 # Local System Files (i.e. cache, logs, etc.) #
 /cache
 /build/logs
