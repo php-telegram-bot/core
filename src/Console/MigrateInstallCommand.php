@@ -23,4 +23,3 @@ class MigrateInstallCommand extends Command
         $this->info('Migration table created successfully.');
     }
 }
-
