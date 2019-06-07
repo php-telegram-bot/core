@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+require __DIR__.'/vendor/autoload.php';
+
+use Longman\TelegramBot\Application;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Console\Application as ConsoleApplication;
+
+$container = new Application(getcwd());
+$events = new Dispatcher($container);
+$console = new ConsoleApplication($container, $events, 'Version 1');
+$console->setName('TelegramBot CLI');
+
+// Bind a command
+$console->resolve(Longman\TelegramBot\Console\MigrateCommand::class);
+$console->resolve(Longman\TelegramBot\Console\MigrateInstallCommand::class);
+
+$console->run();
