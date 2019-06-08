@@ -28,6 +28,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "psr/log": "^1.1",
         "monolog/monolog": "^1.24",
         "guzzlehttp/guzzle": "^6.3"
     },

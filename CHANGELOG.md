@@ -6,7 +6,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- `TelegramLog` now adheres to [PSR-3] `LoggerInterface` and allows custom logger implementations.
 ### Deprecated
+- Old logging that uses Monolog still works but will be removed in the near future. Use `TelegramLog::initialize($logger, $update_logger);` from now on.
 ### Removed
 ### Fixed
 ### Security
@@ -280,6 +282,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
 [example-bot]: https://github.com/php-telegram-bot/example-bot
+[PSR-3]: https://www.php-fig.org/psr/psr-3
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
 [0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
