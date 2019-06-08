@@ -4,22 +4,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.
 ### Added
-- Bot API 4.2 (Polls).
-- `getIsMember()` method to `ChatMember` entity.
-- `getForwardSenderName()` method to `Message` entity.
-- `forward_sender_name` (and forgotten `forward_signature`) DB fields.
-- Added missing API fields to Entities and DB.
-- Created database tables for `shipping_query` and `pre_checkout_query`.
 ### Changed
 ### Deprecated
 - [:exclamation:][unreleased-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more).
 ### Removed
 ### Fixed
-- Missing DB table name specifier in `/cleanup` command. (#947)
 ### Security
 - Don't allow a user to call System Commands directly.
+
+## [0.57.0] - 2019-06-01
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.57.0-sql-migration] on your database.
+### Added
+- New logo! (#954)
+- Bot API 4.2 (Polls). (#948)
+- `getIsMember()` method to `ChatMember` entity. (#948)
+- `getForwardSenderName()` method to `Message` entity. (#948)
+- `forward_sender_name` (and forgotten `forward_signature`) DB fields. (#948)
+- Added missing API fields to Entities and DB. (#885)
+- Created database tables for `shipping_query` and `pre_checkout_query`. (#885)
+### Fixed
+- Missing DB table name specifier in `/cleanup` command. (#947)
 
 ## [0.56.0] - 2019-04-15
 ### Added
@@ -260,6 +265,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 [unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
 [unreleased-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
+[0.57.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.56.0-0.57.0.sql
 [0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
 [0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
 [0.54.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.53.0-0.54.0.sql
@@ -279,6 +285,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
 [0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
 [0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
 [0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
