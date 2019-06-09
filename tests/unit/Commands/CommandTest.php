@@ -74,7 +74,7 @@ class CommandTest extends TestCase
             [null],
             [12345],
             ['something'],
-            [new \stdClass],
+            [new \stdClass()],
             [$this->telegram], // only this one is valid
         ];
 
