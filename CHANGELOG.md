@@ -8,9 +8,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Bot API 4.3 (Seamless Telegram Login, `LoginUrl`)
 - `reply_markup` field to `Message` entity.
 ### Changed
+- Use PSR-12 for code style.
 ### Deprecated
 ### Removed
 ### Fixed
+- `forward_date` is now correctly saved to the DB.
 ### Security
 
 ## [0.57.0] - 2019-06-01

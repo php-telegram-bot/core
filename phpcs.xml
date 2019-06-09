@@ -3,8 +3,11 @@
     <description>PHP Code Sniffer</description>
 
     <arg name="colors"/>
+    <arg name="parallel" value="8"/>
+    <arg name="encoding" value="utf-8"/>
+    <arg name="report-width" value="150"/>
 
-    <rule ref="PSR2"/>
+    <rule ref="PSR12"/>
 
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
     <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
