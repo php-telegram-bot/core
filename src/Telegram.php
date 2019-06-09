@@ -875,23 +875,6 @@ class Telegram
     }
 
     /**
-     * Enable Botan.io integration
-     *
-     * @deprecated Botan.io service is no longer working
-     *
-     * @param  string $token
-     * @param  array  $options
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function enableBotan($token, array $options = [])
-    {
-        trigger_error('Longman\TelegramBot\Telegram::enableBotan is deprecated and will be removed in future release.', E_USER_DEPRECATED);
-
-        return $this;
-    }
-
-    /**
      * Enable requests limiter
      *
      * @param  array $options

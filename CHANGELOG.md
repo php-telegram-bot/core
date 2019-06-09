@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Changed
 ### Deprecated
 ### Removed
+- Botan.io integration completely removed.
 ### Fixed
 - `forward_date` is now correctly saved to the DB.
 ### Security
