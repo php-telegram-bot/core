@@ -881,18 +881,17 @@ class DB
         }
 
         // Insert the forwarded message user in users table
-        $forward_date = null;
+        $forward_date = $message->getForwardDate() ? self::getTimestamp($message->getForwardDate()) : null;
+
         $forward_from = $message->getForwardFrom();
         if ($forward_from instanceof User) {
-            self::insertUser($forward_from, $forward_date);
+            self::insertUser($forward_from);
             $forward_from = $forward_from->getId();
-            $forward_date = self::getTimestamp($message->getForwardDate());
         }
         $forward_from_chat = $message->getForwardFromChat();
         if ($forward_from_chat instanceof Chat) {
-            self::insertChat($forward_from_chat, $forward_date);
+            self::insertChat($forward_from_chat);
             $forward_from_chat = $forward_from_chat->getId();
-            $forward_date      = self::getTimestamp($message->getForwardDate());
         }
 
         // New and left chat member

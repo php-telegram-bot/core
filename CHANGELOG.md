@@ -10,6 +10,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- `forward_date` is now correctly saved to the DB.
 ### Security
 
 ## [0.57.0] - 2019-06-01
