@@ -19,7 +19,8 @@ use Longman\TelegramBot\Entities\Entity;
  *
  * @link https://core.telegram.org/bots/api#passportdata
  *
- * @method EncryptedCredentials getCredentials() Encrypted credentials required to decrypt the data
+ * @method EncryptedPassportElement[] getData()        Array with information about documents and other Telegram Passport elements that was shared with the bot
+ * @method EncryptedCredentials       getCredentials() Encrypted credentials required to decrypt the data
  **/
 class PassportData extends Entity
 {
@@ -29,21 +30,8 @@ class PassportData extends Entity
     protected function subEntities()
     {
         return [
-            'data'        => EncryptedPassportElement::class,
+            'data'        => [EncryptedPassportElement::class],
             'credentials' => EncryptedCredentials::class,
         ];
-    }
-
-    /**
-     * Array with information about documents and other Telegram Passport elements that was shared with the bot
-     *
-     * This method overrides the default getData method
-     * and returns a nice array of EncryptedPassportElement objects.
-     *
-     * @return EncryptedPassportElement[]
-     */
-    public function getData()
-    {
-        return $this->makePrettyObjectArray(EncryptedPassportElement::class, 'data');
     }
 }

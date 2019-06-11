@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - `forward_date` is now correctly saved to the DB.
+- Broken `StickerSet::getStickers()` method.
 ### Security
 
 ## [0.57.0] - 2019-06-01

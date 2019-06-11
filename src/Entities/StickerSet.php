@@ -15,22 +15,20 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#stickerset
  *
- * @method string getName()          Sticker set name
- * @method string getTitle()         Sticker set title
- * @method bool   getContainsMasks() True, if the sticker set contains masks
+ * @method string    getName()          Sticker set name
+ * @method string    getTitle()         Sticker set title
+ * @method bool      getContainsMasks() True, if the sticker set contains masks
+ * @method Sticker[] getStickers()      List of all set stickers
  */
 class StickerSet extends Entity
 {
     /**
-     * List of all set stickers
-     *
-     * This method overrides the default getStickers method
-     * and returns a nice array of Sticker objects.
-     *
-     * @return Sticker[]
+     * {@inheritdoc}
      */
-    public function getStickers()
+    protected function subEntities()
     {
-        return $this->makePrettyObjectArray(Sticker::class, 'stickers');
+        return [
+            'stickers' => [Sticker::class],
+        ];
     }
 }
