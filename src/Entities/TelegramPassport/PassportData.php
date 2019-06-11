@@ -40,12 +40,10 @@ class PassportData extends Entity
      * This method overrides the default getData method
      * and returns a nice array of EncryptedPassportElement objects.
      *
-     * @return null|EncryptedPassportElement[]
+     * @return EncryptedPassportElement[]
      */
     public function getData()
     {
-        $pretty_array = $this->makePrettyObjectArray(EncryptedPassportElement::class, 'data');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(EncryptedPassportElement::class, 'data');
     }
 }

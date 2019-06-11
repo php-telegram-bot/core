@@ -50,13 +50,11 @@ class EncryptedPassportElement extends Entity
      * This method overrides the default getFiles method
      * and returns a nice array of PassportFile objects.
      *
-     * @return null|PassportFile[]
+     * @return PassportFile[]
      */
     public function getFiles()
     {
-        $pretty_array = $this->makePrettyObjectArray(PassportFile::class, 'files');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(PassportFile::class, 'files');
     }
 
     /**
@@ -65,12 +63,10 @@ class EncryptedPassportElement extends Entity
      * This method overrides the default getTranslation method
      * and returns a nice array of PassportFile objects.
      *
-     * @return null|PassportFile[]
+     * @return PassportFile[]
      */
     public function getTranslation()
     {
-        $pretty_array = $this->makePrettyObjectArray(PassportFile::class, 'translation');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(PassportFile::class, 'translation');
     }
 }

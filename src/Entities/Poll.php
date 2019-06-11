@@ -39,12 +39,10 @@ class Poll extends Entity
      * This method overrides the default getOptions method
      * and returns a nice array of PollOption objects.
      *
-     * @return null|PollOption[]
+     * @return PollOption[]
      */
     public function getOptions()
     {
-        $pretty_array = $this->makePrettyObjectArray(PollOption::class, 'options');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(PollOption::class, 'options');
     }
 }

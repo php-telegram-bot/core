@@ -47,13 +47,11 @@ class Game extends Entity
      * This method overrides the default getPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|\Longman\TelegramBot\Entities\PhotoSize[]
+     * @return PhotoSize[]
      */
     public function getPhoto()
     {
-        $pretty_array = $this->makePrettyObjectArray(PhotoSize::class, 'photo');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(PhotoSize::class, 'photo');
     }
 
     /**
@@ -62,12 +60,10 @@ class Game extends Entity
      * This method overrides the default getTextEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return null|\Longman\TelegramBot\Entities\MessageEntity[]
+     * @return MessageEntity[]
      */
     public function getTextEntities()
     {
-        $pretty_array = $this->makePrettyObjectArray(MessageEntity::class, 'text_entities');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(MessageEntity::class, 'text_entities');
     }
 }

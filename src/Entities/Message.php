@@ -118,13 +118,11 @@ class Message extends Entity
      * This method overrides the default getPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|PhotoSize[]
+     * @return PhotoSize[]
      */
     public function getPhoto()
     {
-        $pretty_array = $this->makePrettyObjectArray(PhotoSize::class, 'photo');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(PhotoSize::class, 'photo');
     }
 
     /**
@@ -133,13 +131,11 @@ class Message extends Entity
      * This method overrides the default getNewChatPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|PhotoSize[]
+     * @return PhotoSize[]
      */
     public function getNewChatPhoto()
     {
-        $pretty_array = $this->makePrettyObjectArray(PhotoSize::class, 'new_chat_photo');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(PhotoSize::class, 'new_chat_photo');
     }
 
     /**
@@ -148,13 +144,11 @@ class Message extends Entity
      * This method overrides the default getNewChatMembers method
      * and returns a nice array of User objects.
      *
-     * @return null|User[]
+     * @return User[]
      */
     public function getNewChatMembers()
     {
-        $pretty_array = $this->makePrettyObjectArray(User::class, 'new_chat_members');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(User::class, 'new_chat_members');
     }
 
     /**
@@ -163,13 +157,11 @@ class Message extends Entity
      * This method overrides the default getEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return null|MessageEntity[]
+     * @return MessageEntity[]
      */
     public function getEntities()
     {
-        $pretty_array = $this->makePrettyObjectArray(MessageEntity::class, 'entities');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(MessageEntity::class, 'entities');
     }
 
     /**
@@ -178,13 +170,11 @@ class Message extends Entity
      * This method overrides the default getCaptionEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return null|MessageEntity[]
+     * @return MessageEntity[]
      */
     public function getCaptionEntities()
     {
-        $pretty_array = $this->makePrettyObjectArray(MessageEntity::class, 'caption_entities');
-
-        return empty($pretty_array) ? null : $pretty_array;
+        return $this->makePrettyObjectArray(MessageEntity::class, 'caption_entities');
     }
 
     /**
