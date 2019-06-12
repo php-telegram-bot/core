@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Use PSR-12 for code style.
 ### Deprecated
 ### Removed
 - Botan.io integration completely removed.
