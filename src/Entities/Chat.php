@@ -46,7 +46,7 @@ class Chat extends Entity
     /**
      * {@inheritdoc}
      */
-    public function subEntities()
+    protected function subEntities()
     {
         return [
             'photo'          => ChatPhoto::class,

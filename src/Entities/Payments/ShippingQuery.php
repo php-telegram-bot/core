@@ -31,7 +31,7 @@ class ShippingQuery extends Entity
     /**
      * {@inheritdoc}
      */
-    public function subEntities()
+    protected function subEntities()
     {
         return [
             'from'             => User::class,
