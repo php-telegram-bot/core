@@ -8,17 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands\SystemCommands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Commands\UserCommand;
 
 /**
  * Start command
- *
- * @todo Remove due to deprecation!
  */
-class StartCommand extends SystemCommand
+class StartCommand extends UserCommand
 {
     /**
      * @var string
@@ -38,12 +35,12 @@ class StartCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * Command execute method
      *
-     * @return mixed
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
@@ -51,8 +48,6 @@ class StartCommand extends SystemCommand
         //$message = $this->getMessage();
         //$chat_id = $message->getChat()->getId();
         //$user_id = $message->getFrom()->getId();
-
-        trigger_error(__CLASS__ . ' is deprecated and will be removed and handled by ' . GenericmessageCommand::class . ' by default in a future release.', E_USER_DEPRECATED);
 
         return parent::execute();
     }

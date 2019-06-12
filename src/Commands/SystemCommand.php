@@ -15,6 +15,13 @@ use Longman\TelegramBot\Request;
 abstract class SystemCommand extends Command
 {
     /**
+     * @{inheritdoc}
+     *
+     * Set to empty string to disallow users calling system commands.
+     */
+    protected $usage = '';
+
+    /**
      * A system command just executes
      *
      * Although system commands should just work and return a successful ServerResponse,
