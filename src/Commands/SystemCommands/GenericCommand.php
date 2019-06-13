@@ -36,8 +36,7 @@ class GenericCommand extends SystemCommand
     /**
      * Command execute method
      *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function execute()
     {

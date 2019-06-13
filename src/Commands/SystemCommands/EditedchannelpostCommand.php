@@ -38,7 +38,6 @@ class EditedchannelpostCommand extends SystemCommand
      * Execute command
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {

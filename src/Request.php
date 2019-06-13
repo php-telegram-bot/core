@@ -421,6 +421,7 @@ class Request
      * @param array $multipart
      *
      * @return mixed
+     * @throws TelegramException
      */
     private static function mediaInputHelper($item, &$has_resource, array &$multipart)
     {
@@ -699,7 +700,6 @@ class Request
      * @param array  $data
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function __callStatic($action, array $data)
     {
@@ -717,7 +717,6 @@ class Request
      * don't need to fire a message after execution
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function emptyResponse()
     {

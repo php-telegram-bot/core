@@ -339,6 +339,7 @@ class CleanupCommand extends AdminCommand
      * Execution if MySQL is required but not available
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws TelegramException
      */
     public function executeNoDb()
     {

@@ -880,6 +880,7 @@ class Telegram
      * @param  array $options
      *
      * @return \Longman\TelegramBot\Telegram
+     * @throws TelegramException
      */
     public function enableLimiter(array $options = [])
     {

@@ -40,8 +40,6 @@ class InputMediaPhoto extends Entity implements InputMedia
      * InputMediaPhoto constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

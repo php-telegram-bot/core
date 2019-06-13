@@ -202,7 +202,6 @@ class Keyboard extends Entity
      * @param array $data
      *
      * @return \Longman\TelegramBot\Entities\Keyboard
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function remove(array $data = [])
     {
@@ -217,7 +216,6 @@ class Keyboard extends Entity
      * @param array $data
      *
      * @return \Longman\TelegramBot\Entities\Keyboard
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function forceReply(array $data = [])
     {

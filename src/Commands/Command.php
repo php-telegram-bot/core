@@ -400,6 +400,7 @@ abstract class Command
      * @param array  $data
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function replyToChat($text, array $data = [])
     {
@@ -420,6 +421,7 @@ abstract class Command
      * @param array  $data
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function replyToUser($text, array $data = [])
     {
