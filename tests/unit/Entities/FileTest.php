@@ -38,7 +38,7 @@ class FileTest extends TestCase
     public function testBaseStageLocation()
     {
         $file = new File($this->data);
-        $this->assertInstanceOf('Longman\TelegramBot\Entities\File', $file);
+        $this->assertInstanceOf(File::class, $file);
     }
 
     public function testGetFileId()
