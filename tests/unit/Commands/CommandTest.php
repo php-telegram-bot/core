@@ -10,10 +10,10 @@
 
 namespace Longman\TelegramBot\Tests\Unit\Commands;
 
+use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Tests\Unit\TestCase;
 use Longman\TelegramBot\Tests\Unit\TestHelpers;
-use Longman\TelegramBot\Commands\Command;
 
 /**
  * @package         TelegramTest
@@ -30,22 +30,22 @@ class CommandTest extends TestCase
     private $command_namespace = Command::class;
 
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     private $telegram;
 
     /**
-     * @var \Longman\TelegramBot\Commands\Command
+     * @var Command
      */
     private $command_stub;
 
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     private $telegram_with_config;
 
     /**
-     * @var \Longman\TelegramBot\Commands\Command
+     * @var Command
      */
     private $command_stub_with_config;
 

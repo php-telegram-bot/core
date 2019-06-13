@@ -103,7 +103,7 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return \Longman\TelegramBot\Entities\Chat|\Longman\TelegramBot\Entities\ChatMember|\Longman\TelegramBot\Entities\File|\Longman\TelegramBot\Entities\Message|\Longman\TelegramBot\Entities\User|\Longman\TelegramBot\Entities\UserProfilePhotos|\Longman\TelegramBot\Entities\WebhookInfo
+     * @return Chat|ChatMember|File|Message|User|UserProfilePhotos|WebhookInfo
      */
     private function createResultObject(array $result, $bot_username)
     {
@@ -133,7 +133,7 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return \Longman\TelegramBot\Entities\ChatMember[]|\Longman\TelegramBot\Entities\Games\GameHighScore[]|\Longman\TelegramBot\Entities\Message[]|\Longman\TelegramBot\Entities\Update[]
+     * @return ChatMember[]|GameHighScore[]|Message[]|Update[]
      */
     private function createResultObjects(array $result, $bot_username)
     {

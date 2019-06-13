@@ -70,7 +70,7 @@ class Telegram
     /**
      * Current Update object
      *
-     * @var \Longman\TelegramBot\Entities\Update
+     * @var Update
      */
     protected $update;
 
@@ -98,7 +98,7 @@ class Telegram
     /**
      * PDO object
      *
-     * @var \PDO
+     * @var PDO
      */
     protected $pdo;
 
@@ -119,7 +119,7 @@ class Telegram
     /**
      * ServerResponse of the last Command execution
      *
-     * @var \Longman\TelegramBot\Entities\ServerResponse
+     * @var ServerResponse
      */
     protected $last_command_response;
 
@@ -151,7 +151,7 @@ class Telegram
      * @param string $api_key
      * @param string $bot_username
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function __construct($api_key, $bot_username = '')
     {
@@ -182,8 +182,8 @@ class Telegram
      * @param string $table_prefix
      * @param string $encoding
      *
-     * @return \Longman\TelegramBot\Telegram
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Telegram
+     * @throws TelegramException
      */
     public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
     {
@@ -200,8 +200,8 @@ class Telegram
      * @param PDO    $external_pdo_connection PDO database object
      * @param string $table_prefix
      *
-     * @return \Longman\TelegramBot\Telegram
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Telegram
+     * @throws TelegramException
      */
     public function enableExternalMySql($external_pdo_connection, $table_prefix = null)
     {
@@ -216,7 +216,7 @@ class Telegram
      * Get commands list
      *
      * @return array $commands
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function getCommandsList()
     {
@@ -261,7 +261,7 @@ class Telegram
      *
      * @param string $command
      *
-     * @return \Longman\TelegramBot\Commands\Command|null
+     * @return Command|null
      */
     public function getCommandObject($command)
     {
@@ -284,7 +284,7 @@ class Telegram
      *
      * @param string $input (json format)
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setCustomInput($input)
     {
@@ -306,7 +306,7 @@ class Telegram
     /**
      * Get the ServerResponse of the last Command execution
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public function getLastCommandResponse()
     {
@@ -319,8 +319,8 @@ class Telegram
      * @param int|null $limit
      * @param int|null $timeout
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function handleGetUpdates($limit = null, $timeout = null)
     {
@@ -394,7 +394,7 @@ class Telegram
      *
      * @return bool
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function handle()
     {
@@ -435,10 +435,10 @@ class Telegram
     /**
      * Process bot Update request
      *
-     * @param \Longman\TelegramBot\Entities\Update $update
+     * @param Update $update
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function processUpdate(Update $update)
     {
@@ -493,7 +493,7 @@ class Telegram
      * @param string $command
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function executeCommand($command)
     {
@@ -534,7 +534,7 @@ class Telegram
      *
      * @param integer $admin_id Single admin id
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function enableAdmin($admin_id)
     {
@@ -552,7 +552,7 @@ class Telegram
      *
      * @param array $admin_ids List of admin ids
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function enableAdmins(array $admin_ids)
     {
@@ -627,7 +627,7 @@ class Telegram
      * @param string $path   Custom commands path to add
      * @param bool   $before If the path should be prepended or appended to the list
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function addCommandsPath($path, $before = true)
     {
@@ -650,7 +650,7 @@ class Telegram
      * @param array $paths  Custom commands paths to add
      * @param bool  $before If the paths should be prepended or appended to the list
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function addCommandsPaths(array $paths, $before = true)
     {
@@ -676,7 +676,7 @@ class Telegram
      *
      * @param string $path Custom upload path
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setUploadPath($path)
     {
@@ -700,7 +700,7 @@ class Telegram
      *
      * @param string $path Custom download path
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setDownloadPath($path)
     {
@@ -729,7 +729,7 @@ class Telegram
      * @param string $command
      * @param array  $config
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setCommandConfig($command, array $config)
     {
@@ -796,8 +796,8 @@ class Telegram
      * @param string $url
      * @param array  $data Optional parameters.
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function setWebhook($url, array $data = [])
     {
@@ -832,7 +832,7 @@ class Telegram
      * Delete any assigned webhook
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function deleteWebhook()
     {
@@ -879,7 +879,7 @@ class Telegram
      *
      * @param array $options
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      * @throws TelegramException
      */
     public function enableLimiter(array $options = [])

@@ -154,9 +154,9 @@ class Keyboard extends Entity
     /**
      * Parse a given button to the correct KeyboardButton object type.
      *
-     * @param array|string|\Longman\TelegramBot\Entities\KeyboardButton $button
+     * @param array|string|KeyboardButton $button
      *
-     * @return \Longman\TelegramBot\Entities\KeyboardButton|null
+     * @return KeyboardButton|null
      */
     protected function parseButton($button)
     {
@@ -201,7 +201,7 @@ class Keyboard extends Entity
      *
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\Keyboard
+     * @return Keyboard
      */
     public static function remove(array $data = [])
     {
@@ -215,7 +215,7 @@ class Keyboard extends Entity
      *
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\Keyboard
+     * @return Keyboard
      */
     public static function forceReply(array $data = [])
     {

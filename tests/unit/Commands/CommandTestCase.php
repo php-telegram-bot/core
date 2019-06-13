@@ -10,6 +10,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit\Commands;
 
+use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Tests\Unit\TestCase;
 
@@ -23,12 +24,12 @@ use Longman\TelegramBot\Tests\Unit\TestCase;
 class CommandTestCase extends TestCase
 {
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     protected $telegram;
 
     /**
-     * @var \Longman\TelegramBot\Commands\Command
+     * @var Command
      */
     protected $command;
 

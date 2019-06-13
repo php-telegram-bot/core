@@ -23,7 +23,7 @@ use Longman\TelegramBot\Telegram;
 class ConversationTest extends TestCase
 {
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     private $telegram;
 

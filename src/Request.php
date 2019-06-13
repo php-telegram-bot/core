@@ -91,7 +91,7 @@ class Request
     /**
      * Telegram object
      *
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     private static $telegram;
 
@@ -105,7 +105,7 @@ class Request
     /**
      * Guzzle Client object
      *
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     private static $client;
 
@@ -253,7 +253,7 @@ class Request
     /**
      * Initialize
      *
-     * @param \Longman\TelegramBot\Telegram $telegram
+     * @param Telegram $telegram
      *
      * @throws TelegramException
      */
@@ -287,7 +287,7 @@ class Request
      * Set input from custom input or stdin and return it
      *
      * @return string
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function getInput()
     {
@@ -473,7 +473,7 @@ class Request
      * @param array  $data   Data to attach to the execution
      *
      * @return string Result of the HTTP Request
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function execute($action, array $data = [])
     {
@@ -510,10 +510,10 @@ class Request
     /**
      * Download file
      *
-     * @param \Longman\TelegramBot\Entities\File $file
+     * @param File $file
      *
      * @return boolean
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function downloadFile(File $file)
     {
@@ -554,7 +554,7 @@ class Request
      * @param string $file
      *
      * @return resource
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function encodeFile($file)
     {
@@ -575,8 +575,8 @@ class Request
      * @param string $action
      * @param array  $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public static function send($action, array $data = [])
     {
@@ -644,7 +644,7 @@ class Request
      *
      * @param array $data
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     private static function ensureNonEmptyData(array $data)
     {
@@ -658,7 +658,7 @@ class Request
      *
      * @param string $action
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     private static function ensureValidAction($action)
     {
@@ -674,8 +674,8 @@ class Request
      *
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public static function sendMessage(array $data)
     {
@@ -699,7 +699,7 @@ class Request
      * @param string $action
      * @param array  $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public static function __callStatic($action, array $data)
     {
@@ -716,7 +716,7 @@ class Request
      * No request to telegram are sent, this function is used in commands that
      * don't need to fire a message after execution
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public static function emptyResponse()
     {
@@ -759,7 +759,7 @@ class Request
      * @param boolean $enable
      * @param array   $options
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public static function setLimiter($enable = true, array $options = [])
     {
@@ -788,7 +788,7 @@ class Request
      * @param string $action
      * @param array  $data
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     private static function limitTelegramRequests($action, array $data = [])
     {

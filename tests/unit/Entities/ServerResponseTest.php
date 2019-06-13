@@ -12,15 +12,15 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
+use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Entities\Sticker;
 use Longman\TelegramBot\Entities\StickerSet;
-use Longman\TelegramBot\Entities\File;
-use Longman\TelegramBot\Entities\PhotoSize;
-use Longman\TelegramBot\Entities\UserProfilePhotos;
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\UserProfilePhotos;
+use Longman\TelegramBot\Request;
 
 /**
  * @package         TelegramTest
