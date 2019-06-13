@@ -179,7 +179,7 @@ class Keyboard extends Entity
     protected function validate()
     {
         $keyboard_type = $this->getKeyboardType();
-        $keyboard = $this->getProperty($keyboard_type);
+        $keyboard      = $this->getProperty($keyboard_type);
 
         if ($keyboard !== null) {
             if (!is_array($keyboard)) {

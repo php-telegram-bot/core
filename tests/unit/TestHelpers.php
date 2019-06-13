@@ -223,7 +223,7 @@ class TestHelpers
     /**
      * Empty all tables for the passed database
      *
-     * @param  array $credentials
+     * @param array $credentials
      */
     public static function emptyDb(array $credentials)
     {

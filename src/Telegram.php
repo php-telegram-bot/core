@@ -442,7 +442,7 @@ class Telegram
      */
     public function processUpdate(Update $update)
     {
-        $this->update = $update;
+        $this->update         = $update;
         $this->last_update_id = $update->getUpdateId();
 
         //Load admin commands
@@ -877,7 +877,7 @@ class Telegram
     /**
      * Enable requests limiter
      *
-     * @param  array $options
+     * @param array $options
      *
      * @return \Longman\TelegramBot\Telegram
      * @throws TelegramException
@@ -902,7 +902,7 @@ class Telegram
             throw new TelegramException('No command(s) provided!');
         }
 
-        $this->run_commands  = true;
+        $this->run_commands = true;
 
         $result = Request::getMe();
 

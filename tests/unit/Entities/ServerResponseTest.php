@@ -306,7 +306,7 @@ class ServerResponseTest extends TestCase
 
         //... they are not finished...
     }
-    
+
     public function getStickerSet()
     {
         TestHelpers::setStaticProperty(Request::class, 'current_action', 'getStickerSet');
@@ -357,19 +357,19 @@ class ServerResponseTest extends TestCase
             }
         }';
     }
-    
+
     public function testGetStickerSet()
     {
         $result = $this->getStickerSet();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
 
         $server_result = $server->getResult();
-        
+
         self::assertInstanceOf('\Longman\TelegramBot\Entities\StickerSet', $server_result);
         self::assertEquals('stickerset_name', $server_result->getName());
         self::assertEquals('Some name', $server_result->getTitle());
         self::assertFalse($server_result->getContainsMasks());
-        
+
         $stickers = $server_result->getStickers();
         self::assertCount(4, $stickers);
         self::assertInstanceOf('\Longman\TelegramBot\Entities\Sticker', $stickers[0]);
