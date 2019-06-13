@@ -4,13 +4,14 @@
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](#donate)
 
 [![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
+[![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core)][Tidelift.com/longman/telegram-bot]
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 [![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
-[![License](https://img.shields.io/packagist/l/Longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE.md)
+[![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
 
 ![Telegram Bot API Logo](assets/logo/512px/logo_plain.png)
 
@@ -54,6 +55,7 @@ A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
 - [Projects with this library](#projects-with-this-library)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Security](#security)
 - [Donate](#donate)
 - [License](#license)
 - [Credits](#credits)
@@ -605,6 +607,10 @@ If you like living on the edge, please report any bugs you find on the
 
 See [CONTRIBUTING](.github/CONTRIBUTING.md) for more information.
 
+## Security
+
+See [SECURITY](SECURITY.md) for more information.
+
 ## Donate
 
 All work on this bot consists of many hours of coding during our free time, to provide you with a Telegram Bot library that is easy to use and extend.
@@ -612,15 +618,20 @@ If you enjoy using this library and would like to say thank you, donations are a
 
 Donations are invested back into the project :+1:
 
-- Gratipay: [Gratipay/PHP-Telegram-Bot]
-- Liberapay: [Liberapay/PHP-Telegram-Bot]
-- PayPal: [PayPal/noplanman] (account of @noplanman)
-- Bitcoin: [166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][bitcoin]
-- Ethereum: [0x485855634fa212b0745375e593fAaf8321A81055][ethereum]
+Thank you for keeping this project alive :pray:
+
+- ![patreon](https://user-images.githubusercontent.com/9423417/59235980-a5fa6b80-8be3-11e9-8ae7-020bc4ae9baa.png) [Patreon.com/phptelegrambot]
+- ![opencollective](https://user-images.githubusercontent.com/9423417/59235978-a561d500-8be3-11e9-89be-82ec54be1546.png) [OpenCollective.com/php-telegram-bot]
+- ![ko-fi](https://user-images.githubusercontent.com/9423417/59235976-a561d500-8be3-11e9-911d-b1908c3e6a33.png) [Ko-fi.com/phptelegrambot]
+- ![tidelift](https://user-images.githubusercontent.com/9423417/59235982-a6930200-8be3-11e9-8ac2-bfb6991d80c5.png) [Tidelift.com/longman/telegram-bot]
+- ![liberapay](https://user-images.githubusercontent.com/9423417/59235977-a561d500-8be3-11e9-9d16-bc3b13d3ceba.png) [Liberapay.com/PHP-Telegram-Bot]
+- ![paypal](https://user-images.githubusercontent.com/9423417/59235981-a5fa6b80-8be3-11e9-9761-15eb7a524cb0.png) [PayPal.me/noplanman] (account of @noplanman)
+- ![bitcoin](https://user-images.githubusercontent.com/9423417/59235974-a4c93e80-8be3-11e9-9fde-260c821b6eae.png) [166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][bitcoin]
+- ![ethereum](https://user-images.githubusercontent.com/9423417/59235975-a4c93e80-8be3-11e9-8762-7a47c62c968d.png) [0x485855634fa212b0745375e593fAaf8321A81055][ethereum]
 
 ## License
 
-Please see the [LICENSE](LICENSE.md) included in this repository for a full copy of the MIT license,
+Please see the [LICENSE](LICENSE) included in this repository for a full copy of the MIT license,
 which this project is licensed under.
 
 ## Credits
@@ -645,8 +656,12 @@ Credit list in [CREDITS](CREDITS)
 [wiki]: https://github.com/php-telegram-bot/core/wiki "PHP Telegram Bot Wiki"
 [wiki-create-your-own-commands]: https://github.com/php-telegram-bot/core/wiki/Create-your-own-commands "Create your own commands"
 [issues]: https://github.com/php-telegram-bot/core/issues "PHP Telegram Bot Issues"
-[Gratipay/PHP-Telegram-Bot]: https://gratipay.com/PHP-Telegram-Bot "Donate with Gratipay"
-[Liberapay/PHP-Telegram-Bot]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
-[PayPal/noplanman]: https://paypal.me/noplanman "Donate with PayPal"
+
+[Patreon.com/phptelegrambot]: https://www.patreon.com/phptelegrambot "Support us on Patreon"
+[OpenCollective.com/php-telegram-bot]: https://opencollective.com/php-telegram-bot "Support us on Open Collective"
+[Ko-fi.com/phptelegrambot]: https://ko-fi.com/phptelegrambot "Support us on Ko-fi"
+[Tidelift.com/longman/telegram-bot]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=readme "Support us on Tidelift"
+[Liberapay.com/PHP-Telegram-Bot]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
+[PayPal.me/noplanman]: https://paypal.me/noplanman "Donate with PayPal"
 [bitcoin]: bitcoin:166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
 [ethereum]: https://www.myetherwallet.com/?to=0x485855634fa212b0745375e593fAaf8321A81055 "Donate with Ethereum"
