@@ -4,7 +4,7 @@
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](#donate)
 
 [![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
-[![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core)][Tidelift.com/longman/telegram-bot]
+[![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core)][Tidelift]
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 [![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=develop)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
@@ -620,14 +620,14 @@ Donations are invested back into the project :+1:
 
 Thank you for keeping this project alive :pray:
 
-- ![patreon](https://user-images.githubusercontent.com/9423417/59235980-a5fa6b80-8be3-11e9-8ae7-020bc4ae9baa.png) [Patreon.com/phptelegrambot]
-- ![opencollective](https://user-images.githubusercontent.com/9423417/59235978-a561d500-8be3-11e9-89be-82ec54be1546.png) [OpenCollective.com/php-telegram-bot]
-- ![ko-fi](https://user-images.githubusercontent.com/9423417/59235976-a561d500-8be3-11e9-911d-b1908c3e6a33.png) [Ko-fi.com/phptelegrambot]
-- ![tidelift](https://user-images.githubusercontent.com/9423417/59235982-a6930200-8be3-11e9-8ac2-bfb6991d80c5.png) [Tidelift.com/longman/telegram-bot]
-- ![liberapay](https://user-images.githubusercontent.com/9423417/59235977-a561d500-8be3-11e9-9d16-bc3b13d3ceba.png) [Liberapay.com/PHP-Telegram-Bot]
-- ![paypal](https://user-images.githubusercontent.com/9423417/59235981-a5fa6b80-8be3-11e9-9761-15eb7a524cb0.png) [PayPal.me/noplanman] (account of @noplanman)
-- ![bitcoin](https://user-images.githubusercontent.com/9423417/59235974-a4c93e80-8be3-11e9-9fde-260c821b6eae.png) [166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][bitcoin]
-- ![ethereum](https://user-images.githubusercontent.com/9423417/59235975-a4c93e80-8be3-11e9-8762-7a47c62c968d.png) [0x485855634fa212b0745375e593fAaf8321A81055][ethereum]
+- [![Patreon](https://user-images.githubusercontent.com/9423417/59235980-a5fa6b80-8be3-11e9-8ae7-020bc4ae9baa.png) Patreon.com/phptelegrambot][Patreon]
+- [![OpenCollective](https://user-images.githubusercontent.com/9423417/59235978-a561d500-8be3-11e9-89be-82ec54be1546.png) OpenCollective.com/php-telegram-bot][OpenCollective]
+- [![Ko-fi](https://user-images.githubusercontent.com/9423417/59235976-a561d500-8be3-11e9-911d-b1908c3e6a33.png) Ko-fi.com/phptelegrambot][Ko-fi]
+- [![Tidelift](https://user-images.githubusercontent.com/9423417/59235982-a6930200-8be3-11e9-8ac2-bfb6991d80c5.png) Tidelift.com/longman/telegram-bot][Tidelift]
+- [![Liberapay](https://user-images.githubusercontent.com/9423417/59235977-a561d500-8be3-11e9-9d16-bc3b13d3ceba.png) Liberapay.com/PHP-Telegram-Bot][liberapay]
+- [![PayPal](https://user-images.githubusercontent.com/9423417/59235981-a5fa6b80-8be3-11e9-9761-15eb7a524cb0.png) PayPal.me/noplanman][PayPal-noplanman] (account of @noplanman)
+- [![Bitcoin](https://user-images.githubusercontent.com/9423417/59235974-a4c93e80-8be3-11e9-9fde-260c821b6eae.png) 166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][Bitcoin]
+- [![Ethereum](https://user-images.githubusercontent.com/9423417/59235975-a4c93e80-8be3-11e9-8762-7a47c62c968d.png) 0x485855634fa212b0745375e593fAaf8321A81055][Ethereum]
 
 ## License
 
@@ -657,11 +657,11 @@ Credit list in [CREDITS](CREDITS)
 [wiki-create-your-own-commands]: https://github.com/php-telegram-bot/core/wiki/Create-your-own-commands "Create your own commands"
 [issues]: https://github.com/php-telegram-bot/core/issues "PHP Telegram Bot Issues"
 
-[Patreon.com/phptelegrambot]: https://www.patreon.com/phptelegrambot "Support us on Patreon"
-[OpenCollective.com/php-telegram-bot]: https://opencollective.com/php-telegram-bot "Support us on Open Collective"
-[Ko-fi.com/phptelegrambot]: https://ko-fi.com/phptelegrambot "Support us on Ko-fi"
-[Tidelift.com/longman/telegram-bot]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=readme "Support us on Tidelift"
-[Liberapay.com/PHP-Telegram-Bot]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
-[PayPal.me/noplanman]: https://paypal.me/noplanman "Donate with PayPal"
-[bitcoin]: bitcoin:166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
-[ethereum]: https://www.myetherwallet.com/?to=0x485855634fa212b0745375e593fAaf8321A81055 "Donate with Ethereum"
+[Patreon]: https://www.patreon.com/phptelegrambot "Support us on Patreon"
+[OpenCollective]: https://opencollective.com/php-telegram-bot "Support us on Open Collective"
+[Ko-fi]: https://ko-fi.com/phptelegrambot "Support us on Ko-fi"
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=readme "Support us on Tidelift"
+[liberapay]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
+[PayPal-noplanman]: https://paypal.me/noplanman "Donate with PayPal"
+[Bitcoin]: https://www.blockchain.com/btc/address/166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
+[Ethereum]: https://etherscan.io/address/0x485855634fa212b0745375e593fAaf8321A81055 "Donate with Ethereum"
