@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- New funding and support details.
 ### Changed
 - Use PSR-12 for code style.
 ### Deprecated
@@ -13,6 +14,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 - `forward_date` is now correctly saved to the DB.
 ### Security
+- Security disclosure managed by Tidelift.
 
 ## [0.57.0] - 2019-06-01
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.57.0-sql-migration] on your database.
