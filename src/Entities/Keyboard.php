@@ -54,7 +54,7 @@ class Keyboard extends Entity
     /**
      * Get the proper keyboard button class for this keyboard.
      *
-     * @return KeyboardButton|InlineKeyboardButton
+     * @return string
      */
     public function getKeyboardButtonClass()
     {
@@ -166,7 +166,7 @@ class Keyboard extends Entity
             return $button;
         }
 
-        if (!$this->isInlineKeyboard() || $button_class::couldBe($button)) {
+        if (!$this->isInlineKeyboard() || call_user_func([$button_class, 'couldBe'], $button)) {
             return new $button_class($button);
         }
 

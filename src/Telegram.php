@@ -344,9 +344,8 @@ class Telegram
         if ($custom_input = $this->getCustomInput()) {
             $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
         } else {
-            if (DB::isDbConnected()) {
+            if (DB::isDbConnected() && $last_update = DB::selectTelegramUpdate(1)) {
                 //Get last update id from the database
-                $last_update = DB::selectTelegramUpdate(1);
                 $last_update = reset($last_update);
 
                 $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;

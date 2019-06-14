@@ -147,7 +147,9 @@ class TelegramLog
             if (!self::isDebugLogActive()) {
                 return false;
             }
-            self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+b');
+            if ($temp_stream_handle = fopen('php://temp', 'wb+')) {
+                self::$debug_log_temp_stream_handle = $temp_stream_handle;
+            }
         }
 
         return self::$debug_log_temp_stream_handle;
