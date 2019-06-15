@@ -17,9 +17,10 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#poll
  *
- * @method string getId()       Unique poll identifier
- * @method string getQuestion() Poll question, 1-255 characters
- * @method bool   getIsClosed() True, if the poll is closed
+ * @method string       getId()       Unique poll identifier
+ * @method string       getQuestion() Poll question, 1-255 characters
+ * @method PollOption[] getOptions()  List of poll options
+ * @method bool         getIsClosed() True, if the poll is closed
  */
 class Poll extends Entity
 {
@@ -29,22 +30,7 @@ class Poll extends Entity
     protected function subEntities()
     {
         return [
-            'options' => PollOption::class,
+            'options' => [PollOption::class],
         ];
-    }
-
-    /**
-     * List of poll options
-     *
-     * This method overrides the default getOptions method
-     * and returns a nice array of PollOption objects.
-     *
-     * @return null|PollOption[]
-     */
-    public function getOptions()
-    {
-        $pretty_array = $this->makePrettyObjectArray(PollOption::class, 'options');
-
-        return empty($pretty_array) ? null : $pretty_array;
     }
 }

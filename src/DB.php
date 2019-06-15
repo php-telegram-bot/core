@@ -844,7 +844,7 @@ class DB
 
             $sth->bindValue(':id', $poll->getId());
             $sth->bindValue(':question', $poll->getQuestion());
-            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions()));
+            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions() ?: null));
             $sth->bindValue(':is_closed', $poll->getIsClosed());
             $sth->bindValue(':created_at', self::getTimestamp());
 
@@ -976,13 +976,13 @@ class DB
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':author_signature', $message->getAuthorSignature());
             $sth->bindValue(':text', $message->getText());
-            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities()));
-            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities()));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities() ?: null));
+            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities() ?: null));
             $sth->bindValue(':audio', $message->getAudio());
             $sth->bindValue(':document', $message->getDocument());
             $sth->bindValue(':animation', $message->getAnimation());
             $sth->bindValue(':game', $message->getGame());
-            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto()));
+            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto() ?: null));
             $sth->bindValue(':sticker', $message->getSticker());
             $sth->bindValue(':video', $message->getVideo());
             $sth->bindValue(':voice', $message->getVoice());
@@ -995,7 +995,7 @@ class DB
             $sth->bindValue(':new_chat_members', $new_chat_members_ids);
             $sth->bindValue(':left_chat_member', $left_chat_member_id);
             $sth->bindValue(':new_chat_title', $message->getNewChatTitle());
-            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto()));
+            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto() ?: null));
             $sth->bindValue(':delete_chat_photo', $message->getDeleteChatPhoto());
             $sth->bindValue(':group_chat_created', $message->getGroupChatCreated());
             $sth->bindValue(':supergroup_chat_created', $message->getSupergroupChatCreated());
@@ -1059,7 +1059,7 @@ class DB
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':edit_date', $edit_date);
             $sth->bindValue(':text', $edited_message->getText());
-            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities()));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities() ?: null));
             $sth->bindValue(':caption', $edited_message->getCaption());
 
             return $sth->execute();
@@ -1187,13 +1187,13 @@ class DB
      * @param integer $chat_id
      * @param string  $inline_message_id
      *
-     * @return array|bool Array containing TOTAL and CURRENT fields or false on invalid arguments
+     * @return array Array containing TOTAL and CURRENT fields or false on invalid arguments
      * @throws TelegramException
      */
     public static function getTelegramRequestCount($chat_id = null, $inline_message_id = null)
     {
         if (!self::isDbConnected()) {
-            return false;
+            return [];
         }
 
         try {

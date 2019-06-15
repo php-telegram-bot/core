@@ -272,18 +272,6 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS `botan_shortener` (
-  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
-  `user_id` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier',
-  `url` text NOT NULL COMMENT 'Original URL',
-  `short_url` CHAR(255) NOT NULL DEFAULT '' COMMENT 'Shortened URL',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-
-  PRIMARY KEY (`id`),
-
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
 CREATE TABLE IF NOT EXISTS `request_limiter` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
   `chat_id` char(255) NULL DEFAULT NULL COMMENT 'Unique chat identifier',

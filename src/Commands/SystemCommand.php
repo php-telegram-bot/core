@@ -10,17 +10,25 @@
 
 namespace Longman\TelegramBot\Commands;
 
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 abstract class SystemCommand extends Command
 {
+    /**
+     * @{inheritdoc}
+     *
+     * Set to empty string to disallow users calling system commands.
+     */
+    protected $usage = '';
+
     /**
      * A system command just executes
      *
      * Although system commands should just work and return a successful ServerResponse,
      * each system command can override this method to add custom functionality.
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public function execute()
     {

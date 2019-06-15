@@ -34,7 +34,7 @@ class LocationTest extends TestCase
     public function testBaseStageLocation()
     {
         $location = new Location($this->coordinates);
-        $this->assertInstanceOf('Longman\TelegramBot\Entities\Location', $location);
+        $this->assertInstanceOf(Location::class, $location);
     }
 
     public function testGetLongitude()

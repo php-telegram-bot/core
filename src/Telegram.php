@@ -70,7 +70,7 @@ class Telegram
     /**
      * Current Update object
      *
-     * @var \Longman\TelegramBot\Entities\Update
+     * @var Update
      */
     protected $update;
 
@@ -98,7 +98,7 @@ class Telegram
     /**
      * PDO object
      *
-     * @var \PDO
+     * @var PDO
      */
     protected $pdo;
 
@@ -119,7 +119,7 @@ class Telegram
     /**
      * ServerResponse of the last Command execution
      *
-     * @var \Longman\TelegramBot\Entities\ServerResponse
+     * @var ServerResponse
      */
     protected $last_command_response;
 
@@ -151,7 +151,7 @@ class Telegram
      * @param string $api_key
      * @param string $bot_username
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function __construct($api_key, $bot_username = '')
     {
@@ -182,8 +182,8 @@ class Telegram
      * @param string $table_prefix
      * @param string $encoding
      *
-     * @return \Longman\TelegramBot\Telegram
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Telegram
+     * @throws TelegramException
      */
     public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
     {
@@ -200,8 +200,8 @@ class Telegram
      * @param PDO    $external_pdo_connection PDO database object
      * @param string $table_prefix
      *
-     * @return \Longman\TelegramBot\Telegram
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Telegram
+     * @throws TelegramException
      */
     public function enableExternalMySql($external_pdo_connection, $table_prefix = null)
     {
@@ -216,7 +216,7 @@ class Telegram
      * Get commands list
      *
      * @return array $commands
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function getCommandsList()
     {
@@ -261,7 +261,7 @@ class Telegram
      *
      * @param string $command
      *
-     * @return \Longman\TelegramBot\Commands\Command|null
+     * @return Command|null
      */
     public function getCommandObject($command)
     {
@@ -284,7 +284,7 @@ class Telegram
      *
      * @param string $input (json format)
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setCustomInput($input)
     {
@@ -306,7 +306,7 @@ class Telegram
     /**
      * Get the ServerResponse of the last Command execution
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public function getLastCommandResponse()
     {
@@ -319,8 +319,8 @@ class Telegram
      * @param int|null $limit
      * @param int|null $timeout
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function handleGetUpdates($limit = null, $timeout = null)
     {
@@ -344,9 +344,8 @@ class Telegram
         if ($custom_input = $this->getCustomInput()) {
             $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
         } else {
-            if (DB::isDbConnected()) {
+            if (DB::isDbConnected() && $last_update = DB::selectTelegramUpdate(1)) {
                 //Get last update id from the database
-                $last_update = DB::selectTelegramUpdate(1);
                 $last_update = reset($last_update);
 
                 $this->last_update_id = isset($last_update['id']) ? $last_update['id'] : null;
@@ -394,7 +393,7 @@ class Telegram
      *
      * @return bool
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function handle()
     {
@@ -435,14 +434,14 @@ class Telegram
     /**
      * Process bot Update request
      *
-     * @param \Longman\TelegramBot\Entities\Update $update
+     * @param Update $update
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function processUpdate(Update $update)
     {
-        $this->update = $update;
+        $this->update         = $update;
         $this->last_update_id = $update->getUpdateId();
 
         //Load admin commands
@@ -461,15 +460,16 @@ class Telegram
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
             $type    = $message->getType();
-            if ($type === 'command') {
-                $command = $message->getCommand();
-            } else {
-                // Let's check if the message object has the type field we're looking for
-                // and if a fitting command class is available.
-                $command_tmp = $this->getCommandFromType($type);
-                if ($this->getCommandObject($command_tmp) !== null) {
-                    $command = $command_tmp;
-                }
+
+            // Let's check if the message object has the type field we're looking for...
+            $command_tmp = $type === 'command' ? $message->getCommand() : $this->getCommandFromType($type);
+            // ...and if a fitting command class is available.
+            $command_obj = $this->getCommandObject($command_tmp);
+
+            // Empty usage string denotes a non-executable command.
+            // @see https://github.com/php-telegram-bot/core/issues/772#issuecomment-388616072
+            if ($command_obj !== null && $command_obj->getUsage() !== '') {
+                $command = $command_tmp;
             }
         } else {
             $command = $this->getCommandFromType($update_type);
@@ -493,7 +493,7 @@ class Telegram
      * @param string $command
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function executeCommand($command)
     {
@@ -534,12 +534,12 @@ class Telegram
      *
      * @param integer $admin_id Single admin id
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function enableAdmin($admin_id)
     {
         if (!is_int($admin_id) || $admin_id <= 0) {
-            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
+            TelegramLog::error('Invalid value "' . $admin_id . '" for admin.');
         } elseif (!in_array($admin_id, $this->admins_list, true)) {
             $this->admins_list[] = $admin_id;
         }
@@ -552,7 +552,7 @@ class Telegram
      *
      * @param array $admin_ids List of admin ids
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function enableAdmins(array $admin_ids)
     {
@@ -627,12 +627,12 @@ class Telegram
      * @param string $path   Custom commands path to add
      * @param bool   $before If the path should be prepended or appended to the list
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function addCommandsPath($path, $before = true)
     {
         if (!is_dir($path)) {
-            TelegramLog::error('Commands path "%s" does not exist.', $path);
+            TelegramLog::error('Commands path "' . $path . '" does not exist.');
         } elseif (!in_array($path, $this->commands_paths, true)) {
             if ($before) {
                 array_unshift($this->commands_paths, $path);
@@ -650,7 +650,7 @@ class Telegram
      * @param array $paths  Custom commands paths to add
      * @param bool  $before If the paths should be prepended or appended to the list
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function addCommandsPaths(array $paths, $before = true)
     {
@@ -676,7 +676,7 @@ class Telegram
      *
      * @param string $path Custom upload path
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setUploadPath($path)
     {
@@ -700,7 +700,7 @@ class Telegram
      *
      * @param string $path Custom download path
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setDownloadPath($path)
     {
@@ -729,7 +729,7 @@ class Telegram
      * @param string $command
      * @param array  $config
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function setCommandConfig($command, array $config)
     {
@@ -796,8 +796,8 @@ class Telegram
      * @param string $url
      * @param array  $data Optional parameters.
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function setWebhook($url, array $data = [])
     {
@@ -832,7 +832,7 @@ class Telegram
      * Delete any assigned webhook
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function deleteWebhook()
     {
@@ -875,28 +875,12 @@ class Telegram
     }
 
     /**
-     * Enable Botan.io integration
-     *
-     * @deprecated Botan.io service is no longer working
-     *
-     * @param  string $token
-     * @param  array  $options
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function enableBotan($token, array $options = [])
-    {
-        trigger_error('Longman\TelegramBot\Telegram::enableBotan is deprecated and will be removed in future release.', E_USER_DEPRECATED);
-
-        return $this;
-    }
-
-    /**
      * Enable requests limiter
      *
-     * @param  array $options
+     * @param array $options
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
+     * @throws TelegramException
      */
     public function enableLimiter(array $options = [])
     {
@@ -918,7 +902,7 @@ class Telegram
             throw new TelegramException('No command(s) provided!');
         }
 
-        $this->run_commands  = true;
+        $this->run_commands = true;
 
         $result = Request::getMe();
 
