@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Entities\ServerResponse;
 
 /**
  * Generic command
@@ -36,8 +36,7 @@ class GenericCommand extends SystemCommand
     /**
      * Command execute method
      *
-     * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
      */
     public function execute()
     {

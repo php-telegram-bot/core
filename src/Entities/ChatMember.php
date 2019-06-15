@@ -38,7 +38,7 @@ class ChatMember extends Entity
     /**
      * {@inheritdoc}
      */
-    public function subEntities()
+    protected function subEntities()
     {
         return [
             'user' => User::class,
