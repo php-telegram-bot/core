@@ -61,8 +61,6 @@ class InlineQueryResultMpeg4Gif extends InlineEntity implements InlineQueryResul
      * InlineQueryResultMpeg4Gif constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

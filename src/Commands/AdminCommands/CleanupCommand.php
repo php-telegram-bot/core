@@ -12,6 +12,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\TelegramLog;
@@ -68,7 +69,6 @@ class CleanupCommand extends AdminCommand
      * @var array
      */
     protected static $default_tables_to_clean = [
-        'botan_shortener',
         'callback_query',
         'chosen_inline_result',
         'conversation',
@@ -85,7 +85,6 @@ class CleanupCommand extends AdminCommand
      * @var array
      */
     protected static $default_clean_older_than = [
-        'botan_shortener'      => '30 days',
         'chat'                 => '365 days',
         'callback_query'       => '30 days',
         'chosen_inline_result' => '30 days',
@@ -242,11 +241,6 @@ class CleanupCommand extends AdminCommand
             'request_limiter' => ['table' => TB_REQUEST_LIMITER, 'field' => 'created_at'],
         ];
 
-        // Botan table is only available if enabled.
-        if (defined('TB_BOTAN_SHORTENER')) {
-            $simple_tables['botan_shortener'] = ['table' => TB_BOTAN_SHORTENER, 'field' => 'created_at'];
-        }
-
         foreach (array_intersect(array_keys($simple_tables), $tables_to_clean) as $table_to_clean) {
             $queries[] = sprintf(
                 'DELETE FROM `%1$s`
@@ -345,7 +339,8 @@ class CleanupCommand extends AdminCommand
     /**
      * Execution if MySQL is required but not available
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function executeNoDb()
     {
@@ -364,8 +359,8 @@ class CleanupCommand extends AdminCommand
     /**
      * Command execute method
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     public function execute()
     {

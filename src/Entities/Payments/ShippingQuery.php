@@ -11,6 +11,7 @@
 namespace Longman\TelegramBot\Entities\Payments;
 
 use Longman\TelegramBot\Entities\Entity;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Request;
 
@@ -45,7 +46,7 @@ class ShippingQuery extends Entity
      * @param bool  $ok
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public function answer($ok, array $data = [])
     {

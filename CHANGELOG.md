@@ -5,15 +5,20 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- New funding and support details.
+- Custom issue templates. (#972)
 ### Changed
 - Use PSR-12 for code style.
-- [:exclamation:][unreleased-bc] Return an empty array for Entity properties with no items, instead of `null`.
+- Some general housekeeping. (#972)
+- [:exclamation:][unreleased-bc] Return an empty array for Entity properties with no items, instead of `null`. (#969)
 ### Deprecated
 ### Removed
+- Botan.io integration completely removed.
 ### Fixed
 - `forward_date` is now correctly saved to the DB.
 - Broken `StickerSet::getStickers()` method.
 ### Security
+- Security disclosure managed by Tidelift.
 
 ## [0.57.0] - 2019-06-01
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.57.0-sql-migration] on your database.
