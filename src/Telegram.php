@@ -460,15 +460,16 @@ class Telegram
         if ($update_type === 'message') {
             $message = $this->update->getMessage();
             $type    = $message->getType();
-            if ($type === 'command') {
-                $command = $message->getCommand();
-            } else {
-                // Let's check if the message object has the type field we're looking for
-                // and if a fitting command class is available.
-                $command_tmp = $this->getCommandFromType($type);
-                if ($this->getCommandObject($command_tmp) !== null) {
-                    $command = $command_tmp;
-                }
+
+            // Let's check if the message object has the type field we're looking for...
+            $command_tmp = $type === 'command' ? $message->getCommand() : $this->getCommandFromType($type);
+            // ...and if a fitting command class is available.
+            $command_obj = $this->getCommandObject($command_tmp);
+
+            // Empty usage string denotes a non-executable command.
+            // @see https://github.com/php-telegram-bot/core/issues/772#issuecomment-388616072
+            if ($command_obj !== null && $command_obj->getUsage() !== '') {
+                $command = $command_tmp;
             }
         } else {
             $command = $this->getCommandFromType($update_type);

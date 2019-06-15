@@ -14,6 +14,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `TelegramLog` now adheres to [PSR-3] `LoggerInterface` and allows custom logger implementations.
 ### Deprecated
 - Old logging that uses Monolog still works but will be removed in the near future. Use `TelegramLog::initialize($logger, $update_logger);` from now on.
+- [:exclamation:][unreleased-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more).
 ### Removed
 - Botan.io integration completely removed.
 ### Fixed
@@ -21,6 +22,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Broken `StickerSet::getStickers()` method.
 ### Security
 - Security disclosure managed by Tidelift.
+- Don't allow a user to call system commands directly.
 
 ## [0.57.0] - 2019-06-01
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.57.0-sql-migration] on your database.
@@ -273,7 +275,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Move `hideKeyboard` to `removeKeyboard`.
 
 [unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
+<<<<<<< HEAD
+[unreleased-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
+=======
 [unreleased-bc]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
+>>>>>>> upstream/develop
 [0.57.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.56.0-0.57.0.sql
 [0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
 [0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
