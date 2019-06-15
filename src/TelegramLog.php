@@ -20,14 +20,14 @@ class TelegramLog
     /**
      * Monolog instance
      *
-     * @var \Monolog\Logger
+     * @var Logger
      */
     protected static $monolog;
 
     /**
      * Monolog instance for update
      *
-     * @var \Monolog\Logger
+     * @var Logger
      */
     protected static $monolog_update;
 
@@ -62,9 +62,9 @@ class TelegramLog
     /**
      * Initialize Monolog Logger instance, optionally passing an existing one
      *
-     * @param \Monolog\Logger
+     * @param Logger
      *
-     * @return \Monolog\Logger
+     * @return Logger
      */
     public static function initialize(Logger $external_monolog = null)
     {
@@ -93,8 +93,8 @@ class TelegramLog
      *
      * @param string $path
      *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
+     * @return Logger
+     * @throws TelegramLogException
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
@@ -117,8 +117,8 @@ class TelegramLog
      *
      * @param string $path
      *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
+     * @return Logger
+     * @throws TelegramLogException
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
@@ -147,7 +147,9 @@ class TelegramLog
             if (!self::isDebugLogActive()) {
                 return false;
             }
-            self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+b');
+            if ($temp_stream_handle = fopen('php://temp', 'wb+')) {
+                self::$debug_log_temp_stream_handle = $temp_stream_handle;
+            }
         }
 
         return self::$debug_log_temp_stream_handle;
@@ -173,8 +175,8 @@ class TelegramLog
      *
      * @param string $path
      *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
+     * @return Logger
+     * @throws TelegramLogException
      * @throws \InvalidArgumentException
      * @throws \Exception
      */

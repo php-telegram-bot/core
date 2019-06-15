@@ -24,7 +24,7 @@ class UserTest extends TestCase
     public function testInstance()
     {
         $user = new User(['id' => 1]);
-        self::assertInstanceOf('Longman\TelegramBot\Entities\User', $user);
+        self::assertInstanceOf(User::class, $user);
     }
 
     public function testGetId()

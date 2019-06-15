@@ -1,13 +1,13 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-$filename='logfile.log';
-$API_KEY = 'random'; 
+$filename = 'logfile.log';
+$API_KEY  = 'random';
 $BOT_NAME = 'bot_name';
-                                                                                                                                                                                                                     
+
 define('PHPUNIT_TESTSUITE', 'some value');
 
-$CREDENTIALS = array('host'=>'localhost', 'user'=>'', 'password'=>'', 'database'=>'');
+$CREDENTIALS = ['host' => 'localhost', 'user' => '', 'password' => '', 'database' => ''];
 
 $update = null;
 try {

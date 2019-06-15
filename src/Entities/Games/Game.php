@@ -47,7 +47,7 @@ class Game extends Entity
      * This method overrides the default getPhoto method
      * and returns a nice array of PhotoSize objects.
      *
-     * @return null|\Longman\TelegramBot\Entities\PhotoSize[]
+     * @return null|PhotoSize[]
      */
     public function getPhoto()
     {
@@ -62,7 +62,7 @@ class Game extends Entity
      * This method overrides the default getTextEntities method
      * and returns a nice array of MessageEntity objects.
      *
-     * @return null|\Longman\TelegramBot\Entities\MessageEntity[]
+     * @return null|MessageEntity[]
      */
     public function getTextEntities()
     {

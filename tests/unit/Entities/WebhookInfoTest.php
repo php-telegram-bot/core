@@ -42,7 +42,7 @@ class WebhookInfoTest extends TestCase
     public function testBaseStageWebhookInfo()
     {
         $webhook = new WebhookInfo($this->data);
-        $this->assertInstanceOf('Longman\TelegramBot\Entities\WebhookInfo', $webhook);
+        $this->assertInstanceOf(WebhookInfo::class, $webhook);
     }
 
     public function testGetUrl()

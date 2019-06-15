@@ -47,8 +47,6 @@ class InlineQueryResultCachedAudio extends InlineEntity implements InlineQueryRe
      * InlineQueryResultCachedAudio constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {
