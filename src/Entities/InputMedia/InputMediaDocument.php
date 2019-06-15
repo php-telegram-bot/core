@@ -43,8 +43,6 @@ class InputMediaDocument extends Entity implements InputMedia
      * InputMediaDocument constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

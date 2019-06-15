@@ -104,8 +104,6 @@ class Message extends Entity
      *
      * @param array  $data
      * @param string $bot_username
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data, $bot_username = '')
     {
@@ -264,7 +262,6 @@ class Message extends Entity
      * Bot added in chat
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function botAddedInChat()
     {

@@ -34,7 +34,7 @@ class AudioTest extends TestCase
     public function testInstance()
     {
         $audio = new Audio($this->record);
-        self::assertInstanceOf('Longman\TelegramBot\Entities\Audio', $audio);
+        self::assertInstanceOf(Audio::class, $audio);
     }
 
     public function testGetProperties()

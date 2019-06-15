@@ -36,7 +36,7 @@ class TelegramLogTest extends TestCase
     protected function setUp()
     {
         // Make sure no monolog instance is set before each test.
-        TestHelpers::setStaticProperty('Longman\TelegramBot\TelegramLog', 'monolog', null);
+        TestHelpers::setStaticProperty(TelegramLog::class, 'monolog', null);
     }
 
     protected function tearDown()

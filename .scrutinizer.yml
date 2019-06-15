@@ -1,22 +1,41 @@
+build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
 filter:
-    paths: [src/*]
+  paths:
+    - src/
+  dependency_paths:
+    - lib/
 
 checks:
-    php:
-        remove_extra_empty_lines: true
-        remove_php_closing_tag: true
-        remove_trailing_whitespace: true
-        fix_use_statements:
-            remove_unused: true
-            preserve_multiple: false
-            preserve_blanklines: true
-            order_alphabetically: true
-        fix_php_opening_tag: true
-        fix_linefeed: true
-        fix_line_ending: true
-        fix_identation_4spaces: true
-        fix_doc_comments: true
+  php:
+    check_method_contracts:
+      verify_interface_like_constraints: true
+      verify_documented_constraints: true
+      verify_parent_constraints: true
+    fix_doc_comments: true
+    fix_identation_4spaces: true
+    fix_line_ending: true
+    fix_linefeed: true
+    fix_php_opening_tag: true
+    fix_use_statements:
+      remove_unused: true
+      preserve_multiple: false
+      preserve_blanklines: true
+      order_alphabetically: true
+    more_specific_types_in_doc_comments: true
+    no_goto: true
+    param_doc_comment_if_not_inferrable: true
+    parameter_doc_comments: true
+    remove_extra_empty_lines: true
+    return_doc_comment_if_not_inferrable: true
+    return_doc_comments: true
+    simplify_boolean_return: true
 
 tools:
-    external_code_coverage:
-        timeout: 120
+  external_code_coverage:
+    timeout: 120

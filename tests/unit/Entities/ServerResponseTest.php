@@ -12,8 +12,14 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
+use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Entities\Sticker;
+use Longman\TelegramBot\Entities\StickerSet;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\UserProfilePhotos;
 use Longman\TelegramBot\Request;
 
 /**
@@ -54,7 +60,7 @@ class ServerResponseTest extends TestCase
         self::assertTrue($server->isOk());
         self::assertNull($server->getErrorCode());
         self::assertNull($server->getDescription());
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
+        self::assertInstanceOf(Message::class, $server_result);
 
         //Message
         self::assertEquals('1234', $server_result->getMessageId());
@@ -181,7 +187,7 @@ class ServerResponseTest extends TestCase
         $server = new ServerResponse(json_decode($result, true), 'testbot');
 
         self::assertCount(4, $server->getResult());
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Update', $server->getResult()[0]);
+        self::assertInstanceOf(Update::class, $server->getResult()[0]);
     }
 
     public function getUpdatesEmpty()
@@ -239,8 +245,8 @@ class ServerResponseTest extends TestCase
         //Photo size count
         self::assertCount(3, $photos[0]);
 
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\UserProfilePhotos', $server_result);
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $photos[0][0]);
+        self::assertInstanceOf(UserProfilePhotos::class, $server_result);
+        self::assertInstanceOf(PhotoSize::class, $photos[0][0]);
     }
 
     public function getFile()
@@ -261,7 +267,7 @@ class ServerResponseTest extends TestCase
         $result = $this->getFile();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\File', $server->getResult());
+        self::assertInstanceOf(File::class, $server->getResult());
     }
 
     public function testSetGeneralTestFakeResponse()
@@ -287,7 +293,7 @@ class ServerResponseTest extends TestCase
         self::assertTrue($server->isOk());
         self::assertNull($server->getErrorCode());
         self::assertNull($server->getDescription());
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
+        self::assertInstanceOf(Message::class, $server_result);
 
         //Message
         self::assertEquals('1234', $server_result->getMessageId());
@@ -306,7 +312,7 @@ class ServerResponseTest extends TestCase
 
         //... they are not finished...
     }
-    
+
     public function getStickerSet()
     {
         TestHelpers::setStaticProperty(Request::class, 'current_action', 'getStickerSet');
@@ -357,21 +363,21 @@ class ServerResponseTest extends TestCase
             }
         }';
     }
-    
+
     public function testGetStickerSet()
     {
         $result = $this->getStickerSet();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
 
         $server_result = $server->getResult();
-        
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\StickerSet', $server_result);
+
+        self::assertInstanceOf(StickerSet::class, $server_result);
         self::assertEquals('stickerset_name', $server_result->getName());
         self::assertEquals('Some name', $server_result->getTitle());
         self::assertFalse($server_result->getContainsMasks());
-        
+
         $stickers = $server_result->getStickers();
         self::assertCount(4, $stickers);
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Sticker', $stickers[0]);
+        self::assertInstanceOf(Sticker::class, $stickers[0]);
     }
 }
