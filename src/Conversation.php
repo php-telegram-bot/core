@@ -166,7 +166,7 @@ class Conversation
      * Currently the Conversation is not deleted but just set to 'stopped'
      *
      * @return bool
-     * @throws Exception\TelegramException
+     * @throws TelegramException
      */
     public function stop()
     {
@@ -177,7 +177,7 @@ class Conversation
      * Cancel the current conversation
      *
      * @return bool
-     * @throws Exception\TelegramException
+     * @throws TelegramException
      */
     public function cancel()
     {
@@ -190,7 +190,7 @@ class Conversation
      * @param string $status
      *
      * @return bool
-     * @throws Exception\TelegramException
+     * @throws TelegramException
      */
     protected function updateStatus($status)
     {
@@ -214,7 +214,7 @@ class Conversation
      * Store the array/variable in the database with json_encode() function
      *
      * @return bool
-     * @throws Exception\TelegramException
+     * @throws TelegramException
      */
     public function update()
     {
