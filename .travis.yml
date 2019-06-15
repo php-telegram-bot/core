@@ -1,21 +1,22 @@
-dist: trusty
-sudo: required
 language: php
+sudo: required
+dist: trusty
 
 addons:
   mariadb: 10.1
 
 cache:
   directories:
-    - "$HOME/.composer/cache"
+    - vendor
+    - $HOME/.composer/cache
 
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
   - 7.3
+  - 7.2
+  - 7.1
+  - 7.0
+  - 5.6
+  - 5.5
   - nightly
   - hhvm
 
@@ -44,7 +45,7 @@ before_script:
 
 script:
   - composer check-code
-  - if [ "$TRAVIS_PHP_VERSION" == "7.2" ] ; then composer test-cov; else composer test; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov; else composer test; fi
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" == "7.2" ]; then composer test-cov-upload; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov-upload; fi
