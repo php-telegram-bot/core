@@ -210,8 +210,8 @@ class TelegramLog
      */
     public static function getDebugLogTempStream()
     {
-        if (self::$debug_log_temp_stream_handle === null) {
-            self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+b');
+        if ((self::$debug_log_temp_stream_handle === null) && $temp_stream_handle = fopen('php://temp', 'wb+')) {
+            self::$debug_log_temp_stream_handle = $temp_stream_handle;
         }
 
         return self::$debug_log_temp_stream_handle;

@@ -33,8 +33,6 @@ abstract class Entity
      *
      * @param array  $data
      * @param string $bot_username
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($data, $bot_username = '')
     {
@@ -96,8 +94,6 @@ abstract class Entity
 
     /**
      * Perform any special entity validation
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function validate()
     {
@@ -142,7 +138,13 @@ abstract class Entity
                 $sub_entities = $this->subEntities();
 
                 if (isset($sub_entities[$property_name])) {
-                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_username'));
+                    $class = $sub_entities[$property_name];
+
+                    if (is_array($class)) {
+                        return $this->makePrettyObjectArray(reset($class), $property_name);
+                    }
+
+                    return new $class($property, $this->getProperty('bot_username'));
                 }
 
                 return $property;

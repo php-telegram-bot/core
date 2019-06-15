@@ -30,8 +30,6 @@ class PassportElementErrorUnspecified extends Entity implements PassportElementE
      * PassportElementErrorUnspecified constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

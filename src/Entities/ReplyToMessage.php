@@ -22,8 +22,6 @@ class ReplyToMessage extends Message
      *
      * @param array  $data
      * @param string $bot_username
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data, $bot_username = '')
     {

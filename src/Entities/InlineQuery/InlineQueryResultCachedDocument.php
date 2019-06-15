@@ -53,8 +53,6 @@ class InlineQueryResultCachedDocument extends InlineEntity implements InlineQuer
      * InlineQueryResultCachedDocument constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

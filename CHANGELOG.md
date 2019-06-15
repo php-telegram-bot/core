@@ -5,13 +5,22 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- New funding and support details.
+- Custom issue templates. (#972)
 ### Changed
+- Use PSR-12 for code style.
+- Some general housekeeping. (#972)
+- [:exclamation:][unreleased-bc] Return an empty array for Entity properties with no items, instead of `null`. (#969)
 - `TelegramLog` now adheres to [PSR-3] `LoggerInterface` and allows custom logger implementations.
 ### Deprecated
 - Old logging that uses Monolog still works but will be removed in the near future. Use `TelegramLog::initialize($logger, $update_logger);` from now on.
 ### Removed
+- Botan.io integration completely removed.
 ### Fixed
+- `forward_date` is now correctly saved to the DB.
+- Broken `StickerSet::getStickers()` method.
 ### Security
+- Security disclosure managed by Tidelift.
 
 ## [0.57.0] - 2019-06-01
 :exclamation: After updating to this version, you will need to execute the [SQL migration script][0.57.0-sql-migration] on your database.
@@ -264,6 +273,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Move `hideKeyboard` to `removeKeyboard`.
 
 [unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
+[unreleased-bc]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
 [0.57.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.56.0-0.57.0.sql
 [0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
 [0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
