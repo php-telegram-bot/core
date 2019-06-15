@@ -138,7 +138,13 @@ abstract class Entity
                 $sub_entities = $this->subEntities();
 
                 if (isset($sub_entities[$property_name])) {
-                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_username'));
+                    $class = $sub_entities[$property_name];
+
+                    if (is_array($class)) {
+                        return $this->makePrettyObjectArray(reset($class), $property_name);
+                    }
+
+                    return new $class($property, $this->getProperty('bot_username'));
                 }
 
                 return $property;

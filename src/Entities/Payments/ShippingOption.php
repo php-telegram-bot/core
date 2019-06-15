@@ -19,8 +19,9 @@ use Longman\TelegramBot\Entities\Entity;
  *
  * @link https://core.telegram.org/bots/api#shippingoption
  *
- * @method string getId()    Shipping option identifier
- * @method string getTitle() Option title
+ * @method string         getId()     Shipping option identifier
+ * @method string         getTitle()  Option title
+ * @method LabeledPrice[] getPrices() List of price portions
  **/
 class ShippingOption extends Entity
 {
@@ -30,19 +31,7 @@ class ShippingOption extends Entity
     protected function subEntities()
     {
         return [
-            'prices' => LabeledPrice::class,
+            'prices' => [LabeledPrice::class],
         ];
-    }
-
-    /**
-     * List of price portions
-     *
-     * This method overrides the default getPrices method and returns a nice array
-     *
-     * @return LabeledPrice[]
-     */
-    public function getPrices()
-    {
-        return $this->makePrettyObjectArray(LabeledPrice::class, 'prices');
     }
 }

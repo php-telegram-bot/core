@@ -10,11 +10,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Changed
 - Use PSR-12 for code style.
 - Some general housekeeping. (#972)
+- [:exclamation:][unreleased-bc] Return an empty array for Entity properties with no items, instead of `null`. (#969)
 ### Deprecated
 ### Removed
 - Botan.io integration completely removed.
 ### Fixed
 - `forward_date` is now correctly saved to the DB.
+- Broken `StickerSet::getStickers()` method.
 ### Security
 - Security disclosure managed by Tidelift.
 
@@ -269,6 +271,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Move `hideKeyboard` to `removeKeyboard`.
 
 [unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
+[unreleased-bc]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#unreleased
 [0.57.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.56.0-0.57.0.sql
 [0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
 [0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
