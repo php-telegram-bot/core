@@ -10,31 +10,50 @@
 
 namespace Longman\TelegramBot;
 
+use Exception;
 use Longman\TelegramBot\Exception\TelegramLogException;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
+/**
+ * Class TelegramLog
+ *
+ * @todo Clean out all deprecated code in the near future!
+ *
+ * @method static void emergency(string $message, array $context = [])
+ * @method static void alert(string $message, array $context = [])
+ * @method static void critical(string $message, array $context = [])
+ * @method static void error(string $message, array $context = [])
+ * @method static void warning(string $message, array $context = [])
+ * @method static void notice(string $message, array $context = [])
+ * @method static void info(string $message, array $context = [])
+ * @method static void debug(string $message, array $context = [])
+ * @method static void update(string $message, array $context = [])
+ */
 class TelegramLog
 {
     /**
-     * Monolog instance
+     * Logger instance
      *
-     * @var Logger
+     * @var LoggerInterface|Logger
      */
-    protected static $monolog;
+    protected static $logger;
 
     /**
-     * Monolog instance for update
+     * Logger instance for update
      *
-     * @var Logger
+     * @var LoggerInterface|Logger
      */
-    protected static $monolog_update;
+    protected static $update_logger;
 
     /**
      * Path for error log
      *
      * @var string
+     * @deprecated
      */
     protected static $error_log_path;
 
@@ -42,6 +61,7 @@ class TelegramLog
      * Path for debug log
      *
      * @var string
+     * @deprecated
      */
     protected static $debug_log_path;
 
@@ -49,6 +69,7 @@ class TelegramLog
      * Path for update log
      *
      * @var string
+     * @deprecated
      */
     protected static $update_log_path;
 
@@ -60,80 +81,126 @@ class TelegramLog
     protected static $debug_log_temp_stream_handle;
 
     /**
-     * Initialize Monolog Logger instance, optionally passing an existing one
+     * Initialise Logger instance, optionally passing an existing one.
      *
-     * @param Logger
-     *
-     * @return Logger
+     * @param LoggerInterface|null $logger
+     * @param LoggerInterface|null $update_logger
      */
-    public static function initialize(Logger $external_monolog = null)
+    public static function initialize(LoggerInterface $logger = null, LoggerInterface $update_logger = null)
     {
-        if (self::$monolog === null) {
-            if ($external_monolog !== null) {
-                self::$monolog = $external_monolog;
-
-                foreach (self::$monolog->getHandlers() as $handler) {
-                    if (method_exists($handler, 'getLevel') && $handler->getLevel() === 400) {
-                        self::$error_log_path = 'true';
-                    }
-                    if (method_exists($handler, 'getLevel') && $handler->getLevel() === 100) {
-                        self::$debug_log_path = 'true';
-                    }
+        // Clearly deprecated code still being executed.
+        if ($logger === null) {
+            (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error('A PSR-3 compatible LoggerInterface object must be provided. Initialise with a preconfigured logger instance.', E_USER_DEPRECATED);
+            $logger = new Logger('bot_log');
+        } elseif ($logger instanceof Logger) {
+            foreach ($logger->getHandlers() as $handler) {
+                if (method_exists($handler, 'getLevel') && $handler->getLevel() === Logger::ERROR) {
+                    self::$error_log_path = 'true';
                 }
-            } else {
-                self::$monolog = new Logger('bot_log');
+                if (method_exists($handler, 'getLevel') && $handler->getLevel() === Logger::DEBUG) {
+                    self::$debug_log_path = 'true';
+                }
             }
         }
 
-        return self::$monolog;
+        // Fallback to NullLogger.
+        self::$logger        = $logger ?: new NullLogger();
+        self::$update_logger = $update_logger ?: new NullLogger();
     }
 
     /**
-     * Initialize error log
+     * Initialise error log (deprecated)
      *
      * @param string $path
      *
-     * @return Logger
-     * @throws TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return LoggerInterface
+     * @throws Exception
+     *
+     * @deprecated Initialise a preconfigured logger instance instead.
      */
     public static function initErrorLog($path)
     {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
+
         if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for error log');
         }
         self::initialize();
-        self::$error_log_path = $path;
 
-        return self::$monolog->pushHandler(
-            (new StreamHandler(self::$error_log_path, Logger::ERROR))
-                ->setFormatter(new LineFormatter(null, null, true))
-        );
+        // Deprecated code used as fallback.
+        if (self::$logger instanceof Logger) {
+            self::$error_log_path = $path;
+
+            self::$logger->pushHandler(
+                (new StreamHandler(self::$error_log_path, Logger::ERROR))
+                    ->setFormatter(new LineFormatter(null, null, true))
+            );
+        }
+
+        return self::$logger;
     }
 
     /**
-     * Initialize debug log
+     * Initialise debug log (deprecated)
      *
      * @param string $path
      *
-     * @return Logger
-     * @throws TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return LoggerInterface
+     * @throws Exception
+     *
+     * @deprecated Initialise a preconfigured logger instance instead.
      */
     public static function initDebugLog($path)
     {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
+
         if ($path === null || $path === '') {
             throw new TelegramLogException('Empty path for debug log');
         }
         self::initialize();
-        self::$debug_log_path = $path;
 
-        return self::$monolog->pushHandler(
-            (new StreamHandler(self::$debug_log_path, Logger::DEBUG))
-                ->setFormatter(new LineFormatter(null, null, true))
-        );
+        // Deprecated code used as fallback.
+        if (self::$logger instanceof Logger) {
+            self::$debug_log_path = $path;
+
+            self::$logger->pushHandler(
+                (new StreamHandler(self::$debug_log_path, Logger::DEBUG))
+                    ->setFormatter(new LineFormatter(null, null, true))
+            );
+        }
+
+        return self::$logger;
+    }
+
+    /**
+     * Initialise update log (deprecated)
+     *
+     * @param string $path
+     *
+     * @return LoggerInterface
+     * @throws Exception
+     *
+     * @deprecated Initialise a preconfigured logger instance instead.
+     */
+    public static function initUpdateLog($path)
+    {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
+
+        if ($path === null || $path === '') {
+            throw new TelegramLogException('Empty path for update log');
+        }
+        self::$update_log_path = $path;
+
+        if (self::$update_logger === null || self::$update_logger instanceof NullLogger) {
+            self::$update_logger = new Logger('bot_update_log');
+
+            self::$update_logger->pushHandler(
+                (new StreamHandler(self::$update_log_path, Logger::INFO))
+                    ->setFormatter(new LineFormatter('%message%' . PHP_EOL))
+            );
+        }
+
+        return self::$update_logger;
     }
 
     /**
@@ -143,13 +210,8 @@ class TelegramLog
      */
     public static function getDebugLogTempStream()
     {
-        if (self::$debug_log_temp_stream_handle === null) {
-            if (!self::isDebugLogActive()) {
-                return false;
-            }
-            if ($temp_stream_handle = fopen('php://temp', 'wb+')) {
-                self::$debug_log_temp_stream_handle = $temp_stream_handle;
-            }
+        if ((self::$debug_log_temp_stream_handle === null) && $temp_stream_handle = fopen('php://temp', 'wb+')) {
+            self::$debug_log_temp_stream_handle = $temp_stream_handle;
         }
 
         return self::$debug_log_temp_stream_handle;
@@ -164,48 +226,22 @@ class TelegramLog
     {
         if (is_resource(self::$debug_log_temp_stream_handle)) {
             rewind(self::$debug_log_temp_stream_handle);
-            self::debug($message, stream_get_contents(self::$debug_log_temp_stream_handle));
+            self::debug(sprintf($message, stream_get_contents(self::$debug_log_temp_stream_handle)));
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }
     }
 
     /**
-     * Initialize update log
-     *
-     * @param string $path
-     *
-     * @return Logger
-     * @throws TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     */
-    public static function initUpdateLog($path)
-    {
-        if ($path === null || $path === '') {
-            throw new TelegramLogException('Empty path for update log');
-        }
-        self::$update_log_path = $path;
-
-        if (self::$monolog_update === null) {
-            self::$monolog_update = new Logger('bot_update_log');
-
-            self::$monolog_update->pushHandler(
-                (new StreamHandler(self::$update_log_path, Logger::INFO))
-                    ->setFormatter(new LineFormatter('%message%' . PHP_EOL))
-            );
-        }
-
-        return self::$monolog_update;
-    }
-
-    /**
      * Is error log active
      *
      * @return bool
+     *
+     * @deprecated Initialise a preconfigured logger instance instead.
      */
     public static function isErrorLogActive()
     {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
         return self::$error_log_path !== null;
     }
 
@@ -213,9 +249,12 @@ class TelegramLog
      * Is debug log active
      *
      * @return bool
+     *
+     * @deprecated Initialise a preconfigured logger instance instead.
      */
     public static function isDebugLogActive()
     {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
         return self::$debug_log_path !== null;
     }
 
@@ -223,69 +262,71 @@ class TelegramLog
      * Is update log active
      *
      * @return bool
+     *
+     * @deprecated Initialise a preconfigured logger instance instead.
      */
     public static function isUpdateLogActive()
     {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
         return self::$update_log_path !== null;
     }
 
     /**
-     * Report error log
+     * Handle any logging method call.
      *
-     * @param string $text
+     * @param string $name
+     * @param array  $arguments
      */
-    public static function error($text)
+    public static function __callStatic($name, array $arguments)
     {
-        if (self::isErrorLogActive()) {
-            $text = self::getLogText($text, func_get_args());
-            self::$monolog->error($text);
+        // Get the correct logger instance.
+        $logger = null;
+        if (in_array($name, ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug',], true)) {
+            $logger = self::$logger;
+        } elseif ($name === 'update') {
+            $logger = self::$update_logger;
+            $name   = 'info';
+        } else {
+            return;
         }
+
+        self::initialize(self::$logger, self::$update_logger);
+
+        // Replace any placeholders from the passed context.
+        if (count($arguments) >= 2) {
+            if (is_array($arguments[1])) {
+                $arguments[0] = self::interpolate($arguments[0], $arguments[1]);
+            } else {
+                // @todo Old parameter passing active, should be removed in the near future.
+                $arguments[0] = vsprintf($arguments[0], array_splice($arguments, 1));
+            }
+        }
+
+        call_user_func_array([$logger, $name], $arguments);
     }
 
     /**
-     * Report debug log
+     * Interpolates context values into the message placeholders.
      *
-     * @param string $text
-     */
-    public static function debug($text)
-    {
-        if (self::isDebugLogActive()) {
-            $text = self::getLogText($text, func_get_args());
-            self::$monolog->debug($text);
-        }
-    }
-
-    /**
-     * Report update log
+     * @see https://www.php-fig.org/psr/psr-3/#12-message
      *
-     * @param string $text
-     */
-    public static function update($text)
-    {
-        if (self::isUpdateLogActive()) {
-            $text = self::getLogText($text, func_get_args());
-            self::$monolog_update->info($text);
-        }
-    }
-
-    /**
-     * Applies vsprintf to the text if placeholder replacements are passed along.
-     *
-     * @param string $text
-     * @param array  $args
+     * @param string $message
+     * @param array  $context
      *
      * @return string
      */
-    protected static function getLogText($text, array $args = [])
+    protected static function interpolate($message, array $context = [])
     {
-        // Pop the $text off the array, as it gets passed via func_get_args().
-        array_shift($args);
-
-        // If no placeholders have been passed, don't parse the text.
-        if (empty($args)) {
-            return $text;
+        // build a replacement array with braces around the context keys
+        $replace = [];
+        foreach ($context as $key => $val) {
+            // check that the value can be casted to string
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                $replace['{' . $key . '}'] = $val;
+            }
         }
 
-        return vsprintf($text, $args);
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
     }
 }

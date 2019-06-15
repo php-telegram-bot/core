@@ -538,7 +538,7 @@ class Telegram
     public function enableAdmin($admin_id)
     {
         if (!is_int($admin_id) || $admin_id <= 0) {
-            TelegramLog::error('Invalid value "%s" for admin.', $admin_id);
+            TelegramLog::error('Invalid value "' . $admin_id . '" for admin.');
         } elseif (!in_array($admin_id, $this->admins_list, true)) {
             $this->admins_list[] = $admin_id;
         }
@@ -631,7 +631,7 @@ class Telegram
     public function addCommandsPath($path, $before = true)
     {
         if (!is_dir($path)) {
-            TelegramLog::error('Commands path "%s" does not exist.', $path);
+            TelegramLog::error('Commands path "' . $path . '" does not exist.');
         } elseif (!in_array($path, $this->commands_paths, true)) {
             if ($before) {
                 array_unshift($this->commands_paths, $path);
