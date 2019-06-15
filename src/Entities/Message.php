@@ -65,6 +65,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method SuccessfulPayment getSuccessfulPayment()     Optional. Message is a service message about a successful payment, information about the payment.
  * @method string            getConnectedWebsite()      Optional. The domain name of the website on which the user has logged in.
  * @method PassportData      getPassportData()          Optional. Telegram Passport data
+ * @method InlineKeyboard    getReplyMarkup()           Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
  */
 class Message extends Entity
 {
@@ -101,6 +102,7 @@ class Message extends Entity
             'invoice'            => Invoice::class,
             'successful_payment' => SuccessfulPayment::class,
             'passport_data'      => PassportData::class,
+            'reply_markup'       => InlineKeyboard::class,
         ];
     }
 
@@ -229,6 +231,7 @@ class Message extends Entity
             'invoice',
             'successful_payment',
             'passport_data',
+            'reply_markup',
         ];
 
         $is_command = strlen($this->getCommand()) > 0;

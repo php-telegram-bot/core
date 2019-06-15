@@ -7,6 +7,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - New funding and support details.
 - Custom issue templates. (#972)
+- Bot API 4.3 (Seamless Telegram Login, `LoginUrl`)
+- `reply_markup` field to `Message` entity.
 ### Changed
 - Use PSR-12 for code style.
 - Some general housekeeping. (#972)
