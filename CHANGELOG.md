@@ -4,7 +4,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][unreleased-sql-migration] on your database.### Added
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.58.0] - 2019-06-26
+:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.58.0-sql-migration] on your database.
+### Added
 - New funding and support details. (#971)
 - Custom issue templates. (#972)
 - Bot API 4.3 (Seamless Telegram Login, `LoginUrl`) (#957)
@@ -12,11 +21,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Changed
 - Use PSR-12 for code style. (#966)
 - Some general housekeeping. (#972)
-- [:exclamation:][unreleased-bc-return-value-of-empty-entity-properties] Return an empty array for Entity properties with no items, instead of `null`. (#969)
+- [:exclamation:][0.58.0-bc-return-value-of-empty-entity-properties] Return an empty array for Entity properties with no items, instead of `null`. (#969)
 - `TelegramLog` now adheres to [PSR-3] `LoggerInterface` and allows custom logger implementations. (#964)
 ### Deprecated
 - Old logging that uses Monolog still works but will be removed in the near future. Use `TelegramLog::initialize($logger, $update_logger);` from now on. (#964)
-- [:exclamation:][unreleased-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more). (#970)
+- [:exclamation:][0.58.0-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more). (#970)
 ### Removed
 - Botan.io integration completely removed. (#968)
 ### Fixed
@@ -281,9 +290,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/unreleased.sql
-[unreleased-bc-return-value-of-empty-entity-properties]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility##return-value-of-empty-entity-properties
-[unreleased-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
+[0.58.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.57.0-0.58.0.sql
+[0.58.0-bc-return-value-of-empty-entity-properties]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#return-value-of-empty-entity-properties
+[0.58.0-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
 [0.57.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.56.0-0.57.0.sql
 [0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
 [0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
@@ -305,6 +314,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.58.0]: https://github.com/php-telegram-bot/core/compare/0.57.0...0.58.0
 [0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
 [0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
 [0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
