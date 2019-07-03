@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Changed
 ### Deprecated
 ### Removed
+- Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation.
 ### Fixed
 ### Security
 
