@@ -1,25 +1,25 @@
-<img src="assets/logo/512px/logo_plain.png" title="PHP Telegram Bot" alt="PHP Telegram Bot logo">
+<h1 align="center">
+    PHP Telegram Bot<br>
+	<br>
+    <img src="assets/logo/512px/logo_plain.png" title="PHP Telegram Bot" alt="PHP Telegram Bot logo">
+	<br>
+</h1>
 
-# PHP Telegram Bot
+A Telegram Bot based on the official [Telegram Bot API]
 
-A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
-
-[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-32a2da.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
-[![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](#donate)
+[![API Version](https://img.shields.io/badge/Bot%20API-4.3%20%28May%202019%29-32a2da.svg)](https://core.telegram.org/bots/api#may-31-2019)
+[![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
+[![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 
 [![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
-[![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core)][Tidelift]
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
-[![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/master.svg?style=flat)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
+[![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/master.svg?style=flat)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core?style=flat)][Tidelift]
 [![Total Downloads](https://img.shields.io/packagist/dt/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
-
-![Telegram Bot API Logo](assets/logo/512px/logo_plain.png)
-
-A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -65,61 +65,55 @@ A Telegram Bot based on the official [Telegram Bot API][Telegram-Bot-API]
 - [License](#license)
 - [Credits](#credits)
 
-
-
-
-
-
 ## Introduction
 
 This is a pure PHP Telegram Bot, fully extensible via plugins.
-Telegram recently announced official support for a [Bot
-API](https://telegram.org/blog/bot-revolution) allowing integrators of
-all sorts to bring automated interactions to the mobile platform. This
-Bot aims to provide a platform where one can simply write a plugin
-and have interactions in a matter of minutes.
+
+Telegram announced official support for a [Bot API](https://telegram.org/blog/bot-revolution), allowing integrators of all sorts to bring automated interactions to the mobile platform.
+This Bot aims to provide a platform where one can simply write a bot and have interactions in a matter of minutes.
 
 The Bot can:
-- retrieve updates with webhook and getUpdates methods.
-- supports all types and methods according to Telegram API (25 May 2016).
-- supports supergroups.
-- handle commands in chat with other bots.
-- manage Channel from the bot admin interface.
-- full support for **inline bots**.
-- inline keyboard.
+- Retrieve updates with [webhook][#webhook-installation] and [getUpdates][#getupdates-installation] methods.
+- Supports all types and methods according to Telegram API 4.3 (May 2019).
+- Supports supergroups.
+- Handle commands in chat with other bots.
+- Manage Channel from the bot admin interface.
+- Full support for **inline bots**.
+- Inline keyboard.
 - Messages, InlineQuery and ChosenInlineQuery are stored in the Database.
-- Conversation feature
+- Conversation feature.
 
------
-This code is available on
-[Github](https://github.com/php-telegram-bot/core). Pull requests are welcome.
+---
+
+This code is available on [GitHub](https://github.com/php-telegram-bot/core). Pull requests are welcome.
 
 ## Instructions
 
 ### Create your first bot
 
-1. Message @botfather https://telegram.me/botfather with the following
-text: `/newbot`
-   If you don't know how to message by username, click the search
-field on your Telegram app and type `@botfather`, where you should be able
-to initiate a conversation. Be careful not to send it to the wrong
-contact, because some users has similar usernames to `botfather`.
+1. Message [`@BotFather`](https://telegram.me/BotFather) with the following text: `/newbot`
+   
+   If you don't know how to message by username, click the search field on your Telegram app and type `@BotFather`, where you should be able to initiate a conversation. Be careful not to send it to the wrong contact, because some users have similar usernames to `BotFather`.
 
-   ![botfather initial conversation](http://i.imgur.com/aI26ixR.png)
+   ![BotFather initial conversation](https://user-images.githubusercontent.com/9423417/60736229-bc2aeb80-9f45-11e9-8d35-5b53145347bc.png)
 
-2. @botfather replies with `Alright, a new bot. How are we going to
-call it? Please choose a name for your bot.`
+2. `@BotFather` replies with:
+
+    ```
+    Alright, a new bot. How are we going to call it? Please choose a name for your bot.
+    ```
 
 3. Type whatever name you want for your bot.
 
-4. @botfather replies with ```Good. Now let's choose a username for your
-bot. It must end in `bot`. Like this, for example: TetrisBot or
-tetris_bot.```
+4. `@BotFather` replies with:
+    
+    ```
+    Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.
+    ```
 
-5. Type whatever username you want for your bot, minimum 5 characters,
-and must end with `bot`. For example: `telesample_bot`
+5. Type whatever username you want for your bot, minimum 5 characters, and must end with `bot`. For example: `telesample_bot`
 
-6. @botfather replies with:
+6. `@BotFather` replies with:
 
     ```
     Done! Congratulations on your new bot. You will find it at
@@ -136,16 +130,22 @@ and must end with `bot`. For example: `telesample_bot`
 
 7. Note down the 'token' mentioned above.
 
-8. Type `/setprivacy` to @botfather.
+*Optionally set the bot privacy:*
 
-   ![botfather later conversation](http://i.imgur.com/tWDVvh4.png)
+1. Send `/setprivacy` to `@BotFather`.
 
-9. @botfather replies with `Choose a bot to change group messages settings.`
+   ![BotFather later conversation](https://user-images.githubusercontent.com/9423417/60736340-26439080-9f46-11e9-970f-8f33bbe39c5f.png)
 
-10. Type (or select) `@telesample_bot` (change to the username you set at step 5
+2. `@BotFather` replies with:
+
+    ```
+    Choose a bot to change group messages settings.
+    ```
+
+3. Type (or select) `@telesample_bot` (change to the username you set at step 5
 above, but start it with `@`)
 
-11. @botfather replies with
+4. `@BotFather` replies with:
 
     ```
     'Enable' - your bot will only receive messages that either start with the '/' symbol or mention the bot by username.
@@ -153,14 +153,17 @@ above, but start it with `@`)
     Current status is: ENABLED
     ```
 
-12. Type (or select) `Disable` to let your bot receive all messages sent to a
-group. This step is up to you actually.
+5. Type (or select) `Disable` to let your bot receive all messages sent to a group.
 
-13. @botfather replies with `Success! The new status is: DISABLED. /help`
+6. `@BotFather` replies with:
+
+    ```
+    Success! The new status is: DISABLED. /help
+    ```
 
 ### Require this package with Composer
 
-Install this package through [Composer][composer].
+Install this package through [Composer].
 Edit your project's `composer.json` file to require `longman/telegram-bot`.
 
 Create *composer.json* file
@@ -196,7 +199,7 @@ The bot can handle updates with [**Webhook**](#webhook-installation) or [**getUp
 
 ## Webhook installation
 
-Note: For a more detailed explanation, head over to the [example-bot repository][example-bot-repository] and follow the instructions there.
+Note: For a more detailed explanation, head over to the [example-bot repository] and follow the instructions there.
 
 In order to set a [Webhook][api-setwebhook] you need a server with HTTPS and composer support.
 (For a [self signed certificate](#self-signed-certificate) you need to add some extra code)
@@ -563,13 +566,13 @@ $telegram->setUploadPath('/your/path/Upload');
 
 ## Documentation
 
-Take a look at the repo [Wiki][wiki] for further information and tutorials!
+Take a look at the repo [Wiki] for further information and tutorials!
 Feel free to improve!
 
 ## Example bot
 
 We're busy working on a full A-Z example bot, to help get you started with this library and to show you how to use all its features.
-You can check the progress of the [example bot repository][example-bot-repository]).
+You can check the progress of the [example-bot repository]).
 
 ## Projects with this library
 
@@ -580,16 +583,11 @@ Here's a list of projects that feats this library, feel free to add yours!
 
 ## Troubleshooting
 
-If you like living on the edge, please report any bugs you find on the
-[PHP Telegram Bot issues][issues] page.
+If you like living on the edge, please report any bugs you find on the [PHP Telegram Bot issues][issues] page.
 
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md) for more information.
-
-## Security
-
-See [SECURITY](SECURITY.md) for more information.
 
 ## Security
 
@@ -615,16 +613,27 @@ Thank you for keeping this project alive :pray:
 
 ## License
 
-Please see the [LICENSE](LICENSE) included in this repository for a full copy of the MIT license,
-which this project is licensed under.
+Please see the [LICENSE](LICENSE) included in this repository for a full copy of the MIT license, which this project is licensed under.
 
 ## Credits
 
 Credit list in [CREDITS](CREDITS)
 
-[Telegram-Bot-API]: https://core.telegram.org/bots/api "Telegram Bot API"
-[composer]: https://getcomposer.org/ "Composer"
-[example-bot-repository]: https://github.com/php-telegram-bot/example-bot "Example Bot repository"
+---
+
+<div align="center">
+    <b>
+        <a href="https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=readme-footer">Get professional support for this package with a Tidelift subscription</a>
+    </b>
+    <br>
+    <sub>
+        Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+    </sub>
+</div>
+
+[Telegram Bot API]: https://core.telegram.org/bots/api "Telegram Bot API"
+[Composer]: https://getcomposer.org/ "Composer"
+[example-bot repository]: https://github.com/php-telegram-bot/example-bot "Example Bot repository"
 [api-setwebhook]: https://core.telegram.org/bots/api#setwebhook "Webhook on Telegram Bot API"
 [set.php]: https://github.com/php-telegram-bot/example-bot/blob/master/set.php "example set.php"
 [unset.php]: https://github.com/php-telegram-bot/example-bot/blob/master/unset.php "example unset.php"
@@ -637,7 +646,7 @@ Credit list in [CREDITS](CREDITS)
 [HelpCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/HelpCommand.php "example /help command"
 [SendtochannelCommand.php]: https://github.com/php-telegram-bot/core/blob/master/src/Commands/AdminCommands/SendtochannelCommand.php "/sendtochannel admin command"
 [DB::selectChats]: https://github.com/php-telegram-bot/core/blob/0.46.0/src/DB.php#L1000 "DB::selectChats() parameters"
-[wiki]: https://github.com/php-telegram-bot/core/wiki "PHP Telegram Bot Wiki"
+[Wiki]: https://github.com/php-telegram-bot/core/wiki "PHP Telegram Bot Wiki"
 [wiki-create-your-own-commands]: https://github.com/php-telegram-bot/core/wiki/Create-your-own-commands "Create your own commands"
 [issues]: https://github.com/php-telegram-bot/core/issues "PHP Telegram Bot Issues"
 
