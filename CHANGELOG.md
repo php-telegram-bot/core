@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Touched up readme including header and badges.
 ### Deprecated
 ### Removed
 - Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation.
