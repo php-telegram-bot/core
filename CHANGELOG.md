@@ -4,19 +4,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
+### Notes
+- [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
-- Touched up readme including header and badges.
-- Updated changelog to be more useful for external integrations like [Tidelift] and GitHub releases.
+- Touched up readme including header and badges. (#981)
+- Updated changelog to be more useful for external integrations like [Tidelift] and GitHub releases. (#981)
 ### Deprecated
 ### Removed
-- Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation.
+- Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation. (#978)
 ### Fixed
 ### Security
 
 ## [0.58.0] - 2019-06-26
 ### Notes
-- [:ledger: View full changelog][0.58.0] ∙ [:page_with_curl: DB migration script][0.58.0-sql-migration]
+- [:ledger: View file changes][0.58.0] ∙ [:page_with_curl: DB migration script][0.58.0-sql-migration]
 - Logging now uses [PSR-3] `LoggerInterface`. Learn more about how to use it here: #964
 ### Added
 - New funding and support details. (#971)
@@ -43,7 +45,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.57.0] - 2019-06-01
 ### Notes
-- [:ledger: View full changelog][0.57.0] ∙ [:page_with_curl: DB migration script][0.57.0-sql-migration] 
+- [:ledger: View file changes][0.57.0] ∙ [:page_with_curl: DB migration script][0.57.0-sql-migration] 
 - :grey_exclamation: This is a big update and involves a bunch of MySQL database updates, so please *review the changelog carefully*.
 
 ### Added
@@ -59,7 +61,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.56.0] - 2019-04-15
 ### Notes
-- [:ledger: View full changelog][0.56.0] ∙ [:page_with_curl: DB migration script][0.56.0-sql-migration]
+- [:ledger: View file changes][0.56.0] ∙ [:page_with_curl: DB migration script][0.56.0-sql-migration]
 - :grey_exclamation: This is a big update, so please *review the changelog carefully*!
 ### Added
 - Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods.
@@ -77,7 +79,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.55.1] - 2019-01-06
 ### Notes
-- [:ledger: View full changelog][0.55.1]
+- [:ledger: View file changes][0.55.1]
 ### Added
 - Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods. (#916)
 ### Fixed
@@ -85,7 +87,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.55.0] - 2018-12-20
 ### Notes
-- [:ledger: View full changelog][0.55.0] ∙ [:page_with_curl: DB migration script][0.55.0-sql-migration]
+- [:ledger: View file changes][0.55.0] ∙ [:page_with_curl: DB migration script][0.55.0-sql-migration]
 ### Added
 - Bot API 4.0 and 4.1 (Telegram Passport) (#870, #871)
 - Test PHP 7.3 with Travis. (#903)
@@ -96,13 +98,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.54.1] - 2018-10-23
 ### Notes
-- [:ledger: View full changelog][0.54.1]
+- [:ledger: View file changes][0.54.1]
 ### Fixed
 - `sendToActiveChats` now works correctly for any valid Request action. (#898)
 
 ## [0.54.0] - 2018-07-21
 ### Notes
-- [:ledger: View full changelog][0.54.0] ∙ [:page_with_curl: DB migration script][0.54.0-sql-migration]
+- [:ledger: View file changes][0.54.0] ∙ [:page_with_curl: DB migration script][0.54.0-sql-migration]
 ### Added
 - `ChatAction` class to simplify chat action selection. (#859)
 - Telegram Games platform! (#732)
@@ -116,7 +118,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.53.0] - 2018-04-01
 ### Notes
-- [:ledger: View full changelog][0.53.0] ∙ [:page_with_curl: DB migration script][0.53.0-sql-migration]
+- [:ledger: View file changes][0.53.0] ∙ [:page_with_curl: DB migration script][0.53.0-sql-migration]
 ### Added
 - Implemented new changes for Bot API 3.6 (streamable InputMediaVideo, connected website). (#799)
 - `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed. (#767)
@@ -132,7 +134,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.52.0] - 2018-01-07
 ### Notes
-- [:ledger: View full changelog][0.52.0]
+- [:ledger: View file changes][0.52.0]
 ### Fixed
 - Entity relations and wrong types for payments. (#731)
 - Allow empty string for `switch_inline_query` and `switch_inline_query_current_chat` (InlineKeyboardButton). (#736)
@@ -140,13 +142,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.51.0] - 2017-12-05
 ### Notes
-- [:ledger: View full changelog][0.51.0] ∙ [:page_with_curl: DB migration script][0.51.0-sql-migration]
+- [:ledger: View file changes][0.51.0] ∙ [:page_with_curl: DB migration script][0.51.0-sql-migration]
 ### Added
 - Implemented new changes for Bot API 3.5 (InputMedia, MediaGroup). (#718)
 
 ## [0.50.0] - 2017-10-17
 ### Notes
-- [:ledger: View full changelog][0.50.0]
+- [:ledger: View file changes][0.50.0]
 ### Added
 - Finish implementing payments, adding all missing type checks and docblock methods. (#647)
 - Implemented new changes for Bot API 3.4 (Live Locations). (#675)
@@ -159,7 +161,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.49.0] - 2017-09-17
 ### Notes
-- [:ledger: View full changelog][0.49.0]
+- [:ledger: View file changes][0.49.0]
 ### Added
 - Donation section and links in readme.
 - Missing payment methods in `Request` class.
@@ -172,7 +174,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.48.0] - 2017-08-26
 ### Notes
-- [:ledger: View full changelog][0.48.0] ∙ [:page_with_curl: DB migration script][0.48.0-sql-migration]
+- [:ledger: View file changes][0.48.0] ∙ [:page_with_curl: DB migration script][0.48.0-sql-migration]
 ### Added
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 - Add new methods, fields and objects for working with stickers (Bot API 3.2).
@@ -185,7 +187,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.47.1] - 2017-08-06
 ### Notes
-- [:ledger: View full changelog][0.47.1]
+- [:ledger: View file changes][0.47.1]
 ### Added
 - Linked version numbers in changelog for easy verification of code changes. 
 ### Fixed
@@ -193,7 +195,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.47.0] - 2017-08-06 [YANKED]
 ### Notes
-- [:ledger: View full changelog][0.47.0]
+- [:ledger: View file changes][0.47.0]
 ### Changed
 - Updated readme to latest state of 0.47.0.
 ### Fixed
@@ -204,7 +206,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.46.0] - 2017-07-15
 ### Notes
-- [:ledger: View full changelog][0.46.0]
+- [:ledger: View file changes][0.46.0]
 ### Added
 - Callbacks can be added to be executed when callback queries are called.
 - New Bot API 3.1 changes (#550).
@@ -214,7 +216,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.45.0] - 2017-06-25
 ### Notes
-- [:ledger: View full changelog][0.45.0] ∙ [:page_with_curl: DB migration script][0.45.0-sql-migration]
+- [:ledger: View file changes][0.45.0] ∙ [:page_with_curl: DB migration script][0.45.0-sql-migration]
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 - Allow setting a custom Guzzle HTTP Client for requests (#511).
@@ -236,13 +238,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.44.1] - 2017-04-25
 ### Notes
-- [:ledger: View full changelog][0.44.1]
+- [:ledger: View file changes][0.44.1]
 ### Fixed
 - Erroneous exception when using webhook without a database connection.
 
 ## [0.44.0] - 2017-04-25
 ### Notes
-- [:ledger: View full changelog][0.44.0]
+- [:ledger: View file changes][0.44.0]
 ### Added
 - Proper standalone `scrutinizer.yml` config.
 - Human-readable `last_error_date_string` for debug command.
@@ -255,7 +257,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.43.0] - 2017-04-17
 ### Notes
-- [:ledger: View full changelog][0.43.0]
+- [:ledger: View file changes][0.43.0]
 ### Added
 - Travis CI webhook for Support Bot.
 - Interval for request limiter.
@@ -270,7 +272,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.42.0] - 2017-04-09
 ### Notes
-- [:ledger: View full changelog][0.42.0]
+- [:ledger: View file changes][0.42.0]
 ### Added
 - Added `getBotId()` to directly access bot ID.
 ### Changed
@@ -282,7 +284,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.41.0] - 2017-03-25
 ### Notes
-- [:ledger: View full changelog][0.41.0]
+- [:ledger: View file changes][0.41.0]
 ### Added
 - `$show_in_help` attribute for commands, to set if it should be displayed in the `/help` command.
 - Link to new Telegram group: `https://telegram.me/PHP_Telegram_Bot_Support`
@@ -290,13 +292,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.40.1] - 2017-03-07
 ### Notes
-- [:ledger: View full changelog][0.40.1]
+- [:ledger: View file changes][0.40.1]
 ### Fixed
 - Infinite message loop, caused by incorrect Entity variable.
 
 ## [0.40.0] - 2017-02-20
 ### Notes
-- [:ledger: View full changelog][0.40.0]
+- [:ledger: View file changes][0.40.0]
 ### Added
 - Request limiter for incoming requests.
 ### Fixed
@@ -304,7 +306,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.39.0] - 2017-01-20
 ### Notes
-- [:ledger: View full changelog][0.39.0]
+- [:ledger: View file changes][0.39.0]
 ### Added
 - Newest bot API changes.
 - Allow direct access to PDO object (`DB::getPdo()`).
@@ -318,13 +320,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.38.1] - 2016-12-25
 ### Notes
-- [:ledger: View full changelog][0.38.1]
+- [:ledger: View file changes][0.38.1]
 ### Fixed
 - Usage of self-signed certificates in conjunction with the new `allowed_updates` webhook parameter.
 
 ## [0.38.0] - 2016-12-25
 ### Notes
-- [:ledger: View full changelog][0.38.0]
+- [:ledger: View file changes][0.38.0]
 ### Added
 - New `switch_inline_query_current_chat` option for inline keyboard.
 - Support for `channel_post` and `edited_channel_post`.
@@ -334,14 +336,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.37.1] - 2016-12-24
 ### Notes
-- [:ledger: View full changelog][0.37.1]
+- [:ledger: View file changes][0.37.1]
 ### Fixed
 - Keyboards that are built without using the KeyboardButton objects.
 - Commands that are called via `/command@botname` by correctly passing them the bot name.
 
 ## [0.37.0] - 2016-12-13
 ### Notes
-- [:ledger: View full changelog][0.37.0]
+- [:ledger: View file changes][0.37.0]
 ### Changed
 - Logging improvements to Botan integration.
 ### Deprecated
