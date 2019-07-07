@@ -8,13 +8,19 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
-- Touched up readme including header and badges. (#981)
-- Updated changelog to be more useful for external integrations like [Tidelift] and GitHub releases. (#981)
 ### Deprecated
 ### Removed
-- Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation. (#978)
 ### Fixed
 ### Security
+
+## [0.59.0] - 2019-07-07
+### Notes
+- [:ledger: View file changes][0.59.0]
+### Changed
+- Touched up readme including header and badges. (#981)
+- Updated changelog to be more useful for external integrations like [Tidelift] and GitHub releases. (#981)
+### Removed
+- Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation. (#978)
 
 ## [0.58.0] - 2019-06-26
 ### Notes
@@ -374,6 +380,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.59.0]: https://github.com/php-telegram-bot/core/compare/0.58.0...0.59.0
 [0.58.0]: https://github.com/php-telegram-bot/core/compare/0.57.0...0.58.0
 [0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
 [0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
