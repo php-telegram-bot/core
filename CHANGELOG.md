@@ -7,15 +7,23 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Issue labels set automatically via templates. 
 ### Changed
-- Logging only updates or only debug/errors is now possible.
 ### Deprecated
 ### Removed
 ### Fixed
-- Don't output deprecation notices if no logging is enabled.
-- Respect custom HTTP Client initialisation, no matter when it is set.
 ### Security
+
+## [0.59.1] - 2019-07-18
+### Notes
+- [:ledger: View file changes][0.59.1]
+- :exclamation: Deprecated logging method will be removed in the next version, update to PSR-3 now! (see #964 for more info)
+### Added
+- Issue labels set automatically via templates.
+### Changed
+- Logging only updates or only debug/errors is now possible. (#983)
+### Fixed
+- Don't output deprecation notices if no logging is enabled. (#983)
+- Respect custom HTTP Client initialisation, no matter when it is set. (#986)
 
 ## [0.59.0] - 2019-07-07
 ### Notes
@@ -384,6 +392,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.59.1]: https://github.com/php-telegram-bot/core/compare/0.59.0...0.59.1
 [0.59.0]: https://github.com/php-telegram-bot/core/compare/0.58.0...0.59.0
 [0.58.0]: https://github.com/php-telegram-bot/core/compare/0.57.0...0.58.0
 [0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
