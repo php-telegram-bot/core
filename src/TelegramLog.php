@@ -88,8 +88,8 @@ class TelegramLog
      */
     public static function initialize(LoggerInterface $logger = null, LoggerInterface $update_logger = null)
     {
-        // Clearly deprecated code still being executed.
-        if ($logger === null) {
+        if ($logger === null && $update_logger === null) {
+            // Clearly deprecated code still being executed.
             (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error('A PSR-3 compatible LoggerInterface object must be provided. Initialise with a preconfigured logger instance.', E_USER_DEPRECATED);
             $logger = new Logger('bot_log');
         } elseif ($logger instanceof Logger) {
@@ -286,11 +286,12 @@ class TelegramLog
         } elseif ($name === 'update') {
             $logger = self::$update_logger;
             $name   = 'info';
-        } else {
-            return;
         }
 
-        self::initialize(self::$logger, self::$update_logger);
+        // Clearly we have no logging enabled.
+        if ($logger === null) {
+            return;
+        }
 
         // Replace any placeholders from the passed context.
         if (count($arguments) >= 2) {

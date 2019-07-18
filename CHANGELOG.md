@@ -8,9 +8,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
+- Logging only updates or only debug/errors is now possible.
 ### Deprecated
 ### Removed
 ### Fixed
+- Don't output deprecation notices if no logging is enabled.
 ### Security
 
 ## [0.59.0] - 2019-07-07
