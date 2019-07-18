@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - Don't output deprecation notices if no logging is enabled.
+- Respect custom HTTP Client initialisation, no matter when it is set.
 ### Security
 
 ## [0.59.0] - 2019-07-07

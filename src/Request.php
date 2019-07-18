@@ -264,7 +264,7 @@ class Request
         }
 
         self::$telegram = $telegram;
-        self::setClient(new Client(['base_uri' => self::$api_base_uri]));
+        self::setClient(self::$client ?: new Client(['base_uri' => self::$api_base_uri]));
     }
 
     /**
