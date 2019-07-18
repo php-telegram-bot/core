@@ -1,9 +1,10 @@
 ---
 name: 🐞 Bug Report
 about: Something is broken? 🔨
+labels: bug
 ---
 
-### Bug Report
+### 🐞 Bug Report
 
 <--
 ❗ NEVER put your Telegram API key or any other private details here. (like passwords, user IDs, etc.)
@@ -29,7 +30,7 @@ Substitute them like <API_KEY> or <USER_ID> etc.
 
 <!-- Provide a summary describing the problem you are experiencing. -->
 
-### Current behaviour
+#### Current behaviour
 
 <!-- What is the current (buggy) behaviour? -->
 

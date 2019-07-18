@@ -1,6 +1,7 @@
 ---
 name: 💥 BC Break
 about: Have you encountered an issue during an upgrade? 💣
+labels: bc break
 ---
 
 <!--
@@ -9,7 +10,7 @@ Before reporting a BC break, please consult the changelog and wiki entry for the
 - https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility
 -->
 
-### BC Break Report
+### 💥 BC Break Report
 
 <--
 ❗ NEVER put your Telegram API key or any other private details here. (like passwords, user IDs, etc.)

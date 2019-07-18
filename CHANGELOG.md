@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Issue labels set automatically via templates. 
 ### Changed
 - Logging only updates or only debug/errors is now possible.
 ### Deprecated
