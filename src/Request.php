@@ -50,6 +50,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse unbanChatMember(array $data)         Use this method to unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
  * @method static ServerResponse restrictChatMember(array $data)      Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all boolean parameters to lift restrictions from a user. Returns True on success.
  * @method static ServerResponse promoteChatMember(array $data)       Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean parameters to demote a user. Returns True on success.
+ * @method static ServerResponse setChatPermissions(array $data)      Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members admin rights. Returns True on success.
  * @method static ServerResponse exportChatInviteLink(array $data)    Use this method to export an invite link to a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns exported invite link as String on success.
  * @method static ServerResponse setChatPhoto(array $data)            Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
  * @method static ServerResponse deleteChatPhoto(array $data)         Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
@@ -176,6 +177,7 @@ class Request
         'unbanChatMember',
         'restrictChatMember',
         'promoteChatMember',
+        'setChatPermissions',
         'exportChatInviteLink',
         'setChatPhoto',
         'deleteChatPhoto',
