@@ -18,6 +18,7 @@ namespace Longman\TelegramBot\Entities;
  * @method string       getFileId()       Unique identifier for this file
  * @method int          getWidth()        Sticker width
  * @method int          getHeight()       Sticker height
+ * @method bool         getIsAnimated()   True, if the sticker is animated
  * @method PhotoSize    getThumb()        Optional. Sticker thumbnail in .webp or .jpg format
  * @method string       getEmoji()        Optional. Emoji associated with the sticker
  * @method string       getSetName()      Optional. Name of the sticker set to which the sticker belongs
