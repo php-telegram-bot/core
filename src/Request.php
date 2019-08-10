@@ -373,8 +373,8 @@ class Request
                 if (is_string($item) && file_exists($item)) {
                     $item = new Stream(self::encodeFile($item));
                 }
-            } elseif (is_array($item)) {
-                // Convert any nested arrays into JSON strings.
+            } elseif (is_array($item) || is_object($item)) {
+                // Convert any nested arrays or objects into JSON strings.
                 $item = json_encode($item);
             }
 
@@ -382,6 +382,7 @@ class Request
             $has_resource = $has_resource || is_resource($item) || $item instanceof Stream;
             $multipart[]  = ['name' => $key, 'contents' => $item];
         }
+        unset($item);
 
         if ($has_resource) {
             return ['multipart' => $multipart];
@@ -479,11 +480,6 @@ class Request
      */
     public static function execute($action, array $data = [])
     {
-        //Fix so that the keyboard markup is a string, not an object
-        if (isset($data['reply_markup'])) {
-            $data['reply_markup'] = json_encode($data['reply_markup']);
-        }
-
         $result                  = null;
         $request_params          = self::setUpRequestParams($data);
         $request_params['debug'] = TelegramLog::getDebugLogTempStream();
