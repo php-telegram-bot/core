@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Non-existing commands now correctly execute `GenericCommand` again.
 ### Security
 
 ## [0.59.1] - 2019-07-18
