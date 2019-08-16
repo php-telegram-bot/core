@@ -7,13 +7,21 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 4.4 (Animated stickers, `ChatPermissions`).
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- Non-existing commands now correctly execute `GenericCommand` again.
 ### Security
+
+## [0.60.0] - 2019-08-16
+### Notes
+- [:ledger: View file changes][0.60.0]
+### Added
+- Bot API 4.4 (Animated stickers, `ChatPermissions`). (#990)
+### Changed
+- Allow passing native entity objects to requests. (#991)
+### Fixed
+- Non-existing commands now correctly execute `GenericCommand` again. (#993)
 
 ## [0.59.1] - 2019-07-18
 ### Notes
@@ -394,6 +402,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.60.0]: https://github.com/php-telegram-bot/core/compare/0.59.1...0.60.0
 [0.59.1]: https://github.com/php-telegram-bot/core/compare/0.59.0...0.59.1
 [0.59.0]: https://github.com/php-telegram-bot/core/compare/0.58.0...0.59.0
 [0.58.0]: https://github.com/php-telegram-bot/core/compare/0.57.0...0.58.0
