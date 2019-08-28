@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Boolean value for Polls gets saved correctly in MySQL DB.
 ### Security
 
 ## [0.60.0] - 2019-08-16

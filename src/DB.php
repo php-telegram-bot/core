@@ -845,7 +845,7 @@ class DB
             $sth->bindValue(':id', $poll->getId());
             $sth->bindValue(':question', $poll->getQuestion());
             $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions() ?: null));
-            $sth->bindValue(':is_closed', $poll->getIsClosed());
+            $sth->bindValue(':is_closed', $poll->getIsClosed(), PDO::PARAM_INT);
             $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
