@@ -7,9 +7,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working.
 ### Changed
 ### Deprecated
 ### Removed
+- Service message system commands, which are now handled by `GenericmessageCommand`.
 ### Fixed
 - Boolean value for Polls gets saved correctly in MySQL DB.
 ### Security
