@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 - Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working.
+- Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command.
 ### Changed
 ### Deprecated
 ### Removed

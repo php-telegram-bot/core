@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -34,7 +33,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
 
     /**
      * @var bool
@@ -45,10 +44,15 @@ class GenericmessageCommand extends SystemCommand
      * Execution if MySQL is required but not available
      *
      * @return ServerResponse
+     * @throws TelegramException
      */
     public function executeNoDb()
     {
-        //Do nothing
+        // Try to execute any deprecated system commands.
+        if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
+            return $deprecated_system_command_response;
+        }
+
         return Request::emptyResponse();
     }
 
@@ -60,65 +64,16 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        //If a conversation is busy, execute the conversation command after handling the message
-        $conversation = new Conversation(
-            $this->getMessage()->getFrom()->getId(),
-            $this->getMessage()->getChat()->getId()
-        );
-
-        //Fetch conversation command if it exists and execute it
-        if ($conversation->exists() && ($command = $conversation->getCommand())) {
-            return $this->getTelegram()->executeCommand($command);
+        // Try to continue any active conversation.
+        if ($active_conversation_response = $this->executeActiveConversation()) {
+            return $active_conversation_response;
         }
 
         // Try to execute any deprecated system commands.
-        if ($deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
+        if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
             return $deprecated_system_command_response;
         }
 
         return Request::emptyResponse();
-    }
-
-
-    public function executeDeprecatedSystemCommand()
-    {
-        $telegram = $this->getTelegram();
-        $update   = $this->getUpdate();
-        $message  = $this->getMessage();
-
-        // List of service messages previously handled internally.
-        $service_messages = [
-            'editedmessage'         => [$update, 'getEditedMessage'],
-            'channelpost'           => [$update, 'getChannelPost'],
-            'editedchannelpost'     => [$update, 'getEditedChannelPost'],
-            'newchatmembers'        => [$message, 'getNewChatMembers'],
-            'leftchatmember'        => [$message, 'getLeftChatMember'],
-            'newchattitle'          => [$message, 'getNewChatTitle'],
-            'newchatphoto'          => [$message, 'getNewChatPhoto'],
-            'deletechatphoto'       => [$message, 'getDeleteChatPhoto'],
-            'groupchatcreated'      => [$message, 'getGroupChatCreated'],
-            'supergroupchatcreated' => [$message, 'getSupergroupChatCreated'],
-            'channelchatcreated'    => [$message, 'getChannelChatCreated'],
-            'migratefromchatid'     => [$message, 'getMigrateFromChatId'],
-            'migratetochatid'       => [$message, 'getMigrateToChatId'],
-            'pinnedmessage'         => [$message, 'getPinnedMessage'],
-            'successfulpayment'     => [$message, 'getSuccessfulPayment'],
-        ];
-
-        foreach ($service_messages as $command => $service_message_getter) {
-            // Let's check if this message is a service message.
-            if ($service_message_getter() === null) {
-                continue;
-            }
-
-            // Make sure the command exists, otherwise GenericCommand would be executed instead!
-            if ($telegram->getCommandObject($command) === null) {
-                break;
-            }
-
-            return $telegram->executeCommand($command);
-        }
-
-        return null;
     }
 }
