@@ -91,7 +91,7 @@ class Telegram
     /**
      * MySQL integration
      *
-     * @var boolean
+     * @var bool
      */
     protected $mysql_enabled = false;
 
@@ -126,7 +126,7 @@ class Telegram
     /**
      * Check if runCommands() is running in this session
      *
-     * @var boolean
+     * @var bool
      */
     protected $run_commands = false;
 
@@ -494,7 +494,7 @@ class Telegram
      *
      * @param string $command
      *
-     * @return mixed
+     * @return ServerResponse
      * @throws TelegramException
      */
     public function executeCommand($command)

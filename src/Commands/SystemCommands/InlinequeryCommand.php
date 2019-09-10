@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
  * Inline query command
@@ -31,7 +30,7 @@ class InlinequeryCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.0.1';
 
     /**
      * Command execute method
@@ -40,10 +39,10 @@ class InlinequeryCommand extends SystemCommand
      */
     public function execute()
     {
-        //$inline_query = $this->getUpdate()->getInlineQuery();
+        //$inline_query = $this->getInlineQuery();
         //$user_id      = $inline_query->getFrom()->getId();
         //$query        = $inline_query->getQuery();
 
-        return Request::answerInlineQuery(['inline_query_id' => $this->getUpdate()->getInlineQuery()->getId()]);
+        return $this->getInlineQuery()->answer([]);
     }
 }

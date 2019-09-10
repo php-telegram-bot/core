@@ -197,16 +197,7 @@ abstract class Command
      */
     public function executeNoDb()
     {
-        //Preparing message
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-
-        $data = [
-            'chat_id' => $chat_id,
-            'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
-        ];
-
-        return Request::sendMessage($data);
+        return $this->replyToChat('Sorry no database connection, unable to execute "' . $this->name . '" command.');
     }
 
     /**

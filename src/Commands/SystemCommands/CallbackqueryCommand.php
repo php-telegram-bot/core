@@ -11,7 +11,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Entities\ServerResponse;
 
 /**
  * Callback query command
@@ -41,21 +41,24 @@ class CallbackqueryCommand extends SystemCommand
     /**
      * Command execute method
      *
-     * @return mixed
+     * @return ServerResponse
      */
     public function execute()
     {
-        //$callback_query = $this->getUpdate()->getCallbackQuery();
+        //$callback_query = $this->getCallbackQuery();
         //$user_id        = $callback_query->getFrom()->getId();
         //$query_id       = $callback_query->getId();
         //$query_data     = $callback_query->getData();
 
+        $answer         = null;
+        $callback_query = $this->getCallbackQuery();
+
         // Call all registered callbacks.
         foreach (self::$callbacks as $callback) {
-            $callback($this->getUpdate()->getCallbackQuery());
+            $answer = $callback($callback_query);
         }
 
-        return Request::answerCallbackQuery(['callback_query_id' => $this->getUpdate()->getCallbackQuery()->getId()]);
+        return ($answer instanceof ServerResponse) ? $answer : $callback_query->answer();
     }
 
     /**
