@@ -29,7 +29,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.1",
-        "monolog/monolog": "^1.24",
+        "monolog/monolog": "^1.25",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
