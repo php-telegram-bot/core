@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -34,7 +33,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
 
     /**
      * @var bool
@@ -45,10 +44,15 @@ class GenericmessageCommand extends SystemCommand
      * Execution if MySQL is required but not available
      *
      * @return ServerResponse
+     * @throws TelegramException
      */
     public function executeNoDb()
     {
-        //Do nothing
+        // Try to execute any deprecated system commands.
+        if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
+            return $deprecated_system_command_response;
+        }
+
         return Request::emptyResponse();
     }
 
@@ -60,15 +64,14 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        //If a conversation is busy, execute the conversation command after handling the message
-        $conversation = new Conversation(
-            $this->getMessage()->getFrom()->getId(),
-            $this->getMessage()->getChat()->getId()
-        );
+        // Try to continue any active conversation.
+        if ($active_conversation_response = $this->executeActiveConversation()) {
+            return $active_conversation_response;
+        }
 
-        //Fetch conversation command if it exists and execute it
-        if ($conversation->exists() && ($command = $conversation->getCommand())) {
-            return $this->telegram->executeCommand($command);
+        // Try to execute any deprecated system commands.
+        if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
+            return $deprecated_system_command_response;
         }
 
         return Request::emptyResponse();

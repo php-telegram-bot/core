@@ -7,10 +7,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working.
+- Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command.
 ### Changed
 - Small readme and code fixes / simplifications. 
 ### Deprecated
 ### Removed
+- Service message system commands, which are now handled by `GenericmessageCommand`.
 ### Fixed
 - Boolean value for Polls gets saved correctly in MySQL DB.
 - Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
