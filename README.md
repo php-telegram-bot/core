@@ -73,7 +73,7 @@ Telegram announced official support for a [Bot API](https://telegram.org/blog/bo
 This Bot aims to provide a platform where one can simply write a bot and have interactions in a matter of minutes.
 
 The Bot can:
-- Retrieve updates with [webhook][#webhook-installation] and [getUpdates][#getupdates-installation] methods.
+- Retrieve updates with [webhook](#webhook-installation) and [getUpdates](#getupdates-installation) methods.
 - Supports all types and methods according to Telegram API 4.4 (July 2019).
 - Supports supergroups.
 - Handle commands in chat with other bots.

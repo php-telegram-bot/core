@@ -8,10 +8,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
+- Small readme and code fixes / simplifications. 
 ### Deprecated
 ### Removed
 ### Fixed
 - Boolean value for Polls gets saved correctly in MySQL DB.
+- Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
 ### Security
 
 ## [0.60.0] - 2019-08-16
