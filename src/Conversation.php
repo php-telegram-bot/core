@@ -219,7 +219,7 @@ class Conversation
     public function update()
     {
         if ($this->exists()) {
-            $fields = ['notes' => json_encode($this->notes)];
+            $fields = ['notes' => json_encode($this->notes,JSON_UNESCAPED_UNICODE)];
             //I can update a conversation whatever the state is
             $where = ['id' => $this->conversation['id']];
             if (ConversationDB::updateConversation($fields, $where)) {
