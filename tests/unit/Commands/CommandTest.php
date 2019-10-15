@@ -49,7 +49,7 @@ class CommandTest extends TestCase
      */
     private $command_stub_with_config;
 
-    public function setUp()
+    public function setUp(): void
     {
         //Default command object
         $this->telegram     = new Telegram(self::$dummy_api_key, 'testbot');

@@ -35,14 +35,14 @@ class TelegramLogTest extends TestCase
         'external_update' => '/tmp/php-telegram-bot-external_update.log',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // Make sure no logger instance is set before each test.
         TestHelpers::setStaticProperty(TelegramLog::class, 'logger', null);
         TestHelpers::setStaticProperty(TelegramLog::class, 'update_logger', null);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Make sure no logfiles exist.
         foreach (self::$logfiles as $file) {

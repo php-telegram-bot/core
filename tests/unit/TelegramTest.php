@@ -35,7 +35,7 @@ class TelegramTest extends TestCase
         '/tmp/php-telegram-bot-custom-commands-3',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
 
@@ -45,7 +45,7 @@ class TelegramTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Clean up the custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {

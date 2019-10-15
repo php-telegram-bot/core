@@ -27,7 +27,7 @@ class ConversationTest extends TestCase
      */
     private $telegram;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $credentials = [
             'host'     => PHPUNIT_DB_HOST,

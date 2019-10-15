@@ -23,7 +23,7 @@ class LocationTest extends TestCase
 {
     private $coordinates;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->coordinates = [
             'longitude' => (float) mt_rand(10, 69),

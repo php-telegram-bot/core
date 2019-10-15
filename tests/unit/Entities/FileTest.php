@@ -26,7 +26,7 @@ class FileTest extends TestCase
      */
     private $data;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->data = [
             'file_id'   => (int) mt_rand(1, 99),
