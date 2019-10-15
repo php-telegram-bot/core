@@ -41,7 +41,7 @@ class LocationTest extends TestCase
     {
         $location = new Location($this->coordinates);
         $long     = $location->getLongitude();
-        $this->assertInternalType('float', $long);
+        $this->assertIsFloat($long);
         $this->assertEquals($this->coordinates['longitude'], $long);
     }
 
@@ -49,7 +49,7 @@ class LocationTest extends TestCase
     {
         $location = new Location($this->coordinates);
         $lat      = $location->getLatitude();
-        $this->assertInternalType('float', $lat);
+        $this->assertIsFloat($lat);
         $this->assertEquals($this->coordinates['latitude'], $lat);
     }
 }

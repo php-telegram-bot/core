@@ -56,7 +56,7 @@ class WebhookInfoTest extends TestCase
     {
         $webhook            = new WebhookInfo($this->data);
         $custom_certificate = $webhook->getHasCustomCertificate();
-        $this->assertInternalType('bool', $custom_certificate);
+        $this->assertIsBool($custom_certificate);
         $this->assertEquals($this->data['has_custom_certificate'], $custom_certificate);
     }
 
@@ -64,7 +64,7 @@ class WebhookInfoTest extends TestCase
     {
         $webhook      = new WebhookInfo($this->data);
         $update_count = $webhook->getPendingUpdateCount();
-        $this->assertInternalType('int', $update_count);
+        $this->assertIsInt($update_count);
         $this->assertEquals($this->data['pending_update_count'], $update_count);
     }
 
@@ -72,7 +72,7 @@ class WebhookInfoTest extends TestCase
     {
         $webhook    = new WebhookInfo($this->data);
         $error_date = $webhook->getLastErrorDate();
-        $this->assertInternalType('int', $error_date);
+        $this->assertIsInt($error_date);
         $this->assertEquals($this->data['last_error_date'], $error_date);
     }
 
@@ -80,7 +80,7 @@ class WebhookInfoTest extends TestCase
     {
         $webhook   = new WebhookInfo($this->data);
         $error_msg = $webhook->getLastErrorMessage();
-        $this->assertInternalType('string', $error_msg);
+        $this->assertIsString($error_msg);
         $this->assertEquals($this->data['last_error_message'], $error_msg);
     }
 
@@ -88,7 +88,7 @@ class WebhookInfoTest extends TestCase
     {
         $webhook         = new WebhookInfo($this->data);
         $max_connections = $webhook->getMaxConnections();
-        $this->assertInternalType('int', $max_connections);
+        $this->assertIsInt($max_connections);
         $this->assertEquals($this->data['max_connections'], $max_connections);
     }
 
@@ -96,7 +96,7 @@ class WebhookInfoTest extends TestCase
     {
         $webhook         = new WebhookInfo($this->data);
         $allowed_updates = $webhook->getAllowedUpdates();
-        $this->assertInternalType('array', $allowed_updates);
+        $this->assertIsArray($allowed_updates);
         $this->assertEquals($this->data['allowed_updates'], $allowed_updates);
     }
 

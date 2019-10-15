@@ -12,6 +12,7 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\InlineKeyboardButton;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @package         TelegramTest
@@ -34,21 +35,17 @@ class InlineKeyboardTest extends TestCase
         return new InlineKeyboardButton($data);
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage inline_keyboard field is not an array!
-     */
     public function testInlineKeyboardDataMalformedField()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('inline_keyboard field is not an array!');
         new InlineKeyboard(['inline_keyboard' => 'wrong']);
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage inline_keyboard subfield is not an array!
-     */
     public function testInlineKeyboardDataMalformedSubfield()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('inline_keyboard subfield is not an array!');
         new InlineKeyboard(['inline_keyboard' => ['wrong']]);
     }
 
