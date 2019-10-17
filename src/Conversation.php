@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -146,7 +147,8 @@ class Conversation
      */
     protected function start()
     {
-        if ($this->command
+        if (
+            $this->command
             && !$this->exists()
             && ConversationDB::insertConversation(
                 $this->user_id,

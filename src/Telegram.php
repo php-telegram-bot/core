@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -468,7 +469,8 @@ class Telegram
 
             // Empty usage string denotes a non-executable command.
             // @see https://github.com/php-telegram-bot/core/issues/772#issuecomment-388616072
-            if (($command_obj === null && $type === 'command')
+            if (
+                ($command_obj === null && $type === 'command')
                 || ($command_obj !== null && $command_obj->getUsage() !== '')
             ) {
                 $command = $command_tmp;
