@@ -93,8 +93,6 @@
 
     <rule ref="PEAR.Commenting.InlineComment"/>
 
-    <rule ref="PEAR.ControlStructures.MultiLineCondition"/>
-
     <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent"/>
 
     <rule ref="MySource.PHP.EvalObjectFactory"/>

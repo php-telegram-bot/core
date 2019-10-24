@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -36,7 +37,7 @@ class CommandTestCase extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
 

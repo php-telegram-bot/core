@@ -14,7 +14,6 @@
     stopOnFailure="false"
     stopOnIncomplete="false"
     stopOnSkipped="false"
-    syntaxCheck="true"
     timeoutForLargeTests="60"
     timeoutForMediumTests="10"
     timeoutForSmallTests="1"
@@ -35,7 +34,7 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php" processUncoveredFilesFromWhitelist="true">./src</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
                 <directory suffix=".php">./src/Exception</directory>
             </exclude>

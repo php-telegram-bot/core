@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -12,6 +13,7 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\KeyboardButton;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @package         TelegramTest
@@ -22,21 +24,17 @@ use Longman\TelegramBot\Entities\KeyboardButton;
  */
 class KeyboardTest extends TestCase
 {
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage keyboard field is not an array!
-     */
     public function testKeyboardDataMalformedField()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('keyboard field is not an array!');
         new Keyboard(['keyboard' => 'wrong']);
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage keyboard subfield is not an array!
-     */
     public function testKeyboardDataMalformedSubfield()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('keyboard subfield is not an array!');
         new Keyboard(['keyboard' => ['wrong']]);
     }
 

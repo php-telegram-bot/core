@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -35,14 +36,14 @@ class TelegramLogTest extends TestCase
         'external_update' => '/tmp/php-telegram-bot-external_update.log',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // Make sure no logger instance is set before each test.
         TestHelpers::setStaticProperty(TelegramLog::class, 'logger', null);
         TestHelpers::setStaticProperty(TelegramLog::class, 'update_logger', null);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Make sure no logfiles exist.
         foreach (self::$logfiles as $file) {
@@ -52,19 +53,19 @@ class TelegramLogTest extends TestCase
 
     public function testNewInstanceWithoutErrorPath()
     {
-        $this->setExpectedException(TelegramLogException::class);
+        $this->expectException(TelegramLogException::class);
         TelegramLog::initErrorLog('');
     }
 
     public function testNewInstanceWithoutDebugPath()
     {
-        $this->setExpectedException(TelegramLogException::class);
+        $this->expectException(TelegramLogException::class);
         TelegramLog::initDebugLog('');
     }
 
     public function testNewInstanceWithoutUpdatePath()
     {
-        $this->setExpectedException(TelegramLogException::class);
+        $this->expectException(TelegramLogException::class);
         TelegramLog::initUpdateLog('');
     }
 
@@ -81,10 +82,10 @@ class TelegramLogTest extends TestCase
 
         $this->assertFileExists($file);
         $error_log = file_get_contents($file);
-        $this->assertContains('bot_log.ERROR: my error', $error_log);
-        $this->assertContains('bot_log.ERROR: my 50% error', $error_log);
-        $this->assertContains('bot_log.ERROR: my old custom placeholder error', $error_log);
-        $this->assertContains('bot_log.ERROR: my new custom placeholder error', $error_log);
+        $this->assertStringContainsString('bot_log.ERROR: my error', $error_log);
+        $this->assertStringContainsString('bot_log.ERROR: my 50% error', $error_log);
+        $this->assertStringContainsString('bot_log.ERROR: my old custom placeholder error', $error_log);
+        $this->assertStringContainsString('bot_log.ERROR: my new custom placeholder error', $error_log);
     }
 
     public function testDebugStream()
@@ -100,10 +101,10 @@ class TelegramLogTest extends TestCase
 
         $this->assertFileExists($file);
         $debug_log = file_get_contents($file);
-        $this->assertContains('bot_log.DEBUG: my debug', $debug_log);
-        $this->assertContains('bot_log.DEBUG: my 50% debug', $debug_log);
-        $this->assertContains('bot_log.DEBUG: my old custom placeholder debug', $debug_log);
-        $this->assertContains('bot_log.DEBUG: my new custom placeholder debug', $debug_log);
+        $this->assertStringContainsString('bot_log.DEBUG: my debug', $debug_log);
+        $this->assertStringContainsString('bot_log.DEBUG: my 50% debug', $debug_log);
+        $this->assertStringContainsString('bot_log.DEBUG: my old custom placeholder debug', $debug_log);
+        $this->assertStringContainsString('bot_log.DEBUG: my new custom placeholder debug', $debug_log);
     }
 
     public function testUpdateStream()
@@ -119,10 +120,10 @@ class TelegramLogTest extends TestCase
 
         $this->assertFileExists($file);
         $update_log = file_get_contents($file);
-        $this->assertContains('my update', $update_log);
-        $this->assertContains('my 50% update', $update_log);
-        $this->assertContains('my old custom placeholder update', $update_log);
-        $this->assertContains('my new custom placeholder update', $update_log);
+        $this->assertStringContainsString('my update', $update_log);
+        $this->assertStringContainsString('my 50% update', $update_log);
+        $this->assertStringContainsString('my old custom placeholder update', $update_log);
+        $this->assertStringContainsString('my new custom placeholder update', $update_log);
     }
 
     public function testExternalStream()
@@ -156,17 +157,17 @@ class TelegramLogTest extends TestCase
         $this->assertFileExists($file_update);
         $file_contents        = file_get_contents($file);
         $file_update_contents = file_get_contents($file_update);
-        $this->assertContains('bot_external_log.ERROR: my error', $file_contents);
-        $this->assertContains('bot_external_log.ERROR: my 50% error', $file_contents);
-        $this->assertContains('bot_external_log.ERROR: my old custom placeholder error', $file_contents);
-        $this->assertContains('bot_external_log.ERROR: my new custom placeholder error', $file_contents);
-        $this->assertContains('bot_external_log.DEBUG: my debug', $file_contents);
-        $this->assertContains('bot_external_log.DEBUG: my 50% debug', $file_contents);
-        $this->assertContains('bot_external_log.DEBUG: my old custom placeholder debug', $file_contents);
-        $this->assertContains('bot_external_log.DEBUG: my new custom placeholder debug', $file_contents);
-        $this->assertContains('bot_external_update_log.INFO: my update', $file_update_contents);
-        $this->assertContains('bot_external_update_log.INFO: my 50% update', $file_update_contents);
-        $this->assertContains('bot_external_update_log.INFO: my old custom placeholder update', $file_update_contents);
-        $this->assertContains('bot_external_update_log.INFO: my new custom placeholder update', $file_update_contents);
+        $this->assertStringContainsString('bot_external_log.ERROR: my error', $file_contents);
+        $this->assertStringContainsString('bot_external_log.ERROR: my 50% error', $file_contents);
+        $this->assertStringContainsString('bot_external_log.ERROR: my old custom placeholder error', $file_contents);
+        $this->assertStringContainsString('bot_external_log.ERROR: my new custom placeholder error', $file_contents);
+        $this->assertStringContainsString('bot_external_log.DEBUG: my debug', $file_contents);
+        $this->assertStringContainsString('bot_external_log.DEBUG: my 50% debug', $file_contents);
+        $this->assertStringContainsString('bot_external_log.DEBUG: my old custom placeholder debug', $file_contents);
+        $this->assertStringContainsString('bot_external_log.DEBUG: my new custom placeholder debug', $file_contents);
+        $this->assertStringContainsString('bot_external_update_log.INFO: my update', $file_update_contents);
+        $this->assertStringContainsString('bot_external_update_log.INFO: my 50% update', $file_update_contents);
+        $this->assertStringContainsString('bot_external_update_log.INFO: my old custom placeholder update', $file_update_contents);
+        $this->assertStringContainsString('bot_external_update_log.INFO: my new custom placeholder update', $file_update_contents);
     }
 }

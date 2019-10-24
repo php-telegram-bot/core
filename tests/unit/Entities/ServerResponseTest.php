@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -31,7 +32,7 @@ use Longman\TelegramBot\Request;
  */
 class ServerResponseTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         // Make sure the current action in the Request class is unset.
         TestHelpers::setStaticProperty(Request::class, 'current_action', null);
