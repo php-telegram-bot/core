@@ -230,7 +230,8 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `poll_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New poll state. Bots receive only updates about polls, which are sent or stopped by the bot',
 
   PRIMARY KEY (`id`),
-  KEY `message_id` (`chat_id`, `message_id`),
+  KEY `message_id` (`message_id`),
+  KEY `chat_message_id` (`chat_id`, `message_id`),
   KEY `edited_message_id` (`edited_message_id`),
   KEY `channel_post_id` (`channel_post_id`),
   KEY `edited_channel_post_id` (`edited_channel_post_id`),
