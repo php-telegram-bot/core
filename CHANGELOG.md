@@ -11,12 +11,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command.
 ### Changed
 - Small readme and code fixes / simplifications. 
+- Upgrade PHPUnit to 8.x and PHPCS to 3.5. For tests now minimum PHP version is 7.2.
 ### Deprecated
 ### Removed
 - Service message system commands, which are now handled by `GenericmessageCommand`.
 ### Fixed
 - Boolean value for Polls gets saved correctly in MySQL DB.
 - Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
+- PSR-12 incompatibilities in the codebase.
 ### Security
 
 ## [0.60.0] - 2019-08-16

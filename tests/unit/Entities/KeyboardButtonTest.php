@@ -54,8 +54,12 @@ class KeyboardButtonTest extends TestCase
     public function testKeyboardButtonParameterSetting()
     {
         $button = new KeyboardButton('message');
+        $this->assertSame('message', $button->getText());
         $this->assertEmpty($button->getRequestContact());
         $this->assertEmpty($button->getRequestLocation());
+
+        $button->setText('new message');
+        $this->assertSame('new message', $button->getText());
 
         $button->setRequestContact(true);
         $this->assertTrue($button->getRequestContact());
