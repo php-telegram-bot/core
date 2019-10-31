@@ -10,6 +10,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working.
 - Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command.
+- Improved MySQL DB index for `message` table, making the clean much faster on bigger databases. (Thanks to @damianperez)
+- `/cleanup` command now supports dry run which simply outputs all queries that would be run.
 ### Changed
 - Small readme and code fixes / simplifications. 
 - Upgrade PHPUnit to 8.x and PHPCS to 3.5. For tests now minimum PHP version is 7.2.
@@ -23,6 +25,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Boolean value for Polls gets saved correctly in MySQL DB.
 - Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
 - PSR-12 incompatibilities in the codebase.
+- Improved and corrected `/cleanup` command. 
 ### Security
 
 ## [0.60.0] - 2019-08-16

@@ -52,7 +52,7 @@ class CleanupCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $usage = '/cleanup <days> or /cleanup <count> <unit> (e.g. 3 weeks)';
+    protected $usage = '/cleanup [dry] <days> or /cleanup [dry] <count> <unit> (e.g. 3 weeks)';
 
     /**
      * @var string
