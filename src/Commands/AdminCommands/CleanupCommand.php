@@ -56,7 +56,7 @@ class CleanupCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * @var bool
@@ -85,14 +85,16 @@ class CleanupCommand extends AdminCommand
      * @var array
      */
     protected static $default_clean_older_than = [
-        'chat'                 => '365 days',
         'callback_query'       => '30 days',
+        'chat'                 => '365 days',
         'chosen_inline_result' => '30 days',
-        'conversation'         => '30 days',
+        'conversation'         => '90 days',
         'edited_message'       => '30 days',
         'inline_query'         => '30 days',
         'message'              => '30 days',
+        'poll'                 => '90 days',
         'request_limiter'      => '1 minute',
+        'shipping_query'       => '90 days',
         'telegram_update'      => '30 days',
         'user'                 => '365 days',
         'user_chat'            => '365 days',
@@ -238,7 +240,9 @@ class CleanupCommand extends AdminCommand
             'user'            => ['table' => TB_USER, 'field' => 'updated_at'],
             'chat'            => ['table' => TB_CHAT, 'field' => 'updated_at'],
             'conversation'    => ['table' => TB_CONVERSATION, 'field' => 'updated_at'],
+            'poll'            => ['table' => TB_POLL, 'field' => 'created_at'],
             'request_limiter' => ['table' => TB_REQUEST_LIMITER, 'field' => 'created_at'],
+            'shipping_query'  => ['table' => TB_SHIPPING_QUERY, 'field' => 'created_at'],
         ];
 
         foreach (array_intersect(array_keys($simple_tables), $tables_to_clean) as $table_to_clean) {
