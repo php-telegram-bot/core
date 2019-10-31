@@ -5,6 +5,7 @@
 .DS_Store
 .idea
 .phpintel
+.phpunit.result.cache
 
 # Composer
 /composer.phar

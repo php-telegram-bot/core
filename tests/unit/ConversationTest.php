@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -11,6 +12,7 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
 
 /**
@@ -27,7 +29,7 @@ class ConversationTest extends TestCase
      */
     private $telegram;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $credentials = [
             'host'     => PHPUNIT_DB_HOST,
@@ -46,18 +48,18 @@ class ConversationTest extends TestCase
     public function testConversationThatDoesntExistPropertiesSetCorrectly()
     {
         $conversation = new Conversation(123, 456);
-        $this->assertAttributeEquals(123, 'user_id', $conversation);
-        $this->assertAttributeEquals(456, 'chat_id', $conversation);
-        $this->assertAttributeEquals(null, 'command', $conversation);
+        $this->assertSame(123, $conversation->getUserId());
+        $this->assertSame(456, $conversation->getChatId());
+        $this->assertNull($conversation->getCommand());
     }
 
     public function testConversationThatExistsPropertiesSetCorrectly()
     {
         $info         = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        $this->assertAttributeEquals($info['user_id'], 'user_id', $conversation);
-        $this->assertAttributeEquals($info['chat_id'], 'chat_id', $conversation);
-        $this->assertAttributeEquals('command', 'command', $conversation);
+        $this->assertSame($info['user_id'], $conversation->getUserId());
+        $this->assertSame($info['chat_id'], $conversation->getChatId());
+        $this->assertSame('command', $conversation->getCommand());
     }
 
     public function testConversationThatDoesntExistWithoutCommand()
@@ -67,11 +69,9 @@ class ConversationTest extends TestCase
         $this->assertNull($conversation->getCommand());
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     */
     public function testConversationThatDoesntExistWithCommand()
     {
+        $this->expectException(TelegramException::class);
         new Conversation(1, 1, 'command');
     }
 

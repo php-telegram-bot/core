@@ -15,20 +15,20 @@ The first parameter is the main logger, the second one is used for the raw updat
 
 (in this example we're using [Monolog])
 ```php
+use Longman\TelegramBot\TelegramLog;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Longman\TelegramBot\TelegramLog;
 
 TelegramLog::initialize(
-    // Main logger that handles all 'error' and 'debug' logs.
+    // Main logger that handles all 'debug' and 'error' logs.
     new Logger('telegram_bot', [
-        (new StreamHandler(__DIR__ . "/logs/{$bot_username}_debug.log", Logger::DEBUG))->setFormatter(new LineFormatter(null, null, true)),
-        (new StreamHandler(__DIR__ . "/logs/{$bot_username}_error.log", Logger::ERROR))->setFormatter(new LineFormatter(null, null, true)),
+        (new StreamHandler($path_to_debug_log_file, Logger::DEBUG))->setFormatter(new LineFormatter(null, null, true)),
+        (new StreamHandler($path_to_error_log_file, Logger::ERROR))->setFormatter(new LineFormatter(null, null, true)),
     ]),
     // Updates logger for raw updates.
     new Logger('telegram_bot_updates', [
-        (new StreamHandler(__DIR__ . "/logs/{$bot_username}_update.log", Logger::INFO))->setFormatter(new LineFormatter('%message%' . PHP_EOL)),
+        (new StreamHandler($path_to_updates_log_file, Logger::INFO))->setFormatter(new LineFormatter('%message%' . PHP_EOL)),
     ])
 );
 ```

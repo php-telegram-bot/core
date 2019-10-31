@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -11,6 +12,7 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\KeyboardButton;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @package         TelegramTest
@@ -21,21 +23,17 @@ use Longman\TelegramBot\Entities\KeyboardButton;
  */
 class KeyboardButtonTest extends TestCase
 {
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage You must add some text to the button!
-     */
     public function testKeyboardButtonNoTextFail()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('You must add some text to the button!');
         new KeyboardButton([]);
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage You must use only one of these fields: request_contact, request_location!
-     */
     public function testKeyboardButtonTooManyParametersFail()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('You must use only one of these fields: request_contact, request_location!');
         new KeyboardButton(['text' => 'message', 'request_contact' => true, 'request_location' => true]);
     }
 
@@ -44,26 +42,31 @@ class KeyboardButtonTest extends TestCase
         new KeyboardButton(['text' => 'message']);
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
+        $this->assertTrue(true);
     }
 
     public function testInlineKeyboardButtonCouldBe()
     {
-        self::assertTrue(KeyboardButton::couldBe(['text' => 'message']));
-        self::assertFalse(KeyboardButton::couldBe(['no_text' => 'message']));
+        $this->assertTrue(KeyboardButton::couldBe(['text' => 'message']));
+        $this->assertFalse(KeyboardButton::couldBe(['no_text' => 'message']));
     }
 
     public function testKeyboardButtonParameterSetting()
     {
         $button = new KeyboardButton('message');
-        self::assertEmpty($button->getRequestContact());
-        self::assertEmpty($button->getRequestLocation());
+        $this->assertSame('message', $button->getText());
+        $this->assertEmpty($button->getRequestContact());
+        $this->assertEmpty($button->getRequestLocation());
+
+        $button->setText('new message');
+        $this->assertSame('new message', $button->getText());
 
         $button->setRequestContact(true);
-        self::assertTrue($button->getRequestContact());
-        self::assertEmpty($button->getRequestLocation());
+        $this->assertTrue($button->getRequestContact());
+        $this->assertEmpty($button->getRequestLocation());
 
         $button->setRequestLocation(true);
-        self::assertEmpty($button->getRequestContact());
-        self::assertTrue($button->getRequestLocation());
+        $this->assertEmpty($button->getRequestContact());
+        $this->assertTrue($button->getRequestLocation());
     }
 }

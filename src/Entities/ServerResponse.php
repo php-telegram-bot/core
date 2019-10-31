@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>

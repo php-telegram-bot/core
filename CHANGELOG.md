@@ -6,17 +6,23 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
+- :exclamation: Built-in logging (Monolog) has been removed, a custom PSR-3 logger must be used now! (see #964 for more info)
 ### Added
 - Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working.
 - Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command.
 ### Changed
 - Small readme and code fixes / simplifications. 
+- Upgrade PHPUnit to 8.x and PHPCS to 3.5. For tests now minimum PHP version is 7.2.
+- Updated updates log importer (requires PHP7+).
 ### Deprecated
 ### Removed
 - Service message system commands, which are now handled by `GenericmessageCommand`.
+- [:exclamation:][unreleased-bc-remove-monolog-from-core] Monolog has been removed as built-in logging engine.
+- Assets have been moved to a dedicated repository.
 ### Fixed
 - Boolean value for Polls gets saved correctly in MySQL DB.
 - Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
+- PSR-12 incompatibilities in the codebase.
 ### Security
 
 ## [0.60.0] - 2019-08-16
@@ -383,6 +389,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core
 [0.58.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.57.0-0.58.0.sql
 [0.58.0-bc-return-value-of-empty-entity-properties]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#return-value-of-empty-entity-properties
 [0.58.0-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand

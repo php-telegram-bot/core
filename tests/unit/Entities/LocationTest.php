@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -23,7 +24,7 @@ class LocationTest extends TestCase
 {
     private $coordinates;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->coordinates = [
             'longitude' => (float) mt_rand(10, 69),
@@ -41,7 +42,7 @@ class LocationTest extends TestCase
     {
         $location = new Location($this->coordinates);
         $long     = $location->getLongitude();
-        $this->assertInternalType('float', $long);
+        $this->assertIsFloat($long);
         $this->assertEquals($this->coordinates['longitude'], $long);
     }
 
@@ -49,7 +50,7 @@ class LocationTest extends TestCase
     {
         $location = new Location($this->coordinates);
         $lat      = $location->getLatitude();
-        $this->assertInternalType('float', $lat);
+        $this->assertIsFloat($lat);
         $this->assertEquals($this->coordinates['latitude'], $lat);
     }
 }
