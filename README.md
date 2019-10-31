@@ -1,7 +1,7 @@
 <h1 align="center">
     PHP Telegram Bot<br>
 	<br>
-    <img src="assets/logo/512px/logo_plain.png" title="PHP Telegram Bot" alt="PHP Telegram Bot logo">
+    <img src="https://raw.githubusercontent.com/php-telegram-bot/assets/master/logo/512px/logo_plain.png" title="PHP Telegram Bot" alt="PHP Telegram Bot logo">
 	<br>
 </h1>
 
@@ -56,6 +56,7 @@ A Telegram Bot based on the official [Telegram Bot API]
 - [Upload and Download directory path](#upload-and-download-directory-path)
 - [Logging](doc/01-utils.md)
 - [Documentation](#documentation)
+- [Assets](#assets)
 - [Example bot](#example-bot)
 - [Projects with this library](#projects-with-this-library)
 - [Troubleshooting](#troubleshooting)
@@ -568,6 +569,10 @@ $telegram->setUploadPath('/your/path/Upload');
 
 Take a look at the repo [Wiki] for further information and tutorials!
 Feel free to improve!
+
+## Assets
+
+All project assets can be found in the [assets](https://github.com/php-telegram-bot/assets) repository.
 
 ## Example bot
 

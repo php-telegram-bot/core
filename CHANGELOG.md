@@ -18,6 +18,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 - Service message system commands, which are now handled by `GenericmessageCommand`.
 - [:exclamation:][unreleased-bc-remove-monolog-from-core] Monolog has been removed as built-in logging engine.
+- Assets have been moved to a dedicated repository.
 ### Fixed
 - Boolean value for Polls gets saved correctly in MySQL DB.
 - Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
