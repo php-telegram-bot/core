@@ -52,12 +52,12 @@ class CleanupCommand extends AdminCommand
     /**
      * @var string
      */
-    protected $usage = '/cleanup <days> or /cleanup <count> <unit> (e.g. 3 weeks)';
+    protected $usage = '/cleanup [dry] <days> or /cleanup [dry] <count> <unit> (e.g. 3 weeks)';
 
     /**
      * @var string
      */
-    protected $version = '1.0.0';
+    protected $version = '1.1.0';
 
     /**
      * @var bool
@@ -86,14 +86,16 @@ class CleanupCommand extends AdminCommand
      * @var array
      */
     protected static $default_clean_older_than = [
-        'chat'                 => '365 days',
         'callback_query'       => '30 days',
+        'chat'                 => '365 days',
         'chosen_inline_result' => '30 days',
-        'conversation'         => '30 days',
+        'conversation'         => '90 days',
         'edited_message'       => '30 days',
         'inline_query'         => '30 days',
         'message'              => '30 days',
+        'poll'                 => '90 days',
         'request_limiter'      => '1 minute',
+        'shipping_query'       => '90 days',
         'telegram_update'      => '30 days',
         'user'                 => '365 days',
         'user_chat'            => '365 days',
@@ -163,46 +165,46 @@ class CleanupCommand extends AdminCommand
                   AND `chat_id` NOT IN (
                     SELECT `id`
                     FROM `%4$s`
-                    WHERE `chat_id` = `%4$s`.`id`
-                    AND `updated_at` < \'%1$s\'
+                    WHERE `%3$s`.`chat_id` = `id`
+                    AND `updated_at` < \'%2$s\'
                   )
                   AND (
                     `message_id` IS NOT NULL
                     AND `message_id` IN (
-                      SELECT f.id
-                      FROM `%5$s` f
+                      SELECT `id`
+                      FROM `%5$s`
                       WHERE `date` < \'%2$s\'
                     )
                   )
                   OR (
                     `edited_message_id` IS NOT NULL
                     AND `edited_message_id` IN (
-                      SELECT f.id
-                      FROM `%6$s` f
+                      SELECT `id`
+                      FROM `%6$s`
                       WHERE `edit_date` < \'%2$s\'
                     )
                   )
                   OR (
                     `inline_query_id` IS NOT NULL
                     AND `inline_query_id` IN (
-                      SELECT f.id
-                      FROM `%7$s` f
+                      SELECT `id`
+                      FROM `%7$s`
                       WHERE `created_at` < \'%2$s\'
                     )
                   )
                   OR (
                     `chosen_inline_result_id` IS NOT NULL
                     AND `chosen_inline_result_id` IN (
-                      SELECT f.id
-                      FROM `%8$s` f
+                      SELECT `id`
+                      FROM `%8$s`
                       WHERE `created_at` < \'%2$s\'
                     )
                   )
                   OR (
                     `callback_query_id` IS NOT NULL
                     AND `callback_query_id` IN (
-                      SELECT f.id
-                      FROM `%9$s` f
+                      SELECT `id`
+                      FROM `%9$s`
                       WHERE `created_at` < \'%2$s\'
                     )
                   )
@@ -223,8 +225,8 @@ class CleanupCommand extends AdminCommand
             $queries[] = sprintf(
                 'DELETE FROM `%1$s`
                 WHERE `user_id` IN (
-                  SELECT f.id
-                  FROM `%2$s` f
+                  SELECT `id`
+                  FROM `%2$s`
                   WHERE `updated_at` < \'%3$s\'
                 )
             ',
@@ -239,7 +241,9 @@ class CleanupCommand extends AdminCommand
             'user'            => ['table' => TB_USER, 'field' => 'updated_at'],
             'chat'            => ['table' => TB_CHAT, 'field' => 'updated_at'],
             'conversation'    => ['table' => TB_CONVERSATION, 'field' => 'updated_at'],
+            'poll'            => ['table' => TB_POLL, 'field' => 'created_at'],
             'request_limiter' => ['table' => TB_REQUEST_LIMITER, 'field' => 'created_at'],
+            'shipping_query'  => ['table' => TB_SHIPPING_QUERY, 'field' => 'created_at'],
         ];
 
         foreach (array_intersect(array_keys($simple_tables), $tables_to_clean) as $table_to_clean) {
@@ -345,16 +349,7 @@ class CleanupCommand extends AdminCommand
      */
     public function executeNoDb()
     {
-        $message = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-
-        $data = [
-            'chat_id'    => $chat_id,
-            'parse_mode' => 'Markdown',
-            'text'       => '*No database connection!*',
-        ];
-
-        return Request::sendMessage($data);
+        return $this->replyToChat('*No database connection!*', ['parse_mode' => 'Markdown']);
     }
 
     /**
@@ -366,30 +361,36 @@ class CleanupCommand extends AdminCommand
     public function execute()
     {
         $message = $this->getMessage();
-        $user_id = $message->getFrom()->getId();
         $text    = $message->getText(true);
 
-        $data = [
-            'chat_id'    => $user_id,
-            'parse_mode' => 'Markdown',
-        ];
+        // Dry run?
+        $dry_run = strpos($text, 'dry') !== false;
+        $text    = trim(str_replace('dry', '', $text));
 
         $settings = $this->getSettings($text);
         $queries  = $this->getQueries($settings);
 
+        if ($dry_run) {
+            return $this->replyToUser('Queries:' . PHP_EOL . implode(PHP_EOL, $queries));
+        }
+
         $infos = [];
         foreach ($settings['tables_to_clean'] as $table) {
-            $info = '*' . $table . '*';
+            $info = "*{$table}*";
 
             if (isset($settings['clean_older_than'][$table])) {
-                $info .= ' (' . $settings['clean_older_than'][$table] . ')';
+                $info .= " ({$settings['clean_older_than'][$table]})";
             }
 
             $infos[] = $info;
         }
 
-        $data['text'] = 'Cleaning up tables:' . PHP_EOL . implode(PHP_EOL, $infos);
+        $data = [
+            'chat_id'    => $message->getFrom()->getId(),
+            'parse_mode' => 'Markdown',
+        ];
 
+        $data['text'] = 'Cleaning up tables:' . PHP_EOL . implode(PHP_EOL, $infos);
         Request::sendMessage($data);
 
         $rows = 0;
@@ -398,27 +399,30 @@ class CleanupCommand extends AdminCommand
             $pdo->beginTransaction();
 
             foreach ($queries as $query) {
-                if ($dbq = $pdo->query($query)) {
+                // Delete in chunks to not block / improve speed on big tables.
+                $query .= ' LIMIT 10000';
+                while ($dbq = $pdo->query($query)) {
+                    if ($dbq->rowCount() === 0) {
+                        continue 2;
+                    }
                     $rows += $dbq->rowCount();
-                } else {
-                    TelegramLog::error('Error while executing query: ' . $query);
                 }
+
+                TelegramLog::error('Error while executing query: ' . $query);
             }
 
-            $pdo->commit();     // commit changes to the database and end transaction
+            // commit changes to the database and end transaction
+            $pdo->commit();
+
+            $data['text'] = "*Database cleanup done!* _(removed {$rows} rows)_";
         } catch (PDOException $e) {
-            $pdo->rollBack();   // rollback changes on exception (useful if you want to track down error - you can't replicate it when some of the data is already deleted...)
-
             $data['text'] = '*Database cleanup failed!* _(check your error logs)_';
-            Request::sendMessage($data);
 
-            throw new TelegramException($e->getMessage());
-        }
+            // rollback changes on exception
+            // useful if you want to track down error you can't replicate it when some of the data is already deleted
+            $pdo->rollBack();
 
-        if ($rows > 0) {
-            $data['text'] = '*Database cleanup done!* _(removed ' . $rows . ' rows)_';
-        } else {
-            $data['text'] = '*No data to clean!*';
+            TelegramLog::error($e->getMessage());
         }
 
         return Request::sendMessage($data);
