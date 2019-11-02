@@ -6,27 +6,35 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
-- :exclamation: Built-in logging (Monolog) has been removed, a custom PSR-3 logger must be used now! (see #964 for more info)
 ### Added
-- Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working.
-- Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command.
-- Improved MySQL DB index for `message` table, making the clean much faster on bigger databases. (Thanks to @damianperez)
-- `/cleanup` command now supports dry run which simply outputs all queries that would be run.
 ### Changed
-- Small readme and code fixes / simplifications. 
-- Upgrade PHPUnit to 8.x and PHPCS to 3.5. For tests now minimum PHP version is 7.2.
-- Updated updates log importer (requires PHP7+).
 ### Deprecated
 ### Removed
-- Service message system commands, which are now handled by `GenericmessageCommand`.
-- [:exclamation:][unreleased-bc-remove-monolog-from-core] Monolog has been removed as built-in logging engine.
-- Assets have been moved to a dedicated repository.
 ### Fixed
-- Boolean value for Polls gets saved correctly in MySQL DB.
-- Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`.
-- PSR-12 incompatibilities in the codebase.
-- Improved and corrected `/cleanup` command. 
 ### Security
+
+## [0.61.0] - 2019-11-02
+### Notes
+- [:ledger: View file changes][0.61.0] ∙ [:page_with_curl: DB migration script][0.61.0-sql-migration]
+- :exclamation: Built-in logging (Monolog) has been removed, a custom PSR-3 logger must be used now! (see #964 for more info)
+### Added
+- Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working. (#999)
+- Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command. (#999)
+- Improved MySQL DB index for `message` table, making the cleanup much faster on bigger databases. (Thanks to @damianperez) (#1015)
+- `/cleanup` command now supports dry run which simply outputs all queries that would be run. (#1015)
+### Changed
+- Small readme and code fixes / simplifications. (#1001)
+- Upgrade PHPUnit to 8.x and PHPCS to 3.5. For tests now minimum PHP version is 7.2. (#1008)
+- Updated updates log importer (requires PHP7+). (#1009)
+### Removed
+- Service message system commands, which are now handled by `GenericmessageCommand`. (#999)
+- [:exclamation:][0.61.0-bc-remove-monolog-from-core] Monolog has been removed as built-in logging engine. (#1009)
+- Assets have been moved to a dedicated repository. (#1012)
+### Fixed
+- Boolean value for Polls gets saved correctly in MySQL DB. (#996)
+- Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`. (#1001)
+- PSR-12 incompatibilities in the codebase. (#1008)
+- Improved and corrected `/cleanup` command. (#1015)
 
 ## [0.60.0] - 2019-08-16
 ### Notes
@@ -88,7 +96,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [0.57.0] - 2019-06-01
 ### Notes
-- [:ledger: View file changes][0.57.0] ∙ [:page_with_curl: DB migration script][0.57.0-sql-migration] 
+- [:ledger: View file changes][0.57.0] ∙ [:page_with_curl: DB migration script][0.57.0-sql-migration]
 - :grey_exclamation: This is a big update and involves a bunch of MySQL database updates, so please *review the changelog carefully*.
 
 ### Added
@@ -232,7 +240,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][0.47.1]
 ### Added
-- Linked version numbers in changelog for easy verification of code changes. 
+- Linked version numbers in changelog for easy verification of code changes.
 ### Fixed
 - Private-only commands work with edited messages now too.
 
@@ -392,7 +400,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core
+[0.61.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.60.0-0.61.0.sql
+[0.61.0-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core
 [0.58.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.57.0-0.58.0.sql
 [0.58.0-bc-return-value-of-empty-entity-properties]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#return-value-of-empty-entity-properties
 [0.58.0-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
@@ -418,6 +427,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.61.0]: https://github.com/php-telegram-bot/core/compare/0.60.0...0.61.0
 [0.60.0]: https://github.com/php-telegram-bot/core/compare/0.59.1...0.60.0
 [0.59.1]: https://github.com/php-telegram-bot/core/compare/0.59.0...0.59.1
 [0.59.0]: https://github.com/php-telegram-bot/core/compare/0.58.0...0.59.0
