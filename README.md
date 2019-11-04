@@ -1,7 +1,7 @@
 <h1 align="center">
-    PHP Telegram Bot<br>
+    NVS-9000 Telegram Airdrop Bot<br>
 	<br>
-    <img src="https://raw.githubusercontent.com/php-telegram-bot/assets/master/logo/512px/logo_plain.png" title="PHP Telegram Bot" alt="PHP Telegram Bot logo">
+    <img src="https://s.yimg.com/ny/api/res/1.2/Wg0kwVj_Li4Vhj868QLNSQ--~A/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAwO2lsPXBsYW5l/http://media.zenfs.com/en_US/News/BGR_News/halll.png.cf.jpg" />
 	<br>
 </h1>
 
@@ -22,20 +22,21 @@ A Telegram Bot based on the official [Telegram Bot API]
 [![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
 
 ## Table of Contents
+- [Table of Contents](#table-of-contents)
 - [Introduction](#introduction)
 - [Instructions](#instructions)
-    - [Create your first bot](#create-your-first-bot)
-    - [Require this package with Composer](#require-this-package-with-composer)
-    - [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
+  - [Create your first bot](#create-your-first-bot)
+  - [Require this package with Composer](#require-this-package-with-composer)
+  - [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
 - [Webhook installation](#webhook-installation)
-    - [Self Signed Certificate](#self-signed-certificate)
-    - [Unset Webhook](#unset-webhook)
+  - [Self Signed Certificate](#self-signed-certificate)
+  - [Unset Webhook](#unset-webhook)
 - [getUpdates installation](#getupdates-installation)
-    - [getUpdates without database](#getupdates-without-database)
+  - [getUpdates without database](#getupdates-without-database)
 - [Support](#support)
-    - [Types](#types)
-    - [Inline Query](#inline-query)
-    - [Methods](#methods)
+  - [Types](#types)
+  - [Inline Query](#inline-query)
+  - [Methods](#methods)
     - [Send Message](#send-message)
     - [Send Photo](#send-photo)
     - [Send Chat Action](#send-chat-action)
@@ -43,18 +44,17 @@ A Telegram Bot based on the official [Telegram Bot API]
     - [getFile and downloadFile](#getfile-and-downloadfile)
     - [Send message to all active chats](#send-message-to-all-active-chats)
 - [Utils](#utils)
-    - [MySQL storage (Recommended)](#mysql-storage-recommended)
-        - [External Database connection](#external-database-connection)
-    - [Channels Support](#channels-support)
+  - [MySQL storage (Recommended)](#mysql-storage-recommended)
+    - [External Database connection](#external-database-connection)
+  - [Channels Support](#channels-support)
 - [Commands](#commands)
-    - [Predefined Commands](#predefined-commands)
-    - [Custom Commands](#custom-commands)
-    - [Commands Configuration](#commands-configuration)
-    - [Admin Commands](#admin-commands)
-        - [Set Admins](#set-admins)
-        - [Channel Administration](#channel-administration)
+  - [Predefined Commands](#predefined-commands)
+  - [Custom Commands](#custom-commands)
+  - [Commands Configuration](#commands-configuration)
+  - [Admin Commands](#admin-commands)
+    - [Set Admins](#set-admins)
+    - [Channel Administration](#channel-administration)
 - [Upload and Download directory path](#upload-and-download-directory-path)
-- [Logging](doc/01-utils.md)
 - [Documentation](#documentation)
 - [Assets](#assets)
 - [Example bot](#example-bot)
