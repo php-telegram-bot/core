@@ -63,6 +63,7 @@ A Telegram Bot based on the official [Telegram Bot API]
 - [Contributing](#contributing)
 - [Security](#security)
 - [Donate](#donate)
+- [For enterprise](#for-enterprise)
 - [License](#license)
 - [Credits](#credits)
 
@@ -616,6 +617,12 @@ Thank you for keeping this project alive :pray:
 - [![Bitcoin](https://user-images.githubusercontent.com/9423417/59235974-a4c93e80-8be3-11e9-9fde-260c821b6eae.png) 166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][Bitcoin]
 - [![Ethereum](https://user-images.githubusercontent.com/9423417/59235975-a4c93e80-8be3-11e9-8762-7a47c62c968d.png) 0x485855634fa212b0745375e593fAaf8321A81055][Ethereum]
 
+## For enterprise
+
+Available as part of the Tidelift Subscription.
+
+The maintainers of `PHP Telegram Bot` and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.][Tidelift]
+
 ## License
 
 Please see the [LICENSE](LICENSE) included in this repository for a full copy of the MIT license, which this project is licensed under.
@@ -625,16 +632,6 @@ Please see the [LICENSE](LICENSE) included in this repository for a full copy of
 Credit list in [CREDITS](CREDITS)
 
 ---
-
-<div align="center">
-    <b>
-        <a href="https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=readme-footer">Get professional support for this package with a Tidelift subscription</a>
-    </b>
-    <br>
-    <sub>
-        Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-    </sub>
-</div>
 
 [Telegram Bot API]: https://core.telegram.org/bots/api "Telegram Bot API"
 [Composer]: https://getcomposer.org/ "Composer"
@@ -658,7 +655,7 @@ Credit list in [CREDITS](CREDITS)
 [Patreon]: https://www.patreon.com/phptelegrambot "Support us on Patreon"
 [OpenCollective]: https://opencollective.com/php-telegram-bot "Support us on Open Collective"
 [Ko-fi]: https://ko-fi.com/phptelegrambot "Support us on Ko-fi"
-[Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=readme "Support us on Tidelift"
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=enterprise&utm_term=repo "Learn more about the Tidelift Subscription"
 [Liberapay]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
 [PayPal-noplanman]: https://paypal.me/noplanman "Donate with PayPal"
 [Bitcoin]: https://www.blockchain.com/btc/address/166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
