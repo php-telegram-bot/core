@@ -49,8 +49,8 @@ class InlineQuery extends Entity
     public function answer(array $results, array $data = [])
     {
         return Request::answerInlineQuery(array_merge([
-            'callback_query_id' => $this->getId(),
-            'results'           => $results,
+            'inline_query_id' => $this->getId(),
+            'results'         => $results,
         ], $data));
     }
 }
