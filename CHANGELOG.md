@@ -7,13 +7,20 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Tests for schema update scripts, to ensure that updates work as expected.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- DB schema update from 0.60.0 to 0.61.0.
 ### Security
+
+## [0.61.1] - 2019-11-23
+### Notes
+- [:ledger: View file changes][0.61.1]
+### Added
+- Tests for schema update scripts, to ensure that updates work as expected. (#1025)
+### Fixed
+- Parameter `inline_query_id` in `InlineQuery::answerInlineQuery`. (#1021)
+- Corrected DB schema update 0.60.0-0.61.0. (#1025)
 
 ## [0.61.0] - 2019-11-02
 ### Notes
@@ -429,6 +436,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.61.1]: https://github.com/php-telegram-bot/core/compare/0.61.0...0.61.1
 [0.61.0]: https://github.com/php-telegram-bot/core/compare/0.60.0...0.61.0
 [0.60.0]: https://github.com/php-telegram-bot/core/compare/0.59.1...0.60.0
 [0.59.1]: https://github.com/php-telegram-bot/core/compare/0.59.0...0.59.1
