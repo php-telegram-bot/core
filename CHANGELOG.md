@@ -7,10 +7,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Tests for schema update scripts, to ensure that updates work as expected.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+- DB schema update from 0.60.0 to 0.61.0.
 ### Security
 
 ## [0.61.0] - 2019-11-02
