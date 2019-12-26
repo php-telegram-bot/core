@@ -250,7 +250,7 @@ class Telegram
                     }
                 }
             } catch (Exception $e) {
-                throw new TelegramException('Error getting commands from path: ' . $path);
+                throw new TelegramException('Error getting commands from path: ' . $path, $e);
             }
         }
 
