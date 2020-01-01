@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Execution of `/start` command without any custom implementation.
 ### Security
 
 ## [0.61.1] - 2019-11-23
