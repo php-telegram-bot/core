@@ -157,6 +157,14 @@ class Telegram
     const GENERIC_COMMAND = 'generic';
 
     /**
+     * Update filter
+     * Filter updates
+     *
+     * @var callback
+     */
+    protected $update_filter = null;
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -454,6 +462,20 @@ class Telegram
     {
         $this->update         = $update;
         $this->last_update_id = $update->getUpdateId();
+
+        $allowed = true;
+        if(is_callable($this->update_filter)){
+            try {
+                $allowed = (bool)call_user_func_array($this->update_filter, [$update, $this]);
+            }catch(\Exception $e){
+                $allowed = false;
+            }
+        }
+
+        if(!$allowed){
+            TelegramLog::debug('Update denied by update_filter');
+            return new ServerResponse(['ok' => false, 'description' => 'denied'], null);
+        }
 
         //Load admin commands
         if ($this->isAdmin()) {
@@ -989,5 +1011,26 @@ class Telegram
     public function getLastUpdateId()
     {
         return $this->last_update_id;
+    }
+
+    /**
+     * Set an update filter callback
+     *
+     * @return Telegram
+     */
+    public function setUpdateFilter(callable $callback)
+    {
+        $this->update_filter = $callback;
+        return $this;
+    }
+
+    /**
+     * Return update filter callback
+     *
+     * @return callable or null
+     */
+    public function getUpdateFilter()
+    {
+        return $this->update_filter;
     }
 }
