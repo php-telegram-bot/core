@@ -464,15 +464,15 @@ class Telegram
         $this->last_update_id = $update->getUpdateId();
 
         $allowed = true;
-        if(is_callable($this->update_filter)){
+        if (is_callable($this->update_filter)) {
             try {
                 $allowed = (bool)call_user_func_array($this->update_filter, [$update, $this]);
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 $allowed = false;
             }
         }
 
-        if(!$allowed){
+        if (!$allowed) {
             TelegramLog::debug('Update denied by update_filter');
             return new ServerResponse(['ok' => false, 'description' => 'denied'], null);
         }
