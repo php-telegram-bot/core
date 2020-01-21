@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
 
@@ -144,5 +145,40 @@ class TelegramTest extends TestCase
         $commands = $this->telegram->getCommandsList();
         $this->assertIsArray($commands);
         $this->assertNotCount(0, $commands);
+    }
+
+    public function testUpdateFilter()
+    {
+        $rawUpdate = '{
+            "update_id": 513400512,
+            "message": {
+                "message_id": 3,
+                "from": {
+                    "id": 313534466,
+                    "first_name": "first",
+                    "last_name": "last",
+                    "username": "username"
+                },
+                "chat": {
+                    "id": 313534466,
+                    "first_name": "first",
+                    "last_name": "last",
+                    "username": "username",
+                    "type": "private"
+                },
+                "date": 1499402829,
+                "text": "hi"
+            }
+        }';
+
+        $update = new Update(json_decode($rawUpdate, true), $this->telegram->getBotUsername());
+        $this->telegram->setUpdateFilter(function ($update, $telegramInstance) {
+            if ($update->getMessage()->getChat()->getId() == 313534466) {
+                return false;
+            }
+            return true;
+        });
+        $response = $this->telegram->processUpdate($update);
+        $this->assertFalse($response->isOk());
     }
 }
