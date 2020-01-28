@@ -29,5 +29,13 @@ namespace Longman\TelegramBot\Entities;
  **/
 class Animation extends Entity
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    protected function subEntities()
+    {
+        return [
+            'thumb' => PhotoSize::class,
+        ];
+    }
 }
