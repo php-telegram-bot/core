@@ -18,6 +18,7 @@ namespace Longman\TelegramBot\Entities;
  *
  * @method User   getUser()                  Information about the user
  * @method string getStatus()                The member's status in the chat. Can be “creator”, “administrator”, “member”, “restricted”, “left” or “kicked”
+ * @method string getCustomTitle()           Optional. Owner and administrators only. Custom title for this user
  * @method int    getUntilDate()             Optional. Restricted and kicked only. Date when restrictions will be lifted for this user, unix time
  * @method bool   getCanBeEdited()           Optional. Administrators only. True, if the bot is allowed to edit administrator privileges of that user
  * @method bool   getCanPostMessages()       Optional. Administrators only. True, if the administrator can post in the channel, channels only
