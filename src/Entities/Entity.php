@@ -128,7 +128,7 @@ abstract class Entity
     public function __call($method, $args)
     {
         //Convert method to snake_case (which is the name of the property)
-        $property_name = strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', substr($method, 3)), '_'));
+        $property_name = mb_strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', substr($method, 3)), '_'));
 
         $action = substr($method, 0, 3);
         if ($action === 'get') {
