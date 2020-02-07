@@ -13,7 +13,7 @@ namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 
 /**
  * Start command
@@ -38,13 +38,12 @@ class StartCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.1.0';
+    protected $version = '1.2.0';
 
     /**
      * Command execute method
      *
      * @return ServerResponse
-     * @throws TelegramException
      */
     public function execute()
     {
@@ -52,6 +51,6 @@ class StartCommand extends UserCommand
         //$chat_id = $message->getChat()->getId();
         //$user_id = $message->getFrom()->getId();
 
-        return parent::execute();
+        return Request::emptyResponse();
     }
 }
