@@ -1093,6 +1093,7 @@ class DB
             'date_to'     => null,
             'chat_id'     => null,
             'text'        => null,
+            'language'    => null,
         ], $select_chats_params);
 
         if (!$select['groups'] && !$select['users'] && !$select['supergroups'] && !$select['channels']) {
@@ -1146,6 +1147,11 @@ class DB
             if (null !== $select['chat_id']) {
                 $where[]            = TB_CHAT . '.`id` = :chat_id';
                 $tokens[':chat_id'] = $select['chat_id'];
+            }
+
+            if ($select['users'] && null !== $select['language']) {
+                $where[]            = TB_USER . '.`language_code` = :language';
+                $tokens[':language'] = $select['language'];
             }
 
             if (null !== $select['text']) {
