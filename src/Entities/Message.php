@@ -206,8 +206,8 @@ class Message extends Entity
         $types = [
             'text',
             'audio',
-            'document',
             'animation',
+            'document',
             'game',
             'photo',
             'sticker',

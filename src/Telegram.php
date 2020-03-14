@@ -236,7 +236,7 @@ class Telegram
                 foreach ($files as $file) {
                     //Remove "Command.php" from filename
                     $command      = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
-                    $command_name = strtolower($command);
+                    $command_name = mb_strtolower($command);
 
                     if (array_key_exists($command_name, $commands)) {
                         continue;
@@ -250,7 +250,7 @@ class Telegram
                     }
                 }
             } catch (Exception $e) {
-                throw new TelegramException('Error getting commands from path: ' . $path);
+                throw new TelegramException('Error getting commands from path: ' . $path, $e);
             }
         }
 
@@ -501,7 +501,7 @@ class Telegram
      */
     public function executeCommand($command)
     {
-        $command     = strtolower($command);
+        $command     = mb_strtolower($command);
         $command_obj = $this->getCommandObject($command);
 
         if (!$command_obj || !$command_obj->isEnabled()) {

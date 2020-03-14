@@ -8,10 +8,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 - `DB::selectChats()` support language_code for filtering the selection of users (see #1057 for more infornmation)
+- Bot API 4.5 (Unique file IDs, MarkdownV2). (#1046)
+- Chain the exception thrown when getting commands from path. (#1030)
 ### Changed
+- Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
 ### Deprecated
 ### Removed
 ### Fixed
+- Execution of `/start` command without any custom implementation.
+- Return `animation` type for GIF Message (which returns both `animation` and `document`). (#1044)
+- Change lowercase function to `mb_strtolower` from `strtolower` because of `latin-extented` characters. (#1051)
 ### Security
 
 ## [0.61.1] - 2019-11-23

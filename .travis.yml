@@ -11,7 +11,7 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - 7.4snapshot
+  - 7.4
   - 7.3
   - 7.2
   - nightly
@@ -19,7 +19,7 @@ php:
 
 matrix:
   allow_failures:
-    - php: 7.4snapshot
+    - php: 7.4
     - php: nightly
     - php: hhvm
   fast_finish: true
