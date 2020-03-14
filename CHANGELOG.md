@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- `DB::selectChats()` support language_code for filtering the selection of users (see #1057 for more infornmation)
 ### Changed
 ### Deprecated
 ### Removed
