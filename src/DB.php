@@ -1150,7 +1150,7 @@ class DB
             }
 
             if ($select['users'] && null !== $select['language']) {
-                $where[]            = TB_USER . '.`language_code` = :language';
+                $where[]             = TB_USER . '.`language_code` = :language';
                 $tokens[':language'] = $select['language'];
             }
 

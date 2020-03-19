@@ -7,9 +7,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- `DB::selectChats()` support language_code for filtering the selection of users (see #1057 for more infornmation)
 - Bot API 4.5 (Unique file IDs, MarkdownV2). (#1046)
 - Chain the exception thrown when getting commands from path. (#1030)
+- Support `language_code` in `DB::selectChats()` for filtering the chats selection.
 ### Changed
 - Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
 ### Deprecated
