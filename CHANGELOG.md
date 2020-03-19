@@ -18,6 +18,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Execution of `/start` command without any custom implementation.
 - Return `animation` type for GIF Message (which returns both `animation` and `document`). (#1044)
 - Change lowercase function to `mb_strtolower` from `strtolower` because of `latin-extented` characters. (#1051)
+- Extend `Request::mediaInputHelper()` to include `thumb` parameter.
 ### Security
 
 ## [0.61.1] - 2019-11-23

@@ -439,21 +439,27 @@ class Request
                 continue;
             }
 
-            $media = $media_item->getMedia();
+            // Make a list of all possible media that can be handled by the helper.
+            $possible_medias = array_filter([
+                'media' => $media_item->getMedia(),
+                'thumb' => $media_item->getThumb(),
+            ]);
 
-            // Allow absolute paths to local files.
-            if (is_string($media) && file_exists($media)) {
-                $media = new Stream(self::encodeFile($media));
-            }
+            foreach ($possible_medias as $type => $media) {
+                // Allow absolute paths to local files.
+                if (is_string($media) && file_exists($media)) {
+                    $media = new Stream(self::encodeFile($media));
+                }
 
-            if (is_resource($media) || $media instanceof Stream) {
-                $has_resource = true;
-                $rnd_key      = uniqid('media_', false);
-                $multipart[]  = ['name' => $rnd_key, 'contents' => $media];
+                if (is_resource($media) || $media instanceof Stream) {
+                    $has_resource = true;
+                    $unique_key   = uniqid($type . '_', false);
+                    $multipart[]  = ['name' => $unique_key, 'contents' => $media];
 
-                // We're literally overwriting the passed media data!
-                $media_item->media             = 'attach://' . $rnd_key;
-                $media_item->raw_data['media'] = 'attach://' . $rnd_key;
+                    // We're literally overwriting the passed media type data!
+                    $media_item->$type           = 'attach://' . $unique_key;
+                    $media_item->raw_data[$type] = 'attach://' . $unique_key;
+                }
             }
         }
 
