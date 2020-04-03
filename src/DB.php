@@ -20,6 +20,7 @@ use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
 use Longman\TelegramBot\Entities\Payments\ShippingQuery;
 use Longman\TelegramBot\Entities\Poll;
+use Longman\TelegramBot\Entities\PollAnswer;
 use Longman\TelegramBot\Entities\ReplyToMessage;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
@@ -146,6 +147,7 @@ class DB
             'message',
             'pre_checkout_query',
             'poll',
+            'poll_answer',
             'request_limiter',
             'shipping_query',
             'telegram_update',
@@ -318,6 +320,7 @@ class DB
      * @param string|null $shipping_query_id
      * @param string|null $pre_checkout_query_id
      * @param string|null $poll_id
+     * @param string|null $poll_answer_poll_id
      *
      * @return bool If the insert was successful
      * @throws TelegramException
@@ -334,10 +337,11 @@ class DB
         $callback_query_id = null,
         $shipping_query_id = null,
         $pre_checkout_query_id = null,
-        $poll_id = null
+        $poll_id = null,
+        $poll_answer_poll_id = null
     ) {
-        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null) {
-            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id are all null');
+        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null) {
+            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id are all null');
         }
 
         if (!self::isDbConnected()) {
@@ -347,9 +351,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
-                (`id`, `chat_id`, `message_id`, `edited_message_id`, `channel_post_id`, `edited_channel_post_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `shipping_query_id`, `pre_checkout_query_id`, `poll_id`)
+                (`id`, `chat_id`, `message_id`, `edited_message_id`, `channel_post_id`, `edited_channel_post_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `shipping_query_id`, `pre_checkout_query_id`, `poll_id`, `poll_answer_poll_id`)
                 VALUES
-                (:id, :chat_id, :message_id, :edited_message_id, :channel_post_id, :edited_channel_post_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :shipping_query_id, :pre_checkout_query_id, :poll_id)
+                (:id, :chat_id, :message_id, :edited_message_id, :channel_post_id, :edited_channel_post_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :shipping_query_id, :pre_checkout_query_id, :poll_id, :poll_answer_poll_id)
             ');
 
             $sth->bindValue(':id', $update_id);
@@ -364,6 +368,7 @@ class DB
             $sth->bindValue(':shipping_query_id', $shipping_query_id);
             $sth->bindValue(':pre_checkout_query_id', $pre_checkout_query_id);
             $sth->bindValue(':poll_id', $poll_id);
+            $sth->bindValue(':poll_answer_poll_id', $poll_answer_poll_id);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -527,6 +532,7 @@ class DB
         $shipping_query_id       = null;
         $pre_checkout_query_id   = null;
         $poll_id                 = null;
+        $poll_answer_poll_id     = null;
 
         if (($message = $update->getMessage()) && self::insertMessageRequest($message)) {
             $chat_id    = $message->getChat()->getId();
@@ -552,6 +558,8 @@ class DB
             $pre_checkout_query_id = $pre_checkout_query->getId();
         } elseif (($poll = $update->getPoll()) && self::insertPollRequest($poll)) {
             $poll_id = $poll->getId();
+        } elseif (($poll_answer = $update->getPollAnswer()) && self::insertPollAnswerRequest($poll_answer)) {
+            $poll_answer_poll_id = $poll_answer->getPollId();
         } else {
             return false;
         }
@@ -568,7 +576,8 @@ class DB
             $callback_query_id,
             $shipping_query_id,
             $pre_checkout_query_id,
-            $poll_id
+            $poll_id,
+            $poll_answer_poll_id
         );
     }
 
@@ -835,19 +844,73 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_POLL . '`
-                (`id`, `question`, `options`, `is_closed`, `created_at`)
+                (`id`, `question`, `options`, `total_voter_count`, `is_closed`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `created_at`)
                 VALUES
-                (:id, :question, :options, :is_closed, :created_at)
+                (:id, :question, :options, :total_voter_count, :is_closed, :is_anonymous, :type, :allows_multiple_answers, :correct_option_id, :created_at)
                 ON DUPLICATE KEY UPDATE
-                    `options`   = VALUES(`options`),
-                    `is_closed` = VALUES(`is_closed`)
+                    `options`                 = VALUES(`options`),
+                    `total_voter_count`       = VALUES(`total_voter_count`),
+                    `is_closed`               = VALUES(`is_closed`),
+                    `is_anonymous`            = VALUES(`is_anonymous`),
+                    `type`                    = VALUES(`type`),
+                    `allows_multiple_answers` = VALUES(`allows_multiple_answers`),
+                    `correct_option_id`       = VALUES(`correct_option_id`)
             ');
 
             $sth->bindValue(':id', $poll->getId());
             $sth->bindValue(':question', $poll->getQuestion());
             $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions() ?: null));
+            $sth->bindValue(':total_voter_count', $poll->getTotalVoterCount());
             $sth->bindValue(':is_closed', $poll->getIsClosed(), PDO::PARAM_INT);
+            $sth->bindValue(':is_anonymous', $poll->getIsAnonymous(), PDO::PARAM_INT);
+            $sth->bindValue(':type', $poll->getType());
+            $sth->bindValue(':allows_multiple_answers', $poll->getAllowsMultipleAnswers(), PDO::PARAM_INT);
+            $sth->bindValue(':correct_option_id', $poll->getCorrectOptionId());
             $sth->bindValue(':created_at', self::getTimestamp());
+
+            return $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    /**
+     * Insert poll answer request into database
+     *
+     * @param PollAnswer $poll_answer
+     *
+     * @return bool If the insert was successful
+     * @throws TelegramException
+     */
+    public static function insertPollAnswerRequest(PollAnswer $poll_answer)
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('
+                INSERT INTO `' . TB_POLL_ANSWER . '`
+                (`poll_id`, `user_id`, `option_ids`, `created_at`)
+                VALUES
+                (:poll_id, :user_id, :option_ids, :created_at)
+                ON DUPLICATE KEY UPDATE
+                    `option_ids` = VALUES(`option_ids`)
+            ');
+
+            $date    = self::getTimestamp();
+            $user_id = null;
+
+            $user = $poll_answer->getUser();
+            if ($user instanceof User) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
+            }
+
+            $sth->bindValue(':poll_id', $poll_answer->getPollId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':option_ids', json_encode($poll_answer->getOptionIds()));
+            $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
         } catch (PDOException $e) {
