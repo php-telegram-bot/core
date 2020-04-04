@@ -70,6 +70,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse deleteChatStickerSet(array $data)            Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
+ * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
+ * @method static ServerResponse getMyCommands()                              Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
  * @method static ServerResponse editMessageText(array $data)                 Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageCaption(array $data)              Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageMedia(array $data)                Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -200,6 +202,8 @@ class Request
         'deleteChatStickerSet',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'setMyCommands',
+        'getMyCommands',
         'editMessageText',
         'editMessageCaption',
         'editMessageMedia',
@@ -233,6 +237,7 @@ class Request
         'deleteWebhook',
         'getWebhookInfo',
         'getMe',
+        'getMyCommands',
     ];
 
     /**
@@ -827,6 +832,7 @@ class Request
                 'sendInvoice',
                 'sendGame',
                 'setGameScore',
+                'setMyCommands',
                 'editMessageText',
                 'editMessageCaption',
                 'editMessageMedia',
