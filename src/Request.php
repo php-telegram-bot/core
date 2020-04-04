@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Stream;
 use Longman\TelegramBot\Entities\File;
@@ -108,7 +109,7 @@ class Request
     /**
      * Guzzle Client object
      *
-     * @var Client
+     * @var ClientInterface
      */
     private static $client;
 
@@ -269,9 +270,9 @@ class Request
     /**
      * Set a custom Guzzle HTTP Client object
      *
-     * @param Client $client
+     * @param ClientInterface $client
      */
-    public static function setClient(Client $client)
+    public static function setClient(ClientInterface $client)
     {
         self::$client = $client;
     }
