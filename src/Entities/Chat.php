@@ -24,7 +24,6 @@ namespace Longman\TelegramBot\Entities;
  * @method string          getUsername()                    Optional. Username, for private chats, supergroups and channels if available
  * @method string          getFirstName()                   Optional. First name of the other party in a private chat
  * @method string          getLastName()                    Optional. Last name of the other party in a private chat
- * @method bool            getAllMembersAreAdministrators() Optional. True if a group has ‘All Members Are Admins’ enabled. {@deprecated} {@see Chat::getPermissions()}
  * @method ChatPhoto       getPhoto()                       Optional. Chat photo. Returned only in getChat.
  * @method string          getDescription()                 Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
  * @method string          getInviteLink()                  Optional. Chat invite link, for groups, supergroups and channel chats. Each administrator in a chat generates their own invite links, so the bot must first generate the link using exportChatInviteLink. Returned only in getChat.
@@ -114,5 +113,18 @@ class Chat extends Entity
     public function isChannel()
     {
         return $this->getType() === 'channel';
+    }
+
+    /**
+     * Optional. True if a group has 'All Members Are Admins' enabled.
+     *
+     * @deprecated
+     * @see Chat::getPermissions()
+     *
+     * @return bool
+     */
+    public function getAllMembersAreAdministrators()
+    {
+        return $this->getProperty('all_members_are_administrators');
     }
 }
