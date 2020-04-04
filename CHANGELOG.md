@@ -10,7 +10,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Bot API 4.5 (Unique file IDs, MarkdownV2). (#1046)
 - Chain the exception thrown when getting commands from path. (#1030)
 - Support `language_code` in `DB::selectChats()` for filtering the chats selection.
-- Bot API 4.7 (Dice).
+- Bot API 4.7 (Dice, Sticker Sets).
 ### Changed
 - Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
 ### Deprecated
