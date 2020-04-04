@@ -114,13 +114,6 @@ class Request
     private static $client;
 
     /**
-     * Input value of the request
-     *
-     * @var string
-     */
-    private static $input;
-
-    /**
      * Request limiter
      *
      * @var boolean
@@ -286,7 +279,8 @@ class Request
     public static function getInput()
     {
         // First check if a custom input has been set, else get the PHP input.
-        if (!($input = self::$telegram->getCustomInput())) {
+        $input = self::$telegram->getCustomInput();
+        if (empty($input)) {
             $input = file_get_contents('php://input');
         }
 
@@ -295,11 +289,9 @@ class Request
             throw new TelegramException('Input must be a string!');
         }
 
-        self::$input = $input;
+        TelegramLog::update($input);
 
-        TelegramLog::update(self::$input);
-
-        return self::$input;
+        return $input;
     }
 
     /**
