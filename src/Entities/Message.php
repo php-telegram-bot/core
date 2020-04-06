@@ -51,6 +51,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Location          getLocation()              Optional. Message is a shared location, information about the location
  * @method Venue             getVenue()                 Optional. Message is a venue, information about the venue
  * @method Poll              getPoll()                  Optional. Message is a native poll, information about the poll
+ * @method Dice              getDice()                  Optional. Message is a dice with random value from 1 to 6
  * @method User[]            getNewChatMembers()        Optional. A new member(s) was added to the group, information about them (one of this members may be the bot itself)
  * @method User              getLeftChatMember()        Optional. A member was removed from the group, information about them (this member may be the bot itself)
  * @method string            getNewChatTitle()          Optional. A chat title was changed to this value
@@ -96,6 +97,7 @@ class Message extends Entity
             'location'           => Location::class,
             'venue'              => Venue::class,
             'poll'               => Poll::class,
+            'dice'               => Dice::class,
             'new_chat_members'   => [User::class],
             'left_chat_member'   => User::class,
             'new_chat_photo'     => [PhotoSize::class],

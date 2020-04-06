@@ -134,7 +134,7 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return ChatMember[]|GameHighScore[]|Message[]|Update[]
+     * @return BotCommand[]|ChatMember[]|GameHighScore[]|Message[]|Update[]
      */
     private function createResultObjects(array $result, $bot_username)
     {
@@ -142,6 +142,7 @@ class ServerResponse extends Entity
         $action  = Request::getCurrentAction();
 
         $result_object_types = [
+            'getMyCommands'         => BotCommand::class,
             'getChatAdministrators' => ChatMember::class,
             'getGameHighScores'     => GameHighScore::class,
             'sendMediaGroup'        => Message::class,

@@ -46,6 +46,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse sendVenue(array $data)                       Use this method to send information about a venue. On success, the sent Message is returned.
  * @method static ServerResponse sendContact(array $data)                     Use this method to send phone contacts. On success, the sent Message is returned.
  * @method static ServerResponse sendPoll(array $data)                        Use this method to send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
+ * @method static ServerResponse sendDice(array $data)                        Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent Message is returned.
  * @method static ServerResponse sendChatAction(array $data)                  Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
  * @method static ServerResponse getUserProfilePhotos(array $data)            Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
  * @method static ServerResponse getFile(array $data)                         Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
@@ -71,6 +72,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse deleteChatStickerSet(array $data)            Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
+ * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
+ * @method static ServerResponse getMyCommands()                              Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
  * @method static ServerResponse editMessageText(array $data)                 Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageCaption(array $data)              Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageMedia(array $data)                Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -83,6 +86,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method static ServerResponse addStickerToSet(array $data)                 Use this method to add a new sticker to a set created by the bot. Returns True on success.
  * @method static ServerResponse setStickerPositionInSet(array $data)         Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.
  * @method static ServerResponse deleteStickerFromSet(array $data)            Use this method to delete a sticker from a set created by the bot. Returns True on success.
+ * @method static ServerResponse setStickerSetThumb(array $data)              Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success.
  * @method static ServerResponse sendInvoice(array $data)                     Use this method to send invoices. On success, the sent Message is returned.
  * @method static ServerResponse answerShippingQuery(array $data)             If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
  * @method static ServerResponse answerPreCheckoutQuery(array $data)          Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
@@ -167,6 +171,7 @@ class Request
         'sendVenue',
         'sendContact',
         'sendPoll',
+        'sendDice',
         'sendChatAction',
         'getUserProfilePhotos',
         'getFile',
@@ -192,6 +197,8 @@ class Request
         'deleteChatStickerSet',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'setMyCommands',
+        'getMyCommands',
         'editMessageText',
         'editMessageCaption',
         'editMessageMedia',
@@ -204,6 +211,7 @@ class Request
         'addStickerToSet',
         'setStickerPositionInSet',
         'deleteStickerFromSet',
+        'setStickerSetThumb',
         'sendInvoice',
         'answerShippingQuery',
         'answerPreCheckoutQuery',
@@ -224,6 +232,7 @@ class Request
         'deleteWebhook',
         'getWebhookInfo',
         'getMe',
+        'getMyCommands',
     ];
 
     /**
@@ -246,8 +255,9 @@ class Request
         'setChatPhoto'        => ['photo'],
         'sendSticker'         => ['sticker'],
         'uploadStickerFile'   => ['png_sticker'],
-        'createNewStickerSet' => ['png_sticker'],
-        'addStickerToSet'     => ['png_sticker'],
+        'createNewStickerSet' => ['png_sticker', 'tgs_sticker'],
+        'addStickerToSet'     => ['png_sticker', 'tgs_sticker'],
+        'setStickerSetThumb'  => ['thumb'],
     ];
 
     /**
@@ -806,9 +816,11 @@ class Request
                 'sendVenue',
                 'sendContact',
                 'sendPoll',
+                'sendDice',
                 'sendInvoice',
                 'sendGame',
                 'setGameScore',
+                'setMyCommands',
                 'editMessageText',
                 'editMessageCaption',
                 'editMessageMedia',

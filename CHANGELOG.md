@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Chain the exception thrown when getting commands from path. (#1030)
 - Support `language_code` in `DB::selectChats()` for filtering the chats selection.
 - Bot API 4.6 (Polls 2.0).
+- Bot API 4.7 (Dice, Sticker Sets, Bot Commands).
 ### Changed
 - Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
 - `Request::setClient()` now accepts more flexible `ClientInterface`. (#1068)

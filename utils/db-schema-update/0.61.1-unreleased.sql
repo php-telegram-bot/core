@@ -3,6 +3,7 @@ ALTER TABLE `poll` ADD COLUMN `is_anonymous` tinyint(1) DEFAULT 1 COMMENT 'True,
 ALTER TABLE `poll` ADD COLUMN `type` char(255) COMMENT 'Poll type, currently can be “regular” or “quiz”' AFTER `is_anonymous`;
 ALTER TABLE `poll` ADD COLUMN `allows_multiple_answers` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll allows multiple answers' AFTER `type`;
 ALTER TABLE `poll` ADD COLUMN `correct_option_id` int UNSIGNED COMMENT '0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.' AFTER `allows_multiple_answers`;
+ALTER TABLE `message` ADD COLUMN `dice` TEXT COMMENT 'Message is a dice with random value from 1 to 6' AFTER `poll`;
 
 CREATE TABLE IF NOT EXISTS `poll_answer` (
   `poll_id` bigint UNSIGNED COMMENT 'Unique poll identifier',
