@@ -20,7 +20,6 @@ use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
 use Longman\TelegramBot\Entities\Payments\ShippingQuery;
 use Longman\TelegramBot\Entities\Poll;
-use Longman\TelegramBot\Entities\ReplyToMessage;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -418,7 +417,7 @@ class DB
         }
 
         // Also insert the relationship to the chat into the user_chat table
-        if ($chat instanceof Chat) {
+        if ($chat) {
             try {
                 $sth = self::$pdo->prepare('
                     INSERT IGNORE INTO `' . TB_USER_CHAT . '`
@@ -597,8 +596,7 @@ class DB
             $date    = self::getTimestamp();
             $user_id = null;
 
-            $user = $inline_query->getFrom();
-            if ($user instanceof User) {
+            if ($user = $inline_query->getFrom()) {
                 $user_id = $user->getId();
                 self::insertUser($user, $date);
             }
@@ -641,8 +639,7 @@ class DB
             $date    = self::getTimestamp();
             $user_id = null;
 
-            $user = $chosen_inline_result->getFrom();
-            if ($user instanceof User) {
+            if ($user = $chosen_inline_result->getFrom()) {
                 $user_id = $user->getId();
                 self::insertUser($user, $date);
             }
@@ -685,16 +682,14 @@ class DB
             $date    = self::getTimestamp();
             $user_id = null;
 
-            $user = $callback_query->getFrom();
-            if ($user instanceof User) {
+            if ($user = $callback_query->getFrom()) {
                 $user_id = $user->getId();
                 self::insertUser($user, $date);
             }
 
-            $message    = $callback_query->getMessage();
             $chat_id    = null;
             $message_id = null;
-            if ($message instanceof Message) {
+            if ($message = $callback_query->getMessage()) {
                 $chat_id    = $message->getChat()->getId();
                 $message_id = $message->getMessageId();
 
@@ -754,8 +749,7 @@ class DB
             $date    = self::getTimestamp();
             $user_id = null;
 
-            $user = $shipping_query->getFrom();
-            if ($user instanceof User) {
+            if ($user = $shipping_query->getFrom()) {
                 $user_id = $user->getId();
                 self::insertUser($user, $date);
             }
@@ -797,8 +791,7 @@ class DB
             $date    = self::getTimestamp();
             $user_id = null;
 
-            $user = $pre_checkout_query->getFrom();
-            if ($user instanceof User) {
+            if ($user = $pre_checkout_query->getFrom()) {
                 $user_id = $user->getId();
                 self::insertUser($user, $date);
             }
@@ -876,21 +869,18 @@ class DB
         self::insertChat($chat, $date, $message->getMigrateToChatId());
 
         // Insert user and the relation with the chat
-        $user = $message->getFrom();
-        if ($user instanceof User) {
+        if ($user = $message->getFrom()) {
             self::insertUser($user, $date, $chat);
         }
 
         // Insert the forwarded message user in users table
         $forward_date = $message->getForwardDate() ? self::getTimestamp($message->getForwardDate()) : null;
 
-        $forward_from = $message->getForwardFrom();
-        if ($forward_from instanceof User) {
+        if ($forward_from = $message->getForwardFrom()) {
             self::insertUser($forward_from);
             $forward_from = $forward_from->getId();
         }
-        $forward_from_chat = $message->getForwardFromChat();
-        if ($forward_from_chat instanceof Chat) {
+        if ($forward_from_chat = $message->getForwardFromChat()) {
             self::insertChat($forward_from_chat);
             $forward_from_chat = $forward_from_chat->getId();
         }
@@ -910,7 +900,7 @@ class DB
                 }
             }
             $new_chat_members_ids = implode(',', $new_chat_members_ids);
-        } elseif ($left_chat_member instanceof User) {
+        } elseif ($left_chat_member) {
             // Insert the left chat user
             self::insertUser($left_chat_member, $date, $chat);
             $left_chat_member_id = $left_chat_member->getId();
@@ -940,15 +930,11 @@ class DB
                 )
             ');
 
-            $user_id = null;
-            if ($user instanceof User) {
-                $user_id = $user->getId();
-            }
+            $user_id = $user ? $user->getId() : null;
             $chat_id = $chat->getId();
 
-            $reply_to_message    = $message->getReplyToMessage();
             $reply_to_message_id = null;
-            if ($reply_to_message instanceof ReplyToMessage) {
+            if ($reply_to_message = $message->getReplyToMessage()) {
                 $reply_to_message_id = $reply_to_message->getMessageId();
                 // please notice that, as explained in the documentation, reply_to_message don't contain other
                 // reply_to_message field so recursion deep is 1
@@ -1038,8 +1024,7 @@ class DB
             self::insertChat($chat, $edit_date);
 
             // Insert user and the relation with the chat
-            $user = $edited_message->getFrom();
-            if ($user instanceof User) {
+            if ($user = $edited_message->getFrom()) {
                 self::insertUser($user, $edit_date, $chat);
             }
 
@@ -1050,10 +1035,7 @@ class DB
                 (:chat_id, :message_id, :user_id, :edit_date, :text, :entities, :caption)
             ');
 
-            $user_id = null;
-            if ($user instanceof User) {
-                $user_id = $user->getId();
-            }
+            $user_id = $user ? $user->getId() : null;
 
             $sth->bindValue(':chat_id', $chat->getId());
             $sth->bindValue(':message_id', $edited_message->getMessageId());

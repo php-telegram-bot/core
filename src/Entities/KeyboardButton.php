@@ -18,6 +18,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  *
  * @link https://core.telegram.org/bots/api#keyboardbutton
  *
+ * @property bool $request_contact
+ * @property bool $request_location
+ *
  * @method string getText()            Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
  * @method bool   getRequestContact()  Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
  * @method bool   getRequestLocation() Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
