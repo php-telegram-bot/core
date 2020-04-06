@@ -13,13 +13,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Bot API 4.6 (Polls 2.0).
 ### Changed
 - Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
+- `Request::setClient()` now accepts more flexible `ClientInterface`. (#1068)
 ### Deprecated
 ### Removed
+- Unnecessary `instanceof` checks for entities. (#1068)
+- Unused `Request::$input` variable. (#1068)
 ### Fixed
 - Execution of `/start` command without any custom implementation.
 - Return `animation` type for GIF Message (which returns both `animation` and `document`). (#1044)
 - Change lowercase function to `mb_strtolower` from `strtolower` because of `latin-extented` characters. (#1051)
 - Extend `Request::mediaInputHelper()` to include `thumb` parameter.
+- Various docblock annotations. (#1068)
 ### Security
 
 ## [0.61.1] - 2019-11-23

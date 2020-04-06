@@ -31,7 +31,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string            getForwardSignature()      Optional. For messages forwarded from channels, signature of the post author if present
  * @method string            getForwardSenderName()     Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
  * @method int               getForwardDate()           Optional. For forwarded messages, date the original message was sent in Unix time
- * @method Message           getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
+ * @method ReplyToMessage    getReplyToMessage()        Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method int               getEditDate()              Optional. Date the message was last edited in Unix time
  * @method string            getMediaGroupId()          Optional. The unique identifier of a media message group this message belongs to
  * @method string            getAuthorSignature()       Optional. Signature of the post author for messages in channels

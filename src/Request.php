@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Stream;
 use Longman\TelegramBot\Entities\File;
@@ -109,16 +110,9 @@ class Request
     /**
      * Guzzle Client object
      *
-     * @var Client
+     * @var ClientInterface
      */
     private static $client;
-
-    /**
-     * Input value of the request
-     *
-     * @var string
-     */
-    private static $input;
 
     /**
      * Request limiter
@@ -260,15 +254,9 @@ class Request
      * Initialize
      *
      * @param Telegram $telegram
-     *
-     * @throws TelegramException
      */
     public static function initialize(Telegram $telegram)
     {
-        if (!($telegram instanceof Telegram)) {
-            throw new TelegramException('Invalid Telegram pointer!');
-        }
-
         self::$telegram = $telegram;
         self::setClient(self::$client ?: new Client(['base_uri' => self::$api_base_uri]));
     }
@@ -276,16 +264,10 @@ class Request
     /**
      * Set a custom Guzzle HTTP Client object
      *
-     * @param Client $client
-     *
-     * @throws TelegramException
+     * @param ClientInterface $client
      */
-    public static function setClient(Client $client)
+    public static function setClient(ClientInterface $client)
     {
-        if (!($client instanceof Client)) {
-            throw new TelegramException('Invalid GuzzleHttp\Client pointer!');
-        }
-
         self::$client = $client;
     }
 
@@ -298,7 +280,8 @@ class Request
     public static function getInput()
     {
         // First check if a custom input has been set, else get the PHP input.
-        if (!($input = self::$telegram->getCustomInput())) {
+        $input = self::$telegram->getCustomInput();
+        if (empty($input)) {
             $input = file_get_contents('php://input');
         }
 
@@ -307,11 +290,9 @@ class Request
             throw new TelegramException('Input must be a string!');
         }
 
-        self::$input = $input;
+        TelegramLog::update($input);
 
-        TelegramLog::update(self::$input);
-
-        return self::$input;
+        return $input;
     }
 
     /**
