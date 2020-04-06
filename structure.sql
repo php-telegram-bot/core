@@ -209,10 +209,25 @@ CREATE TABLE IF NOT EXISTS `poll` (
   `id` bigint UNSIGNED COMMENT 'Unique poll identifier',
   `question` char(255) NOT NULL COMMENT 'Poll question',
   `options` text NOT NULL COMMENT 'List of poll options',
+  `total_voter_count` int UNSIGNED COMMENT 'Total number of users that voted in the poll',
   `is_closed` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll is closed',
+  `is_anonymous` tinyint(1) DEFAULT 1 COMMENT 'True, if the poll is anonymous',
+  `type` char(255) COMMENT 'Poll type, currently can be “regular” or “quiz”',
+  `allows_multiple_answers` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll allows multiple answers',
+  `correct_option_id` int UNSIGNED COMMENT '0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `poll_answer` (
+  `poll_id` bigint UNSIGNED COMMENT 'Unique poll identifier',
+  `user_id` bigint NOT NULL COMMENT 'The user, who changed the answer to the poll',
+  `option_ids` text NOT NULL COMMENT '0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`poll_id`),
+  FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `telegram_update` (
@@ -228,6 +243,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `shipping_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming shipping query. Only for invoices with flexible price',
   `pre_checkout_query_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New incoming pre-checkout query. Contains full information about checkout',
   `poll_id` bigint UNSIGNED DEFAULT NULL COMMENT 'New poll state. Bots receive only updates about polls, which are sent or stopped by the bot',
+  `poll_answer_poll_id` bigint UNSIGNED DEFAULT NULL COMMENT 'A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`message_id`),
@@ -241,6 +257,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   KEY `shipping_query_id` (`shipping_query_id`),
   KEY `pre_checkout_query_id` (`pre_checkout_query_id`),
   KEY `poll_id` (`poll_id`),
+  KEY `poll_answer_poll_id` (`poll_answer_poll_id`),
 
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`),
@@ -251,7 +268,8 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`),
   FOREIGN KEY (`shipping_query_id`) REFERENCES `shipping_query` (`id`),
   FOREIGN KEY (`pre_checkout_query_id`) REFERENCES `pre_checkout_query` (`id`),
-  FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`)
+  FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`),
+  FOREIGN KEY (`poll_answer_poll_id`) REFERENCES `poll_answer` (`poll_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
