@@ -94,7 +94,7 @@ This code is available on [GitHub](https://github.com/php-telegram-bot/core). Pu
 ### Create your first bot
 
 1. Message [`@BotFather`](https://telegram.me/BotFather) with the following text: `/newbot`
-   
+
    If you don't know how to message by username, click the search field on your Telegram app and type `@BotFather`, where you should be able to initiate a conversation. Be careful not to send it to the wrong contact, because some users have similar usernames to `BotFather`.
 
    ![BotFather initial conversation](https://user-images.githubusercontent.com/9423417/60736229-bc2aeb80-9f45-11e9-8d35-5b53145347bc.png)
@@ -108,7 +108,7 @@ This code is available on [GitHub](https://github.com/php-telegram-bot/core). Pu
 3. Type whatever name you want for your bot.
 
 4. `@BotFather` replies with:
-    
+
     ```
     Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.
     ```

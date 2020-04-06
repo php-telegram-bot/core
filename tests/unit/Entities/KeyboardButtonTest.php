@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use Longman\TelegramBot\Entities\KeyboardButton;
+use Longman\TelegramBot\Entities\KeyboardButtonPollType;
 use Longman\TelegramBot\Exception\TelegramException;
 
 /**
@@ -33,7 +34,7 @@ class KeyboardButtonTest extends TestCase
     public function testKeyboardButtonTooManyParametersFail()
     {
         $this->expectException(TelegramException::class);
-        $this->expectExceptionMessage('You must use only one of these fields: request_contact, request_location!');
+        $this->expectExceptionMessage('You must use only one of these fields: request_contact, request_location, request_poll!');
         new KeyboardButton(['text' => 'message', 'request_contact' => true, 'request_location' => true]);
     }
 
@@ -42,6 +43,7 @@ class KeyboardButtonTest extends TestCase
         new KeyboardButton(['text' => 'message']);
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
+        new KeyboardButton(['text' => 'message', 'request_poll' => new KeyboardButtonPollType([])]);
         $this->assertTrue(true);
     }
 
@@ -57,6 +59,7 @@ class KeyboardButtonTest extends TestCase
         $this->assertSame('message', $button->getText());
         $this->assertEmpty($button->getRequestContact());
         $this->assertEmpty($button->getRequestLocation());
+        $this->assertEmpty($button->getRequestPoll());
 
         $button->setText('new message');
         $this->assertSame('new message', $button->getText());
@@ -64,9 +67,16 @@ class KeyboardButtonTest extends TestCase
         $button->setRequestContact(true);
         $this->assertTrue($button->getRequestContact());
         $this->assertEmpty($button->getRequestLocation());
+        $this->assertEmpty($button->getRequestPoll());
 
         $button->setRequestLocation(true);
         $this->assertEmpty($button->getRequestContact());
         $this->assertTrue($button->getRequestLocation());
+        $this->assertEmpty($button->getRequestPoll());
+
+        $button->setRequestPoll(new KeyboardButtonPollType([]));
+        $this->assertEmpty($button->getRequestContact());
+        $this->assertEmpty($button->getRequestLocation());
+        $this->assertInstanceOf(KeyboardButtonPollType::class, $button->getRequestPoll());
     }
 }
