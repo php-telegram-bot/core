@@ -7,15 +7,24 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.62.0] - 2020-04-08
+### Notes
+- [:ledger: View file changes][0.62.0] ∙ [:page_with_curl: DB migration script][0.62.0-sql-migration]
+### Added
 - Bot API 4.5 (Unique file IDs, MarkdownV2). (#1046)
 - Chain the exception thrown when getting commands from path. (#1030)
-- Support `language_code` in `DB::selectChats()` for filtering the chats selection.
-- Bot API 4.6 (Polls 2.0).
-- Bot API 4.7 (Dice, Sticker Sets, Bot Commands).
+- Support `language_code` in `DB::selectChats()` for filtering the chats selection. (#1058)
+- Bot API 4.6 (Polls 2.0). (#1066)
+- Bot API 4.7 (Dice, Sticker Sets, Bot Commands). (#1067)
 ### Changed
 - Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
 - `Request::setClient()` now accepts more flexible `ClientInterface`. (#1068)
-### Deprecated
 ### Removed
 - Unnecessary `instanceof` checks for entities. (#1068)
 - Unused `Request::$input` variable. (#1068)
@@ -23,9 +32,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Execution of `/start` command without any custom implementation.
 - Return `animation` type for GIF Message (which returns both `animation` and `document`). (#1044)
 - Change lowercase function to `mb_strtolower` from `strtolower` because of `latin-extented` characters. (#1051)
-- Extend `Request::mediaInputHelper()` to include `thumb` parameter.
+- Extend `Request::mediaInputHelper()` to include `thumb` parameter. (#1059)
 - Various docblock annotations. (#1068)
-### Security
 
 ## [0.61.1] - 2019-11-23
 ### Notes
@@ -423,6 +431,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[0.62.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.61.1-0.62.0.sql
 [0.61.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.60.0-0.61.0.sql
 [0.61.0-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core
 [0.58.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.57.0-0.58.0.sql
@@ -450,6 +459,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.62.0]: https://github.com/php-telegram-bot/core/compare/0.61.1...0.62.0
 [0.61.1]: https://github.com/php-telegram-bot/core/compare/0.61.0...0.61.1
 [0.61.0]: https://github.com/php-telegram-bot/core/compare/0.60.0...0.61.0
 [0.60.0]: https://github.com/php-telegram-bot/core/compare/0.59.1...0.60.0
