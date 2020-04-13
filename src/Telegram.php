@@ -147,6 +147,16 @@ class Telegram
     protected $last_update_id = null;
 
     /**
+     * The command to be executed when there's a new message update and nothing more suitable is found
+     */
+    const GENERIC_MESSAGE_COMMAND = 'genericmessage';
+
+    /**
+     * The command to be executed by default (when no other relevant commands are applicable)
+     */
+    const GENERIC_COMMAND = 'generic';
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -455,7 +465,7 @@ class Telegram
         $this->getCommandsList();
 
         //If all else fails, it's a generic message.
-        $command = 'genericmessage';
+        $command = self::GENERIC_MESSAGE_COMMAND;
 
         $update_type = $this->update->getUpdateType();
         if ($update_type === 'message') {
@@ -506,12 +516,12 @@ class Telegram
 
         if (!$command_obj || !$command_obj->isEnabled()) {
             //Failsafe in case the Generic command can't be found
-            if ($command === 'generic') {
+            if ($command === self::GENERIC_COMMAND) {
                 throw new TelegramException('Generic command missing!');
             }
 
             //Handle a generic command or non existing one
-            $this->last_command_response = $this->executeCommand('generic');
+            $this->last_command_response = $this->executeCommand(self::GENERIC_COMMAND);
         } else {
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
