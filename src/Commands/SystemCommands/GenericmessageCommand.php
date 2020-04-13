@@ -15,6 +15,7 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Telegram;
 
 /**
  * Generic message command
@@ -24,7 +25,7 @@ class GenericmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'genericmessage';
+    protected $name = Telegram::GENERIC_MESSAGE_COMMAND;
 
     /**
      * @var string
