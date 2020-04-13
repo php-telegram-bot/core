@@ -154,7 +154,7 @@ class Telegram
     /**
      * The command to be executed by default (when no other relevant commands are applicable)
      */
-    const FALLBACK_COMMAND = 'generic';
+    const GENERIC_COMMAND = 'generic';
 
     /**
      * Telegram constructor.
@@ -516,12 +516,12 @@ class Telegram
 
         if (!$command_obj || !$command_obj->isEnabled()) {
             //Failsafe in case the Generic command can't be found
-            if ($command === self::FALLBACK_COMMAND) {
+            if ($command === self::GENERIC_COMMAND) {
                 throw new TelegramException('Generic command missing!');
             }
 
             //Handle a generic command or non existing one
-            $this->last_command_response = $this->executeCommand(self::FALLBACK_COMMAND);
+            $this->last_command_response = $this->executeCommand(self::GENERIC_COMMAND);
         } else {
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
