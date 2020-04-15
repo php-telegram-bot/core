@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace PhpTelegramBot\Core\Tests\Unit;
 
-use Longman\TelegramBot\TelegramLog;
+use PhpTelegramBot\Core\TelegramLog;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

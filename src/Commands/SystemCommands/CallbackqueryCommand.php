@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands\SystemCommands;
+namespace PhpTelegramBot\Core\Commands\SystemCommands;
 
-use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\ServerResponse;
+use PhpTelegramBot\Core\Commands\SystemCommand;
+use PhpTelegramBot\Core\Entities\ServerResponse;
 
 /**
  * Callback query command

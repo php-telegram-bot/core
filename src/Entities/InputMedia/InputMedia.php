@@ -1,6 +1,6 @@
 <?php
 
-namespace Longman\TelegramBot\Entities\InputMedia;
+namespace PhpTelegramBot\Core\Entities\InputMedia;
 
 interface InputMedia
 {

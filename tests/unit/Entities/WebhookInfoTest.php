@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace PhpTelegramBot\Core\Tests\Unit;
 
-use Longman\TelegramBot\Entities\WebhookInfo;
+use PhpTelegramBot\Core\Entities\WebhookInfo;
 
 /**
  * @package         TelegramTest

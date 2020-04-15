@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace PhpTelegramBot\Core\Tests\Unit;
 
-use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Telegram;
+use PhpTelegramBot\Core\Conversation;
+use PhpTelegramBot\Core\Exception\TelegramException;
+use PhpTelegramBot\Core\Telegram;
 
 /**
  * @package         TelegramTest

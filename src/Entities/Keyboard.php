@@ -11,9 +11,9 @@
  * Written by Marco Boretto <marco.bore@gmail.com>
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
-use Longman\TelegramBot\Exception\TelegramException;
+use PhpTelegramBot\Core\Exception\TelegramException;
 
 /**
  * Class Keyboard

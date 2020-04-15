@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
-use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
-use Longman\TelegramBot\Entities\Payments\ShippingQuery;
+use PhpTelegramBot\Core\Entities\Payments\PreCheckoutQuery;
+use PhpTelegramBot\Core\Entities\Payments\ShippingQuery;
 
 /**
  * Class Update

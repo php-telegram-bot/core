@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands\UserCommands;
+namespace PhpTelegramBot\Core\Commands\UserCommands;
 
-use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Commands\UserCommand;
+use PhpTelegramBot\Core\Request;
 
 /**
  * Test "/hidden" command to test $show_in_help

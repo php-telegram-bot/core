@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Exception;
+namespace PhpTelegramBot\Core\Exception;
 
 /**
  * Thrown when bot token is invalid

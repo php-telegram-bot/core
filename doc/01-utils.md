@@ -15,7 +15,7 @@ The first parameter is the main logger, the second one is used for the raw updat
 
 (in this example we're using [Monolog])
 ```php
-use Longman\TelegramBot\TelegramLog;
+use PhpTelegramBot\Core\TelegramLog;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

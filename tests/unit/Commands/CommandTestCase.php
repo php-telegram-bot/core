@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit\Commands;
+namespace PhpTelegramBot\Core\Tests\Unit\Commands;
 
-use Longman\TelegramBot\Commands\Command;
-use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\Tests\Unit\TestCase;
+use PhpTelegramBot\Core\Commands\Command;
+use PhpTelegramBot\Core\Telegram;
+use PhpTelegramBot\Core\Tests\Unit\TestCase;
 
 /**
  * @package         TelegramTest

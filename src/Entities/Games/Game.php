@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\Games;
+namespace PhpTelegramBot\Core\Entities\Games;
 
-use Longman\TelegramBot\Entities\Animation;
-use Longman\TelegramBot\Entities\Entity;
-use Longman\TelegramBot\Entities\MessageEntity;
-use Longman\TelegramBot\Entities\PhotoSize;
+use PhpTelegramBot\Core\Entities\Animation;
+use PhpTelegramBot\Core\Entities\Entity;
+use PhpTelegramBot\Core\Entities\MessageEntity;
+use PhpTelegramBot\Core\Entities\PhotoSize;
 
 /**
  * Class Game

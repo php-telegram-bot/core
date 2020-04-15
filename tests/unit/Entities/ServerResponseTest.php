@@ -11,17 +11,17 @@
  * Written by Marco Boretto
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace PhpTelegramBot\Core\Tests\Unit;
 
-use Longman\TelegramBot\Entities\File;
-use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\PhotoSize;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Entities\Sticker;
-use Longman\TelegramBot\Entities\StickerSet;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\UserProfilePhotos;
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Entities\File;
+use PhpTelegramBot\Core\Entities\Message;
+use PhpTelegramBot\Core\Entities\PhotoSize;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Entities\Sticker;
+use PhpTelegramBot\Core\Entities\StickerSet;
+use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Entities\UserProfilePhotos;
+use PhpTelegramBot\Core\Request;
 
 /**
  * @package         TelegramTest

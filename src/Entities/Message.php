@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
-use Longman\TelegramBot\Entities\Games\Game;
-use Longman\TelegramBot\Entities\Payments\Invoice;
-use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
-use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
+use PhpTelegramBot\Core\Entities\Games\Game;
+use PhpTelegramBot\Core\Entities\Payments\Invoice;
+use PhpTelegramBot\Core\Entities\Payments\SuccessfulPayment;
+use PhpTelegramBot\Core\Entities\TelegramPassport\PassportData;
 
 /**
  * Class Message

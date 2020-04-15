@@ -218,14 +218,14 @@ $hook_url     = 'https://your-domain/path/to/hook.php';
 
 try {
     // Create Telegram API object
-    $telegram = new Longman\TelegramBot\Telegram($bot_api_key, $bot_username);
+    $telegram = new PhpTelegramBot\Core\Telegram($bot_api_key, $bot_username);
 
     // Set webhook
     $result = $telegram->setWebhook($hook_url);
     if ($result->isOk()) {
         echo $result->getDescription();
     }
-} catch (Longman\TelegramBot\Exception\TelegramException $e) {
+} catch (PhpTelegramBot\Core\Exception\TelegramException $e) {
     // log telegram errors
     // echo $e->getMessage();
 }
@@ -245,11 +245,11 @@ $bot_username = 'username_bot';
 
 try {
     // Create Telegram API object
-    $telegram = new Longman\TelegramBot\Telegram($bot_api_key, $bot_username);
+    $telegram = new PhpTelegramBot\Core\Telegram($bot_api_key, $bot_username);
 
     // Handle telegram webhook request
     $telegram->handle();
-} catch (Longman\TelegramBot\Exception\TelegramException $e) {
+} catch (PhpTelegramBot\Core\Exception\TelegramException $e) {
     // Silence is golden!
     // log telegram errors
     // echo $e->getMessage();
@@ -290,14 +290,14 @@ $mysql_credentials = [
 
 try {
     // Create Telegram API object
-    $telegram = new Longman\TelegramBot\Telegram($bot_api_key, $bot_username);
+    $telegram = new PhpTelegramBot\Core\Telegram($bot_api_key, $bot_username);
 
     // Enable MySQL
     $telegram->enableMySql($mysql_credentials);
 
     // Handle telegram getUpdates request
     $telegram->handleGetUpdates();
-} catch (Longman\TelegramBot\Exception\TelegramException $e) {
+} catch (PhpTelegramBot\Core\Exception\TelegramException $e) {
     // log telegram errors
     // echo $e->getMessage();
 }
@@ -382,7 +382,7 @@ See the [*ImageCommand.php*][ImageCommand.php] for a full example.
 ```php
 Request::sendChatAction([
     'chat_id' => $chat_id,
-    'action'  => Longman\TelegramBot\ChatAction::TYPING,
+    'action'  => PhpTelegramBot\Core\ChatAction::TYPING,
 ]);
 ```
 

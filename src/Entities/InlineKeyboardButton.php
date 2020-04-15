@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
-use Longman\TelegramBot\Entities\Games\CallbackGame;
-use Longman\TelegramBot\Exception\TelegramException;
+use PhpTelegramBot\Core\Entities\Games\CallbackGame;
+use PhpTelegramBot\Core\Exception\TelegramException;
 
 /**
  * Class InlineKeyboardButton

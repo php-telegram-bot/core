@@ -1,6 +1,6 @@
 <?php
 
-namespace Longman\TelegramBot\Entities\InlineQuery;
+namespace PhpTelegramBot\Core\Entities\InlineQuery;
 
 interface InlineQueryResult
 {

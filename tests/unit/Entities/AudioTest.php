@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace PhpTelegramBot\Core\Tests\Unit;
 
-use Longman\TelegramBot\Entities\Audio;
+use PhpTelegramBot\Core\Entities\Audio;
 
 /**
  * @package         TelegramTest

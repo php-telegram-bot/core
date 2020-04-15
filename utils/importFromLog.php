@@ -11,9 +11,9 @@
  * @todo Move to dedicated CLI tool.
  */
 
-use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Telegram;
+use PhpTelegramBot\Core\DB;
+use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Telegram;
 
 require __DIR__ . '/../vendor/autoload.php';
 

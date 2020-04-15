@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace PhpTelegramBot\Core\Tests\Unit;
 
-use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\User;
+use PhpTelegramBot\Core\DB;
+use PhpTelegramBot\Core\Entities\Chat;
+use PhpTelegramBot\Core\Entities\Message;
+use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Entities\User;
 
 /**
  * @package         TelegramTest

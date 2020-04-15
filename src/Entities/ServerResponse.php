@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
-use Longman\TelegramBot\Entities\Games\GameHighScore;
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Entities\Games\GameHighScore;
+use PhpTelegramBot\Core\Request;
 
 /**
  * Class ServerResponse

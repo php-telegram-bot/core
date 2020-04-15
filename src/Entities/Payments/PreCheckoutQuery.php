@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\Payments;
+namespace PhpTelegramBot\Core\Entities\Payments;
 
-use Longman\TelegramBot\Entities\Entity;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Entities\User;
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Entities\Entity;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Entities\User;
+use PhpTelegramBot\Core\Request;
 
 /**
  * Class PreCheckoutQuery

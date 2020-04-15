@@ -10,20 +10,20 @@
  * Written by Marco Boretto <marco.bore@gmail.com>
  */
 
-namespace Longman\TelegramBot;
+namespace PhpTelegramBot\Core;
 
-use Longman\TelegramBot\Entities\CallbackQuery;
-use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Entities\ChosenInlineResult;
-use Longman\TelegramBot\Entities\InlineQuery;
-use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
-use Longman\TelegramBot\Entities\Payments\ShippingQuery;
-use Longman\TelegramBot\Entities\Poll;
-use Longman\TelegramBot\Entities\PollAnswer;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Entities\User;
-use Longman\TelegramBot\Exception\TelegramException;
+use PhpTelegramBot\Core\Entities\CallbackQuery;
+use PhpTelegramBot\Core\Entities\Chat;
+use PhpTelegramBot\Core\Entities\ChosenInlineResult;
+use PhpTelegramBot\Core\Entities\InlineQuery;
+use PhpTelegramBot\Core\Entities\Message;
+use PhpTelegramBot\Core\Entities\Payments\PreCheckoutQuery;
+use PhpTelegramBot\Core\Entities\Payments\ShippingQuery;
+use PhpTelegramBot\Core\Entities\Poll;
+use PhpTelegramBot\Core\Entities\PollAnswer;
+use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Entities\User;
+use PhpTelegramBot\Core\Exception\TelegramException;
 use PDO;
 use PDOException;
 

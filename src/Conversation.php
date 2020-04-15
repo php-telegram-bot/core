@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace PhpTelegramBot\Core;
 
-use Longman\TelegramBot\Exception\TelegramException;
+use PhpTelegramBot\Core\Exception\TelegramException;
 
 /**
  * Class Conversation

@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace PhpTelegramBot\Core\Commands;
 
-use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\CallbackQuery;
-use Longman\TelegramBot\Entities\ChosenInlineResult;
-use Longman\TelegramBot\Entities\InlineQuery;
-use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
-use Longman\TelegramBot\Entities\Payments\ShippingQuery;
-use Longman\TelegramBot\Entities\Poll;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Telegram;
+use PhpTelegramBot\Core\DB;
+use PhpTelegramBot\Core\Entities\CallbackQuery;
+use PhpTelegramBot\Core\Entities\ChosenInlineResult;
+use PhpTelegramBot\Core\Entities\InlineQuery;
+use PhpTelegramBot\Core\Entities\Message;
+use PhpTelegramBot\Core\Entities\Payments\PreCheckoutQuery;
+use PhpTelegramBot\Core\Entities\Payments\ShippingQuery;
+use PhpTelegramBot\Core\Entities\Poll;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Exception\TelegramException;
+use PhpTelegramBot\Core\Request;
+use PhpTelegramBot\Core\Telegram;
 
 /**
  * Class Command

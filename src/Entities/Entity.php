@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
 use Exception;
-use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
-use Longman\TelegramBot\Entities\InputMedia\InputMedia;
+use PhpTelegramBot\Core\Entities\InlineQuery\InlineEntity;
+use PhpTelegramBot\Core\Entities\InputMedia\InputMedia;
 
 /**
  * Class Entity

@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands\AdminCommands;
+namespace PhpTelegramBot\Core\Commands\AdminCommands;
 
-use Longman\TelegramBot\Commands\AdminCommand;
-use Longman\TelegramBot\DB;
-use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Commands\AdminCommand;
+use PhpTelegramBot\Core\DB;
+use PhpTelegramBot\Core\Entities\Chat;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Exception\TelegramException;
+use PhpTelegramBot\Core\Request;
 
 class ChatsCommand extends AdminCommand
 {

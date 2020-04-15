@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\Games;
+namespace PhpTelegramBot\Core\Entities\Games;
 
-use Longman\TelegramBot\Entities\Entity;
+use PhpTelegramBot\Core\Entities\Entity;
 
 /**
  * Class CallbackGame

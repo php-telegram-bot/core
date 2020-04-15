@@ -1,5 +1,5 @@
 {
-    "name": "longman/telegram-bot",
+    "name": "php-telegram-bot/core",
     "type": "library",
     "description": "PHP Telegram bot",
     "keywords": ["telegram", "bot", "api"],
@@ -39,12 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Longman\\TelegramBot\\": "src/"
+            "PhpTelegramBot\\Core\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Longman\\TelegramBot\\Tests\\Unit\\": "tests/unit"
+            "PhpTelegramBot\\Core\\Tests\\Unit\\": "tests/unit"
         }
     },
     "scripts": {

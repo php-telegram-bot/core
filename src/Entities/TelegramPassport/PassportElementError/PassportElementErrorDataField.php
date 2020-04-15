@@ -11,7 +11,7 @@
 
 namespace Entities\TelegramPassport\PassportElementError;
 
-use Longman\TelegramBot\Entities\Entity;
+use PhpTelegramBot\Core\Entities\Entity;
 
 /**
  * Class PassportElementErrorDataField

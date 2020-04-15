@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities;
+namespace PhpTelegramBot\Core\Entities;
 
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Request;
 
 /**
  * Class CallbackQuery.

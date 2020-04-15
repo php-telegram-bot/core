@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\InlineQuery;
+namespace PhpTelegramBot\Core\Entities\InlineQuery;
 
-use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
+use PhpTelegramBot\Core\Entities\InlineKeyboard;
+use PhpTelegramBot\Core\Entities\InputMessageContent\InputMessageContent;
 
 /**
  * Class InlineQueryResultContact

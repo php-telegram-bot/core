@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace PhpTelegramBot\Core;
 
 defined('TB_BASE_PATH') || define('TB_BASE_PATH', __DIR__);
 defined('TB_BASE_COMMANDS_PATH') || define('TB_BASE_COMMANDS_PATH', TB_BASE_PATH . '/Commands');
 
 use Exception;
-use Longman\TelegramBot\Commands\Command;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Exception\TelegramException;
+use PhpTelegramBot\Core\Commands\Command;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Exception\TelegramException;
 use PDO;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

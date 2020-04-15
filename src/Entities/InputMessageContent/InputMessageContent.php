@@ -1,6 +1,6 @@
 <?php
 
-namespace Longman\TelegramBot\Entities\InputMessageContent;
+namespace PhpTelegramBot\Core\Entities\InputMessageContent;
 
 interface InputMessageContent
 {

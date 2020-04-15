@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\TelegramPassport;
+namespace PhpTelegramBot\Core\Entities\TelegramPassport;
 
-use Longman\TelegramBot\Entities\Entity;
+use PhpTelegramBot\Core\Entities\Entity;
 
 /**
  * Class PassportData

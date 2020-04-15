@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace PhpTelegramBot\Core\Commands;
 
 abstract class AdminCommand extends Command
 {

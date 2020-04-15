@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace PhpTelegramBot\Core;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;

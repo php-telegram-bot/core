@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Commands;
+namespace PhpTelegramBot\Core\Commands;
 
-use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
+use PhpTelegramBot\Core\Conversation;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Exception\TelegramException;
+use PhpTelegramBot\Core\Request;
 
 abstract class SystemCommand extends Command
 {

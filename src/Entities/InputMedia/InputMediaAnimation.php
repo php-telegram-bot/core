@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Entities\InputMedia;
+namespace PhpTelegramBot\Core\Entities\InputMedia;
 
-use Longman\TelegramBot\Entities\Entity;
+use PhpTelegramBot\Core\Entities\Entity;
 
 /**
  * Class InputMediaAnimation

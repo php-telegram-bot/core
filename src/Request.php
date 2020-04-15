@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot;
+namespace PhpTelegramBot\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Stream;
-use Longman\TelegramBot\Entities\File;
-use Longman\TelegramBot\Entities\InputMedia\InputMedia;
-use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\InvalidBotTokenException;
-use Longman\TelegramBot\Exception\TelegramException;
+use PhpTelegramBot\Core\Entities\File;
+use PhpTelegramBot\Core\Entities\InputMedia\InputMedia;
+use PhpTelegramBot\Core\Entities\Message;
+use PhpTelegramBot\Core\Entities\ServerResponse;
+use PhpTelegramBot\Core\Exception\InvalidBotTokenException;
+use PhpTelegramBot\Core\Exception\TelegramException;
 
 /**
  * Class Request
