@@ -837,9 +837,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_POLL . '`
-                (`id`, `question`, `options`, `total_voter_count`, `is_closed`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `created_at`)
+                (`id`, `question`, `options`, `total_voter_count`, `is_closed`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_entities`, `open_period`, `close_date`, `created_at`)
                 VALUES
-                (:id, :question, :options, :total_voter_count, :is_closed, :is_anonymous, :type, :allows_multiple_answers, :correct_option_id, :created_at)
+                (:id, :question, :options, :total_voter_count, :is_closed, :is_anonymous, :type, :allows_multiple_answers, :correct_option_id, :explanation, :explanation_entities, :open_period, :close_date, :created_at)
                 ON DUPLICATE KEY UPDATE
                     `options`                 = VALUES(`options`),
                     `total_voter_count`       = VALUES(`total_voter_count`),
@@ -847,7 +847,11 @@ class DB
                     `is_anonymous`            = VALUES(`is_anonymous`),
                     `type`                    = VALUES(`type`),
                     `allows_multiple_answers` = VALUES(`allows_multiple_answers`),
-                    `correct_option_id`       = VALUES(`correct_option_id`)
+                    `correct_option_id`       = VALUES(`correct_option_id`),
+                    `explanation`             = VALUES(`explanation`),
+                    `explanation_entities`    = VALUES(`explanation_entities`),
+                    `open_period`             = VALUES(`open_period`),
+                    `close_date`              = VALUES(`close_date`)
             ');
 
             $sth->bindValue(':id', $poll->getId());
@@ -859,6 +863,10 @@ class DB
             $sth->bindValue(':type', $poll->getType());
             $sth->bindValue(':allows_multiple_answers', $poll->getAllowsMultipleAnswers(), PDO::PARAM_INT);
             $sth->bindValue(':correct_option_id', $poll->getCorrectOptionId());
+            $sth->bindValue(':explanation', $poll->getExplanation());
+            $sth->bindValue(':explanation_entities', self::entitiesArrayToJson($poll->getExplanationEntities() ?: null));
+            $sth->bindValue(':open_period', $poll->getOpenPeriod());
+            $sth->bindValue(':close_date', self::getTimestamp($poll->getCloseDate()));
             $sth->bindValue(':created_at', self::getTimestamp());
 
             return $sth->execute();
