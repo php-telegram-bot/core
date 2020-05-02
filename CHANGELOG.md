@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Replaced 'generic' and 'genericmessage' strings with Telegram::GENERIC_COMMAND and Telegram::GENERIC_MESSAGE_COMMAND constants (@1int)
 - Bot API 4.8 (Extra Poll and Dice features).
+- `TelegramLog::$log_request_data` parameter to output the request data to the debug log.
 ### Changed
 ### Deprecated
 ### Removed
