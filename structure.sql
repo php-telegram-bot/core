@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `poll_answer` (
   `option_ids` text NOT NULL COMMENT '0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
-  PRIMARY KEY (`poll_id`),
+  PRIMARY KEY (`poll_id`, `user_id`),
   FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 

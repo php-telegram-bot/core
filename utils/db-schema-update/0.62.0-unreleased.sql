@@ -2,3 +2,5 @@ ALTER TABLE `poll` ADD COLUMN `explanation` varchar(255) DEFAULT NULL COMMENT 'T
 ALTER TABLE `poll` ADD COLUMN `explanation_entities` text DEFAULT NULL COMMENT 'Special entities like usernames, URLs, bot commands, etc. that appear in the explanation' AFTER `explanation`;
 ALTER TABLE `poll` ADD COLUMN `open_period` int UNSIGNED DEFAULT NULL COMMENT 'Amount of time in seconds the poll will be active after creation' AFTER `explanation_entities`;
 ALTER TABLE `poll` ADD COLUMN `close_date` timestamp NULL DEFAULT NULL COMMENT 'Point in time (Unix timestamp) when the poll will be automatically closed' AFTER `open_period`;
+
+ALTER TABLE `poll_answer` DROP PRIMARY KEY, ADD PRIMARY KEY (`poll_id`, `user_id`);
