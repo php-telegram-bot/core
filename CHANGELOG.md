@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Primary key for `poll_answer` also requires the `user_id`.
 ### Security
 
 ## [0.62.0] - 2020-04-08
