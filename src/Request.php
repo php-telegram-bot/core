@@ -491,13 +491,21 @@ class Request
                 $request_params
             );
             $result   = (string) $response->getBody();
-
+            
+            if (TelegramLog::$log_response_data) {
+                TelegramLog::debug('Request Data: ' . print_r($result, true));
+            }
+            
             //Logging getUpdates Update
             if ($action === 'getUpdates') {
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
             $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
+            
+            if (TelegramLog::$log_response_data) {
+                TelegramLog::debug('Request Data: ' . print_r($result, true));
+            }
         } finally {
             //Logging verbose debug output
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
