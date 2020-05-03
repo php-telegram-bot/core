@@ -44,6 +44,13 @@ class TelegramLog
     protected static $update_logger;
 
     /**
+     * Log the response data to the debug log
+     *
+     * @var bool
+     */
+    public static $log_response_data = false;
+    
+    /**
      * Temporary stream handle for debug log
      *
      * @var resource|null
