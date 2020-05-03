@@ -486,10 +486,6 @@ class Request
         $request_params['debug'] = TelegramLog::getDebugLogTempStream();
 
         try {
-            if (TelegramLog::$log_request_data) {
-                TelegramLog::debug('Request Data: ' . print_r($data, true));
-            }
-
             $response = self::$client->post(
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
@@ -504,6 +500,9 @@ class Request
             $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
+            if (TelegramLog::$log_request_data) {
+                TelegramLog::debug('Request Data:' . PHP_EOL . print_r($data, true));
+            }
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }
 
