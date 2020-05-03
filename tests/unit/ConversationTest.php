@@ -33,6 +33,7 @@ class ConversationTest extends TestCase
     {
         $credentials = [
             'host'     => PHPUNIT_DB_HOST,
+            'port'     => PHPUNIT_DB_PORT,
             'database' => PHPUNIT_DB_NAME,
             'user'     => PHPUNIT_DB_USER,
             'password' => PHPUNIT_DB_PASS,

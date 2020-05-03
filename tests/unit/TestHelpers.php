@@ -228,7 +228,11 @@ class TestHelpers
      */
     public static function emptyDb(array $credentials)
     {
-        $dsn     = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
+        if (!empty($credentials['port'])) {
+            $dsn .= ';port=' . $credentials['port'];
+        }
+
         $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
 
         $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
