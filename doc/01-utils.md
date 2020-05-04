@@ -46,6 +46,13 @@ If you's like to always log the request and response data to the debug log, also
 \Longman\TelegramBot\TelegramLog::$always_log_request_and_response = true;
 ```
 
+### Hiding API token from the log
+By default, the API token is removed from the log, to prevent any mistaken leakage when posting logs online.
+This behaviour can be changed by setting the appropriate variable:
+``php
+\Longman\TelegramBot\TelegramLog::$remove_bot_token = false;
+```
+
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [PSR-3-providers]: https://packagist.org/providers/psr/log-implementation
 [Monolog]: https://github.com/Seldaek/monolog

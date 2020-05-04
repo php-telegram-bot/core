@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Bot API 4.8 (Extra Poll and Dice features).
 - Allow custom MySQL port to be defined for tests.
 - New static method `Entity::escapeMarkdownV2` for MarkdownV2.
+- Remove bot token from debug http logs, this can be disabled by setting `TelegramLog::$remove_bot_token` parameter to `false`
 - `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests
 ### Changed
 - [:exclamation:][unreleased-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object.
