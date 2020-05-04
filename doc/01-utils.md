@@ -40,10 +40,10 @@ Telegram API changes continuously and it often happens that the database schema 
 If you store the raw data you can import all updates on the newest table schema by simply using [this script](../utils/importFromLog.php).
 Remember to always backup first!!
 
-### Request data
-If you'd like to also log the request data to your debug log, you can set the appropriate variable:
+### Always log request and response data
+If you's like to always log the request and response data to the debug log, also for successful requests, you can set the appropriate variable:
 ```php
-\Longman\TelegramBot\TelegramLog::$log_request_data = true;
+\Longman\TelegramBot\TelegramLog::$always_log_request_and_response = true;
 ```
 
 [PSR-3]: https://www.php-fig.org/psr/psr-3

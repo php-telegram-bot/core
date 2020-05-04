@@ -44,11 +44,11 @@ class TelegramLog
     protected static $update_logger;
 
     /**
-     * Log the request data to the debug log
+     * Always log the request and response data to the debug log, also for successful requests
      *
      * @var bool
      */
-    public static $log_request_data = false;
+    public static $always_log_request_and_response = false;
 
     /**
      * Temporary stream handle for debug log
