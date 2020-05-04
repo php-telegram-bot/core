@@ -40,6 +40,12 @@ Telegram API changes continuously and it often happens that the database schema 
 If you store the raw data you can import all updates on the newest table schema by simply using [this script](../utils/importFromLog.php).
 Remember to always backup first!!
 
+### Hiding API token from the log
+By default, the API token is removed from the log, to prevent any mistaken leakage when posting logs online.
+This behaviour can be changed by setting the appropriate variable:
+``php
+\Longman\TelegramBot\TelegramLog::$remove_bot_token = false;
+```
 
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [PSR-3-providers]: https://packagist.org/providers/psr/log-implementation
