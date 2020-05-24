@@ -465,7 +465,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
 [example-bot]: https://github.com/php-telegram-bot/example-bot
 [PSR-3]: https://www.php-fig.org/psr/psr-3
-[Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-php-telegram-bot-core?utm_source=packagist-php-telegram-bot-core&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
 [0.62.0]: https://github.com/php-telegram-bot/core/compare/0.61.1...0.62.0

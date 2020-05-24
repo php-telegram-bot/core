@@ -14,12 +14,12 @@ A Telegram Bot based on the official [Telegram Bot API]
 [![Build Status](https://travis-ci.org/php-telegram-bot/core.svg?branch=master)](https://travis-ci.org/php-telegram-bot/core)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/master.svg?style=flat)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
 [![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/master.svg?style=flat)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
-[![Latest Stable Version](https://img.shields.io/packagist/v/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Latest Stable Version](https://img.shields.io/packagist/v/php-telegram-bot/core.svg)](https://packagist.org/packages/php-telegram-bot/core)
 [![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core?style=flat)][Tidelift]
-[![Total Downloads](https://img.shields.io/packagist/dt/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Downloads Month](https://img.shields.io/packagist/dm/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
+[![Total Downloads](https://img.shields.io/packagist/dt/php-telegram-bot/core.svg)](https://packagist.org/packages/php-telegram-bot/core)
+[![Downloads Month](https://img.shields.io/packagist/dm/php-telegram-bot/core.svg)](https://packagist.org/packages/php-telegram-bot/core)
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
-[![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
+[![License](https://img.shields.io/packagist/l/php-telegram-bot/core.svg)](https://github.com/php-telegram-bot/core/LICENSE)
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -166,7 +166,7 @@ above, but start it with `@`)
 ### Require this package with Composer
 
 Install this package through [Composer].
-Edit your project's `composer.json` file to require `longman/telegram-bot`.
+Edit your project's `composer.json` file to require `php-telegram-bot/core`.
 
 Create *composer.json* file
 ```json
@@ -175,7 +175,7 @@ Create *composer.json* file
     "type": "project",
     "require": {
         "php": ">=5.5",
-        "longman/telegram-bot": "*"
+        "php-telegram-bot/core": "*"
     }
 }
 ```
@@ -186,7 +186,7 @@ and run `composer update`
 run this command in your command line:
 
 ```bash
-composer require longman/telegram-bot
+composer require php-telegram-bot/core
 ```
 
 ### Choose how to retrieve Telegram updates
@@ -611,7 +611,7 @@ Thank you for keeping this project alive :pray:
 - [![Patreon](https://user-images.githubusercontent.com/9423417/59235980-a5fa6b80-8be3-11e9-8ae7-020bc4ae9baa.png) Patreon.com/phptelegrambot][Patreon]
 - [![OpenCollective](https://user-images.githubusercontent.com/9423417/59235978-a561d500-8be3-11e9-89be-82ec54be1546.png) OpenCollective.com/php-telegram-bot][OpenCollective]
 - [![Ko-fi](https://user-images.githubusercontent.com/9423417/59235976-a561d500-8be3-11e9-911d-b1908c3e6a33.png) Ko-fi.com/phptelegrambot][Ko-fi]
-- [![Tidelift](https://user-images.githubusercontent.com/9423417/59235982-a6930200-8be3-11e9-8ac2-bfb6991d80c5.png) Tidelift.com/longman/telegram-bot][Tidelift]
+- [![Tidelift](https://user-images.githubusercontent.com/9423417/59235982-a6930200-8be3-11e9-8ac2-bfb6991d80c5.png) Tidelift.com/php-telegram-bot/core][Tidelift]
 - [![Liberapay](https://user-images.githubusercontent.com/9423417/59235977-a561d500-8be3-11e9-9d16-bc3b13d3ceba.png) Liberapay.com/PHP-Telegram-Bot][Liberapay]
 - [![PayPal](https://user-images.githubusercontent.com/9423417/59235981-a5fa6b80-8be3-11e9-9761-15eb7a524cb0.png) PayPal.me/noplanman][PayPal-noplanman] (account of @noplanman)
 - [![Bitcoin](https://user-images.githubusercontent.com/9423417/59235974-a4c93e80-8be3-11e9-9fde-260c821b6eae.png) 166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV][Bitcoin]
@@ -655,7 +655,7 @@ Credit list in [CREDITS](CREDITS)
 [Patreon]: https://www.patreon.com/phptelegrambot "Support us on Patreon"
 [OpenCollective]: https://opencollective.com/php-telegram-bot "Support us on Open Collective"
 [Ko-fi]: https://ko-fi.com/phptelegrambot "Support us on Ko-fi"
-[Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=enterprise&utm_term=repo "Learn more about the Tidelift Subscription"
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-php-telegram-bot-core?utm_source=packagist-php-telegram-bot-core&utm_medium=referral&utm_campaign=enterprise&utm_term=repo "Learn more about the Tidelift Subscription"
 [Liberapay]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
 [PayPal-noplanman]: https://paypal.me/noplanman "Donate with PayPal"
 [Bitcoin]: https://www.blockchain.com/btc/address/166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
