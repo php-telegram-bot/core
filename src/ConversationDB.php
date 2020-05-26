@@ -33,11 +33,12 @@ class ConversationDB extends DB
      * @param string   $user_id
      * @param string   $chat_id
      * @param int|null $limit
+     * @param bool $paused
      *
      * @return array|bool
      * @throws TelegramException
      */
-    public static function selectConversation($user_id, $chat_id, $limit = null)
+    public static function selectConversation($user_id, $chat_id, $limit = null, $paused = false)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -58,7 +59,13 @@ class ConversationDB extends DB
 
             $sth = self::$pdo->prepare($sql);
 
-            $sth->bindValue(':status', 'active');
+            if ($paused) {
+                $sth->bindValue(':status', 'paused');
+            }
+            else {
+                $sth->bindValue(':status', 'active');
+            }
+
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':chat_id', $chat_id);
 

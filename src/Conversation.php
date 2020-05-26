@@ -69,17 +69,18 @@ class Conversation
      * @param int    $user_id
      * @param int    $chat_id
      * @param string $command
+     * @param bool $paused
      *
      * @throws TelegramException
      */
-    public function __construct($user_id, $chat_id, $command = null)
+    public function __construct($user_id, $chat_id, $command = null, $paused = false)
     {
         $this->user_id = $user_id;
         $this->chat_id = $chat_id;
         $this->command = $command;
 
         //Try to load an existing conversation if possible
-        if (!$this->load() && $command !== null) {
+        if (!$this->load($paused) && $command !== null) {
             //A new conversation start
             $this->start();
         }
@@ -102,11 +103,38 @@ class Conversation
     /**
      * Load the conversation from the database
      *
+     * @param bool $paused
      * @return bool
      * @throws TelegramException
      */
-    protected function load()
+    protected function load($paused = false)
     {
+        if ($paused) {
+            //Select an paused conversation
+            $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1, true);
+            if (isset($conversation[0])) {
+                //Pick only the first element
+                $this->conversation = $conversation[0];
+
+                //Load the command from the conversation if it hasn't been passed
+                $this->command = $this->command ?: $this->conversation['command'];
+
+                if ($this->command !== $this->conversation['command']) {
+                    $this->cancel();
+                    return $this->load ();
+                }
+
+                // Resume paused conversation
+                $this->resume();
+
+                //Load the conversation notes
+                $this->protected_notes = json_decode($this->conversation['notes'], true);
+                $this->notes           = $this->protected_notes;
+            }
+
+            return $this->exists();
+        }
+
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
         if (isset($conversation[0])) {
@@ -187,23 +215,54 @@ class Conversation
     }
 
     /**
-     * Update the status of the current conversation
-     *
-     * @param string $status
+     * Cancel the current conversation
      *
      * @return bool
      * @throws TelegramException
      */
-    protected function updateStatus($status)
+    public function pause()
+    {
+        return ($this->updateStatus('paused') && $this->clear());
+    }
+
+    /**
+     * Resume the current conversation
+     *
+     * @return bool
+     * @throws TelegramException
+     */
+    public function resume()
+    {
+        return ($this->updateStatus('active', true) && $this->clear());
+    }
+
+    /**
+     * Update the status of the current conversation
+     *
+     * @param string $status
+     * @param bool $paused
+     *
+     * @return bool
+     * @throws TelegramException
+     */
+    protected function updateStatus($status, $paused = false)
     {
         if ($this->exists()) {
             $fields = ['status' => $status];
+
             $where  = [
                 'id'      => $this->conversation['id'],
-                'status'  => 'active',
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
             ];
+
+            if ($paused) {
+                $where['status'] = 'paused';
+            }
+            else {
+                $where['status'] = 'active';
+            }
+
             if (ConversationDB::updateConversation($fields, $where)) {
                 return true;
             }
