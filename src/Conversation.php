@@ -107,34 +107,8 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    protected function load($paused = false)
+    protected function load()
     {
-        if ($paused) {
-            //Select an paused conversation
-            $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1, true);
-            if (isset($conversation[0])) {
-                //Pick only the first element
-                $this->conversation = $conversation[0];
-
-                //Load the command from the conversation if it hasn't been passed
-                $this->command = $this->command ?: $this->conversation['command'];
-
-                if ($this->command !== $this->conversation['command']) {
-                    $this->cancel();
-                    return $this->load ();
-                }
-
-                // Resume paused conversation
-                $this->resume();
-
-                //Load the conversation notes
-                $this->protected_notes = json_decode($this->conversation['notes'], true);
-                $this->notes           = $this->protected_notes;
-            }
-
-            return $this->exists();
-        }
-
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
         if (isset($conversation[0])) {
