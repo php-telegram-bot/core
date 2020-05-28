@@ -69,18 +69,17 @@ class Conversation
      * @param int    $user_id
      * @param int    $chat_id
      * @param string $command
-     * @param bool $paused
      *
      * @throws TelegramException
      */
-    public function __construct($user_id, $chat_id, $command = null, $paused = false)
+    public function __construct($user_id, $chat_id, $command = null)
     {
         $this->user_id = $user_id;
         $this->chat_id = $chat_id;
         $this->command = $command;
 
         //Try to load an existing conversation if possible
-        if (!$this->load($paused) && $command !== null) {
+        if (!$this->load() && $command !== null) {
             //A new conversation start
             $this->start();
         }
@@ -126,6 +125,10 @@ class Conversation
             //Load the conversation notes
             $this->protected_notes = json_decode($this->conversation['notes'], true);
             $this->notes           = $this->protected_notes;
+
+            if ($this->conversation['status'] == 'paused') {
+                $this->resume();
+            }
         }
 
         return $this->exists();
@@ -231,10 +234,7 @@ class Conversation
             ];
 
             if ($paused) {
-                $where['status'] = 'paused';
-            }
-            else {
-                $where['status'] = 'active';
+                $where['status'] = $paused ? 'paused' : 'active';
             }
 
             if (ConversationDB::updateConversation($fields, $where)) {
