@@ -246,16 +246,32 @@ class Conversation
         return false;
     }
 
+    /**
+     * Get current conversation status
+     *
+     * @return string
+     * @throws TelegramException
+     */
     protected function getStatus()
     {
         return $this->conversation['status'];
     }
 
+    /**
+     * Check is conversation active
+     *
+     * @return bool
+     */
     public function isActive()
     {
         return ($this->command['status'] === 'active');
     }
 
+    /**
+     * Check is conversation paused
+     *
+     * @return bool
+     */
     public function isPaused()
     {
         return ($this->command['status'] === 'paused');
