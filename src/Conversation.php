@@ -199,7 +199,7 @@ class Conversation
      */
     public function pause()
     {
-        return ($this->updateStatus('paused') && $this->clear());
+        return ($this->updateStatus('paused'));
     }
 
     /**
@@ -210,7 +210,7 @@ class Conversation
      */
     public function resume()
     {
-        return ($this->updateStatus('active', true) && $this->clear());
+        return ($this->updateStatus('active', true));
     }
 
     /**
@@ -238,6 +238,7 @@ class Conversation
             }
 
             if (ConversationDB::updateConversation($fields, $where)) {
+                $this->conversation['status'] = $status;
                 return true;
             }
         }
