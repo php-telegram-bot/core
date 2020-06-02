@@ -246,6 +246,21 @@ class Conversation
         return false;
     }
 
+    protected function getStatus()
+    {
+        return $this->conversation['status'];
+    }
+
+    public function isActive()
+    {
+        return ($this->command['status'] === 'active');
+    }
+
+    public function isPaused()
+    {
+        return ($this->command['status'] === 'paused');
+    }
+
     /**
      * Store the array/variable in the database with json_encode() function
      *
