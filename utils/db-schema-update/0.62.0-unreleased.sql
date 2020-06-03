@@ -4,3 +4,5 @@ ALTER TABLE `poll` ADD COLUMN `open_period` int UNSIGNED DEFAULT NULL COMMENT 'A
 ALTER TABLE `poll` ADD COLUMN `close_date` timestamp NULL DEFAULT NULL COMMENT 'Point in time (Unix timestamp) when the poll will be automatically closed' AFTER `open_period`;
 
 ALTER TABLE `poll_answer` DROP PRIMARY KEY, ADD PRIMARY KEY (`poll_id`, `user_id`);
+
+ALTER TABLE `message` DROP CONSTRAINT `message_ibfk_6`;

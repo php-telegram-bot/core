@@ -133,7 +133,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`, `id`),
-  FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
