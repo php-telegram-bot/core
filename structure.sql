@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   `id` bigint(20) unsigned AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
   `user_id` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique user or chat identifier',
-  `status` ENUM('active', 'cancelled', 'stopped','paused') NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
+  `status` ENUM('active', 'paused', 'stopped', 'cancelled') NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
   `command` varchar(160) DEFAULT '' COMMENT 'Default command to execute',
   `notes` text DEFAULT NULL COMMENT 'Data stored from command',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',

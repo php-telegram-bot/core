@@ -6,3 +6,5 @@ ALTER TABLE `poll` ADD COLUMN `close_date` timestamp NULL DEFAULT NULL COMMENT '
 ALTER TABLE `poll_answer` DROP PRIMARY KEY, ADD PRIMARY KEY (`poll_id`, `user_id`);
 
 ALTER TABLE `message` DROP CONSTRAINT `message_ibfk_6`;
+
+ALTER TABLE `conversation` CHANGE `status` `status` ENUM('active', 'paused', 'stopped', 'cancelled') NOT NULL DEFAULT 'active' COMMENT 'Conversation state';
