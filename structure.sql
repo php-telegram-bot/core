@@ -133,7 +133,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`, `id`),
-  FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -216,6 +215,10 @@ CREATE TABLE IF NOT EXISTS `poll` (
   `type` char(255) COMMENT 'Poll type, currently can be “regular” or “quiz”',
   `allows_multiple_answers` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll allows multiple answers',
   `correct_option_id` int UNSIGNED COMMENT '0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.',
+  `explanation` varchar(255) DEFAULT NULL COMMENT 'Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters',
+  `explanation_entities` text DEFAULT NULL COMMENT 'Special entities like usernames, URLs, bot commands, etc. that appear in the explanation',
+  `open_period` int UNSIGNED DEFAULT NULL COMMENT 'Amount of time in seconds the poll will be active after creation',
+  `close_date` timestamp NULL DEFAULT NULL COMMENT 'Point in time (Unix timestamp) when the poll will be automatically closed',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
   PRIMARY KEY (`id`)
@@ -227,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `poll_answer` (
   `option_ids` text NOT NULL COMMENT '0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
-  PRIMARY KEY (`poll_id`),
+  PRIMARY KEY (`poll_id`, `user_id`),
   FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 

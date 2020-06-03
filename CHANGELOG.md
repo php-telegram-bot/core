@@ -7,10 +7,19 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Replaced 'generic' and 'genericmessage' strings with Telegram::GENERIC_COMMAND and Telegram::GENERIC_MESSAGE_COMMAND constants (@1int)
+- Bot API 4.8 (Extra Poll and Dice features).
+- Allow custom MySQL port to be defined for tests.
+- New static method `Entity::escapeMarkdownV2` for MarkdownV2.
+- Remove bot token from debug http logs, this can be disabled by setting `TelegramLog::$remove_bot_token` parameter to `false`
+- `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests
 ### Changed
+- [:exclamation:][unreleased-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object.
 ### Deprecated
 ### Removed
 ### Fixed
+- Primary key for `poll_answer` also requires the `user_id`.
+- Small SQL foreign key fixes.
 ### Security
 
 ## [0.62.0] - 2020-04-08
@@ -431,6 +440,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-bc-static-method-entityescapemarkdown]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#static-method-entityescapemarkdown
 [0.62.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.61.1-0.62.0.sql
 [0.61.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.60.0-0.61.0.sql
 [0.61.0-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core

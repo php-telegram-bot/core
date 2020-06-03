@@ -18,7 +18,8 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#dice
  *
- * @method int getValue() Value of the dice, 1-6
+ * @method string getEmoji() Emoji on which the dice throw animation is based
+ * @method int    getValue() Value of the dice, 1-6
  */
 class Dice extends Entity
 {

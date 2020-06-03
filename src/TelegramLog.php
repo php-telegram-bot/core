@@ -44,11 +44,25 @@ class TelegramLog
     protected static $update_logger;
 
     /**
+     * Always log the request and response data to the debug log, also for successful requests
+     *
+     * @var bool
+     */
+    public static $always_log_request_and_response = false;
+
+    /**
      * Temporary stream handle for debug log
      *
      * @var resource|null
      */
     protected static $debug_log_temp_stream_handle;
+
+    /**
+     * Remove bot token from debug stream
+     *
+     * @var bool
+     */
+    public static $remove_bot_token = true;
 
     /**
      * Initialise logging.
@@ -85,7 +99,13 @@ class TelegramLog
     {
         if (is_resource(self::$debug_log_temp_stream_handle)) {
             rewind(self::$debug_log_temp_stream_handle);
-            self::debug(sprintf($message, stream_get_contents(self::$debug_log_temp_stream_handle)));
+            $stream_contents = stream_get_contents(self::$debug_log_temp_stream_handle);
+
+            if (self::$remove_bot_token) {
+                $stream_contents = preg_replace('/\/bot(\d+)\:[\w\-]+\//', '/botBOT_TOKEN_REMOVED/', $stream_contents);
+            }
+
+            self::debug(sprintf($message, $stream_contents));
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }

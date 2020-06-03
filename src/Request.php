@@ -482,6 +482,7 @@ class Request
     public static function execute($action, array $data = [])
     {
         $result                  = null;
+        $response                = null;
         $request_params          = self::setUpRequestParams($data);
         $request_params['debug'] = TelegramLog::getDebugLogTempStream();
 
@@ -497,10 +498,15 @@ class Request
                 TelegramLog::update($result);
             }
         } catch (RequestException $e) {
-            $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
+            $response = null;
+            $result   = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
         } finally {
             //Logging verbose debug output
-            TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
+            if (TelegramLog::$always_log_request_and_response || $response === null) {
+                TelegramLog::debug('Request data:' . PHP_EOL . print_r($data, true));
+                TelegramLog::debug('Response data:' . PHP_EOL . $result);
+                TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
+            }
         }
 
         return $result;
