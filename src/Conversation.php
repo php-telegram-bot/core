@@ -21,6 +21,11 @@ use Longman\TelegramBot\Exception\TelegramException;
  */
 class Conversation
 {
+    const STATUS_ACTIVE    = 'active';
+    const STATUS_PAUSED    = 'paused';
+    const STATUS_STOPPED   = 'stopped';
+    const STATUS_CANCELLED = 'cancelled';
+
     /**
      * All information fetched from the database
      *
@@ -64,7 +69,7 @@ class Conversation
     protected $command;
 
     /**
-     * Conversation contructor to initialize a new conversation
+     * Conversation constructor to initialize a new conversation
      *
      * @param int    $user_id
      * @param int    $chat_id
@@ -102,7 +107,6 @@ class Conversation
     /**
      * Load the conversation from the database
      *
-     * @param bool $paused
      * @return bool
      * @throws TelegramException
      */
@@ -126,7 +130,7 @@ class Conversation
             $this->protected_notes = json_decode($this->conversation['notes'], true);
             $this->notes           = $this->protected_notes;
 
-            if ($this->conversation['status'] == 'paused') {
+            if ($this->isPaused()) {
                 $this->resume();
             }
         }
@@ -141,7 +145,7 @@ class Conversation
      */
     public function exists()
     {
-        return ($this->conversation !== null);
+        return $this->conversation !== null;
     }
 
     /**
@@ -177,7 +181,7 @@ class Conversation
      */
     public function stop()
     {
-        return ($this->updateStatus('stopped') && $this->clear());
+        return $this->updateStatus(self::STATUS_STOPPED) && $this->clear();
     }
 
     /**
@@ -188,7 +192,7 @@ class Conversation
      */
     public function cancel()
     {
-        return ($this->updateStatus('cancelled') && $this->clear());
+        return $this->updateStatus(self::STATUS_CANCELLED) && $this->clear();
     }
 
     /**
@@ -199,7 +203,7 @@ class Conversation
      */
     public function pause()
     {
-        return ($this->updateStatus('paused'));
+        return $this->updateStatus(self::STATUS_PAUSED);
     }
 
     /**
@@ -210,32 +214,30 @@ class Conversation
      */
     public function resume()
     {
-        return ($this->updateStatus('active', true));
+        return $this->updateStatus(self::STATUS_ACTIVE, true);
     }
 
     /**
      * Update the status of the current conversation
      *
      * @param string $status
-     * @param bool $paused
+     * @param bool   $was_paused
      *
      * @return bool
      * @throws TelegramException
      */
-    protected function updateStatus($status, $paused = false)
+    protected function updateStatus($status, $was_paused = false)
     {
         if ($this->exists()) {
             $fields = ['status' => $status];
 
-            $where  = [
+            $where = [
                 'id'      => $this->conversation['id'],
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
             ];
 
-            if ($paused) {
-                $where['status'] = $paused ? 'paused' : 'active';
-            }
+            $where['status'] = $was_paused ? self::STATUS_PAUSED : self::STATUS_ACTIVE;
 
             if (ConversationDB::updateConversation($fields, $where)) {
                 $this->conversation['status'] = $status;
@@ -250,7 +252,6 @@ class Conversation
      * Get current conversation status
      *
      * @return string
-     * @throws TelegramException
      */
     protected function getStatus()
     {
@@ -258,23 +259,23 @@ class Conversation
     }
 
     /**
-     * Check is conversation active
+     * Check if the conversation is active
      *
      * @return bool
      */
     public function isActive()
     {
-        return ($this->command['status'] === 'active');
+        return $this->getStatus() === self::STATUS_ACTIVE;
     }
 
     /**
-     * Check is conversation paused
+     * Check if the conversation is paused
      *
      * @return bool
      */
     public function isPaused()
     {
-        return ($this->command['status'] === 'paused');
+        return $this->getStatus() === self::STATUS_PAUSED;
     }
 
     /**

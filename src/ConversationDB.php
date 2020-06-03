@@ -45,22 +45,20 @@ class ConversationDB extends DB
         }
 
         try {
-            $sql = '
+            $sql = "
               SELECT *
-              FROM `' . TB_CONVERSATION . '`
-              WHERE (`status` = :status OR `status` = :pstatus)
+              FROM `" . TB_CONVERSATION . "`
+              WHERE (`status` = '" . Conversation::STATUS_ACTIVE . "'
+                  OR `status` = '" . Conversation::STATUS_PAUSED . "')
                 AND `chat_id` = :chat_id
                 AND `user_id` = :user_id
-            ';
+            ";
 
             if ($limit !== null) {
                 $sql .= ' LIMIT :limit';
             }
 
             $sth = self::$pdo->prepare($sql);
-
-            $sth->bindValue(':status', 'active');
-            $sth->bindValue(':pstatus', 'paused');
 
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':chat_id', $chat_id);
@@ -102,7 +100,7 @@ class ConversationDB extends DB
 
             $date = self::getTimestamp();
 
-            $sth->bindValue(':status', 'active');
+            $sth->bindValue(':status', Conversation::STATUS_ACTIVE);
             $sth->bindValue(':command', $command);
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':chat_id', $chat_id);
