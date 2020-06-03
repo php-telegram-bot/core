@@ -19,6 +19,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - Primary key for `poll_answer` also requires the `user_id`.
+- Small SQL foreign key fixes.
 ### Security
 
 ## [0.62.0] - 2020-04-08
