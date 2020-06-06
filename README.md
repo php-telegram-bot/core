@@ -42,6 +42,7 @@ A Telegram Bot based on the official [Telegram Bot API]
     - [getUserProfilePhoto](#getuserprofilephoto)
     - [getFile and downloadFile](#getfile-and-downloadfile)
     - [Send message to all active chats](#send-message-to-all-active-chats)
+    - [Filter Update](#filter-update)
 - [Utils](#utils)
     - [MySQL storage (Recommended)](#mysql-storage-recommended)
         - [External Database connection](#external-database-connection)
@@ -413,6 +414,25 @@ $results = Request::sendToActiveChats(
 ```
 
 You can also broadcast a message to users, from the private chat with your bot. Take a look at the [admin commands](#admin-commands) below.
+
+#### Filter Update
+
+Update processing can be allowed or denied by defining a custom update filter.
+Let's say we only want to allow messages from a user with ID 428, we can do the following before handling the request:
+
+```php
+$telegram->setUpdateFilter(function (Update $update, Telegram $telegram, &$reason = 'Update denied by update_filter') {
+    $user_id = $update->getMessage()->getFrom()->getId();
+    if ($user_id === 428) {
+        return true;
+    }
+
+    $reason = "Invalid user with ID {$user_id}";
+    return false;
+});
+```
+
+The reason for denying an update can be defined with the `$reason` parameter. This text gets written to the debug log.
 
 ## Utils
 
