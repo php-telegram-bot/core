@@ -144,7 +144,7 @@ class Telegram
      *
      * @var integer
      */
-    protected $last_update_id = null;
+    protected $last_update_id;
 
     /**
      * The command to be executed when there's a new message update and nothing more suitable is found
@@ -162,7 +162,7 @@ class Telegram
      *
      * @var callback
      */
-    protected $update_filter = null;
+    protected $update_filter;
 
     /**
      * Telegram constructor.
@@ -463,18 +463,17 @@ class Telegram
         $this->update         = $update;
         $this->last_update_id = $update->getUpdateId();
 
-        $allowed = true;
         if (is_callable($this->update_filter)) {
             try {
-                $allowed = (bool)call_user_func_array($this->update_filter, [$update, $this]);
+                $allowed = (bool) call_user_func($this->update_filter, $update, $this);
             } catch (\Exception $e) {
                 $allowed = false;
             }
-        }
 
-        if (!$allowed) {
-            TelegramLog::debug('Update denied by update_filter');
-            return new ServerResponse(['ok' => false, 'description' => 'denied'], null);
+            if (!$allowed) {
+                TelegramLog::debug('Update denied by update_filter');
+                return new ServerResponse(['ok' => false, 'description' => 'denied'], null);
+            }
         }
 
         //Load admin commands
@@ -1016,18 +1015,21 @@ class Telegram
     /**
      * Set an update filter callback
      *
+     * @param callable $callback
+     *
      * @return Telegram
      */
     public function setUpdateFilter(callable $callback)
     {
         $this->update_filter = $callback;
+
         return $this;
     }
 
     /**
      * Return update filter callback
      *
-     * @return callable or null
+     * @return callable|null
      */
     public function getUpdateFilter()
     {
