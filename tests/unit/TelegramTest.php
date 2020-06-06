@@ -12,8 +12,10 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\TelegramLog;
 
 /**
  * @package         TelegramTest
@@ -144,5 +146,53 @@ class TelegramTest extends TestCase
         $commands = $this->telegram->getCommandsList();
         $this->assertIsArray($commands);
         $this->assertNotCount(0, $commands);
+    }
+
+    public function testUpdateFilter()
+    {
+        $rawUpdate = '{
+            "update_id": 513400512,
+            "message": {
+                "message_id": 3,
+                "from": {
+                    "id": 313534466,
+                    "first_name": "first",
+                    "last_name": "last",
+                    "username": "username"
+                },
+                "chat": {
+                    "id": 313534466,
+                    "first_name": "first",
+                    "last_name": "last",
+                    "username": "username",
+                    "type": "private"
+                },
+                "date": 1499402829,
+                "text": "hi"
+            }
+        }';
+
+        $debug_log_file = '/tmp/php-telegram-bot-update-filter-debug.log';
+        TelegramLog::initialize(
+            new \Monolog\Logger('bot_log', [
+                (new \Monolog\Handler\StreamHandler($debug_log_file, \Monolog\Logger::DEBUG))->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, true)),
+            ])
+        );
+
+        $update = new Update(json_decode($rawUpdate, true), $this->telegram->getBotUsername());
+        $this->telegram->setUpdateFilter(function (Update $update, Telegram $telegram, &$reason) {
+            if ($update->getMessage()->getChat()->getId() === 313534466) {
+                $reason = 'Invalid user, update denied.';
+                return false;
+            }
+            return true;
+        });
+        $response = $this->telegram->processUpdate($update);
+        $this->assertFalse($response->isOk());
+
+        // Check that the reason is written to the debug log.
+        $debug_log = file_get_contents($debug_log_file);
+        $this->assertStringContainsString('Invalid user, update denied.', $debug_log);
+        file_exists($debug_log_file) && unlink($debug_log_file);
     }
 }

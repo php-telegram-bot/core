@@ -144,7 +144,7 @@ class Telegram
      *
      * @var integer
      */
-    protected $last_update_id = null;
+    protected $last_update_id;
 
     /**
      * The command to be executed when there's a new message update and nothing more suitable is found
@@ -155,6 +155,14 @@ class Telegram
      * The command to be executed by default (when no other relevant commands are applicable)
      */
     const GENERIC_COMMAND = 'generic';
+
+    /**
+     * Update filter
+     * Filter updates
+     *
+     * @var callback
+     */
+    protected $update_filter;
 
     /**
      * Telegram constructor.
@@ -454,6 +462,20 @@ class Telegram
     {
         $this->update         = $update;
         $this->last_update_id = $update->getUpdateId();
+
+        if (is_callable($this->update_filter)) {
+            $reason = 'Update denied by update_filter';
+            try {
+                $allowed = (bool) call_user_func_array($this->update_filter, [$update, $this, &$reason]);
+            } catch (\Exception $e) {
+                $allowed = false;
+            }
+
+            if (!$allowed) {
+                TelegramLog::debug($reason);
+                return new ServerResponse(['ok' => false, 'description' => 'denied'], null);
+            }
+        }
 
         //Load admin commands
         if ($this->isAdmin()) {
@@ -989,5 +1011,29 @@ class Telegram
     public function getLastUpdateId()
     {
         return $this->last_update_id;
+    }
+
+    /**
+     * Set an update filter callback
+     *
+     * @param callable $callback
+     *
+     * @return Telegram
+     */
+    public function setUpdateFilter(callable $callback)
+    {
+        $this->update_filter = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Return update filter callback
+     *
+     * @return callable|null
+     */
+    public function getUpdateFilter()
+    {
+        return $this->update_filter;
     }
 }

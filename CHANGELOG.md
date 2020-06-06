@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- New method `setUpdateFilter($callback)` used to filter `processUpdate(Update $update)` calls. If `$callback` returns `false` the update isn't processed and an empty falsey `ServerResponse` is returned. (@VRciF)
 - Replaced 'generic' and 'genericmessage' strings with Telegram::GENERIC_COMMAND and Telegram::GENERIC_MESSAGE_COMMAND constants (@1int)
 - Bot API 4.8 (Extra Poll and Dice features).
 - Allow custom MySQL port to be defined for tests.
