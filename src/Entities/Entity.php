@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -12,7 +13,7 @@ namespace Longman\TelegramBot\Entities;
 
 use Exception;
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
-use Longman\TelegramBot\TelegramLog;
+use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 
 /**
  * Class Entity
@@ -33,8 +34,6 @@ abstract class Entity
      *
      * @param array  $data
      * @param string $bot_username
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct($data, $bot_username = '')
     {
@@ -96,8 +95,6 @@ abstract class Entity
 
     /**
      * Perform any special entity validation
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function validate()
     {
@@ -131,7 +128,7 @@ abstract class Entity
     public function __call($method, $args)
     {
         //Convert method to snake_case (which is the name of the property)
-        $property_name = strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', substr($method, 3)), '_'));
+        $property_name = mb_strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', substr($method, 3)), '_'));
 
         $action = substr($method, 0, 3);
         if ($action === 'get') {
@@ -142,14 +139,20 @@ abstract class Entity
                 $sub_entities = $this->subEntities();
 
                 if (isset($sub_entities[$property_name])) {
-                    return new $sub_entities[$property_name]($property, $this->getProperty('bot_username'));
+                    $class = $sub_entities[$property_name];
+
+                    if (is_array($class)) {
+                        return $this->makePrettyObjectArray(reset($class), $property_name);
+                    }
+
+                    return new $class($property, $this->getProperty('bot_username'));
                 }
 
                 return $property;
             }
         } elseif ($action === 'set') {
             // Limit setters to specific classes.
-            if ($this instanceof InlineEntity || $this instanceof Keyboard || $this instanceof KeyboardButton) {
+            if ($this instanceof InlineEntity || $this instanceof InputMedia || $this instanceof Keyboard || $this instanceof KeyboardButton) {
                 $this->$property_name = $args[0];
 
                 return $this;
@@ -190,13 +193,15 @@ abstract class Entity
     }
 
     /**
-     * Escape markdown special characters
+     * Escape markdown (v1) special characters
+     *
+     * @see https://core.telegram.org/bots/api#markdown-style
      *
      * @param string $string
      *
      * @return string
      */
-    public function escapeMarkdown($string)
+    public static function escapeMarkdown($string)
     {
         return str_replace(
             ['[', '`', '*', '_',],
@@ -206,10 +211,30 @@ abstract class Entity
     }
 
     /**
+     * Escape markdown (v2) special characters
+     *
+     * @see https://core.telegram.org/bots/api#markdownv2-style
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function escapeMarkdownV2($string)
+    {
+        return str_replace(
+            ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'],
+            ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!'],
+            $string
+        );
+    }
+
+    /**
      * Try to mention the user
      *
      * Mention the user with the username otherwise print first and last name
      * if the $escape_markdown argument is true special characters are escaped from the output
+     *
+     * @todo What about MarkdownV2?
      *
      * @param bool $escape_markdown
      *
@@ -236,7 +261,7 @@ abstract class Entity
         }
 
         if ($escape_markdown) {
-            $name = $this->escapeMarkdown($name);
+            $name = self::escapeMarkdown($name);
         }
 
         return ($is_username ? '@' : '') . $name;

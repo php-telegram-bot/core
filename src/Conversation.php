@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -9,6 +10,8 @@
  */
 
 namespace Longman\TelegramBot;
+
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * Class Conversation
@@ -67,7 +70,7 @@ class Conversation
      * @param int    $chat_id
      * @param string $command
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function __construct($user_id, $chat_id, $command = null)
     {
@@ -100,7 +103,7 @@ class Conversation
      * Load the conversation from the database
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     protected function load()
     {
@@ -140,11 +143,12 @@ class Conversation
      * Start a new conversation if the current command doesn't have one yet
      *
      * @return bool
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     protected function start()
     {
-        if ($this->command
+        if (
+            $this->command
             && !$this->exists()
             && ConversationDB::insertConversation(
                 $this->user_id,
@@ -164,6 +168,7 @@ class Conversation
      * Currently the Conversation is not deleted but just set to 'stopped'
      *
      * @return bool
+     * @throws TelegramException
      */
     public function stop()
     {
@@ -174,6 +179,7 @@ class Conversation
      * Cancel the current conversation
      *
      * @return bool
+     * @throws TelegramException
      */
     public function cancel()
     {
@@ -186,6 +192,7 @@ class Conversation
      * @param string $status
      *
      * @return bool
+     * @throws TelegramException
      */
     protected function updateStatus($status)
     {
@@ -209,11 +216,12 @@ class Conversation
      * Store the array/variable in the database with json_encode() function
      *
      * @return bool
+     * @throws TelegramException
      */
     public function update()
     {
         if ($this->exists()) {
-            $fields = ['notes' => json_encode($this->notes)];
+            $fields = ['notes' => json_encode($this->notes, JSON_UNESCAPED_UNICODE)];
             //I can update a conversation whatever the state is
             $where = ['id' => $this->conversation['id']];
             if (ConversationDB::updateConversation($fields, $where)) {
@@ -232,5 +240,25 @@ class Conversation
     public function getCommand()
     {
         return $this->command;
+    }
+
+    /**
+     * Retrieve the user id
+     *
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * Retrieve the chat id
+     *
+     * @return int
+     */
+    public function getChatId()
+    {
+        return $this->chat_id;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -10,130 +11,69 @@
 
 namespace Longman\TelegramBot;
 
-use Longman\TelegramBot\Exception\TelegramLogException;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
+/**
+ * Class TelegramLog
+ *
+ * @method static void emergency(string $message, array $context = [])
+ * @method static void alert(string $message, array $context = [])
+ * @method static void critical(string $message, array $context = [])
+ * @method static void error(string $message, array $context = [])
+ * @method static void warning(string $message, array $context = [])
+ * @method static void notice(string $message, array $context = [])
+ * @method static void info(string $message, array $context = [])
+ * @method static void debug(string $message, array $context = [])
+ * @method static void update(string $message, array $context = [])
+ */
 class TelegramLog
 {
     /**
-     * Monolog instance
+     * Logger instance
      *
-     * @var \Monolog\Logger
+     * @var LoggerInterface
      */
-    static protected $monolog;
+    protected static $logger;
 
     /**
-     * Monolog instance for update
+     * Logger instance for update
      *
-     * @var \Monolog\Logger
+     * @var LoggerInterface
      */
-    static protected $monolog_update;
+    protected static $update_logger;
 
     /**
-     * Path for error log
+     * Always log the request and response data to the debug log, also for successful requests
      *
-     * @var string
+     * @var bool
      */
-    static protected $error_log_path;
-
-    /**
-     * Path for debug log
-     *
-     * @var string
-     */
-    static protected $debug_log_path;
-
-    /**
-     * Path for update log
-     *
-     * @var string
-     */
-    static protected $update_log_path;
+    public static $always_log_request_and_response = false;
 
     /**
      * Temporary stream handle for debug log
      *
      * @var resource|null
      */
-    static protected $debug_log_temp_stream_handle;
+    protected static $debug_log_temp_stream_handle;
 
     /**
-     * Initialize Monolog Logger instance, optionally passing an existing one
+     * Remove bot token from debug stream
      *
-     * @param \Monolog\Logger
-     *
-     * @return \Monolog\Logger
+     * @var bool
      */
-    public static function initialize(Logger $external_monolog = null)
-    {
-        if (self::$monolog === null) {
-            if ($external_monolog !== null) {
-                self::$monolog = $external_monolog;
-
-                foreach (self::$monolog->getHandlers() as $handler) {
-                    if (method_exists($handler, 'getLevel') && $handler->getLevel() === 400) {
-                        self::$error_log_path = 'true';
-                    }
-                    if (method_exists($handler, 'getLevel') && $handler->getLevel() === 100) {
-                        self::$debug_log_path = 'true';
-                    }
-                }
-            } else {
-                self::$monolog = new Logger('bot_log');
-            }
-        }
-
-        return self::$monolog;
-    }
+    public static $remove_bot_token = true;
 
     /**
-     * Initialize error log
+     * Initialise logging.
      *
-     * @param string $path
-     *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @param LoggerInterface|null $logger
+     * @param LoggerInterface|null $update_logger
      */
-    public static function initErrorLog($path)
+    public static function initialize(LoggerInterface $logger = null, LoggerInterface $update_logger = null)
     {
-        if ($path === null || $path === '') {
-            throw new TelegramLogException('Empty path for error log');
-        }
-        self::initialize();
-        self::$error_log_path = $path;
-
-        return self::$monolog->pushHandler(
-            (new StreamHandler(self::$error_log_path, Logger::ERROR))
-                ->setFormatter(new LineFormatter(null, null, true))
-        );
-    }
-
-    /**
-     * Initialize debug log
-     *
-     * @param string $path
-     *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     */
-    public static function initDebugLog($path)
-    {
-        if ($path === null || $path === '') {
-            throw new TelegramLogException('Empty path for debug log');
-        }
-        self::initialize();
-        self::$debug_log_path = $path;
-
-        return self::$monolog->pushHandler(
-            (new StreamHandler(self::$debug_log_path, Logger::DEBUG))
-                ->setFormatter(new LineFormatter(null, null, true))
-        );
+        self::$logger        = $logger ?: new NullLogger();
+        self::$update_logger = $update_logger ?: new NullLogger();
     }
 
     /**
@@ -143,11 +83,8 @@ class TelegramLog
      */
     public static function getDebugLogTempStream()
     {
-        if (self::$debug_log_temp_stream_handle === null) {
-            if (!self::isDebugLogActive()) {
-                return false;
-            }
-            self::$debug_log_temp_stream_handle = fopen('php://temp', 'w+b');
+        if ((self::$debug_log_temp_stream_handle === null) && $temp_stream_handle = fopen('php://temp', 'wb+')) {
+            self::$debug_log_temp_stream_handle = $temp_stream_handle;
         }
 
         return self::$debug_log_temp_stream_handle;
@@ -162,128 +99,70 @@ class TelegramLog
     {
         if (is_resource(self::$debug_log_temp_stream_handle)) {
             rewind(self::$debug_log_temp_stream_handle);
-            self::debug($message, stream_get_contents(self::$debug_log_temp_stream_handle));
+            $stream_contents = stream_get_contents(self::$debug_log_temp_stream_handle);
+
+            if (self::$remove_bot_token) {
+                $stream_contents = preg_replace('/\/bot(\d+)\:[\w\-]+\//', '/botBOT_TOKEN_REMOVED/', $stream_contents);
+            }
+
+            self::debug(sprintf($message, $stream_contents));
             fclose(self::$debug_log_temp_stream_handle);
             self::$debug_log_temp_stream_handle = null;
         }
     }
 
     /**
-     * Initialize update log
+     * Handle any logging method call.
      *
-     * @param string $path
-     *
-     * @return \Monolog\Logger
-     * @throws \Longman\TelegramBot\Exception\TelegramLogException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @param string $name
+     * @param array  $arguments
      */
-    public static function initUpdateLog($path)
+    public static function __callStatic($name, array $arguments)
     {
-        if ($path === null || $path === '') {
-            throw new TelegramLogException('Empty path for update log');
-        }
-        self::$update_log_path = $path;
-
-        if (self::$monolog_update === null) {
-            self::$monolog_update = new Logger('bot_update_log');
-
-            self::$monolog_update->pushHandler(
-                (new StreamHandler(self::$update_log_path, Logger::INFO))
-                    ->setFormatter(new LineFormatter('%message%' . PHP_EOL))
-            );
+        // Get the correct logger instance.
+        $logger = null;
+        if (in_array($name, ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug',], true)) {
+            $logger = self::$logger;
+        } elseif ($name === 'update') {
+            $logger = self::$update_logger;
+            $name   = 'info';
         }
 
-        return self::$monolog_update;
-    }
-
-    /**
-     * Is error log active
-     *
-     * @return bool
-     */
-    public static function isErrorLogActive()
-    {
-        return self::$error_log_path !== null;
-    }
-
-    /**
-     * Is debug log active
-     *
-     * @return bool
-     */
-    public static function isDebugLogActive()
-    {
-        return self::$debug_log_path !== null;
-    }
-
-    /**
-     * Is update log active
-     *
-     * @return bool
-     */
-    public static function isUpdateLogActive()
-    {
-        return self::$update_log_path !== null;
-    }
-
-    /**
-     * Report error log
-     *
-     * @param string $text
-     */
-    public static function error($text)
-    {
-        if (self::isErrorLogActive()) {
-            $text = self::getLogText($text, func_get_args());
-            self::$monolog->error($text);
+        // Clearly we have no logging enabled.
+        if ($logger === null) {
+            return;
         }
-    }
 
-    /**
-     * Report debug log
-     *
-     * @param string $text
-     */
-    public static function debug($text)
-    {
-        if (self::isDebugLogActive()) {
-            $text = self::getLogText($text, func_get_args());
-            self::$monolog->debug($text);
+        // Replace any placeholders from the passed context.
+        if (count($arguments) >= 2) {
+            $arguments[0] = self::interpolate($arguments[0], $arguments[1]);
         }
+
+        call_user_func_array([$logger, $name], $arguments);
     }
 
     /**
-     * Report update log
+     * Interpolates context values into the message placeholders.
      *
-     * @param string $text
-     */
-    public static function update($text)
-    {
-        if (self::isUpdateLogActive()) {
-            $text = self::getLogText($text, func_get_args());
-            self::$monolog_update->info($text);
-        }
-    }
-
-    /**
-     * Applies vsprintf to the text if placeholder replacements are passed along.
+     * @see https://www.php-fig.org/psr/psr-3/#12-message
      *
-     * @param string $text
-     * @param array  $args
+     * @param string $message
+     * @param array  $context
      *
      * @return string
      */
-    protected static function getLogText($text, array $args = [])
+    protected static function interpolate($message, array $context = [])
     {
-        // Pop the $text off the array, as it gets passed via func_get_args().
-        array_shift($args);
-
-        // If no placeholders have been passed, don't parse the text.
-        if (empty($args)) {
-            return $text;
+        // Build a replacement array with braces around the context keys.
+        $replace = [];
+        foreach ($context as $key => $val) {
+            // check that the value can be casted to string
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                $replace["{{$key}}"] = $val;
+            }
         }
 
-        return vsprintf($text, $args);
+        // Interpolate replacement values into the message and return.
+        return strtr($message, $replace);
     }
 }

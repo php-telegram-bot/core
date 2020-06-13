@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -26,7 +27,7 @@ class AudioTest extends TestCase
      */
     private $record;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->record = TestHelpers::getFakeRecordedAudio();
     }
@@ -34,7 +35,7 @@ class AudioTest extends TestCase
     public function testInstance()
     {
         $audio = new Audio($this->record);
-        self::assertInstanceOf('Longman\TelegramBot\Entities\Audio', $audio);
+        self::assertInstanceOf(Audio::class, $audio);
     }
 
     public function testGetProperties()

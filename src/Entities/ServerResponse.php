@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
@@ -7,6 +8,9 @@
  */
 
 namespace Longman\TelegramBot\Entities;
+
+use Longman\TelegramBot\Entities\Games\GameHighScore;
+use Longman\TelegramBot\Request;
 
 /**
  * Class ServerResponse
@@ -27,8 +31,6 @@ class ServerResponse extends Entity
      *
      * @param array  $data
      * @param string $bot_username
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data, $bot_username)
     {
@@ -102,32 +104,28 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return \Longman\TelegramBot\Entities\Chat|\Longman\TelegramBot\Entities\ChatMember|\Longman\TelegramBot\Entities\File|\Longman\TelegramBot\Entities\Message|\Longman\TelegramBot\Entities\User|\Longman\TelegramBot\Entities\UserProfilePhotos|\Longman\TelegramBot\Entities\WebhookInfo
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Chat|ChatMember|File|Message|User|UserProfilePhotos|WebhookInfo
      */
-    private function createResultObject($result, $bot_username)
+    private function createResultObject(array $result, $bot_username)
     {
+        $action = Request::getCurrentAction();
+
         // We don't need to save the raw_data of the response object!
         $result['raw_data'] = null;
 
         $result_object_types = [
-            'total_count' => 'UserProfilePhotos', //Response from getUserProfilePhotos
-            'file_id'     => 'File',              //Response from getFile
-            'title'       => 'Chat',              //Response from getChat
-            'username'    => 'User',              //Response from getMe
-            'user'        => 'ChatMember',        //Response from getChatMember
-            'url'         => 'WebhookInfo',       //Response from getWebhookInfo
+            'getChat'              => Chat::class,
+            'getChatMember'        => ChatMember::class,
+            'getFile'              => File::class,
+            'getMe'                => User::class,
+            'getStickerSet'        => StickerSet::class,
+            'getUserProfilePhotos' => UserProfilePhotos::class,
+            'getWebhookInfo'       => WebhookInfo::class,
         ];
-        foreach ($result_object_types as $type => $object_class) {
-            if (isset($result[$type])) {
-                $object_class = __NAMESPACE__ . '\\' . $object_class;
 
-                return new $object_class($result);
-            }
-        }
+        $object_class = array_key_exists($action, $result_object_types) ? $result_object_types[$action] : Message::class;
 
-        //Response from sendMessage
-        return new Message($result, $bot_username);
+        return new $object_class($result, $bot_username);
     }
 
     /**
@@ -136,28 +134,27 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return null|\Longman\TelegramBot\Entities\ChatMember[]|\Longman\TelegramBot\Entities\Update[]
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotCommand[]|ChatMember[]|GameHighScore[]|Message[]|Update[]
      */
-    private function createResultObjects($result, $bot_username)
+    private function createResultObjects(array $result, $bot_username)
     {
         $results = [];
-        if (isset($result[0]['user'])) {
-            //Response from getChatAdministrators
-            foreach ($result as $user) {
-                // We don't need to save the raw_data of the response object!
-                $user['raw_data'] = null;
+        $action  = Request::getCurrentAction();
 
-                $results[] = new ChatMember($user);
-            }
-        } else {
-            //Get Update
-            foreach ($result as $update) {
-                // We don't need to save the raw_data of the response object!
-                $update['raw_data'] = null;
+        $result_object_types = [
+            'getMyCommands'         => BotCommand::class,
+            'getChatAdministrators' => ChatMember::class,
+            'getGameHighScores'     => GameHighScore::class,
+            'sendMediaGroup'        => Message::class,
+        ];
 
-                $results[] = new Update($update, $bot_username);
-            }
+        $object_class = array_key_exists($action, $result_object_types) ? $result_object_types[$action] : Update::class;
+
+        foreach ($result as $data) {
+            // We don't need to save the raw_data of the response object!
+            $data['raw_data'] = null;
+
+            $results[] = new $object_class($data, $bot_username);
         }
 
         return $results;

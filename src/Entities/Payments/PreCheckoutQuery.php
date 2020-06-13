@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -11,6 +12,7 @@
 namespace Longman\TelegramBot\Entities\Payments;
 
 use Longman\TelegramBot\Entities\Entity;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Request;
 
@@ -34,7 +36,7 @@ class PreCheckoutQuery extends Entity
     /**
      * {@inheritdoc}
      */
-    public function subEntities()
+    protected function subEntities()
     {
         return [
             'from'       => User::class,
@@ -48,7 +50,7 @@ class PreCheckoutQuery extends Entity
      * @param bool  $ok
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @return ServerResponse
      */
     public function answer($ok, array $data = [])
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -15,12 +16,15 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#user
  *
- * @method int    getId()           Unique identifier for this user or bot
- * @method bool   getIsBot()        True, if this user is a bot
- * @method string getFirstName()    User's or bot’s first name
- * @method string getLastName()     Optional. User's or bot’s last name
- * @method string getUsername()     Optional. User's or bot’s username
- * @method string getLanguageCode() Optional. User's system language
+ * @method int    getId()                      Unique identifier for this user or bot
+ * @method bool   getIsBot()                   True, if this user is a bot
+ * @method string getFirstName()               User's or bot’s first name
+ * @method string getLastName()                Optional. User's or bot’s last name
+ * @method string getUsername()                Optional. User's or bot’s username
+ * @method string getLanguageCode()            Optional. IETF language tag of the user's language
+ * @method bool   getCanJoinGroups()           Optional. True, if the bot can be invited to groups. Returned only in getMe.
+ * @method bool   getCanReadAllGroupMessages() Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
+ * @method bool   getSupportsInlineQueries()   Optional. True, if the bot supports inline queries. Returned only in getMe.
  */
 class User extends Entity
 {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -47,7 +48,6 @@ class VisibleCommand extends UserCommand
      * Command execute method
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {

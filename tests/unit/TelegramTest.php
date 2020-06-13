@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -10,7 +11,11 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\TelegramLog;
 
 /**
  * @package         TelegramTest
@@ -21,8 +26,10 @@ use Longman\TelegramBot\Telegram;
  */
 class TelegramTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     private $telegram;
 
@@ -35,7 +42,7 @@ class TelegramTest extends TestCase
         '/tmp/php-telegram-bot-custom-commands-3',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
 
@@ -45,7 +52,7 @@ class TelegramTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Clean up the custom commands paths.
         foreach ($this->custom_commands_paths as $custom_path) {
@@ -53,21 +60,17 @@ class TelegramTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage API KEY not defined!
-     */
     public function testNewInstanceWithoutApiKeyParam()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('API KEY not defined!');
         new Telegram(null, 'testbot');
     }
 
-    /**
-     * @expectedException \Longman\TelegramBot\Exception\TelegramException
-     * @expectedExceptionMessage Invalid API KEY defined!
-     */
     public function testNewInstanceWithInvalidApiKeyParam()
     {
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('Invalid API KEY defined!');
         new Telegram('invalid-api-key-format', null);
     }
 
@@ -141,7 +144,55 @@ class TelegramTest extends TestCase
     public function testGetCommandsList()
     {
         $commands = $this->telegram->getCommandsList();
-        $this->assertInternalType('array', $commands);
+        $this->assertIsArray($commands);
         $this->assertNotCount(0, $commands);
+    }
+
+    public function testUpdateFilter()
+    {
+        $rawUpdate = '{
+            "update_id": 513400512,
+            "message": {
+                "message_id": 3,
+                "from": {
+                    "id": 313534466,
+                    "first_name": "first",
+                    "last_name": "last",
+                    "username": "username"
+                },
+                "chat": {
+                    "id": 313534466,
+                    "first_name": "first",
+                    "last_name": "last",
+                    "username": "username",
+                    "type": "private"
+                },
+                "date": 1499402829,
+                "text": "hi"
+            }
+        }';
+
+        $debug_log_file = '/tmp/php-telegram-bot-update-filter-debug.log';
+        TelegramLog::initialize(
+            new \Monolog\Logger('bot_log', [
+                (new \Monolog\Handler\StreamHandler($debug_log_file, \Monolog\Logger::DEBUG))->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, true)),
+            ])
+        );
+
+        $update = new Update(json_decode($rawUpdate, true), $this->telegram->getBotUsername());
+        $this->telegram->setUpdateFilter(function (Update $update, Telegram $telegram, &$reason) {
+            if ($update->getMessage()->getChat()->getId() === 313534466) {
+                $reason = 'Invalid user, update denied.';
+                return false;
+            }
+            return true;
+        });
+        $response = $this->telegram->processUpdate($update);
+        $this->assertFalse($response->isOk());
+
+        // Check that the reason is written to the debug log.
+        $debug_log = file_get_contents($debug_log_file);
+        $this->assertStringContainsString('Invalid user, update denied.', $debug_log);
+        file_exists($debug_log_file) && unlink($debug_log_file);
     }
 }

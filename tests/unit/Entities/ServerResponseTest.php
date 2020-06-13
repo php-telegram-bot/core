@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -12,8 +13,14 @@
 
 namespace Longman\TelegramBot\Tests\Unit;
 
+use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Entities\Sticker;
+use Longman\TelegramBot\Entities\StickerSet;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\UserProfilePhotos;
 use Longman\TelegramBot\Request;
 
 /**
@@ -25,6 +32,12 @@ use Longman\TelegramBot\Request;
  */
 class ServerResponseTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        // Make sure the current action in the Request class is unset.
+        TestHelpers::setStaticProperty(Request::class, 'current_action', null);
+    }
+
     public function sendMessageOk()
     {
         return '{
@@ -48,7 +61,7 @@ class ServerResponseTest extends TestCase
         self::assertTrue($server->isOk());
         self::assertNull($server->getErrorCode());
         self::assertNull($server->getDescription());
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
+        self::assertInstanceOf(Message::class, $server_result);
 
         //Message
         self::assertEquals('1234', $server_result->getMessageId());
@@ -175,7 +188,7 @@ class ServerResponseTest extends TestCase
         $server = new ServerResponse(json_decode($result, true), 'testbot');
 
         self::assertCount(4, $server->getResult());
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Update', $server->getResult()[0]);
+        self::assertInstanceOf(Update::class, $server->getResult()[0]);
     }
 
     public function getUpdatesEmpty()
@@ -193,6 +206,7 @@ class ServerResponseTest extends TestCase
 
     public function getUserProfilePhotos()
     {
+        TestHelpers::setStaticProperty(Request::class, 'current_action', 'getUserProfilePhotos');
         return '{
             "ok":true,
             "result":{
@@ -232,12 +246,13 @@ class ServerResponseTest extends TestCase
         //Photo size count
         self::assertCount(3, $photos[0]);
 
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\UserProfilePhotos', $server_result);
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $photos[0][0]);
+        self::assertInstanceOf(UserProfilePhotos::class, $server_result);
+        self::assertInstanceOf(PhotoSize::class, $photos[0][0]);
     }
 
     public function getFile()
     {
+        TestHelpers::setStaticProperty(Request::class, 'current_action', 'getFile');
         return '{
             "ok":true,
             "result":{
@@ -253,7 +268,7 @@ class ServerResponseTest extends TestCase
         $result = $this->getFile();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\File', $server->getResult());
+        self::assertInstanceOf(File::class, $server->getResult());
     }
 
     public function testSetGeneralTestFakeResponse()
@@ -279,7 +294,7 @@ class ServerResponseTest extends TestCase
         self::assertTrue($server->isOk());
         self::assertNull($server->getErrorCode());
         self::assertNull($server->getDescription());
-        self::assertInstanceOf('\Longman\TelegramBot\Entities\Message', $server_result);
+        self::assertInstanceOf(Message::class, $server_result);
 
         //Message
         self::assertEquals('1234', $server_result->getMessageId());
@@ -297,5 +312,73 @@ class ServerResponseTest extends TestCase
         self::assertEquals('', $server_result->getChat()->getUsername());
 
         //... they are not finished...
+    }
+
+    public function getStickerSet()
+    {
+        TestHelpers::setStaticProperty(Request::class, 'current_action', 'getStickerSet');
+        return '{
+            "ok":true,
+            "result":{
+                "name":"stickerset_name",
+                "title":"Some name",
+                "contains_masks":false,
+                "stickers":[
+                    {
+                        "width":512,
+                        "height":324,
+                        "emoji":"\ud83d\ude33",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABOKTFsZAASfA4t3pp1_VlH1AAIC","file_size":3120,"width":128,"height":81},
+                        "file_id":"CAADBAADzAIAAph_7gOATSb9ehxv5QI",
+                        "file_size":14246
+                    },
+                    {
+                        "width":419,
+                        "height":512,
+                        "emoji":"\u2764",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABMj8qoZAASePUHuDSJ2uGIKAAIC","file_size":3500,"width":105,"height":128},
+                        "file_id":"CAADBAADzQIAAph_7gNPFguft4qtjAI",
+                        "file_size":17814
+                    },
+                    {
+                        "width":512,
+                        "height":276,
+                        "emoji":"\ud83d\ude36",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABMiaWcZAATNUEPkYkd0Fh2JBAABAg","file_size":2642,"file_path":"thumbnails\/file_8.jpg","width":128,"height":69},
+                        "file_id":"CAADBAADzwIAAph_7gOClxA3gK5wqAI",
+                        "file_size":12258
+                    },
+                    {
+                        "width":512,
+                        "height":327,
+                        "emoji":"\ud83d\udcbb",
+                        "set_name":"stickerset_name",
+                        "thumb":{"file_id":"AAQEABPC3d8ZAAQUJJnFB1VfII2RAAIC","file_size":3824,"file_path":"thumbnails\/file_10.jpg","width":128,"height":82},
+                        "file_id":"CAADBAAD0QIAAph_7gO-vBJGkTeWqwI",
+                        "file_size":18282
+                    }
+                ]
+            }
+        }';
+    }
+
+    public function testGetStickerSet()
+    {
+        $result = $this->getStickerSet();
+        $server = new ServerResponse(json_decode($result, true), 'testbot');
+
+        $server_result = $server->getResult();
+
+        self::assertInstanceOf(StickerSet::class, $server_result);
+        self::assertEquals('stickerset_name', $server_result->getName());
+        self::assertEquals('Some name', $server_result->getTitle());
+        self::assertFalse($server_result->getContainsMasks());
+
+        $stickers = $server_result->getStickers();
+        self::assertCount(4, $stickers);
+        self::assertInstanceOf(Sticker::class, $stickers[0]);
     }
 }

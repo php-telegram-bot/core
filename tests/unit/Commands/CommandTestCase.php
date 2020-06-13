@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -10,6 +11,7 @@
 
 namespace Longman\TelegramBot\Tests\Unit\Commands;
 
+use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Tests\Unit\TestCase;
 
@@ -23,19 +25,19 @@ use Longman\TelegramBot\Tests\Unit\TestCase;
 class CommandTestCase extends TestCase
 {
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     protected $telegram;
 
     /**
-     * @var \Longman\TelegramBot\Commands\Command
+     * @var Command
      */
     protected $command;
 
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
 

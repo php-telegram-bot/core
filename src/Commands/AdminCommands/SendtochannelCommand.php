@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -15,6 +16,8 @@ use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 class SendtochannelCommand extends AdminCommand
@@ -47,15 +50,15 @@ class SendtochannelCommand extends AdminCommand
     /**
      * Conversation Object
      *
-     * @var \Longman\TelegramBot\Conversation
+     * @var Conversation
      */
     protected $conversation;
 
     /**
      * Command execute method
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse|mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse|mixed
+     * @throws TelegramException
      */
     public function execute()
     {
@@ -272,11 +275,11 @@ class SendtochannelCommand extends AdminCommand
      * @todo This method will be moved to a higher level maybe in AdminCommand or Command
      * @todo Looking for a more significant name
      *
-     * @param \Longman\TelegramBot\Entities\Message $message
-     * @param array                                 $data
+     * @param Message $message
+     * @param array   $data
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      */
     protected function sendBack(Message $message, array $data)
     {
@@ -311,12 +314,12 @@ class SendtochannelCommand extends AdminCommand
     /**
      * Publish a message to a channel and return success or failure message in markdown format
      *
-     * @param \Longman\TelegramBot\Entities\Message $message
-     * @param string|int                            $channel_id
-     * @param string|null                           $caption
+     * @param Message     $message
+     * @param string|int  $channel_id
+     * @param string|null $caption
      *
      * @return string
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     protected function publish(Message $message, $channel_id, $caption = null)
     {
@@ -351,7 +354,7 @@ class SendtochannelCommand extends AdminCommand
      * @todo Why send just to the first found channel?
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function executeNoDb()
     {

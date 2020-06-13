@@ -4,51 +4,257 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
+### Notes
+- [:ledger: View file changes][Unreleased]
 ### Added
+- New method `setUpdateFilter($callback)` used to filter `processUpdate(Update $update)` calls. If `$callback` returns `false` the update isn't processed and an empty falsey `ServerResponse` is returned. (@VRciF)
+- Replaced 'generic' and 'genericmessage' strings with Telegram::GENERIC_COMMAND and Telegram::GENERIC_MESSAGE_COMMAND constants (@1int)
+- Bot API 4.8 (Extra Poll and Dice features).
+- Allow custom MySQL port to be defined for tests.
+- New static method `Entity::escapeMarkdownV2` for MarkdownV2.
+- Remove bot token from debug http logs, this can be disabled by setting `TelegramLog::$remove_bot_token` parameter to `false`
+- `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests
 ### Changed
+- [:exclamation:][unreleased-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object.
+- Allow custom namespacing for commands. (@Jonybang)
 ### Deprecated
 ### Removed
 ### Fixed
+- Primary key for `poll_answer` also requires the `user_id`.
+- Small SQL foreign key fixes.
 ### Security
 
-## [0.53.0] - 2018-04-01
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.53.0-sql-migration] on your database.
+## [0.62.0] - 2020-04-08
+### Notes
+- [:ledger: View file changes][0.62.0] ∙ [:page_with_curl: DB migration script][0.62.0-sql-migration]
 ### Added
-- Implemented new changes for Bot API 3.6 (streamable InputMediaVideo, connected website).
-- `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed.
-- `Telegram::useGetUpdatesWithoutDatabase()` method, enables `Telegram::handleGetUpdates()` to run without a database.
+- Bot API 4.5 (Unique file IDs, MarkdownV2). (#1046)
+- Chain the exception thrown when getting commands from path. (#1030)
+- Support `language_code` in `DB::selectChats()` for filtering the chats selection. (#1058)
+- Bot API 4.6 (Polls 2.0). (#1066)
+- Bot API 4.7 (Dice, Sticker Sets, Bot Commands). (#1067)
 ### Changed
-- Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests.
-- Add debug log entry instead of throwing an exception for duplicate updates.
-- `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default).
-- Improved `/sendtochannel` and `/sendtoall` commands, using new message helpers.
+- Save notes an unescaped JSON, to allow easy DB reading and editing of values. (#1005)
+- `Request::setClient()` now accepts more flexible `ClientInterface`. (#1068)
+### Removed
+- Unnecessary `instanceof` checks for entities. (#1068)
+- Unused `Request::$input` variable. (#1068)
 ### Fixed
-- PHPCS fixes for updated CodeSniffer dependency.
-- Send messages correctly via `/sendtochannel`.
+- Execution of `/start` command without any custom implementation.
+- Return `animation` type for GIF Message (which returns both `animation` and `document`). (#1044)
+- Change lowercase function to `mb_strtolower` from `strtolower` because of `latin-extented` characters. (#1051)
+- Extend `Request::mediaInputHelper()` to include `thumb` parameter. (#1059)
+- Various docblock annotations. (#1068)
+
+## [0.61.1] - 2019-11-23
+### Notes
+- [:ledger: View file changes][0.61.1]
+### Added
+- Tests for schema update scripts, to ensure that updates work as expected. (#1025)
+### Fixed
+- Parameter `inline_query_id` in `InlineQuery::answerInlineQuery`. (#1021)
+- Corrected DB schema update 0.60.0-0.61.0. (#1025)
+
+## [0.61.0] - 2019-11-02
+### Notes
+- [:ledger: View file changes][0.61.0] ∙ [:page_with_curl: DB migration script][0.61.0-sql-migration]
+- :exclamation: Built-in logging (Monolog) has been removed, a custom PSR-3 logger must be used now! (see #964 for more info)
+### Added
+- Code snippet in `GenericmessageCommand` to keep obsolete service message system commands working. (#999)
+- Static boolean property `SystemCommand::$execute_deprecated` (must be assigned before handling the request) to try and execute any deprecated system command. (#999)
+- Improved MySQL DB index for `message` table, making the cleanup much faster on bigger databases. (Thanks to @damianperez) (#1015)
+- `/cleanup` command now supports dry run which simply outputs all queries that would be run. (#1015)
+### Changed
+- Small readme and code fixes / simplifications. (#1001)
+- Upgrade PHPUnit to 8.x and PHPCS to 3.5. For tests now minimum PHP version is 7.2. (#1008)
+- Updated updates log importer (requires PHP7+). (#1009)
+### Removed
+- Service message system commands, which are now handled by `GenericmessageCommand`. (#999)
+- [:exclamation:][0.61.0-bc-remove-monolog-from-core] Monolog has been removed as built-in logging engine. (#1009)
+- Assets have been moved to a dedicated repository. (#1012)
+### Fixed
+- Boolean value for Polls gets saved correctly in MySQL DB. (#996)
+- Correctly use `Request::answerInlineQuery` in `InlineQuery::answer`. (#1001)
+- PSR-12 incompatibilities in the codebase. (#1008)
+- Improved and corrected `/cleanup` command. (#1015)
+
+## [0.60.0] - 2019-08-16
+### Notes
+- [:ledger: View file changes][0.60.0]
+### Added
+- Bot API 4.4 (Animated stickers, `ChatPermissions`). (#990)
+### Changed
+- Allow passing native entity objects to requests. (#991)
+### Fixed
+- Non-existing commands now correctly execute `GenericCommand` again. (#993)
+
+## [0.59.1] - 2019-07-18
+### Notes
+- [:ledger: View file changes][0.59.1]
+- :exclamation: Deprecated logging method will be removed in the next version, update to PSR-3 now! (see #964 for more info)
+### Added
+- Issue labels set automatically via templates.
+### Changed
+- Logging only updates or only debug/errors is now possible. (#983)
+### Fixed
+- Don't output deprecation notices if no logging is enabled. (#983)
+- Respect custom HTTP Client initialisation, no matter when it is set. (#986)
+
+## [0.59.0] - 2019-07-07
+### Notes
+- [:ledger: View file changes][0.59.0]
+### Changed
+- Touched up readme including header and badges. (#981)
+- Updated changelog to be more useful for external integrations like [Tidelift] and GitHub releases. (#981)
+### Removed
+- Abstract methods from `InputMedia` interface, as method annotations didn't work for propagation. (#978)
+
+## [0.58.0] - 2019-06-26
+### Notes
+- [:ledger: View file changes][0.58.0] ∙ [:page_with_curl: DB migration script][0.58.0-sql-migration]
+- Logging now uses [PSR-3] `LoggerInterface`. Learn more about how to use it here: #964
+### Added
+- New funding and support details. (#971)
+- Custom issue templates. (#972)
+- Bot API 4.3 (Seamless Telegram Login, `LoginUrl`) (#957)
+- `reply_markup` field to `Message` entity. (#957)
+### Changed
+- Use PSR-12 for code style. (#966)
+- Some general housekeeping. (#972)
+- [:exclamation:][0.58.0-bc-return-value-of-empty-entity-properties] Return an empty array for Entity properties with no items, instead of `null`. (#969)
+- `TelegramLog` now adheres to [PSR-3] `LoggerInterface` and allows custom logger implementations. (#964)
+### Deprecated
+- Old logging that uses Monolog still works but will be removed in the near future. Use `TelegramLog::initialize($logger, $update_logger);` from now on. (#964)
+- [:exclamation:][0.58.0-bc-startcommand-is-now-a-usercommand] `StartCommand` is now a `UserCommand` (not `SystemCommand` any more). (#970)
+### Removed
+- Botan.io integration completely removed. (#968)
+### Fixed
+- `forward_date` is now correctly saved to the DB. (#967)
+- Broken `StickerSet::getStickers()` method. (#969)
+- Smaller code and docblock fixes. (#973)
+### Security
+- Security disclosure managed by [Tidelift]. (#971)
+- Don't allow a user to call system commands directly. (#970)
+
+## [0.57.0] - 2019-06-01
+### Notes
+- [:ledger: View file changes][0.57.0] ∙ [:page_with_curl: DB migration script][0.57.0-sql-migration]
+- :grey_exclamation: This is a big update and involves a bunch of MySQL database updates, so please *review the changelog carefully*.
+
+### Added
+- New logo! :tada: (#954)
+- Bot API 4.2 (Polls). (#948)
+- `getIsMember()` method to `ChatMember` entity. (#948)
+- `getForwardSenderName()` method to `Message` entity. (#948)
+- `forward_sender_name` (and forgotten `forward_signature`) DB fields. (#948)
+- Added missing API fields to Entities and DB. (#885)
+- Created database tables for `shipping_query` and `pre_checkout_query`. (#885)
+### Fixed
+- Missing DB table name specifier in `/cleanup` command. (#947)
+
+## [0.56.0] - 2019-04-15
+### Notes
+- [:ledger: View file changes][0.56.0] ∙ [:page_with_curl: DB migration script][0.56.0-sql-migration]
+- :grey_exclamation: This is a big update, so please *review the changelog carefully*!
+### Added
+- Helper for sending `InputMedia` objects using `Request::sendMediaGroup()` and `Request::editMediaMessage()` methods.
+- Allow passing absolute file path for InputFile fields, instead of `Request::encodeFile($path)`. (#934)
+### Changed
+- All Message field types dynamically search for an existing Command class that can handle them. (#940)
+- Upgrade dependencies. (#945)
+### Deprecated
+- Botan.io service has been discontinued. (#925)
+- Most built-in System Commands will be handled by GenericmessageCommand by default in a future release and will require a custom implementation. (#940)
+### Fixed
+- Constraint errors in `/cleanup` command. (#930)
+- Return correct objects for requests. (#934)
+- PHPCS: static before visibility declaration. (#945)
+
+## [0.55.1] - 2019-01-06
+### Notes
+- [:ledger: View file changes][0.55.1]
+### Added
+- Add missing `Request::editMessageMedia()` and `CallbackQuery::getChatInstance()` methods. (#916)
+### Fixed
+- Return correct message type. (#913)
+
+## [0.55.0] - 2018-12-20
+### Notes
+- [:ledger: View file changes][0.55.0] ∙ [:page_with_curl: DB migration script][0.55.0-sql-migration]
+### Added
+- Bot API 4.0 and 4.1 (Telegram Passport) (#870, #871)
+- Test PHP 7.3 with Travis. (#903)
+### Changed
+- [:exclamation:][0.55.0-bc-move-animation-out-of-games-namespace] Move Animation entity out of Games namespace.
+### Fixed
+- Added missing `video_note` to `Message` types.
+
+## [0.54.1] - 2018-10-23
+### Notes
+- [:ledger: View file changes][0.54.1]
+### Fixed
+- `sendToActiveChats` now works correctly for any valid Request action. (#898)
+
+## [0.54.0] - 2018-07-21
+### Notes
+- [:ledger: View file changes][0.54.0] ∙ [:page_with_curl: DB migration script][0.54.0-sql-migration]
+### Added
+- `ChatAction` class to simplify chat action selection. (#859)
+- Telegram Games platform! (#732)
+- Ability to set custom MySQL port. (#860)
+- New `InvalidBotTokenException` exception. (#855)
+### Changed
+- [:exclamation:][0.54.0-bc-rename-constants] Rename and ensure no redefinition of constants: `BASE_PATH` -> `TB_BASE_PATH`, `BASE_COMMANDS_PATH` -> `TB_BASE_COMMANDS_PATH`. (#813)
+- Improve readability of readme code snippets. (#861)
+### Fixed
+- Response from `getStickerSet`. (#838)
+
+## [0.53.0] - 2018-04-01
+### Notes
+- [:ledger: View file changes][0.53.0] ∙ [:page_with_curl: DB migration script][0.53.0-sql-migration]
+### Added
+- Implemented new changes for Bot API 3.6 (streamable InputMediaVideo, connected website). (#799)
+- `Telegram::getLastUpdateId()` method, returns ID of the last update that was processed. (#767)
+- `Telegram::useGetUpdatesWithoutDatabase()` method, enables `Telegram::handleGetUpdates()` to run without a database. (#767)
+### Changed
+- Updated Travis to use Trusty containers (for HHVM) and add PHP 7.2 to the tests. (#739)
+- Add debug log entry instead of throwing an exception for duplicate updates. (#765)
+- `Telegram::handleGetUpdates()` can now work without a database connection (not enabled by default). (#767)
+- Improved `/sendtochannel` and `/sendtoall` commands, using new message helpers. (#810)
+### Fixed
+- PHPCS fixes for updated CodeSniffer dependency. (#739)
+- Send messages correctly via `/sendtochannel`. (#803)
 
 ## [0.52.0] - 2018-01-07
+### Notes
+- [:ledger: View file changes][0.52.0]
 ### Fixed
-- Entity relations and wrong types for payments.
-- Allow empty string for `switch_inline_query` and `switch_inline_query_current_chat` (InlineKeyboardButton).
-- Fix empty date entry for User and Chat entities, using the current timestamp instead.
+- Entity relations and wrong types for payments. (#731)
+- Allow empty string for `switch_inline_query` and `switch_inline_query_current_chat` (InlineKeyboardButton). (#736)
+- Fix empty date entry for User and Chat entities, using the current timestamp instead. (#738)
 
 ## [0.51.0] - 2017-12-05
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.51.0-sql-migration] on your database.
+### Notes
+- [:ledger: View file changes][0.51.0] ∙ [:page_with_curl: DB migration script][0.51.0-sql-migration]
 ### Added
-- Implemented new changes for Bot API 3.5 (InputMedia, MediaGroup).
+- Implemented new changes for Bot API 3.5 (InputMedia, MediaGroup). (#718)
 
 ## [0.50.0] - 2017-10-17
+### Notes
+- [:ledger: View file changes][0.50.0]
 ### Added
-- Finish implementing payments, adding all missing type checks and docblock methods.
-- Implemented new changes for Bot API 3.4 (Live Locations).
+- Finish implementing payments, adding all missing type checks and docblock methods. (#647)
+- Implemented new changes for Bot API 3.4 (Live Locations). (#675)
 ### Changed
-- [:exclamation:][0.50.0-bc-messagegetcommand-return-value] `Message::getCommand()` returns `null` if not a command, instead of `false`.
+- [:exclamation:][0.50.0-bc-messagegetcommand-return-value] `Message::getCommand()` returns `null` if not a command, instead of `false`. (#654)
 ### Fixed
 - SQL update script for version 0.44.1-0.45.0.
-- Issues found by Scrutinizer (Type hints and return values).
-- Check inline keyboard button parameter value correctly. 
+- Issues found by Scrutinizer (Type hints and return values). (#654)
+- Check inline keyboard button parameter value correctly. (#672)
 
 ## [0.49.0] - 2017-09-17
+### Notes
+- [:ledger: View file changes][0.49.0]
 ### Added
 - Donation section and links in readme.
 - Missing payment methods in `Request` class.
@@ -60,7 +266,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Channel selection when using `DB::selectChats()`.
 
 ## [0.48.0] - 2017-08-26
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.48.0-sql-migration] on your database.
+### Notes
+- [:ledger: View file changes][0.48.0] ∙ [:page_with_curl: DB migration script][0.48.0-sql-migration]
 ### Added
 - New entities, methods, update types and inline keyboard button for Payments (Bot API 3.0).
 - Add new methods, fields and objects for working with stickers (Bot API 3.2).
@@ -72,12 +279,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Correctly save `reply_to_message` to DB.
 
 ## [0.47.1] - 2017-08-06
+### Notes
+- [:ledger: View file changes][0.47.1]
 ### Added
-- Linked version numbers in changelog for easy verification of code changes. 
+- Linked version numbers in changelog for easy verification of code changes.
 ### Fixed
 - Private-only commands work with edited messages now too.
 
 ## [0.47.0] - 2017-08-06 [YANKED]
+### Notes
+- [:ledger: View file changes][0.47.0]
 ### Changed
 - Updated readme to latest state of 0.47.0.
 ### Fixed
@@ -87,6 +298,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:exclamation:][0.47.0-bc-private-only-admin-commands] New command parameter `$private_only` to enforce usage in private chats only (set by default for Admin commands).
 
 ## [0.46.0] - 2017-07-15
+### Notes
+- [:ledger: View file changes][0.46.0]
 ### Added
 - Callbacks can be added to be executed when callback queries are called.
 - New Bot API 3.1 changes (#550).
@@ -95,7 +308,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:exclamation:][0.46.0-bc-request-class-refactor] Big refactor of the `Request` class, removing most custom method implementations.
 
 ## [0.45.0] - 2017-06-25
-:exclamation: After updating to this version, you will need to execute the [SQL migration script][0.45.0-sql-migration] on your database.
+### Notes
+- [:ledger: View file changes][0.45.0] ∙ [:page_with_curl: DB migration script][0.45.0-sql-migration]
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
 - Allow setting a custom Guzzle HTTP Client for requests (#511).
@@ -116,10 +330,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Request limiter has been fixed to correctly support channels.
 
 ## [0.44.1] - 2017-04-25
+### Notes
+- [:ledger: View file changes][0.44.1]
 ### Fixed
 - Erroneous exception when using webhook without a database connection.
 
 ## [0.44.0] - 2017-04-25
+### Notes
+- [:ledger: View file changes][0.44.0]
 ### Added
 - Proper standalone `scrutinizer.yml` config.
 - Human-readable `last_error_date_string` for debug command.
@@ -131,6 +349,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:exclamation:][0.44.0-bc-update-content-type] Format of Update content type using `$update->getUpdateContent()`.
 
 ## [0.43.0] - 2017-04-17
+### Notes
+- [:ledger: View file changes][0.43.0]
 ### Added
 - Travis CI webhook for Support Bot.
 - Interval for request limiter.
@@ -144,6 +364,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Prevent handling the same Telegram updates multiple times, throw exception instead.
 
 ## [0.42.0] - 2017-04-09
+### Notes
+- [:ledger: View file changes][0.42.0]
 ### Added
 - Added `getBotId()` to directly access bot ID.
 ### Changed
@@ -154,22 +376,30 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Tests are more reliable now, using a properly formatted API key.
 
 ## [0.41.0] - 2017-03-25
+### Notes
+- [:ledger: View file changes][0.41.0]
 ### Added
 - `$show_in_help` attribute for commands, to set if it should be displayed in the `/help` command.
 - Link to new Telegram group: `https://telegram.me/PHP_Telegram_Bot_Support`
 - Introduce change log.
 
 ## [0.40.1] - 2017-03-07
+### Notes
+- [:ledger: View file changes][0.40.1]
 ### Fixed
 - Infinite message loop, caused by incorrect Entity variable.
 
 ## [0.40.0] - 2017-02-20
+### Notes
+- [:ledger: View file changes][0.40.0]
 ### Added
 - Request limiter for incoming requests.
 ### Fixed
 - Faulty formatting in logger.
 
 ## [0.39.0] - 2017-01-20
+### Notes
+- [:ledger: View file changes][0.39.0]
 ### Added
 - Newest bot API changes.
 - Allow direct access to PDO object (`DB::getPdo()`).
@@ -182,10 +412,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Various bugs and recommendations by Scrutinizer.
 
 ## [0.38.1] - 2016-12-25
+### Notes
+- [:ledger: View file changes][0.38.1]
 ### Fixed
 - Usage of self-signed certificates in conjunction with the new `allowed_updates` webhook parameter.
 
 ## [0.38.0] - 2016-12-25
+### Notes
+- [:ledger: View file changes][0.38.0]
 ### Added
 - New `switch_inline_query_current_chat` option for inline keyboard.
 - Support for `channel_post` and `edited_channel_post`.
@@ -194,20 +428,36 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Update WebhookInfo entity and `setWebhook` to allow passing of new arguments.
 
 ## [0.37.1] - 2016-12-24
+### Notes
+- [:ledger: View file changes][0.37.1]
 ### Fixed
 - Keyboards that are built without using the KeyboardButton objects.
 - Commands that are called via `/command@botname` by correctly passing them the bot name.
 
 ## [0.37.0] - 2016-12-13
+### Notes
+- [:ledger: View file changes][0.37.0]
 ### Changed
 - Logging improvements to Botan integration.
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.52.0-0.53.0.sql
-[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.50.0-0.51.0.sql
+[unreleased-bc-static-method-entityescapemarkdown]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#static-method-entityescapemarkdown
+[0.62.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.61.1-0.62.0.sql
+[0.61.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.60.0-0.61.0.sql
+[0.61.0-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core
+[0.58.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.57.0-0.58.0.sql
+[0.58.0-bc-return-value-of-empty-entity-properties]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#return-value-of-empty-entity-properties
+[0.58.0-bc-startcommand-is-now-a-usercommand]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#startcommand-is-now-a-usercommand
+[0.57.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.56.0-0.57.0.sql
+[0.55.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.54.1-0.55.0.sql
+[0.55.0-bc-move-animation-out-of-games-namespace]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#move-animation-out-of-games-namespace
+[0.54.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.53.0-0.54.0.sql
+[0.54.0-bc-rename-constants]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#rename-constants
+[0.53.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.52.0-0.53.0.sql
+[0.51.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.50.0-0.51.0.sql
 [0.50.0-bc-messagegetcommand-return-value]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#messagegetcommand-return-value
-[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.47.1-0.48.0.sql
+[0.48.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.47.1-0.48.0.sql
 [0.48.0-bc-correct-printerror]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#correct-printerror
 [0.47.0-bc-private-only-admin-commands]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#private-only-admin-commands
 [0.46.0-bc-request-class-refactor]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#request-class-refactor
@@ -217,8 +467,23 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.45.0-bc-up-download-directory]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#up-download-directory
 [0.44.0-bc-update-content-type]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#update-getupdatecontent
 [example-bot]: https://github.com/php-telegram-bot/example-bot
+[PSR-3]: https://www.php-fig.org/psr/psr-3
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.62.0]: https://github.com/php-telegram-bot/core/compare/0.61.1...0.62.0
+[0.61.1]: https://github.com/php-telegram-bot/core/compare/0.61.0...0.61.1
+[0.61.0]: https://github.com/php-telegram-bot/core/compare/0.60.0...0.61.0
+[0.60.0]: https://github.com/php-telegram-bot/core/compare/0.59.1...0.60.0
+[0.59.1]: https://github.com/php-telegram-bot/core/compare/0.59.0...0.59.1
+[0.59.0]: https://github.com/php-telegram-bot/core/compare/0.58.0...0.59.0
+[0.58.0]: https://github.com/php-telegram-bot/core/compare/0.57.0...0.58.0
+[0.57.0]: https://github.com/php-telegram-bot/core/compare/0.56.0...0.57.0
+[0.56.0]: https://github.com/php-telegram-bot/core/compare/0.55.1...0.56.0
+[0.55.1]: https://github.com/php-telegram-bot/core/compare/0.55.0...0.55.1
+[0.55.0]: https://github.com/php-telegram-bot/core/compare/0.54.1...0.55.0
+[0.54.1]: https://github.com/php-telegram-bot/core/compare/0.54.0...0.54.1
+[0.54.0]: https://github.com/php-telegram-bot/core/compare/0.53.0...0.54.0
 [0.53.0]: https://github.com/php-telegram-bot/core/compare/0.52.0...0.53.0
 [0.52.0]: https://github.com/php-telegram-bot/core/compare/0.51.0...0.52.0
 [0.51.0]: https://github.com/php-telegram-bot/core/compare/0.50.0...0.51.0

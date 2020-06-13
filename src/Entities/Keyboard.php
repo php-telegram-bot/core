@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -54,7 +55,7 @@ class Keyboard extends Entity
     /**
      * Get the proper keyboard button class for this keyboard.
      *
-     * @return KeyboardButton|InlineKeyboardButton
+     * @return string
      */
     public function getKeyboardButtonClass()
     {
@@ -154,9 +155,9 @@ class Keyboard extends Entity
     /**
      * Parse a given button to the correct KeyboardButton object type.
      *
-     * @param array|string|\Longman\TelegramBot\Entities\KeyboardButton $button
+     * @param array|string|KeyboardButton $button
      *
-     * @return \Longman\TelegramBot\Entities\KeyboardButton|null
+     * @return KeyboardButton|null
      */
     protected function parseButton($button)
     {
@@ -166,7 +167,7 @@ class Keyboard extends Entity
             return $button;
         }
 
-        if (!$this->isInlineKeyboard() || $button_class::couldBe($button)) {
+        if (!$this->isInlineKeyboard() || call_user_func([$button_class, 'couldBe'], $button)) {
             return new $button_class($button);
         }
 
@@ -179,7 +180,7 @@ class Keyboard extends Entity
     protected function validate()
     {
         $keyboard_type = $this->getKeyboardType();
-        $keyboard = $this->getProperty($keyboard_type);
+        $keyboard      = $this->getProperty($keyboard_type);
 
         if ($keyboard !== null) {
             if (!is_array($keyboard)) {
@@ -201,8 +202,7 @@ class Keyboard extends Entity
      *
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\Keyboard
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Keyboard
      */
     public static function remove(array $data = [])
     {
@@ -216,8 +216,7 @@ class Keyboard extends Entity
      *
      * @param array $data
      *
-     * @return \Longman\TelegramBot\Entities\Keyboard
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return Keyboard
      */
     public static function forceReply(array $data = [])
     {

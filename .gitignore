@@ -5,28 +5,21 @@
 .DS_Store
 .idea
 .phpintel
-composer.phar
-
-# Local System Files (i.e. cache, logs, etc.) #
-/cache
-/build/logs
-/build/coverage
-/tmp
-
-# Test Related Files #
-/phpunit.xml
-
-#Exception output
-TelegramException.log
+.phpunit.result.cache
 
 # Composer
-vendor/
+/composer.phar
+/vendor
 
+# Test-Related Files
+/clover.xml
+/phpcs.xml
+/phpunit.xml
 
-# phpDocumentor Logs #
+# phpDocumentor Logs
 phpdoc-*
 
-# OSX #
+# OSX
 ._*
 .Spotlight-V100
 .Trashes

@@ -1,19 +1,18 @@
-dist: trusty
-sudo: required
 language: php
+sudo: required
+dist: trusty
 
 addons:
   mariadb: 10.1
 
 cache:
   directories:
-    - "$HOME/.composer/cache"
+    - vendor
+    - $HOME/.composer/cache
 
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
+  - 7.4
+  - 7.3
   - 7.2
   - nightly
   - hhvm
@@ -39,11 +38,16 @@ install:
   - travis_retry composer install --prefer-dist --no-interaction
 
 before_script:
-  - mysql -u root -e 'create database telegrambot; use telegrambot; source structure.sql;'
+  # Get structure from 0.44.1, to test all migration steps.
+  - git fetch origin 0.44.1 && git checkout FETCH_HEAD -- structure.sql
+  - mysql -u root -e "create database telegrambot_migrations; use telegrambot_migrations; source structure.sql;"
+  - git checkout HEAD -- structure.sql
+  - mysql -u root -e "create database telegrambot; use telegrambot; source structure.sql;"
 
 script:
+  - for SCHEMA_UPDATE_FILE in $(ls utils/db-schema-update); do mysql -u root -e "use telegrambot_migrations; source utils/db-schema-update/${SCHEMA_UPDATE_FILE};"; done;
   - composer check-code
-  - if [ "$TRAVIS_PHP_VERSION" == "7.2" ] ; then composer test-cov; else composer test; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov; else composer test; fi
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" == "7.2" ]; then composer test-cov-upload; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov-upload; fi

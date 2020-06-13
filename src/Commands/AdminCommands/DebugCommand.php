@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -12,6 +13,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
 /**
@@ -43,14 +45,14 @@ class DebugCommand extends AdminCommand
      * Command execute method
      *
      * @return mixed
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
      */
     public function execute()
     {
-        $pdo = DB::getPdo();
+        $pdo     = DB::getPdo();
         $message = $this->getMessage();
-        $chat = $message->getChat();
-        $text = strtolower($message->getText(true));
+        $chat    = $message->getChat();
+        $text    = strtolower($message->getText(true));
 
         $data = ['chat_id' => $chat->getId()];
 
@@ -80,7 +82,7 @@ class DebugCommand extends AdminCommand
         $debug_info[] = sprintf('*Maximum PHP script execution time:* `%d seconds`', ini_get('max_execution_time'));
 
         $mysql_version = $pdo ? $pdo->query('SELECT VERSION() AS version')->fetchColumn() : null;
-        $debug_info[] = sprintf('*MySQL version:* `%s`', $mysql_version ?: 'disabled');
+        $debug_info[]  = sprintf('*MySQL version:* `%s`', $mysql_version ?: 'disabled');
 
         $debug_info[] = sprintf('*Operating System:* `%s`', php_uname());
 
@@ -88,7 +90,7 @@ class DebugCommand extends AdminCommand
             $debug_info[] = sprintf('*Web Server:* `%s`', $_SERVER['SERVER_SOFTWARE']);
         }
         if (function_exists('curl_init')) {
-            $curlversion = curl_version();
+            $curlversion  = curl_version();
             $debug_info[] = sprintf('*curl version:* `%1$s; %2$s`', $curlversion['version'], $curlversion['ssl_version']);
         }
 
@@ -105,8 +107,8 @@ class DebugCommand extends AdminCommand
                 }
 
                 $webhook_info_result_str = json_encode($webhook_info_result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-                $debug_info[] = $webhook_info_title;
-                $debug_info[] = sprintf(
+                $debug_info[]            = $webhook_info_title;
+                $debug_info[]            = sprintf(
                     '```' . PHP_EOL . '%s```',
                     $webhook_info_result_str
                 );
@@ -116,7 +118,7 @@ class DebugCommand extends AdminCommand
         }
 
         $data['parse_mode'] = 'Markdown';
-        $data['text'] = implode(PHP_EOL, $debug_info);
+        $data['text']       = implode(PHP_EOL, $debug_info);
 
         return Request::sendMessage($data);
     }

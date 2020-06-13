@@ -15,19 +15,27 @@
             "email": "akalongman@gmail.com",
             "homepage": "http://longman.me",
             "role": "Developer"
+        },
+        {
+            "name": "PHP Telegram Bot Team",
+            "homepage": "https://github.com/php-telegram-bot/core/graphs/contributors",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": "^5.5|^7.0",
         "ext-pdo": "*",
         "ext-curl": "*",
+        "ext-json": "*",
         "ext-mbstring": "*",
-        "monolog/monolog": "^1.23",
+        "psr/log": "^1.1",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8|^5.7|^6.5|^7.0",
-        "squizlabs/php_codesniffer": "^3.2"
+        "phpunit/phpunit": "^8.4",
+        "squizlabs/php_codesniffer": "^3.4",
+        "dms/phpunit-arraysubset-asserts": "^0.1.0",
+        "monolog/monolog": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -41,16 +49,16 @@
     },
     "scripts": {
         "check-code": [
-            "\"vendor/bin/phpcs\" --standard=phpcs.xml -snp --encoding=utf-8 src/ tests/ --report-width=150"
+            "\"vendor/bin/phpcs\" -snp src/ tests/"
         ],
         "test": [
             "\"vendor/bin/phpunit\""
         ],
         "test-cov": [
-            "\"vendor/bin/phpunit\" --coverage-clover build/logs/clover.xml"
+            "\"vendor/bin/phpunit\" --coverage-clover clover.xml"
         ],
         "test-cov-upload": [
-            "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml"
+            "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover clover.xml"
         ]
     }
 }

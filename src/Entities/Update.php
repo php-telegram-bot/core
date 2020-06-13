@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -28,6 +29,8 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  * @method CallbackQuery       getCallbackQuery()      Optional. New incoming callback query
  * @method ShippingQuery       getShippingQuery()      Optional. New incoming shipping query. Only for invoices with flexible price
  * @method PreCheckoutQuery    getPreCheckoutQuery()   Optional. New incoming pre-checkout query. Contains full information about checkout
+ * @method Poll                getPoll()               Optional. New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
+ * @method PollAnswer          getPollAnswer()         Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
  */
 class Update extends Entity
 {
@@ -46,6 +49,8 @@ class Update extends Entity
             'callback_query'       => CallbackQuery::class,
             'shipping_query'       => ShippingQuery::class,
             'pre_checkout_query'   => PreCheckoutQuery::class,
+            'poll'                 => Poll::class,
+            'poll_answer'          => PollAnswer::class,
         ];
     }
 
@@ -56,17 +61,7 @@ class Update extends Entity
      */
     public function getUpdateType()
     {
-        $types = [
-            'message',
-            'edited_message',
-            'channel_post',
-            'edited_channel_post',
-            'inline_query',
-            'chosen_inline_result',
-            'callback_query',
-            'shipping_query',
-            'pre_checkout_query',
-        ];
+        $types = array_keys($this->subEntities());
         foreach ($types as $type) {
             if ($this->getProperty($type)) {
                 return $type;
@@ -79,10 +74,7 @@ class Update extends Entity
     /**
      * Get update content
      *
-     * @return \Longman\TelegramBot\Entities\CallbackQuery
-     *         |\Longman\TelegramBot\Entities\ChosenInlineResult
-     *         |\Longman\TelegramBot\Entities\InlineQuery
-     *         |\Longman\TelegramBot\Entities\Message
+     * @return CallbackQuery|ChosenInlineResult|InlineQuery|Message
      */
     public function getUpdateContent()
     {

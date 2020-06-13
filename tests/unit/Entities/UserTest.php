@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -24,7 +25,7 @@ class UserTest extends TestCase
     public function testInstance()
     {
         $user = new User(['id' => 1]);
-        self::assertInstanceOf('Longman\TelegramBot\Entities\User', $user);
+        self::assertInstanceOf(User::class, $user);
     }
 
     public function testGetId()
@@ -64,9 +65,6 @@ class UserTest extends TestCase
         $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => '`Taylor`']);
         self::assertEquals('John `Taylor`', $user->tryMention());
         self::assertEquals('John \`Taylor\`', $user->tryMention(true));
-
-        // Plain escapeMarkdown functionality.
-        self::assertEquals('a\`b\[c\*d\_e', $user->escapeMarkdown('a`b[c*d_e'));
     }
 
     public function testGetProperties()

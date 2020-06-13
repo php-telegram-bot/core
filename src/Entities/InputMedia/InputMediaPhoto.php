@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -19,17 +20,20 @@ use Longman\TelegramBot\Entities\Entity;
  *
  * <code>
  * $data = [
- *   'media'   => '123abc',
- *   'caption' => 'Photo caption',
+ *   'media'      => '123abc',
+ *   'caption'    => '*Photo* caption',
+ *   'parse_mode' => 'markdown',
  * ];
  * </code>
  *
- * @method string getType()    Type of the result, must be photo
- * @method string getMedia()   File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
- * @method string getCaption() Optional. Caption of the photo to be sent, 0-200 characters
+ * @method string getType()      Type of the result, must be photo
+ * @method string getMedia()     File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
+ * @method string getCaption()   Optional. Caption of the photo to be sent, 0-200 characters
+ * @method string getParseMode() Optional. Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
  *
- * @method $this setMedia(string $media)     File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
- * @method $this setCaption(string $caption) Optional. Caption of the photo to be sent, 0-200 characters
+ * @method $this setMedia(string $media)          File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
+ * @method $this setCaption(string $caption)      Optional. Caption of the photo to be sent, 0-200 characters
+ * @method $this setParseMode(string $parse_mode) Optional. Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
  */
 class InputMediaPhoto extends Entity implements InputMedia
 {
@@ -37,8 +41,6 @@ class InputMediaPhoto extends Entity implements InputMedia
      * InputMediaPhoto constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

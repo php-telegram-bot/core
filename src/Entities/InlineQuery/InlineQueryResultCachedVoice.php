@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -50,8 +51,6 @@ class InlineQueryResultCachedVoice extends InlineEntity implements InlineQueryRe
      * InlineQueryResultCachedVoice constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

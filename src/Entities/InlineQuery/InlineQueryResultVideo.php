@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -68,8 +69,6 @@ class InlineQueryResultVideo extends InlineEntity implements InlineQueryResult
      * InlineQueryResultVideo constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

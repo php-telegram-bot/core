@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
-        bootstrap="./tests/bootstrap.php"
-        backupGlobals="false"
-        backupStaticAttributes="false"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        processIsolation="false"
-        stopOnError="false"
-        stopOnFailure="false"
-        stopOnIncomplete="false"
-        stopOnSkipped="false"
-        syntaxCheck="true"
-        timeoutForLargeTests="60"
-        timeoutForMediumTests="10"
-        timeoutForSmallTests="1"
-        verbose="false"
-        >
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
+    bootstrap="./tests/bootstrap.php"
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    timeoutForLargeTests="60"
+    timeoutForMediumTests="10"
+    timeoutForSmallTests="1"
+    verbose="false"
+>
     <php>
-        <ini name="error_reporting" value="-1" />
+        <ini name="error_reporting" value="-1"/>
         <const name="PHPUNIT_TESTSUITE" value="true"/>
         <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
+        <const name="PHPUNIT_DB_PORT" value="3306"/>
         <const name="PHPUNIT_DB_NAME" value="telegrambot"/>
         <const name="PHPUNIT_DB_USER" value="root"/>
         <const name="PHPUNIT_DB_PASS" value=""/>
@@ -35,7 +35,7 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php" processUncoveredFilesFromWhitelist="true">./src</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
                 <directory suffix=".php">./src/Exception</directory>
             </exclude>

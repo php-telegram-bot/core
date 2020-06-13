@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -41,6 +42,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getTitle()               Title of the venue
  * @method string               getAddress()             Address of the venue
  * @method string               getFoursquareId()        Optional. Foursquare identifier of the venue if known
+ * @method string               getFoursquareType()      Optional. Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the venue
  * @method string               getThumbUrl()            Optional. Url of the thumbnail for the result
@@ -53,6 +55,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setTitle(string $title)                                            Title of the venue
  * @method $this setAddress(string $address)                                        Address of the venue
  * @method $this setFoursquareId(string $foursquare_id)                             Optional. Foursquare identifier of the venue if known
+ * @method $this setFoursquareType(string $foursquare_type)                         Optional. Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the venue
  * @method $this setThumbUrl(string $thumb_url)                                     Optional. Url of the thumbnail for the result
@@ -65,8 +68,6 @@ class InlineQueryResultVenue extends InlineEntity implements InlineQueryResult
      * InlineQueryResultVenue constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {

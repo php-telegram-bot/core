@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -44,8 +45,6 @@ class InlineQueryResultCachedSticker extends InlineEntity implements InlineQuery
      * InlineQueryResultCachedSticker constructor
      *
      * @param array $data
-     *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $data = [])
     {
