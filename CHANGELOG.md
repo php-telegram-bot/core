@@ -16,6 +16,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests
 ### Changed
 - [:exclamation:][unreleased-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object.
+- Allow custom namespacing for commands. (@Jonybang)
 ### Deprecated
 ### Removed
 ### Fixed
