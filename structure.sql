@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
+  `via_bot` bigint NULL DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent',
   `edit_date` bigint UNSIGNED DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
   `media_group_id` TEXT COMMENT 'The unique identifier of a media message group this message belongs to',
   `author_signature` TEXT COMMENT 'Signature of the post author for messages in channels',
@@ -124,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   KEY `forward_from_chat` (`forward_from_chat`),
   KEY `reply_to_chat` (`reply_to_chat`),
   KEY `reply_to_message` (`reply_to_message`),
+  KEY `via_bot` (`via_bot`),
   KEY `left_chat_member` (`left_chat_member`),
   KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
   KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
@@ -133,6 +135,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
   FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
   FOREIGN KEY (`reply_to_chat`, `reply_to_message`) REFERENCES `message` (`chat_id`, `id`),
+  FOREIGN KEY (`via_bot`) REFERENCES `user` (`id`),
   FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 

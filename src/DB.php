@@ -955,6 +955,12 @@ class DB
             $forward_from_chat = $forward_from_chat->getId();
         }
 
+        $via_bot_id = null;
+        if ($via_bot = $message->getViaBot()) {
+            self::insertUser($via_bot);
+            $via_bot_id = $via_bot->getId();
+        }
+
         // New and left chat member
         $new_chat_members_ids = null;
         $left_chat_member_id  = null;
@@ -982,7 +988,7 @@ class DB
                 (
                     `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_signature`, `forward_sender_name`, `forward_date`,
-                    `reply_to_chat`, `reply_to_message`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
+                    `reply_to_chat`, `reply_to_message`, `via_bot`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
                     `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
@@ -991,7 +997,7 @@ class DB
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date,
-                    :reply_to_chat, :reply_to_message, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
+                    :reply_to_chat, :reply_to_message, :via_bot, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
                     :audio, :document, :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
@@ -1029,6 +1035,7 @@ class DB
             $sth->bindValue(':reply_to_chat', $reply_to_chat_id);
             $sth->bindValue(':reply_to_message', $reply_to_message_id);
 
+            $sth->bindValue(':via_bot', $via_bot_id);
             $sth->bindValue(':edit_date', $message->getEditDate());
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':author_signature', $message->getAuthorSignature());

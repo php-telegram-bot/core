@@ -14,6 +14,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - New static method `Entity::escapeMarkdownV2` for MarkdownV2.
 - Remove bot token from debug http logs, this can be disabled by setting `TelegramLog::$remove_bot_token` parameter to `false`
 - `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests
+- Bot API 4.9 (New `via_bot` field).
 ### Changed
 - [:exclamation:][unreleased-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object.
 - Allow custom namespacing for commands. (@Jonybang)
