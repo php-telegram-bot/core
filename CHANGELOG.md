@@ -5,25 +5,31 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased]
 ### Added
-- New method `setUpdateFilter($callback)` used to filter `processUpdate(Update $update)` calls. If `$callback` returns `false` the update isn't processed and an empty falsey `ServerResponse` is returned. (@VRciF)
-- Replaced 'generic' and 'genericmessage' strings with Telegram::GENERIC_COMMAND and Telegram::GENERIC_MESSAGE_COMMAND constants (@1int)
-- Bot API 4.8 (Extra Poll and Dice features).
-- Allow custom MySQL port to be defined for tests.
-- New static method `Entity::escapeMarkdownV2` for MarkdownV2.
-- Remove bot token from debug http logs, this can be disabled by setting `TelegramLog::$remove_bot_token` parameter to `false`
-- `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests
-- Bot API 4.9 (New `via_bot` field).
 ### Changed
-- [:exclamation:][unreleased-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object.
-- Allow custom namespacing for commands. (@Jonybang)
 ### Deprecated
 ### Removed
 ### Fixed
-- Primary key for `poll_answer` also requires the `user_id`.
-- Small SQL foreign key fixes.
 ### Security
+
+## [0.63.0] - 2020-06-17
+### Notes
+- [:ledger: View file changes][0.63.0] ∙ [:page_with_curl: DB migration script][0.63.0-sql-migration]
+### Added
+- New method `setUpdateFilter($callback)` used to filter `processUpdate(Update $update)` calls. If `$callback` returns `false` the update isn't processed and an empty falsey `ServerResponse` is returned. (@VRciF) (#1045)
+- Replaced 'generic' and 'genericmessage' strings with Telegram::GENERIC_COMMAND and Telegram::GENERIC_MESSAGE_COMMAND constants. (@1int) (#1074)
+- Bot API 4.8 (Extra Poll and Dice features). (#1082)
+- Allow custom MySQL port to be defined for tests. (#1090)
+- New static method `Entity::escapeMarkdownV2` for MarkdownV2. (#1094)
+- Remove bot token from debug http logs, this can be disabled by setting `TelegramLog::$remove_bot_token` parameter to `false`. (@jacklul) (#1095)
+- `TelegramLog::$always_log_request_and_response` parameter to force output of the request and response data to the debug log, also for successful requests. (#1089)
+- Bot API 4.9 (New `via_bot` field). (#1112)
+### Changed
+- [:exclamation:][0.63.0-bc-static-method-entityescapemarkdown] Made `Entity::escapeMarkdown` static, to not require an `Entity` object. (#1094)
+- Allow custom namespacing for commands. (@Jonybang) (#689)
+### Fixed
+- Primary key for `poll_answer` also requires the `user_id`. (#1087)
+- Small SQL foreign key fixes. (#1105)
 
 ## [0.62.0] - 2020-04-08
 ### Notes
@@ -443,7 +449,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-bc-static-method-entityescapemarkdown]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#static-method-entityescapemarkdown
+[0.63.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.62.0-0.63.0.sql
+[0.63.0-bc-static-method-entityescapemarkdown]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#static-method-entityescapemarkdown
 [0.62.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.61.1-0.62.0.sql
 [0.61.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.60.0-0.61.0.sql
 [0.61.0-bc-remove-monolog-from-core]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#remove-monolog-from-core
@@ -472,6 +479,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.63.0]: https://github.com/php-telegram-bot/core/compare/0.62.0...0.63.0
 [0.62.0]: https://github.com/php-telegram-bot/core/compare/0.61.1...0.62.0
 [0.61.1]: https://github.com/php-telegram-bot/core/compare/0.61.0...0.61.1
 [0.61.0]: https://github.com/php-telegram-bot/core/compare/0.60.0...0.61.0
