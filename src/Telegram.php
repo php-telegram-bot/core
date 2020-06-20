@@ -345,7 +345,7 @@ class Telegram
     protected function getFileNamespace($src)
     {
         $content = file_get_contents($src);
-        if (preg_match('#^namespace\s+(.+?);$#sm', $content, $m)) {
+        if (preg_match('#^namespace\s+(.+?);#m', $content, $m)) {
             return $m[1];
         }
         return null;
@@ -1012,12 +1012,11 @@ class Telegram
             $bot_username = $this->getBotUsername();
         }
 
+        // Give bot access to admin commands
+        $this->enableAdmin($bot_id);
 
-        $this->enableAdmin($bot_id);    // Give bot access to admin commands
-        $this->getCommandsList();       // Load full commands list
-
-        foreach ($commands as $command) {
-            $this->update = new Update(
+        $newUpdate = static function ($text = '') use ($bot_id, $bot_name, $bot_username) {
+            return new Update(
                 [
                     'update_id' => 0,
                     'message'   => [
@@ -1032,10 +1031,17 @@ class Telegram
                             'id'   => $bot_id,
                             'type' => 'private',
                         ],
-                        'text'       => $command,
+                        'text'       => $text,
                     ],
                 ]
             );
+        };
+
+        $this->update = $newUpdate();   // Required for isAdmin() check inside getCommandObject()
+        $this->commands_objects = $this->getCommandsList();       // Load up-to-date commands list
+
+        foreach ($commands as $command) {
+            $this->update = $newUpdate($command);
 
             $this->executeCommand($this->update->getMessage()->getCommand());
         }
