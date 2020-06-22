@@ -10,6 +10,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Regex in `getFileNamespace()` that introduced a breaking bug (#1114)
+- Fixed `runCommands()` not working due to custom namespace feature
 ### Security
 
 ## [0.63.0] - 2020-06-17
