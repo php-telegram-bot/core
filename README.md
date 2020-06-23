@@ -606,6 +606,7 @@ Here's a list of projects that feats this library, feel free to add yours!
 - [Inline Games](https://github.com/jacklul/inlinegamesbot) ([@inlinegamesbot](https://telegram.me/inlinegamesbot))
 - [Super-Dice-Roll](https://github.com/RafaelDelboni/Super-Dice-Roll) ([@superdiceroll_bot](https://telegram.me/superdiceroll_bot))
 - [tg-mentioned-bot](https://github.com/gruessung/tg-mentioned-bot)
+- [OSMdeWikiBot](https://github.com/OSM-de/TelegramWikiBot) ([@OSM_de](https://t.me/OSM_de))
 
 ## Troubleshooting
 
