@@ -34,7 +34,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.63.0';
+    protected $version = '0.63.1';
 
     /**
      * Telegram API key

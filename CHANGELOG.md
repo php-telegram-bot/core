@@ -4,15 +4,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
 
 ## [Unreleased]
+- [:ledger: View file changes][Unreleased]
 ### Notes
 ### Added
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- Regex in `getFileNamespace()` that introduced a breaking bug (#1114)
-- Fixed `runCommands()` not working due to custom namespace feature
 ### Security
+
+## [0.63.1] - 2020-06-24
+### Notes
+- [:ledger: View file changes][0.63.1]
+- This fixed version is necessary for Windows users.
+### Fixed
+- Regex in `getFileNamespace()` that introduced a breaking bug in #1114. (@jacklul) (#1115)
+- Fixed `runCommands()` not working due to custom namespace feature. (@jacklul) (#1115, #1118)
 
 ## [0.63.0] - 2020-06-17
 ### Notes
@@ -481,6 +488,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.63.1]: https://github.com/php-telegram-bot/core/compare/0.63.0...0.63.1
 [0.63.0]: https://github.com/php-telegram-bot/core/compare/0.62.0...0.63.0
 [0.62.0]: https://github.com/php-telegram-bot/core/compare/0.61.1...0.62.0
 [0.61.1]: https://github.com/php-telegram-bot/core/compare/0.61.0...0.61.1
