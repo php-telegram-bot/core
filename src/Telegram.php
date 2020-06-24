@@ -295,6 +295,10 @@ class Telegram
      */
     public function getCommandObject($command, $filepath = null)
     {
+        if (isset($this->commands_objects[$command])) {
+            return $this->commands_objects[$command];
+        }
+
         $which = ['System'];
         $this->isAdmin() && $which[] = 'Admin';
         $which[] = 'User';
