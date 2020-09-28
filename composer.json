@@ -23,13 +23,13 @@
         }
     ],
     "require": {
-        "php": "^5.5|^7.0",
+        "php": "^7.2",
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.1",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.4",
