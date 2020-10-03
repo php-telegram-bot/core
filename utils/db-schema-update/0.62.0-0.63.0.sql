@@ -5,7 +5,10 @@ ALTER TABLE `poll` ADD COLUMN `close_date` timestamp NULL DEFAULT NULL COMMENT '
 
 ALTER TABLE `poll_answer` DROP PRIMARY KEY, ADD PRIMARY KEY (`poll_id`, `user_id`);
 
-ALTER TABLE `message` DROP CONSTRAINT `message_ibfk_6`;
+ALTER TABLE `message`
+    DROP FOREIGN KEY IF EXISTS `message_ibfk_6`,
+    DROP INDEX IF EXISTS `message_ibfk_6`;
+
 ALTER TABLE `message`
     ADD COLUMN `via_bot` bigint NULL DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent' AFTER `reply_to_message`,
     ADD KEY `via_bot` (`via_bot`),
