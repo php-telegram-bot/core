@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Correct SQL migration script for older versions of MySQL.
 ### Security
 
 ## [0.63.1] - 2020-06-24
