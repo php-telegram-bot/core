@@ -60,95 +60,87 @@ class TelegramTest extends TestCase
         }
     }
 
-    public function testNewInstanceWithoutApiKeyParam()
+    public function testNewInstanceWithoutApiKeyParam(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('API KEY not defined!');
-        new Telegram(null, 'testbot');
+        new Telegram('');
     }
 
-    public function testNewInstanceWithInvalidApiKeyParam()
+    public function testNewInstanceWithInvalidApiKeyParam(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('Invalid API KEY defined!');
-        new Telegram('invalid-api-key-format', null);
+        new Telegram('invalid-api-key-format');
     }
 
-    public function testGetApiKey()
+    public function testGetApiKey(): void
     {
-        $this->assertEquals(self::$dummy_api_key, $this->telegram->getApiKey());
+        self::assertEquals(self::$dummy_api_key, $this->telegram->getApiKey());
     }
 
-    public function testGetBotUsername()
+    public function testGetBotUsername(): void
     {
-        $this->assertEquals('testbot', $this->telegram->getBotUsername());
+        self::assertEquals('testbot', $this->telegram->getBotUsername());
     }
 
-    public function testEnableAdmins()
+    public function testEnableAdmins(): void
     {
         $tg = $this->telegram;
 
-        $this->assertEmpty($tg->getAdminList());
+        self::assertEmpty($tg->getAdminList());
 
         // Single
         $tg->enableAdmin(1);
-        $this->assertCount(1, $tg->getAdminList());
+        self::assertCount(1, $tg->getAdminList());
 
         // Multiple
         $tg->enableAdmins([2, 3]);
-        $this->assertCount(3, $tg->getAdminList());
+        self::assertCount(3, $tg->getAdminList());
 
         // Already added
         $tg->enableAdmin(2);
-        $this->assertCount(3, $tg->getAdminList());
-
-        // Integer as a string
-        $tg->enableAdmin('4');
-        $this->assertCount(3, $tg->getAdminList());
-
-        // Random string
-        $tg->enableAdmin('a string?');
-        $this->assertCount(3, $tg->getAdminList());
+        self::assertCount(3, $tg->getAdminList());
     }
 
-    public function testAddCustomCommandsPaths()
+    public function testAddCustomCommandsPaths(): void
     {
         $tg = $this->telegram;
 
-        $this->assertCount(1, $tg->getCommandsPaths());
+        self::assertCount(1, $tg->getCommandsPaths());
 
         $tg->addCommandsPath($this->custom_commands_paths[0]);
-        $this->assertCount(2, $tg->getCommandsPaths());
-        $this->assertArraySubset(
+        self::assertCount(2, $tg->getCommandsPaths());
+        self::assertArraySubset(
             [$this->custom_commands_paths[0]],
             $tg->getCommandsPaths()
         );
 
         $tg->addCommandsPath('/invalid/path');
-        $this->assertCount(2, $tg->getCommandsPaths());
+        self::assertCount(2, $tg->getCommandsPaths());
 
         $tg->addCommandsPaths([
             $this->custom_commands_paths[1],
             $this->custom_commands_paths[2],
         ]);
-        $this->assertCount(4, $tg->getCommandsPaths());
-        $this->assertArraySubset(
+        self::assertCount(4, $tg->getCommandsPaths());
+        self::assertArraySubset(
             array_reverse($this->custom_commands_paths),
             $tg->getCommandsPaths()
         );
 
         $tg->addCommandsPath($this->custom_commands_paths[0]);
-        $this->assertCount(4, $tg->getCommandsPaths());
+        self::assertCount(4, $tg->getCommandsPaths());
     }
 
-    public function testGetCommandsList()
+    public function testGetCommandsList(): void
     {
         $commands = $this->telegram->getCommandsList();
-        $this->assertIsArray($commands);
-        $this->assertNotCount(0, $commands);
+        self::assertIsArray($commands);
+        self::assertNotCount(0, $commands);
     }
 
-    public function testUpdateFilter()
+    public function testUpdateFilter(): void
     {
         $rawUpdate = '{
             "update_id": 513400512,
@@ -188,11 +180,11 @@ class TelegramTest extends TestCase
             return true;
         });
         $response = $this->telegram->processUpdate($update);
-        $this->assertFalse($response->isOk());
+        self::assertFalse($response->isOk());
 
         // Check that the reason is written to the debug log.
         $debug_log = file_get_contents($debug_log_file);
-        $this->assertStringContainsString('Invalid user, update denied.', $debug_log);
+        self::assertStringContainsString('Invalid user, update denied.', $debug_log);
         file_exists($debug_log_file) && unlink($debug_log_file);
     }
 }

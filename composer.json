@@ -23,13 +23,13 @@
         }
     ],
     "require": {
-        "php": "^5.5|^7.0",
+        "php": "^7.2",
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.1",
-        "guzzlehttp/guzzle": "^6.3|^7.1"
+        "guzzlehttp/guzzle": "^6.5|^7.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
@@ -49,7 +49,7 @@
     },
     "scripts": {
         "check-code": [
-            "\"vendor/bin/phpcs\" -snp src/ tests/"
+            "\"vendor/bin/phpcs\""
         ],
         "test": [
             "\"vendor/bin/phpunit\""

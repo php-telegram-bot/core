@@ -36,48 +36,48 @@ class FileTest extends TestCase
         ];
     }
 
-    public function testBaseStageLocation()
+    public function testBaseStageLocation(): void
     {
         $file = new File($this->data);
-        $this->assertInstanceOf(File::class, $file);
+        self::assertInstanceOf(File::class, $file);
     }
 
-    public function testGetFileId()
+    public function testGetFileId(): void
     {
         $file = new File($this->data);
         $id   = $file->getFileId();
-        $this->assertIsInt($id);
-        $this->assertEquals($this->data['file_id'], $id);
+        self::assertIsInt($id);
+        self::assertEquals($this->data['file_id'], $id);
     }
 
-    public function testGetFileSize()
+    public function testGetFileSize(): void
     {
         $file = new File($this->data);
         $size = $file->getFileSize();
-        $this->assertIsInt($size);
-        $this->assertEquals($this->data['file_size'], $size);
+        self::assertIsInt($size);
+        self::assertEquals($this->data['file_size'], $size);
     }
 
-    public function testGetFilePath()
+    public function testGetFilePath(): void
     {
         $file = new File($this->data);
         $path = $file->getFilePath();
-        $this->assertEquals($this->data['file_path'], $path);
+        self::assertEquals($this->data['file_path'], $path);
     }
 
-    public function testGetFileSizeWithoutData()
+    public function testGetFileSizeWithoutData(): void
     {
         unset($this->data['file_size']);
         $file = new File($this->data);
         $id   = $file->getFileSize();
-        $this->assertNull($id);
+        self::assertNull($id);
     }
 
-    public function testGetFilePathWithoutData()
+    public function testGetFilePathWithoutData(): void
     {
         unset($this->data['file_path']);
         $file = new File($this->data);
         $path = $file->getFilePath();
-        $this->assertNull($path);
+        self::assertNull($path);
     }
 }

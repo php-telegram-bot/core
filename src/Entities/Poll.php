@@ -37,7 +37,7 @@ class Poll extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'options'              => [PollOption::class],

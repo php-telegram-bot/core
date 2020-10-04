@@ -95,14 +95,14 @@ abstract class Command
     /**
      * If this command is enabled
      *
-     * @var boolean
+     * @var bool
      */
     protected $enabled = true;
 
     /**
      * If this command needs mysql
      *
-     * @var boolean
+     * @var bool
      */
     protected $need_mysql = false;
 
@@ -123,13 +123,15 @@ abstract class Command
     /**
      * Constructor
      *
-     * @param Telegram $telegram
-     * @param Update   $update
+     * @param Telegram    $telegram
+     * @param Update|null $update
      */
-    public function __construct(Telegram $telegram, Update $update = null)
+    public function __construct(Telegram $telegram, ?Update $update = null)
     {
         $this->telegram = $telegram;
-        $this->setUpdate($update);
+        if ($update !== null) {
+            $this->setUpdate($update);
+        }
         $this->config = $telegram->getCommandConfig($this->name);
     }
 
@@ -140,11 +142,9 @@ abstract class Command
      *
      * @return Command
      */
-    public function setUpdate(Update $update = null)
+    public function setUpdate(Update $update): Command
     {
-        if ($update !== null) {
-            $this->update = $update;
-        }
+        $this->update = $update;
 
         return $this;
     }
@@ -155,7 +155,7 @@ abstract class Command
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function preExecute()
+    public function preExecute(): ServerResponse
     {
         if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
             return $this->executeNoDb();
@@ -188,7 +188,7 @@ abstract class Command
      * @return ServerResponse
      * @throws TelegramException
      */
-    abstract public function execute();
+    abstract public function execute(): ServerResponse;
 
     /**
      * Execution if MySQL is required but not available
@@ -196,7 +196,7 @@ abstract class Command
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function executeNoDb()
+    public function executeNoDb(): ServerResponse
     {
         return $this->replyToChat('Sorry no database connection, unable to execute "' . $this->name . '" command.');
     }
@@ -204,9 +204,9 @@ abstract class Command
     /**
      * Get update object
      *
-     * @return Update
+     * @return Update|null
      */
-    public function getUpdate()
+    public function getUpdate(): ?Update
     {
         return $this->update;
     }
@@ -221,7 +221,7 @@ abstract class Command
      *
      * @return Command
      */
-    public function __call($name, array $arguments)
+    public function __call(string $name, array $arguments)
     {
         if ($this->update === null) {
             return null;
@@ -232,23 +232,20 @@ abstract class Command
     /**
      * Get command config
      *
-     * Look for config $name if found return it, if not return null.
+     * Look for config $name if found return it, if not return $default.
      * If $name is not set return all set config.
      *
      * @param string|null $name
+     * @param mixed       $default
      *
-     * @return array|mixed|null
+     * @return mixed
      */
-    public function getConfig($name = null)
+    public function getConfig($name = null, $default = null)
     {
         if ($name === null) {
             return $this->config;
         }
-        if (isset($this->config[$name])) {
-            return $this->config[$name];
-        }
-
-        return null;
+        return $this->config[$name] ?? $default;
     }
 
     /**
@@ -256,7 +253,7 @@ abstract class Command
      *
      * @return Telegram
      */
-    public function getTelegram()
+    public function getTelegram(): Telegram
     {
         return $this->telegram;
     }
@@ -266,7 +263,7 @@ abstract class Command
      *
      * @return string
      */
-    public function getUsage()
+    public function getUsage(): string
     {
         return $this->usage;
     }
@@ -276,7 +273,7 @@ abstract class Command
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -286,7 +283,7 @@ abstract class Command
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -296,7 +293,7 @@ abstract class Command
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -306,7 +303,7 @@ abstract class Command
      *
      * @return bool
      */
-    public function showInHelp()
+    public function showInHelp(): bool
     {
         return $this->show_in_help;
     }
@@ -316,7 +313,7 @@ abstract class Command
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -326,7 +323,7 @@ abstract class Command
      *
      * @return bool
      */
-    public function isPrivateOnly()
+    public function isPrivateOnly(): bool
     {
         return $this->private_only;
     }
@@ -336,7 +333,7 @@ abstract class Command
      *
      * @return bool
      */
-    public function isSystemCommand()
+    public function isSystemCommand(): bool
     {
         return ($this instanceof SystemCommand);
     }
@@ -346,7 +343,7 @@ abstract class Command
      *
      * @return bool
      */
-    public function isAdminCommand()
+    public function isAdminCommand(): bool
     {
         return ($this instanceof AdminCommand);
     }
@@ -356,7 +353,7 @@ abstract class Command
      *
      * @return bool
      */
-    public function isUserCommand()
+    public function isUserCommand(): bool
     {
         return ($this instanceof UserCommand);
     }
@@ -366,7 +363,7 @@ abstract class Command
      *
      * @return bool
      */
-    protected function removeNonPrivateMessage()
+    protected function removeNonPrivateMessage(): bool
     {
         $message = $this->getMessage() ?: $this->getEditedMessage();
 
@@ -396,7 +393,7 @@ abstract class Command
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function replyToChat($text, array $data = [])
+    public function replyToChat(string $text, array $data = []): ServerResponse
     {
         if ($message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost()) {
             return Request::sendMessage(array_merge([
@@ -417,7 +414,7 @@ abstract class Command
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function replyToUser($text, array $data = [])
+    public function replyToUser(string $text, array $data = []): ServerResponse
     {
         if ($message = $this->getMessage() ?: $this->getEditedMessage()) {
             return Request::sendMessage(array_merge([

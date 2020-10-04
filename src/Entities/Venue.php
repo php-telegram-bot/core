@@ -27,7 +27,7 @@ class Venue extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'location' => Location::class,

@@ -60,7 +60,7 @@ class SendtochannelCommand extends AdminCommand
      * @return ServerResponse|mixed
      * @throws TelegramException
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
@@ -281,7 +281,7 @@ class SendtochannelCommand extends AdminCommand
      * @return ServerResponse
      * @throws TelegramException
      */
-    protected function sendBack(Message $message, array $data)
+    protected function sendBack(Message $message, array $data): ServerResponse
     {
         $type = $message->getType();
         in_array($type, ['command', 'text'], true) && $type = 'message';
@@ -321,7 +321,7 @@ class SendtochannelCommand extends AdminCommand
      * @return string
      * @throws TelegramException
      */
-    protected function publish(Message $message, $channel_id, $caption = null)
+    protected function publish(Message $message, $channel_id, $caption = null): string
     {
         $res = $this->sendBack($message, [
             'chat_id' => $channel_id,
@@ -356,7 +356,7 @@ class SendtochannelCommand extends AdminCommand
      * @return mixed
      * @throws TelegramException
      */
-    public function executeNoDb()
+    public function executeNoDb(): ServerResponse
     {
         $message = $this->getMessage();
         $text    = trim($message->getText(true));

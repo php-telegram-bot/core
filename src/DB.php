@@ -71,9 +71,9 @@ class DB
     public static function initialize(
         array $credentials,
         Telegram $telegram,
-        $table_prefix = null,
+        $table_prefix = '',
         $encoding = 'utf8mb4'
-    ) {
+    ): PDO {
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
         }
@@ -114,10 +114,10 @@ class DB
      * @throws TelegramException
      */
     public static function externalInitialize(
-        $external_pdo_connection,
+        PDO $external_pdo_connection,
         Telegram $telegram,
-        $table_prefix = null
-    ) {
+        string $table_prefix = ''
+    ): PDO {
         if ($external_pdo_connection === null) {
             throw new TelegramException('MySQL external connection not provided!');
         }
@@ -135,7 +135,7 @@ class DB
     /**
      * Define all the tables with the proper prefix
      */
-    protected static function defineTables()
+    protected static function defineTables(): void
     {
         $tables = [
             'callback_query',
@@ -166,7 +166,7 @@ class DB
      *
      * @return bool
      */
-    public static function isDbConnected()
+    public static function isDbConnected(): bool
     {
         return self::$pdo !== null;
     }
@@ -176,7 +176,7 @@ class DB
      *
      * @return PDO
      */
-    public static function getPdo()
+    public static function getPdo(): PDO
     {
         return self::$pdo;
     }
@@ -190,7 +190,7 @@ class DB
      * @return array|bool Fetched data or false if not connected
      * @throws TelegramException
      */
-    public static function selectTelegramUpdate($limit = null, $id = null)
+    public static function selectTelegramUpdate(int $limit = 0, string $id = '')
     {
         if (!self::isDbConnected()) {
             return false;
@@ -202,22 +202,22 @@ class DB
                 FROM `' . TB_TELEGRAM_UPDATE . '`
             ';
 
-            if ($id !== null) {
+            if ($id !== '') {
                 $sql .= ' WHERE `id` = :id';
             } else {
                 $sql .= ' ORDER BY `id` DESC';
             }
 
-            if ($limit !== null) {
+            if ($limit > 0) {
                 $sql .= ' LIMIT :limit';
             }
 
             $sth = self::$pdo->prepare($sql);
 
-            if ($limit !== null) {
+            if ($limit > 0) {
                 $sth->bindValue(':limit', $limit, PDO::PARAM_INT);
             }
-            if ($id !== null) {
+            if ($id !== '') {
                 $sth->bindValue(':id', $id);
             }
 
@@ -237,7 +237,7 @@ class DB
      * @return array|bool Fetched data or false if not connected
      * @throws TelegramException
      */
-    public static function selectMessages($limit = null)
+    public static function selectMessages(int $limit = 0)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -250,13 +250,13 @@ class DB
                 ORDER BY `id` DESC
             ';
 
-            if ($limit !== null) {
+            if ($limit > 0) {
                 $sql .= ' LIMIT :limit';
             }
 
             $sth = self::$pdo->prepare($sql);
 
-            if ($limit !== null) {
+            if ($limit > 0) {
                 $sth->bindValue(':limit', $limit, PDO::PARAM_INT);
             }
 
@@ -271,13 +271,13 @@ class DB
     /**
      * Convert from unix timestamp to timestamp
      *
-     * @param int $time Unix timestamp (if empty, current timestamp is used)
+     * @param ?int $unixtime Unix timestamp (if empty, current timestamp is used)
      *
      * @return string
      */
-    protected static function getTimestamp($time = null)
+    protected static function getTimestamp(?int $unixtime = null): string
     {
-        return date('Y-m-d H:i:s', $time ?: time());
+        return date('Y-m-d H:i:s', $unixtime ?: time());
     }
 
     /**
@@ -285,14 +285,14 @@ class DB
      *
      * @todo Find a better way, as json_* functions are very heavy
      *
-     * @param array|null $entities
-     * @param mixed      $default
+     * @param array $entities
+     * @param mixed $default
      *
      * @return mixed
      */
-    public static function entitiesArrayToJson($entities, $default = null)
+    public static function entitiesArrayToJson(array $entities, $default = null)
     {
-        if (!is_array($entities)) {
+        if (empty($entities)) {
             return $default;
         }
 
@@ -325,20 +325,20 @@ class DB
      * @throws TelegramException
      */
     protected static function insertTelegramUpdate(
-        $update_id,
-        $chat_id = null,
-        $message_id = null,
-        $edited_message_id = null,
-        $channel_post_id = null,
-        $edited_channel_post_id = null,
-        $inline_query_id = null,
-        $chosen_inline_result_id = null,
-        $callback_query_id = null,
-        $shipping_query_id = null,
-        $pre_checkout_query_id = null,
-        $poll_id = null,
-        $poll_answer_poll_id = null
-    ) {
+        string $update_id,
+        ?string $chat_id = null,
+        ?string $message_id = null,
+        ?string $edited_message_id = null,
+        ?string $channel_post_id = null,
+        ?string $edited_channel_post_id = null,
+        ?string $inline_query_id = null,
+        ?string $chosen_inline_result_id = null,
+        ?string $callback_query_id = null,
+        ?string $shipping_query_id = null,
+        ?string $pre_checkout_query_id = null,
+        ?string $poll_id = null,
+        ?string $poll_answer_poll_id = null
+    ): ?bool {
         if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null) {
             throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id are all null');
         }
@@ -378,14 +378,14 @@ class DB
     /**
      * Insert users and save their connection to chats
      *
-     * @param User   $user
-     * @param string $date
-     * @param Chat   $chat
+     * @param User        $user
+     * @param string|null $date
+     * @param Chat|null   $chat
      *
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertUser(User $user, $date = null, Chat $chat = null)
+    public static function insertUser(User $user, ?string $date = null, ?Chat $chat = null): bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -446,14 +446,14 @@ class DB
     /**
      * Insert chat
      *
-     * @param Chat   $chat
-     * @param string $date
-     * @param string $migrate_to_chat_id
+     * @param Chat     $chat
+     * @param string   $date
+     * @param int|null $migrate_to_chat_id
      *
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertChat(Chat $chat, $date = null, $migrate_to_chat_id = null)
+    public static function insertChat(Chat $chat, string $date = '', ?int $migrate_to_chat_id = null): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -514,7 +514,7 @@ class DB
      * @return bool
      * @throws TelegramException
      */
-    public static function insertRequest(Update $update)
+    public static function insertRequest(Update $update): bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -588,7 +588,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertInlineQueryRequest(InlineQuery $inline_query)
+    public static function insertInlineQueryRequest(InlineQuery $inline_query): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -631,7 +631,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertChosenInlineResultRequest(ChosenInlineResult $chosen_inline_result)
+    public static function insertChosenInlineResultRequest(ChosenInlineResult $chosen_inline_result): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -674,7 +674,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertCallbackQueryRequest(CallbackQuery $callback_query)
+    public static function insertCallbackQueryRequest(CallbackQuery $callback_query): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -741,7 +741,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertShippingQueryRequest(ShippingQuery $shipping_query)
+    public static function insertShippingQueryRequest(ShippingQuery $shipping_query): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -783,7 +783,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertPreCheckoutQueryRequest(PreCheckoutQuery $pre_checkout_query)
+    public static function insertPreCheckoutQueryRequest(PreCheckoutQuery $pre_checkout_query): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -828,7 +828,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertPollRequest(Poll $poll)
+    public static function insertPollRequest(Poll $poll): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -856,7 +856,7 @@ class DB
 
             $sth->bindValue(':id', $poll->getId());
             $sth->bindValue(':question', $poll->getQuestion());
-            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions() ?: null));
+            $sth->bindValue(':options', self::entitiesArrayToJson($poll->getOptions() ?: []));
             $sth->bindValue(':total_voter_count', $poll->getTotalVoterCount());
             $sth->bindValue(':is_closed', $poll->getIsClosed(), PDO::PARAM_INT);
             $sth->bindValue(':is_anonymous', $poll->getIsAnonymous(), PDO::PARAM_INT);
@@ -864,7 +864,7 @@ class DB
             $sth->bindValue(':allows_multiple_answers', $poll->getAllowsMultipleAnswers(), PDO::PARAM_INT);
             $sth->bindValue(':correct_option_id', $poll->getCorrectOptionId());
             $sth->bindValue(':explanation', $poll->getExplanation());
-            $sth->bindValue(':explanation_entities', self::entitiesArrayToJson($poll->getExplanationEntities() ?: null));
+            $sth->bindValue(':explanation_entities', self::entitiesArrayToJson($poll->getExplanationEntities() ?: []));
             $sth->bindValue(':open_period', $poll->getOpenPeriod());
             $sth->bindValue(':close_date', self::getTimestamp($poll->getCloseDate()));
             $sth->bindValue(':created_at', self::getTimestamp());
@@ -883,7 +883,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertPollAnswerRequest(PollAnswer $poll_answer)
+    public static function insertPollAnswerRequest(PollAnswer $poll_answer): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -926,7 +926,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertMessageRequest(Message $message)
+    public static function insertMessageRequest(Message $message): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -1040,13 +1040,13 @@ class DB
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':author_signature', $message->getAuthorSignature());
             $sth->bindValue(':text', $message->getText());
-            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities() ?: null));
-            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities() ?: null));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($message->getEntities() ?: []));
+            $sth->bindValue(':caption_entities', self::entitiesArrayToJson($message->getCaptionEntities() ?: []));
             $sth->bindValue(':audio', $message->getAudio());
             $sth->bindValue(':document', $message->getDocument());
             $sth->bindValue(':animation', $message->getAnimation());
             $sth->bindValue(':game', $message->getGame());
-            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto() ?: null));
+            $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto() ?: []));
             $sth->bindValue(':sticker', $message->getSticker());
             $sth->bindValue(':video', $message->getVideo());
             $sth->bindValue(':voice', $message->getVoice());
@@ -1060,7 +1060,7 @@ class DB
             $sth->bindValue(':new_chat_members', $new_chat_members_ids);
             $sth->bindValue(':left_chat_member', $left_chat_member_id);
             $sth->bindValue(':new_chat_title', $message->getNewChatTitle());
-            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto() ?: null));
+            $sth->bindValue(':new_chat_photo', self::entitiesArrayToJson($message->getNewChatPhoto() ?: []));
             $sth->bindValue(':delete_chat_photo', $message->getDeleteChatPhoto());
             $sth->bindValue(':group_chat_created', $message->getGroupChatCreated());
             $sth->bindValue(':supergroup_chat_created', $message->getSupergroupChatCreated());
@@ -1088,7 +1088,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertEditedMessageRequest(Message $edited_message)
+    public static function insertEditedMessageRequest(Message $edited_message): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -1120,7 +1120,7 @@ class DB
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':edit_date', $edit_date);
             $sth->bindValue(':text', $edited_message->getText());
-            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities() ?: null));
+            $sth->bindValue(':entities', self::entitiesArrayToJson($edited_message->getEntities() ?: []));
             $sth->bindValue(':caption', $edited_message->getCaption());
 
             return $sth->execute();
@@ -1251,13 +1251,13 @@ class DB
     /**
      * Get Telegram API request count for current chat / message
      *
-     * @param integer $chat_id
-     * @param string  $inline_message_id
+     * @param int|null    $chat_id
+     * @param string|null $inline_message_id
      *
      * @return array Array containing TOTAL and CURRENT fields or false on invalid arguments
      * @throws TelegramException
      */
-    public static function getTelegramRequestCount($chat_id = null, $inline_message_id = null)
+    public static function getTelegramRequestCount(int $chat_id = null, string $inline_message_id = null): ?array
     {
         if (!self::isDbConnected()) {
             return [];
@@ -1297,7 +1297,7 @@ class DB
      * @return bool If the insert was successful
      * @throws TelegramException
      */
-    public static function insertTelegramRequest($method, $data)
+    public static function insertTelegramRequest(string $method, array $data): ?bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -1310,8 +1310,8 @@ class DB
                 (:method, :chat_id, :inline_message_id, :created_at);
             ');
 
-            $chat_id           = isset($data['chat_id']) ? $data['chat_id'] : null;
-            $inline_message_id = isset($data['inline_message_id']) ? $data['inline_message_id'] : null;
+            $chat_id           = $data['chat_id'] ?? null;
+            $inline_message_id = $data['inline_message_id'] ?? null;
 
             $sth->bindValue(':chat_id', $chat_id);
             $sth->bindValue(':inline_message_id', $inline_message_id);
@@ -1334,7 +1334,7 @@ class DB
      * @return bool
      * @throws TelegramException
      */
-    public static function update($table, array $fields_values, array $where_fields_values)
+    public static function update(string $table, array $fields_values, array $where_fields_values): ?bool
     {
         if (empty($fields_values) || !self::isDbConnected()) {
             return false;

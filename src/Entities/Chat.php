@@ -38,7 +38,7 @@ class Chat extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'photo'          => ChatPhoto::class,
@@ -64,9 +64,9 @@ class Chat extends Entity
      *
      * @param bool $escape_markdown
      *
-     * @return string|null
+     * @return string
      */
-    public function tryMention($escape_markdown = false)
+    public function tryMention($escape_markdown = false): string
     {
         if ($this->isPrivateChat()) {
             return parent::tryMention($escape_markdown);
@@ -80,7 +80,7 @@ class Chat extends Entity
      *
      * @return bool
      */
-    public function isGroupChat()
+    public function isGroupChat(): bool
     {
         return $this->getType() === 'group' || $this->getId() < 0;
     }
@@ -90,7 +90,7 @@ class Chat extends Entity
      *
      * @return bool
      */
-    public function isPrivateChat()
+    public function isPrivateChat(): bool
     {
         return $this->getType() === 'private';
     }
@@ -100,7 +100,7 @@ class Chat extends Entity
      *
      * @return bool
      */
-    public function isSuperGroup()
+    public function isSuperGroup(): bool
     {
         return $this->getType() === 'supergroup';
     }
@@ -110,7 +110,7 @@ class Chat extends Entity
      *
      * @return bool
      */
-    public function isChannel()
+    public function isChannel(): bool
     {
         return $this->getType() === 'channel';
     }
@@ -121,9 +121,9 @@ class Chat extends Entity
      * @deprecated
      * @see Chat::getPermissions()
      *
-     * @return bool
+     * @return bool|null
      */
-    public function getAllMembersAreAdministrators()
+    public function getAllMembersAreAdministrators(): ?bool
     {
         return $this->getProperty('all_members_are_administrators');
     }

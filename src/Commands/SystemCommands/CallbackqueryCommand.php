@@ -44,7 +44,7 @@ class CallbackqueryCommand extends SystemCommand
      *
      * @return ServerResponse
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         //$callback_query = $this->getCallbackQuery();
         //$user_id        = $callback_query->getFrom()->getId();
@@ -67,7 +67,7 @@ class CallbackqueryCommand extends SystemCommand
      *
      * @param $callback
      */
-    public static function addCallbackHandler($callback)
+    public static function addCallbackHandler($callback): void
     {
         self::$callbacks[] = $callback;
     }

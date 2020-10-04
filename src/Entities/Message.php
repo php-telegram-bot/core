@@ -75,7 +75,7 @@ class Message extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'from'               => User::class,
@@ -116,7 +116,7 @@ class Message extends Entity
      *
      * @return string|null
      */
-    public function getFullCommand()
+    public function getFullCommand(): ?string
     {
         $text = $this->getProperty('text');
         if (strpos($text, '/') !== 0) {
@@ -135,7 +135,7 @@ class Message extends Entity
      *
      * @return string|null
      */
-    public function getCommand()
+    public function getCommand(): ?string
     {
         if ($command = $this->getProperty('command')) {
             return $command;
@@ -167,9 +167,9 @@ class Message extends Entity
      *
      * @param bool $without_cmd
      *
-     * @return string
+     * @return string|null
      */
-    public function getText($without_cmd = false)
+    public function getText($without_cmd = false): ?string
     {
         $text = $this->getProperty('text');
 
@@ -189,7 +189,7 @@ class Message extends Entity
      *
      * @return bool
      */
-    public function botAddedInChat()
+    public function botAddedInChat(): bool
     {
         foreach ($this->getNewChatMembers() as $member) {
             if ($member instanceof User && $member->getUsername() === $this->getBotUsername()) {
@@ -205,7 +205,7 @@ class Message extends Entity
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         $types = [
             'text',

@@ -22,19 +22,19 @@ use Longman\TelegramBot\Entities\User;
  */
 class UserTest extends TestCase
 {
-    public function testInstance()
+    public function testInstance(): void
     {
         $user = new User(['id' => 1]);
         self::assertInstanceOf(User::class, $user);
     }
 
-    public function testGetId()
+    public function testGetId(): void
     {
         $user = new User(['id' => 123]);
         self::assertEquals(123, $user->getId());
     }
 
-    public function testTryMention()
+    public function testTryMention(): void
     {
         // Username
         $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'jtaylor']);
@@ -49,7 +49,7 @@ class UserTest extends TestCase
         self::assertEquals('John Taylor', $user->tryMention());
     }
 
-    public function testEscapeMarkdown()
+    public function testEscapeMarkdown(): void
     {
         // Username.
         $user = new User(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'j_taylor']);
@@ -67,7 +67,7 @@ class UserTest extends TestCase
         self::assertEquals('John \`Taylor\`', $user->tryMention(true));
     }
 
-    public function testGetProperties()
+    public function testGetProperties(): void
     {
         // Username.
         $user = new User(['id' => 1, 'username' => 'name_phpunit']);

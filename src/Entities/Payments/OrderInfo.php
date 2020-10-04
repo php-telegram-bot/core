@@ -30,7 +30,7 @@ class OrderInfo extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'shipping_address' => ShippingAddress::class,

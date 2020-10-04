@@ -35,7 +35,7 @@ abstract class Entity
      * @param array  $data
      * @param string $bot_username
      */
-    public function __construct($data, $bot_username = '')
+    public function __construct(array $data, string $bot_username = '')
     {
         //Make sure we're not raw_data inception-ing
         if (array_key_exists('raw_data', $data)) {
@@ -56,7 +56,7 @@ abstract class Entity
      *
      * @return string
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->getRawData());
     }
@@ -76,7 +76,7 @@ abstract class Entity
      *
      * @param array $data
      */
-    protected function assignMemberVariables(array $data)
+    protected function assignMemberVariables(array $data): void
     {
         foreach ($data as $key => $value) {
             $this->$key = $value;
@@ -88,7 +88,7 @@ abstract class Entity
      *
      * @return array
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [];
     }
@@ -96,7 +96,7 @@ abstract class Entity
     /**
      * Perform any special entity validation
      */
-    protected function validate()
+    protected function validate(): void
     {
     }
 
@@ -110,11 +110,7 @@ abstract class Entity
      */
     public function getProperty($property, $default = null)
     {
-        if (isset($this->$property)) {
-            return $this->$property;
-        }
-
-        return $default;
+        return $this->$property ?? $default;
     }
 
     /**
@@ -173,7 +169,7 @@ abstract class Entity
      *
      * @return array
      */
-    protected function makePrettyObjectArray($class, $property)
+    protected function makePrettyObjectArray(string $class, string $property): array
     {
         $new_objects = [];
 
@@ -201,7 +197,7 @@ abstract class Entity
      *
      * @return string
      */
-    public static function escapeMarkdown($string)
+    public static function escapeMarkdown(string $string): string
     {
         return str_replace(
             ['[', '`', '*', '_',],
@@ -219,7 +215,7 @@ abstract class Entity
      *
      * @return string
      */
-    public static function escapeMarkdownV2($string)
+    public static function escapeMarkdownV2(string $string): string
     {
         return str_replace(
             ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'],
@@ -238,13 +234,13 @@ abstract class Entity
      *
      * @param bool $escape_markdown
      *
-     * @return string|null
+     * @return string
      */
-    public function tryMention($escape_markdown = false)
+    public function tryMention($escape_markdown = false): string
     {
-        //TryMention only makes sense for the User and Chat entity.
+        // TryMention only makes sense for the User and Chat entity.
         if (!($this instanceof User || $this instanceof Chat)) {
-            return null;
+            return '';
         }
 
         //Try with the username first...

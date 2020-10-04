@@ -35,10 +35,10 @@ class ServerResponseTest extends TestCase
     protected function setUp(): void
     {
         // Make sure the current action in the Request class is unset.
-        TestHelpers::setStaticProperty(Request::class, 'current_action', null);
+        TestHelpers::setStaticProperty(Request::class, 'current_action', '');
     }
 
-    public function sendMessageOk()
+    public function sendMessageOk(): string
     {
         return '{
             "ok":true,
@@ -52,7 +52,7 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testSendMessageOk()
+    public function testSendMessageOk(): void
     {
         $result        = $this->sendMessageOk();
         $server        = new ServerResponse(json_decode($result, true), 'testbot');
@@ -77,7 +77,7 @@ class ServerResponseTest extends TestCase
         //... they are not finished...
     }
 
-    public function sendMessageFail()
+    public function sendMessageFail(): string
     {
         return '{
             "ok":false,
@@ -86,7 +86,7 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testSendMessageFail()
+    public function testSendMessageFail(): void
     {
         $result = $this->sendMessageFail();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
@@ -97,12 +97,12 @@ class ServerResponseTest extends TestCase
         self::assertEquals('Error: Bad Request: wrong chat id', $server->getDescription());
     }
 
-    public function setWebhookOk()
+    public function setWebhookOk(): string
     {
         return '{"ok":true,"result":true,"description":"Webhook was set"}';
     }
 
-    public function testSetWebhookOk()
+    public function testSetWebhookOk(): void
     {
         $result = $this->setWebhookOk();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
@@ -113,16 +113,16 @@ class ServerResponseTest extends TestCase
         self::assertEquals('Webhook was set', $server->getDescription());
     }
 
-    public function setWebhookFail()
+    public function setWebhookFail(): string
     {
         return '{
             "ok":false,
             "error_code":400,
-            "description":"Error: Bad request: htttps:\/\/domain.host.org\/dir\/hook.php"
+            "description":"Error: Bad request: https:\/\/domain.host.org\/dir\/hook.php"
         }';
     }
 
-    public function testSetWebhookFail()
+    public function testSetWebhookFail(): void
     {
         $result = $this->setWebhookFail();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
@@ -130,10 +130,10 @@ class ServerResponseTest extends TestCase
         self::assertFalse($server->isOk());
         self::assertNull($server->getResult());
         self::assertEquals(400, $server->getErrorCode());
-        self::assertEquals('Error: Bad request: htttps://domain.host.org/dir/hook.php', $server->getDescription());
+        self::assertEquals('Error: Bad request: https://domain.host.org/dir/hook.php', $server->getDescription());
     }
 
-    public function getUpdatesArray()
+    public function getUpdatesArray(): string
     {
         return '{
             "ok":true,
@@ -182,7 +182,7 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testGetUpdatesArray()
+    public function testGetUpdatesArray(): void
     {
         $result = $this->getUpdatesArray();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
@@ -191,12 +191,12 @@ class ServerResponseTest extends TestCase
         self::assertInstanceOf(Update::class, $server->getResult()[0]);
     }
 
-    public function getUpdatesEmpty()
+    public function getUpdatesEmpty(): string
     {
         return '{"ok":true,"result":[]}';
     }
 
-    public function testGetUpdatesEmpty()
+    public function testGetUpdatesEmpty(): void
     {
         $result = $this->getUpdatesEmpty();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
@@ -204,7 +204,7 @@ class ServerResponseTest extends TestCase
         self::assertEmpty($server->getResult());
     }
 
-    public function getUserProfilePhotos()
+    public function getUserProfilePhotos(): string
     {
         TestHelpers::setStaticProperty(Request::class, 'current_action', 'getUserProfilePhotos');
         return '{
@@ -232,7 +232,7 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testGetUserProfilePhotos()
+    public function testGetUserProfilePhotos(): void
     {
         $result        = $this->getUserProfilePhotos();
         $server        = new ServerResponse(json_decode($result, true), 'testbot');
@@ -250,7 +250,7 @@ class ServerResponseTest extends TestCase
         self::assertInstanceOf(PhotoSize::class, $photos[0][0]);
     }
 
-    public function getFile()
+    public function getFile(): string
     {
         TestHelpers::setStaticProperty(Request::class, 'current_action', 'getFile');
         return '{
@@ -263,7 +263,7 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testGetFile()
+    public function testGetFile(): void
     {
         $result = $this->getFile();
         $server = new ServerResponse(json_decode($result, true), 'testbot');
@@ -271,7 +271,7 @@ class ServerResponseTest extends TestCase
         self::assertInstanceOf(File::class, $server->getResult());
     }
 
-    public function testSetGeneralTestFakeResponse()
+    public function testSetGeneralTestFakeResponse(): void
     {
         //setWebhook ok
         $fake_response = Request::generateGeneralFakeServerResponse();
@@ -314,7 +314,7 @@ class ServerResponseTest extends TestCase
         //... they are not finished...
     }
 
-    public function getStickerSet()
+    public function getStickerSet(): string
     {
         TestHelpers::setStaticProperty(Request::class, 'current_action', 'getStickerSet');
         return '{
@@ -365,7 +365,7 @@ class ServerResponseTest extends TestCase
         }';
     }
 
-    public function testGetStickerSet()
+    public function testGetStickerSet(): void
     {
         $result = $this->getStickerSet();
         $server = new ServerResponse(json_decode($result, true), 'testbot');

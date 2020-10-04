@@ -36,7 +36,7 @@ class PreCheckoutQuery extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'from'       => User::class,
@@ -52,7 +52,7 @@ class PreCheckoutQuery extends Entity
      *
      * @return ServerResponse
      */
-    public function answer($ok, array $data = [])
+    public function answer(bool $ok, array $data = []): ServerResponse
     {
         return Request::answerPreCheckoutQuery(array_merge([
             'pre_checkout_query_id' => $this->getId(),

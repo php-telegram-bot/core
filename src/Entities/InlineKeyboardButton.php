@@ -46,24 +46,23 @@ class InlineKeyboardButton extends KeyboardButton
      *
      * @return bool
      */
-    public static function couldBe($data)
+    public static function couldBe(array $data): bool
     {
-        return is_array($data) &&
-               array_key_exists('text', $data) && (
-                   array_key_exists('url', $data) ||
-                   array_key_exists('login_url', $data) ||
-                   array_key_exists('callback_data', $data) ||
-                   array_key_exists('switch_inline_query', $data) ||
-                   array_key_exists('switch_inline_query_current_chat', $data) ||
-                   array_key_exists('callback_game', $data) ||
-                   array_key_exists('pay', $data)
-               );
+        return array_key_exists('text', $data) && (
+                array_key_exists('url', $data) ||
+                array_key_exists('login_url', $data) ||
+                array_key_exists('callback_data', $data) ||
+                array_key_exists('switch_inline_query', $data) ||
+                array_key_exists('switch_inline_query_current_chat', $data) ||
+                array_key_exists('callback_game', $data) ||
+                array_key_exists('pay', $data)
+            );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function validate()
+    protected function validate(): void
     {
         if ($this->getProperty('text', '') === '') {
             throw new TelegramException('You must add some text to the button!');

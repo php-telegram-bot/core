@@ -32,25 +32,25 @@ class LocationTest extends TestCase
         ];
     }
 
-    public function testBaseStageLocation()
+    public function testBaseStageLocation(): void
     {
         $location = new Location($this->coordinates);
-        $this->assertInstanceOf(Location::class, $location);
+        self::assertInstanceOf(Location::class, $location);
     }
 
-    public function testGetLongitude()
+    public function testGetLongitude(): void
     {
         $location = new Location($this->coordinates);
         $long     = $location->getLongitude();
-        $this->assertIsFloat($long);
-        $this->assertEquals($this->coordinates['longitude'], $long);
+        self::assertIsFloat($long);
+        self::assertEquals($this->coordinates['longitude'], $long);
     }
 
-    public function testGetLatitude()
+    public function testGetLatitude(): void
     {
         $location = new Location($this->coordinates);
         $lat      = $location->getLatitude();
-        $this->assertIsFloat($lat);
-        $this->assertEquals($this->coordinates['latitude'], $lat);
+        self::assertIsFloat($lat);
+        self::assertEquals($this->coordinates['latitude'], $lat);
     }
 }

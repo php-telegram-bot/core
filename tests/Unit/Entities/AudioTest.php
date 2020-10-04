@@ -32,13 +32,13 @@ class AudioTest extends TestCase
         $this->record = TestHelpers::getFakeRecordedAudio();
     }
 
-    public function testInstance()
+    public function testInstance(): void
     {
         $audio = new Audio($this->record);
         self::assertInstanceOf(Audio::class, $audio);
     }
 
-    public function testGetProperties()
+    public function testGetProperties(): void
     {
         $audio = new Audio($this->record);
         self::assertEquals($this->record['file_id'], $audio->getFileId());

@@ -31,7 +31,7 @@ class CallbackQuery extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'from'    => User::class,
@@ -46,7 +46,7 @@ class CallbackQuery extends Entity
      *
      * @return ServerResponse
      */
-    public function answer(array $data = [])
+    public function answer(array $data = []): ServerResponse
     {
         return Request::answerCallbackQuery(array_merge([
             'callback_query_id' => $this->getId(),

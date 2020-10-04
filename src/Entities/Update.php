@@ -37,7 +37,7 @@ class Update extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'message'              => Message::class,
@@ -59,7 +59,7 @@ class Update extends Entity
      *
      * @return string|null
      */
-    public function getUpdateType()
+    public function getUpdateType(): ?string
     {
         $types = array_keys($this->subEntities());
         foreach ($types as $type) {

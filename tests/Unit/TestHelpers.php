@@ -58,8 +58,10 @@ class TestHelpers
      * @param object $object   Object that contains the property
      * @param string $property Name of the property who's value we want to set
      * @param mixed  $value    The value to set to the property
+     *
+     * @throws \ReflectionException
      */
-    public static function setObjectProperty($object, $property, $value)
+    public static function setObjectProperty(object $object, string $property, $value): void
     {
         $ref_object   = new \ReflectionObject($object);
         $ref_property = $ref_object->getProperty($property);
@@ -73,8 +75,10 @@ class TestHelpers
      * @param string $class    Class that contains the static property
      * @param string $property Name of the property who's value we want to set
      * @param mixed  $value    The value to set to the property
+     *
+     * @throws \ReflectionException
      */
-    public static function setStaticProperty($class, $property, $value)
+    public static function setStaticProperty(string $class, string $property, $value): void
     {
         $ref_property = new \ReflectionProperty($class, $property);
         $ref_property->setAccessible(true);
@@ -88,7 +92,7 @@ class TestHelpers
      *
      * @return Update
      */
-    public static function getFakeUpdateObject($data = null)
+    public static function getFakeUpdateObject(array $data = []): Update
     {
         $data = $data ?: [
             'update_id' => mt_rand(),
@@ -110,7 +114,7 @@ class TestHelpers
      *
      * @return Update
      */
-    public static function getFakeUpdateCommandObject($command_text)
+    public static function getFakeUpdateCommandObject(string $command_text): Update
     {
         $data = [
             'update_id' => mt_rand(),
@@ -132,7 +136,7 @@ class TestHelpers
      *
      * @return User
      */
-    public static function getFakeUserObject(array $data = [])
+    public static function getFakeUserObject(array $data = []): User
     {
         ($data === null) && $data = [];
 
@@ -146,10 +150,8 @@ class TestHelpers
      *
      * @return Chat
      */
-    public static function getFakeChatObject(array $data = [])
+    public static function getFakeChatObject(array $data = []): Chat
     {
-        ($data === null) && $data = [];
-
         return new Chat($data + self::$chat_template);
     }
 
@@ -158,10 +160,10 @@ class TestHelpers
      *
      * @return array
      */
-    public static function getFakeRecordedAudio()
+    public static function getFakeRecordedAudio(): array
     {
         $mime_type = ['audio/ogg', 'audio/mpeg', 'audio/vnd.wave', 'audio/x-ms-wma', 'audio/basic'];
-        $data      = [
+        return [
             'file_id'   => mt_rand(1, 999),
             'duration'  => (string) mt_rand(1, 99) . ':' . mt_rand(1, 60),
             'performer' => 'phpunit',
@@ -169,8 +171,6 @@ class TestHelpers
             'mime_type' => $mime_type[array_rand($mime_type, 1)],
             'file_size' => mt_rand(1, 99999),
         ];
-
-        return $data;
     }
 
     /**
@@ -182,12 +182,8 @@ class TestHelpers
      *
      * @return Message
      */
-    public static function getFakeMessageObject(array $message_data = [], array $user_data = [], array $chat_data = [])
+    public static function getFakeMessageObject(array $message_data = [], array $user_data = [], array $chat_data = []): Message
     {
-        ($message_data === null) && $message_data = [];
-        ($user_data === null) && $user_data = [];
-        ($chat_data === null) && $chat_data = [];
-
         return new Message($message_data + [
             'message_id' => mt_rand(),
             'from'       => $user_data + self::$user_template,
@@ -200,7 +196,8 @@ class TestHelpers
     /**
      * Start a fake conversation for the passed command and return the randomly generated ids.
      *
-     * @return array
+     * @return array|false
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function startFakeConversation()
     {
@@ -226,7 +223,7 @@ class TestHelpers
      *
      * @param array $credentials
      */
-    public static function emptyDb(array $credentials)
+    public static function emptyDb(array $credentials): void
     {
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         if (!empty($credentials['port'])) {

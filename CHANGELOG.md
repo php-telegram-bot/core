@@ -8,10 +8,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
+- Upgrade code to PHP 7.2.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+- Minimum PHP 7.2.
 
 ## [0.64.0] - 2020-10-04
 ### Notes

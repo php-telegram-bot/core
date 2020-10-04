@@ -1,9 +1,8 @@
-language: php
-sudo: required
 dist: trusty
+language: php
 
 addons:
-  mariadb: 10.1
+  mariadb: '10.1'
 
 cache:
   directories:
@@ -23,14 +22,6 @@ matrix:
     - php: hhvm
   fast_finish: true
 
-notifications:
-  on_success: never
-  on_failure: always
-  webhooks:
-    on_success: always
-    urls:
-      secure: jW1RbSV8TXSL3qa2cNVhlxEGbImrQS5b8FO4xIe/Sg2S2zgXOxJZrui1d/gh6mM3dqjquvCdUkXOYYWL8Mrnbe07utUigwW4qxmsw2XDqobgUl9/yoqejLsUvccV2bbvxhSlVEnGkYox9yOd7pakBW0wLxG4Izw8ML3q+tJWYAypM/x3mRhXBMRuOhLm3cI9MwYogCq82FRBTvwTszuU74EHQE/LgQnlEwfOhBYa1sqD+HHG51H59+a0pBWiAgcROG/vPffNDzCfmgrcpU6Bw/eJjGJcDYNwjvBp90lYHYXofbWtwj0m6QvCuE7HFlG7UXXipEe+trViH9G7DpPwAf5nghEgJNholESq6DVhy+5fBFEiZfcpbhMJWzh807iL8r0Ekx3oUKe67wcOO55s/Hatln5DNq3vuVzfDhIjGkBE4Z44Il1M/n5zY5Rj/zMPpRFs9cI53wynKoFxI7gPNylqnkoztYsFv/yMf1W9moZvWqzQY0qeMLSUZNJ9TpxhETGkM3P12X/jSkBkmoBPEG1Rdq/H2e6T4bQ/K9I9UyBXM3bZ1ybUqqwyi7vQTm6RCVai1P4dgMZ4VyX79dhiGhtwCIIQSrYdqi7sLO0kTw05j0zvdaT2IEATgdnj+OOSxtJrp069OL7spkRg8EEyn6emawnsrNjqJUwksvuz1tY=
-
 git:
   depth: 1
 
@@ -47,7 +38,15 @@ before_script:
 script:
   - for SCHEMA_UPDATE_FILE in $(ls utils/db-schema-update); do mysql -u root -e "use telegrambot_migrations; source utils/db-schema-update/${SCHEMA_UPDATE_FILE};"; done;
   - composer check-code
-  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov; else composer test; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.4" ]; then composer test-cov; else composer test; fi
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov-upload; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.4" ]; then composer test-cov-upload; fi
+
+notifications:
+  on_success: never
+  on_failure: always
+  webhooks:
+    on_success: always
+    urls:
+      secure: jW1RbSV8TXSL3qa2cNVhlxEGbImrQS5b8FO4xIe/Sg2S2zgXOxJZrui1d/gh6mM3dqjquvCdUkXOYYWL8Mrnbe07utUigwW4qxmsw2XDqobgUl9/yoqejLsUvccV2bbvxhSlVEnGkYox9yOd7pakBW0wLxG4Izw8ML3q+tJWYAypM/x3mRhXBMRuOhLm3cI9MwYogCq82FRBTvwTszuU74EHQE/LgQnlEwfOhBYa1sqD+HHG51H59+a0pBWiAgcROG/vPffNDzCfmgrcpU6Bw/eJjGJcDYNwjvBp90lYHYXofbWtwj0m6QvCuE7HFlG7UXXipEe+trViH9G7DpPwAf5nghEgJNholESq6DVhy+5fBFEiZfcpbhMJWzh807iL8r0Ekx3oUKe67wcOO55s/Hatln5DNq3vuVzfDhIjGkBE4Z44Il1M/n5zY5Rj/zMPpRFs9cI53wynKoFxI7gPNylqnkoztYsFv/yMf1W9moZvWqzQY0qeMLSUZNJ9TpxhETGkM3P12X/jSkBkmoBPEG1Rdq/H2e6T4bQ/K9I9UyBXM3bZ1ybUqqwyi7vQTm6RCVai1P4dgMZ4VyX79dhiGhtwCIIQSrYdqi7sLO0kTw05j0zvdaT2IEATgdnj+OOSxtJrp069OL7spkRg8EEyn6emawnsrNjqJUwksvuz1tY=

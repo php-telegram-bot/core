@@ -24,59 +24,59 @@ use Longman\TelegramBot\Exception\TelegramException;
  */
 class KeyboardButtonTest extends TestCase
 {
-    public function testKeyboardButtonNoTextFail()
+    public function testKeyboardButtonNoTextFail(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('You must add some text to the button!');
         new KeyboardButton([]);
     }
 
-    public function testKeyboardButtonTooManyParametersFail()
+    public function testKeyboardButtonTooManyParametersFail(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('You must use only one of these fields: request_contact, request_location, request_poll!');
         new KeyboardButton(['text' => 'message', 'request_contact' => true, 'request_location' => true]);
     }
 
-    public function testKeyboardButtonSuccess()
+    public function testKeyboardButtonSuccess(): void
     {
         new KeyboardButton(['text' => 'message']);
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
         new KeyboardButton(['text' => 'message', 'request_poll' => new KeyboardButtonPollType([])]);
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
-    public function testInlineKeyboardButtonCouldBe()
+    public function testInlineKeyboardButtonCouldBe(): void
     {
-        $this->assertTrue(KeyboardButton::couldBe(['text' => 'message']));
-        $this->assertFalse(KeyboardButton::couldBe(['no_text' => 'message']));
+        self::assertTrue(KeyboardButton::couldBe(['text' => 'message']));
+        self::assertFalse(KeyboardButton::couldBe(['no_text' => 'message']));
     }
 
-    public function testKeyboardButtonParameterSetting()
+    public function testKeyboardButtonParameterSetting(): void
     {
         $button = new KeyboardButton('message');
-        $this->assertSame('message', $button->getText());
-        $this->assertEmpty($button->getRequestContact());
-        $this->assertEmpty($button->getRequestLocation());
-        $this->assertEmpty($button->getRequestPoll());
+        self::assertSame('message', $button->getText());
+        self::assertEmpty($button->getRequestContact());
+        self::assertEmpty($button->getRequestLocation());
+        self::assertEmpty($button->getRequestPoll());
 
         $button->setText('new message');
-        $this->assertSame('new message', $button->getText());
+        self::assertSame('new message', $button->getText());
 
         $button->setRequestContact(true);
-        $this->assertTrue($button->getRequestContact());
-        $this->assertEmpty($button->getRequestLocation());
-        $this->assertEmpty($button->getRequestPoll());
+        self::assertTrue($button->getRequestContact());
+        self::assertEmpty($button->getRequestLocation());
+        self::assertEmpty($button->getRequestPoll());
 
         $button->setRequestLocation(true);
-        $this->assertEmpty($button->getRequestContact());
-        $this->assertTrue($button->getRequestLocation());
-        $this->assertEmpty($button->getRequestPoll());
+        self::assertEmpty($button->getRequestContact());
+        self::assertTrue($button->getRequestLocation());
+        self::assertEmpty($button->getRequestPoll());
 
         $button->setRequestPoll(new KeyboardButtonPollType([]));
-        $this->assertEmpty($button->getRequestContact());
-        $this->assertEmpty($button->getRequestLocation());
-        $this->assertInstanceOf(KeyboardButtonPollType::class, $button->getRequestPoll());
+        self::assertEmpty($button->getRequestContact());
+        self::assertEmpty($button->getRequestLocation());
+        self::assertInstanceOf(KeyboardButtonPollType::class, $button->getRequestPoll());
     }
 }

@@ -20,7 +20,7 @@ namespace Longman\TelegramBot\Tests\Unit;
  */
 class ChatTest extends TestCase
 {
-    public function testChatType()
+    public function testChatType(): void
     {
         $chat = TestHelpers::getFakeChatObject();
         self::assertEquals('private', $chat->getType());
@@ -35,7 +35,7 @@ class ChatTest extends TestCase
         self::assertEquals('channel', $chat->getType());
     }
 
-    public function testIsChatType()
+    public function testIsChatType(): void
     {
         $chat = TestHelpers::getFakeChatObject();
         self::assertTrue($chat->isPrivateChat());
@@ -50,7 +50,7 @@ class ChatTest extends TestCase
         self::assertTrue($chat->isChannel());
     }
 
-    public function testTryMention()
+    public function testTryMention(): void
     {
         // Username.
         $chat = TestHelpers::getFakeChatObject(['id' => 1, 'first_name' => 'John', 'last_name' => 'Taylor', 'username' => 'jtaylor']);

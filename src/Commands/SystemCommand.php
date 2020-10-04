@@ -38,7 +38,7 @@ abstract class SystemCommand extends Command
      *
      * @return ServerResponse
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         // System command, return empty ServerResponse by default
         return Request::emptyResponse();
@@ -51,7 +51,7 @@ abstract class SystemCommand extends Command
      * @throws TelegramException
      * @internal
      */
-    protected function executeActiveConversation()
+    protected function executeActiveConversation(): ?ServerResponse
     {
         $message = $this->getMessage();
         if ($message === null) {
@@ -82,7 +82,7 @@ abstract class SystemCommand extends Command
      * @throws TelegramException
      * @internal
      */
-    protected function executeDeprecatedSystemCommand()
+    protected function executeDeprecatedSystemCommand(): ?ServerResponse
     {
         $message = $this->getMessage();
         if ($message === null) {
