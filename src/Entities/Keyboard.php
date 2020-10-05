@@ -115,9 +115,9 @@ class Keyboard extends Entity
     /**
      * Create a new row in keyboard and add buttons.
      *
-     * @return $this
+     * @return Keyboard
      */
-    public function addRow(): self
+    public function addRow(): Keyboard
     {
         if (($new_row = $this->parseRow(func_get_args())) !== null) {
             $this->{$this->getKeyboardType()}[] = $new_row;

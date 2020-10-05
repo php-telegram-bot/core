@@ -103,12 +103,12 @@ abstract class Entity
     /**
      * Get a property from the current Entity
      *
-     * @param mixed $property
-     * @param mixed $default
+     * @param string $property
+     * @param mixed  $default
      *
      * @return mixed
      */
-    public function getProperty($property, $default = null)
+    public function getProperty(string $property, $default = null)
     {
         return $this->$property ?? $default;
     }

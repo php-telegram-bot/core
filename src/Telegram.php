@@ -53,9 +53,9 @@ class Telegram
     /**
      * Telegram Bot id
      *
-     * @var string
+     * @var int
      */
-    protected $bot_id = '';
+    protected $bot_id = 0;
 
     /**
      * Raw request data (json) for webhook methods
@@ -191,7 +191,7 @@ class Telegram
         if (!isset($matches[1])) {
             throw new TelegramException('Invalid API KEY defined!');
         }
-        $this->bot_id  = $matches[1];
+        $this->bot_id  = (int) $matches[1];
         $this->api_key = $api_key;
 
         $this->bot_username = $bot_username;
@@ -307,7 +307,7 @@ class Telegram
             } else {
                 $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands';
             }
-            $command_class = $command_namespace . '\\' . $this->ucfirstUnicode($command) . 'Command';
+            $command_class = $command_namespace . '\\' . $this->ucFirstUnicode($command) . 'Command';
 
             if (class_exists($command_class)) {
                 $command_obj = new $command_class($this, $this->update);
@@ -499,7 +499,7 @@ class Telegram
      */
     protected function getCommandFromType(string $type): string
     {
-        return $this->ucfirstUnicode(str_replace('_', '', $type));
+        return $this->ucFirstUnicode(str_replace('_', '', $type));
     }
 
     /**
@@ -615,7 +615,7 @@ class Telegram
      */
     protected function sanitizeCommand(string $command): string
     {
-        return str_replace(' ', '', $this->ucwordsUnicode(str_replace('_', ' ', $command)));
+        return str_replace(' ', '', $this->ucWordsUnicode(str_replace('_', ' ', $command)));
     }
 
     /**
@@ -858,9 +858,9 @@ class Telegram
     /**
      * Get Bot Id
      *
-     * @return string
+     * @return int
      */
-    public function getBotId(): string
+    public function getBotId(): int
     {
         return $this->bot_id;
     }
@@ -940,7 +940,7 @@ class Telegram
      *
      * @return string
      */
-    protected function ucwordsUnicode(string $str, string $encoding = 'UTF-8'): string
+    protected function ucWordsUnicode(string $str, string $encoding = 'UTF-8'): string
     {
         return mb_convert_case($str, MB_CASE_TITLE, $encoding);
     }
@@ -953,7 +953,7 @@ class Telegram
      *
      * @return string
      */
-    protected function ucfirstUnicode(string $str, string $encoding = 'UTF-8'): string
+    protected function ucFirstUnicode(string $str, string $encoding = 'UTF-8'): string
     {
         return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding)
             . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
@@ -1026,8 +1026,11 @@ class Telegram
             ]);
         };
 
-        $this->update           = $newUpdate();   // Required for isAdmin() check inside getCommandObject()
-        $this->commands_objects = $this->getCommandsList();       // Load up-to-date commands list
+        // Required for isAdmin() check inside getCommandObject()
+        $this->update = $newUpdate();
+
+        // Load up-to-date commands list
+        $this->commands_objects = $this->getCommandsList();
 
         foreach ($commands as $command) {
             $this->update = $newUpdate($command);

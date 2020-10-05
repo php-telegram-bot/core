@@ -30,8 +30,8 @@ class ConversationDB extends DB
     /**
      * Select a conversation from the DB
      *
-     * @param int   $user_id
-     * @param int   $chat_id
+     * @param int $user_id
+     * @param int $chat_id
      * @param int $limit
      *
      * @return array|bool
@@ -77,8 +77,8 @@ class ConversationDB extends DB
     /**
      * Insert the conversation in the database
      *
-     * @param int $user_id
-     * @param int $chat_id
+     * @param int    $user_id
+     * @param int    $chat_id
      * @param string $command
      *
      * @return bool

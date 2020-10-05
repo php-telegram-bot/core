@@ -240,7 +240,7 @@ abstract class Command
      *
      * @return mixed
      */
-    public function getConfig($name = null, $default = null)
+    public function getConfig(?string $name = null, $default = null)
     {
         if ($name === null) {
             return $this->config;
