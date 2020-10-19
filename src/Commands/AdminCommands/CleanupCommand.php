@@ -161,53 +161,58 @@ class CleanupCommand extends AdminCommand
         if (in_array('telegram_update', $tables_to_clean, true)) {
             $queries[] = sprintf(
                 'DELETE FROM `%3$s`
-                WHERE `id` != \'%1$s\'
-                  AND `chat_id` NOT IN (
-                    SELECT `id`
-                    FROM `%4$s`
-                    WHERE `%3$s`.`chat_id` = `id`
-                    AND `updated_at` < \'%2$s\'
-                  )
-                  AND (
-                    `message_id` IS NOT NULL
-                    AND `message_id` IN (
-                      SELECT `id`
-                      FROM `%5$s`
-                      WHERE `date` < \'%2$s\'
-                    )
-                  )
-                  OR (
-                    `edited_message_id` IS NOT NULL
-                    AND `edited_message_id` IN (
-                      SELECT `id`
-                      FROM `%6$s`
-                      WHERE `edit_date` < \'%2$s\'
-                    )
-                  )
-                  OR (
-                    `inline_query_id` IS NOT NULL
-                    AND `inline_query_id` IN (
-                      SELECT `id`
-                      FROM `%7$s`
-                      WHERE `created_at` < \'%2$s\'
-                    )
-                  )
-                  OR (
-                    `chosen_inline_result_id` IS NOT NULL
-                    AND `chosen_inline_result_id` IN (
-                      SELECT `id`
-                      FROM `%8$s`
-                      WHERE `created_at` < \'%2$s\'
-                    )
-                  )
-                  OR (
-                    `callback_query_id` IS NOT NULL
-                    AND `callback_query_id` IN (
-                      SELECT `id`
-                      FROM `%9$s`
-                      WHERE `created_at` < \'%2$s\'
-                    )
-                  )
+                WHERE id IN (
+                    SELECT id FROM (
+                        SELECT id FROM `%3$s`
+                        WHERE `id` != \'%1$s\'
+                        AND `chat_id` NOT IN (
+                          SELECT `id`
+                          FROM `%4$s`
+                          WHERE `%3$s`.`chat_id` = `id`
+                          AND `updated_at` < \'%2$s\'
+                        )
+                        AND (
+                          `message_id` IS NOT NULL
+                          AND `message_id` IN (
+                            SELECT `id`
+                            FROM `%5$s`
+                            WHERE `date` < \'%2$s\'
+                          )
+                        )
+                        OR (
+                          `edited_message_id` IS NOT NULL
+                          AND `edited_message_id` IN (
+                            SELECT `id`
+                            FROM `%6$s`
+                            WHERE `edit_date` < \'%2$s\'
+                          )
+                        )
+                        OR (
+                          `inline_query_id` IS NOT NULL
+                          AND `inline_query_id` IN (
+                            SELECT `id`
+                            FROM `%7$s`
+                            WHERE `created_at` < \'%2$s\'
+                          )
+                        )
+                        OR (
+                          `chosen_inline_result_id` IS NOT NULL
+                          AND `chosen_inline_result_id` IN (
+                            SELECT `id`
+                            FROM `%8$s`
+                            WHERE `created_at` < \'%2$s\'
+                          )
+                        )
+                        OR (
+                          `callback_query_id` IS NOT NULL
+                          AND `callback_query_id` IN (
+                            SELECT `id`
+                            FROM `%9$s`
+                            WHERE `created_at` < \'%2$s\'
+                          )
+                        )
+                    ) a
+                )
             ',
                 $this->getUpdate()->getUpdateId(),
                 $clean_older_than['telegram_update'],
