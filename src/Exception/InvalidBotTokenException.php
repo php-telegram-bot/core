@@ -21,6 +21,6 @@ class InvalidBotTokenException extends TelegramException
      */
     public function __construct()
     {
-        parent::__construct("Invalid bot token!");
+        parent::__construct('Invalid bot token!');
     }
 }
