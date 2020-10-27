@@ -95,14 +95,14 @@ abstract class Command
     /**
      * If this command is enabled
      *
-     * @var boolean
+     * @var bool
      */
     protected $enabled = true;
 
     /**
      * If this command needs mysql
      *
-     * @var boolean
+     * @var bool
      */
     protected $need_mysql = false;
 

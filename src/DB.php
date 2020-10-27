@@ -1251,7 +1251,7 @@ class DB
     /**
      * Get Telegram API request count for current chat / message
      *
-     * @param integer $chat_id
+     * @param int $chat_id
      * @param string  $inline_message_id
      *
      * @return array Array containing TOTAL and CURRENT fields or false on invalid arguments

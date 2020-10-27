@@ -152,7 +152,7 @@ class Telegram
      * Last update ID
      * Only used when running getUpdates without a database
      *
-     * @var integer
+     * @var int
      */
     protected $last_update_id;
 
@@ -630,7 +630,7 @@ class Telegram
     /**
      * Enable a single Admin account
      *
-     * @param integer $admin_id Single admin id
+     * @param int $admin_id Single admin id
      *
      * @return Telegram
      */
@@ -712,11 +712,7 @@ class Telegram
      */
     public function isDbEnabled()
     {
-        if ($this->mysql_enabled) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->mysql_enabled;
     }
 
     /**

@@ -121,7 +121,7 @@ class Request
     /**
      * Request limiter
      *
-     * @var boolean
+     * @var bool
      */
     private static $limiter_enabled;
 
@@ -517,7 +517,7 @@ class Request
      *
      * @param File $file
      *
-     * @return boolean
+     * @return bool
      * @throws TelegramException
      */
     public static function downloadFile(File $file)
@@ -767,7 +767,7 @@ class Request
     /**
      * Enable request limiter
      *
-     * @param boolean $enable
+     * @param bool $enable
      * @param array   $options
      *
      * @throws TelegramException
