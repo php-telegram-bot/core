@@ -102,7 +102,7 @@ class TelegramLog
             $stream_contents = stream_get_contents(self::$debug_log_temp_stream_handle);
 
             if (self::$remove_bot_token) {
-                $stream_contents = preg_replace('/\/bot(\d+)\:[\w\-]+\//', '/botBOT_TOKEN_REMOVED/', $stream_contents);
+                $stream_contents = preg_replace('/\/bot(\d+):[\w\-]+\//', '/botBOT_TOKEN_REMOVED/', $stream_contents);
             }
 
             self::debug(sprintf($message, $stream_contents));

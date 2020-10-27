@@ -187,7 +187,7 @@ class Telegram
         if (empty($api_key)) {
             throw new TelegramException('API KEY not defined!');
         }
-        preg_match('/(\d+)\:[\w\-]+/', $api_key, $matches);
+        preg_match('/(\d+):[\w\-]+/', $api_key, $matches);
         if (!isset($matches[1])) {
             throw new TelegramException('Invalid API KEY defined!');
         }
