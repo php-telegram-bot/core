@@ -11,6 +11,7 @@
 
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
+use Exception;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -114,7 +115,7 @@ class DebugCommand extends AdminCommand
                     $webhook_info_result_str
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $debug_info[] = $webhook_info_title . sprintf(' `Failed to get webhook info! (%s)`', $e->getMessage());
         }
 

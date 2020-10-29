@@ -11,9 +11,6 @@
 
 namespace Longman\TelegramBot\Entities;
 
-/**
- * {@inheritdoc}
- */
 class EditedChannelPost extends Message
 {
 

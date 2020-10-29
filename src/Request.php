@@ -421,6 +421,7 @@ class Request
         $was_array = is_array($item);
         $was_array || $item = [$item];
 
+        /** @var InputMedia|null $media_item */
         foreach ($item as $media_item) {
             if (!($media_item instanceof InputMedia)) {
                 continue;
