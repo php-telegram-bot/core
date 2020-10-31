@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
+- Speed up clean query (#1139)
 ### Deprecated
 ### Removed
 ### Fixed
