@@ -20,10 +20,10 @@ class TestCase extends BaseTestCase
      */
     public static $dummy_api_key = '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11';
 
-    protected function skip64BitTest()
+    protected function skip64BitTest(): void
     {
         if (PHP_INT_SIZE === 4) {
-            $this->markTestSkipped(
+            self::markTestSkipped(
                 'Skipping test that can run only on a 64-bit build of PHP.'
             );
         }

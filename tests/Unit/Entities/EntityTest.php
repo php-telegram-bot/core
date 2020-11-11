@@ -22,7 +22,7 @@ use Longman\TelegramBot\Entities\Entity;
  */
 class EntityTest extends TestCase
 {
-    public function testEscapeMarkdown()
+    public function testEscapeMarkdown(): void
     {
         // Make sure all characters that need escaping are escaped.
 

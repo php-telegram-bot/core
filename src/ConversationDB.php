@@ -20,7 +20,7 @@ class ConversationDB extends DB
     /**
      * Initialize conversation table
      */
-    public static function initializeConversation()
+    public static function initializeConversation(): void
     {
         if (!defined('TB_CONVERSATION')) {
             define('TB_CONVERSATION', self::$table_prefix . 'conversation');
@@ -30,14 +30,14 @@ class ConversationDB extends DB
     /**
      * Select a conversation from the DB
      *
-     * @param string   $user_id
-     * @param string   $chat_id
-     * @param int|null $limit
+     * @param int $user_id
+     * @param int $chat_id
+     * @param int $limit
      *
      * @return array|bool
      * @throws TelegramException
      */
-    public static function selectConversation($user_id, $chat_id, $limit = null)
+    public static function selectConversation(int $user_id, int $chat_id, $limit = 0)
     {
         if (!self::isDbConnected()) {
             return false;
@@ -52,7 +52,7 @@ class ConversationDB extends DB
                 AND `user_id` = :user_id
             ';
 
-            if ($limit !== null) {
+            if ($limit > 0) {
                 $sql .= ' LIMIT :limit';
             }
 
@@ -62,7 +62,7 @@ class ConversationDB extends DB
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':chat_id', $chat_id);
 
-            if ($limit !== null) {
+            if ($limit > 0) {
                 $sth->bindValue(':limit', $limit, PDO::PARAM_INT);
             }
 
@@ -77,14 +77,14 @@ class ConversationDB extends DB
     /**
      * Insert the conversation in the database
      *
-     * @param string $user_id
-     * @param string $chat_id
+     * @param int    $user_id
+     * @param int    $chat_id
      * @param string $command
      *
      * @return bool
      * @throws TelegramException
      */
-    public static function insertConversation($user_id, $chat_id, $command)
+    public static function insertConversation(int $user_id, int $chat_id, string $command): bool
     {
         if (!self::isDbConnected()) {
             return false;
@@ -122,7 +122,7 @@ class ConversationDB extends DB
      * @return bool
      * @throws TelegramException
      */
-    public static function updateConversation(array $fields_values, array $where_fields_values)
+    public static function updateConversation(array $fields_values, array $where_fields_values): bool
     {
         // Auto update the update_at field.
         $fields_values['updated_at'] = self::getTimestamp();

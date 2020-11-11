@@ -14,6 +14,7 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -60,7 +61,7 @@ class SendtochannelCommand extends AdminCommand
      * @return ServerResponse|mixed
      * @throws TelegramException
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
@@ -281,7 +282,7 @@ class SendtochannelCommand extends AdminCommand
      * @return ServerResponse
      * @throws TelegramException
      */
-    protected function sendBack(Message $message, array $data)
+    protected function sendBack(Message $message, array $data): ServerResponse
     {
         $type = $message->getType();
         in_array($type, ['command', 'text'], true) && $type = 'message';
@@ -321,7 +322,7 @@ class SendtochannelCommand extends AdminCommand
      * @return string
      * @throws TelegramException
      */
-    protected function publish(Message $message, $channel_id, $caption = null)
+    protected function publish(Message $message, $channel_id, $caption = null): string
     {
         $res = $this->sendBack($message, [
             'chat_id' => $channel_id,
@@ -331,7 +332,7 @@ class SendtochannelCommand extends AdminCommand
         if ($res->isOk()) {
             /** @var Chat $channel */
             $channel          = $res->getResult()->getChat();
-            $escaped_username = $channel->getUsername() ? $this->getMessage()->escapeMarkdown($channel->getUsername()) : '';
+            $escaped_username = $channel->getUsername() ? Entity::escapeMarkdown($channel->getUsername()) : '';
 
             $response = sprintf(
                 'Message successfully sent to *%s*%s',
@@ -339,7 +340,7 @@ class SendtochannelCommand extends AdminCommand
                 $escaped_username ? " (@{$escaped_username})" : ''
             );
         } else {
-            $escaped_username = $this->getMessage()->escapeMarkdown($channel_id);
+            $escaped_username = Entity::escapeMarkdown($channel_id);
             $response         = "Message not sent to *{$escaped_username}*" . PHP_EOL .
                                 '- Does the channel exist?' . PHP_EOL .
                                 '- Is the bot an admin of the channel?';
@@ -356,7 +357,7 @@ class SendtochannelCommand extends AdminCommand
      * @return mixed
      * @throws TelegramException
      */
-    public function executeNoDb()
+    public function executeNoDb(): ServerResponse
     {
         $message = $this->getMessage();
         $text    = trim($message->getText(true));

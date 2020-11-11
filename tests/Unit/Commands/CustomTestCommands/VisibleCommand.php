@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 /**
@@ -49,7 +50,7 @@ class VisibleCommand extends UserCommand
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         return Request::emptyResponse();
     }

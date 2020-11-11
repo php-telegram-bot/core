@@ -23,7 +23,7 @@ class UserProfilePhotos extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'photos' => PhotoSize::class,
@@ -37,7 +37,7 @@ class UserProfilePhotos extends Entity
      *
      * @return PhotoSize[][]
      */
-    public function getPhotos()
+    public function getPhotos(): array
     {
         $all_photos = [];
 

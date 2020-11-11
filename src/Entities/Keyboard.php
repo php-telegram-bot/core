@@ -30,12 +30,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  */
 class Keyboard extends Entity
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($data = [])
+    public function __construct()
     {
-        $data = call_user_func_array([$this, 'createFromParams'], func_get_args());
+        $data = $this->createFromParams(...func_get_args());
         parent::__construct($data);
 
         // Remove any empty buttons.
@@ -47,7 +44,7 @@ class Keyboard extends Entity
      *
      * @return bool
      */
-    public function isInlineKeyboard()
+    public function isInlineKeyboard(): bool
     {
         return $this instanceof InlineKeyboard;
     }
@@ -57,7 +54,7 @@ class Keyboard extends Entity
      *
      * @return string
      */
-    public function getKeyboardButtonClass()
+    public function getKeyboardButtonClass(): string
     {
         return $this->isInlineKeyboard() ? InlineKeyboardButton::class : KeyboardButton::class;
     }
@@ -67,7 +64,7 @@ class Keyboard extends Entity
      *
      * @return string
      */
-    public function getKeyboardType()
+    public function getKeyboardType(): string
     {
         return $this->isInlineKeyboard() ? 'inline_keyboard' : 'keyboard';
     }
@@ -77,7 +74,7 @@ class Keyboard extends Entity
      *
      * @return array
      */
-    protected function createFromParams()
+    protected function createFromParams(): array
     {
         $keyboard_type = $this->getKeyboardType();
 
@@ -118,9 +115,9 @@ class Keyboard extends Entity
     /**
      * Create a new row in keyboard and add buttons.
      *
-     * @return $this
+     * @return Keyboard
      */
-    public function addRow()
+    public function addRow(): Keyboard
     {
         if (($new_row = $this->parseRow(func_get_args())) !== null) {
             $this->{$this->getKeyboardType()}[] = $new_row;
@@ -132,11 +129,11 @@ class Keyboard extends Entity
     /**
      * Parse a given row to the correct array format.
      *
-     * @param array $row
+     * @param array|string $row
      *
-     * @return array
+     * @return array|null
      */
-    protected function parseRow($row)
+    protected function parseRow($row): ?array
     {
         if (!is_array($row)) {
             return null;
@@ -159,7 +156,7 @@ class Keyboard extends Entity
      *
      * @return KeyboardButton|null
      */
-    protected function parseButton($button)
+    protected function parseButton($button): ?KeyboardButton
     {
         $button_class = $this->getKeyboardButtonClass();
 
@@ -177,7 +174,7 @@ class Keyboard extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function validate()
+    protected function validate(): void
     {
         $keyboard_type = $this->getKeyboardType();
         $keyboard      = $this->getProperty($keyboard_type);
@@ -204,7 +201,7 @@ class Keyboard extends Entity
      *
      * @return Keyboard
      */
-    public static function remove(array $data = [])
+    public static function remove(array $data = []): Keyboard
     {
         return new static(array_merge(['keyboard' => [], 'remove_keyboard' => true, 'selective' => false], $data));
     }
@@ -218,7 +215,7 @@ class Keyboard extends Entity
      *
      * @return Keyboard
      */
-    public static function forceReply(array $data = [])
+    public static function forceReply(array $data = []): Keyboard
     {
         return new static(array_merge(['keyboard' => [], 'force_reply' => true, 'selective' => false], $data));
     }

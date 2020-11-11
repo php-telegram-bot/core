@@ -36,7 +36,7 @@ class EncryptedPassportElement extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'files'        => [PassportFile::class],

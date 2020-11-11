@@ -33,7 +33,7 @@ class SuccessfulPayment extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'order_info' => OrderInfo::class,

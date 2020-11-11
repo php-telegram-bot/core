@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
 
 /**
  * Inline query command
@@ -38,7 +39,7 @@ class InlinequeryCommand extends SystemCommand
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         //$inline_query = $this->getInlineQuery();
         //$user_id      = $inline_query->getFrom()->getId();

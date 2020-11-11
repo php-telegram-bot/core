@@ -64,7 +64,7 @@ class Conversation
     protected $command;
 
     /**
-     * Conversation contructor to initialize a new conversation
+     * Conversation constructor to initialize a new conversation
      *
      * @param int    $user_id
      * @param int    $chat_id
@@ -72,14 +72,14 @@ class Conversation
      *
      * @throws TelegramException
      */
-    public function __construct($user_id, $chat_id, $command = null)
+    public function __construct(int $user_id, int $chat_id, string $command = '')
     {
         $this->user_id = $user_id;
         $this->chat_id = $chat_id;
         $this->command = $command;
 
         //Try to load an existing conversation if possible
-        if (!$this->load() && $command !== null) {
+        if (!$this->load() && $command !== '') {
             //A new conversation start
             $this->start();
         }
@@ -90,7 +90,7 @@ class Conversation
      *
      * @return bool Always return true, to allow this method in an if statement.
      */
-    protected function clear()
+    protected function clear(): bool
     {
         $this->conversation    = null;
         $this->protected_notes = null;
@@ -105,7 +105,7 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    protected function load()
+    protected function load(): bool
     {
         //Select an active conversation
         $conversation = ConversationDB::selectConversation($this->user_id, $this->chat_id, 1);
@@ -134,9 +134,9 @@ class Conversation
      *
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
-        return ($this->conversation !== null);
+        return $this->conversation !== null;
     }
 
     /**
@@ -145,7 +145,7 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    protected function start()
+    protected function start(): bool
     {
         if (
             $this->command
@@ -170,9 +170,9 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    public function stop()
+    public function stop(): bool
     {
-        return ($this->updateStatus('stopped') && $this->clear());
+        return $this->updateStatus('stopped') && $this->clear();
     }
 
     /**
@@ -181,9 +181,9 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    public function cancel()
+    public function cancel(): bool
     {
-        return ($this->updateStatus('cancelled') && $this->clear());
+        return $this->updateStatus('cancelled') && $this->clear();
     }
 
     /**
@@ -194,7 +194,7 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    protected function updateStatus($status)
+    protected function updateStatus(string $status): bool
     {
         if ($this->exists()) {
             $fields = ['status' => $status];
@@ -218,7 +218,7 @@ class Conversation
      * @return bool
      * @throws TelegramException
      */
-    public function update()
+    public function update(): bool
     {
         if ($this->exists()) {
             $fields = ['notes' => json_encode($this->notes, JSON_UNESCAPED_UNICODE)];
@@ -235,9 +235,9 @@ class Conversation
     /**
      * Retrieve the command to execute from the conversation
      *
-     * @return string|null
+     * @return string
      */
-    public function getCommand()
+    public function getCommand(): string
     {
         return $this->command;
     }
@@ -247,7 +247,7 @@ class Conversation
      *
      * @return int
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -257,7 +257,7 @@ class Conversation
      *
      * @return int
      */
-    public function getChatId()
+    public function getChatId(): int
     {
         return $this->chat_id;
     }

@@ -30,7 +30,7 @@ class InlineQuery extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'from'     => User::class,
@@ -46,7 +46,7 @@ class InlineQuery extends Entity
      *
      * @return ServerResponse
      */
-    public function answer(array $results, array $data = [])
+    public function answer(array $results, array $data = []): ServerResponse
     {
         return Request::answerInlineQuery(array_merge([
             'inline_query_id' => $this->getId(),

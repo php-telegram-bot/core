@@ -24,7 +24,7 @@ use Longman\TelegramBot\Exception\TelegramException;
  */
 class InlineKeyboardTest extends TestCase
 {
-    private function getRandomButton($text)
+    private function getRandomButton($text): InlineKeyboardButton
     {
         $random_params = ['url', 'callback_data', 'switch_inline_query', 'switch_inline_query_current_chat', 'pay'];
         $param         = $random_params[array_rand($random_params, 1)];
@@ -36,21 +36,21 @@ class InlineKeyboardTest extends TestCase
         return new InlineKeyboardButton($data);
     }
 
-    public function testInlineKeyboardDataMalformedField()
+    public function testInlineKeyboardDataMalformedField(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('inline_keyboard field is not an array!');
         new InlineKeyboard(['inline_keyboard' => 'wrong']);
     }
 
-    public function testInlineKeyboardDataMalformedSubfield()
+    public function testInlineKeyboardDataMalformedSubfield(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('inline_keyboard subfield is not an array!');
         new InlineKeyboard(['inline_keyboard' => ['wrong']]);
     }
 
-    public function testInlineKeyboardSingleButtonSingleRow()
+    public function testInlineKeyboardSingleButtonSingleRow(): void
     {
         $inline_keyboard = (new InlineKeyboard(
             $this->getRandomButton('Button Text 1')
@@ -63,7 +63,7 @@ class InlineKeyboardTest extends TestCase
         self::assertSame('Button Text 2', $inline_keyboard[0][0]->getText());
     }
 
-    public function testInlineKeyboardSingleButtonMultipleRows()
+    public function testInlineKeyboardSingleButtonMultipleRows(): void
     {
         $keyboard = (new InlineKeyboard(
             $this->getRandomButton('Button Text 1'),
@@ -84,7 +84,7 @@ class InlineKeyboardTest extends TestCase
         self::assertSame('Button Text 6', $keyboard[2][0]->getText());
     }
 
-    public function testInlineKeyboardMultipleButtonsSingleRow()
+    public function testInlineKeyboardMultipleButtonsSingleRow(): void
     {
         $keyboard = (new InlineKeyboard([
             $this->getRandomButton('Button Text 1'),
@@ -94,7 +94,7 @@ class InlineKeyboardTest extends TestCase
         self::assertSame('Button Text 2', $keyboard[0][1]->getText());
     }
 
-    public function testInlineKeyboardMultipleButtonsMultipleRows()
+    public function testInlineKeyboardMultipleButtonsMultipleRows(): void
     {
         $keyboard = (new InlineKeyboard(
             [
@@ -113,7 +113,7 @@ class InlineKeyboardTest extends TestCase
         self::assertSame('Button Text 4', $keyboard[1][1]->getText());
     }
 
-    public function testInlineKeyboardAddRows()
+    public function testInlineKeyboardAddRows(): void
     {
         $keyboard_obj = new InlineKeyboard([]);
 

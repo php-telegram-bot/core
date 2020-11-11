@@ -32,14 +32,14 @@ class ServerResponse extends Entity
      * @param array  $data
      * @param string $bot_username
      */
-    public function __construct(array $data, $bot_username)
+    public function __construct(array $data, string $bot_username = '')
     {
         // Make sure we don't double-save the raw_data
         unset($data['raw_data']);
         $data['raw_data'] = $data;
 
-        $is_ok  = isset($data['ok']) ? (bool) $data['ok'] : false;
-        $result = isset($data['result']) ? $data['result'] : null;
+        $is_ok  = (bool) ($data['ok'] ?? false);
+        $result = $data['result'] ?? null;
 
         if ($is_ok && is_array($result)) {
             if ($this->isAssoc($result)) {
@@ -61,7 +61,7 @@ class ServerResponse extends Entity
      *
      * @return bool
      */
-    protected function isAssoc(array $array)
+    protected function isAssoc(array $array): bool
     {
         return count(array_filter(array_keys($array), 'is_string')) > 0;
     }
@@ -71,7 +71,7 @@ class ServerResponse extends Entity
      *
      * @return bool
      */
-    public function isOk()
+    public function isOk(): bool
     {
         return (bool) $this->getOk();
     }
@@ -106,7 +106,7 @@ class ServerResponse extends Entity
      *
      * @return Chat|ChatMember|File|Message|User|UserProfilePhotos|WebhookInfo
      */
-    private function createResultObject(array $result, $bot_username)
+    private function createResultObject(array $result, string $bot_username)
     {
         $action = Request::getCurrentAction();
 
@@ -136,7 +136,7 @@ class ServerResponse extends Entity
      *
      * @return BotCommand[]|ChatMember[]|GameHighScore[]|Message[]|Update[]
      */
-    private function createResultObjects(array $result, $bot_username)
+    private function createResultObjects(array $result, string $bot_username): array
     {
         $results = [];
         $action  = Request::getCurrentAction();

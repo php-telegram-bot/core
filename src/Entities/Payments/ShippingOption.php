@@ -29,7 +29,7 @@ class ShippingOption extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'prices' => [LabeledPrice::class],

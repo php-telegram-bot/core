@@ -59,7 +59,7 @@ class TelegramLogTest extends TestCase
         }
     }
 
-    public function testNullLogger()
+    public function testNullLogger(): void
     {
         TelegramLog::initialize(null, null);
 
@@ -68,49 +68,49 @@ class TelegramLogTest extends TestCase
         TelegramLog::update('my update log');
 
         foreach (self::$logfiles as $file) {
-            $this->assertFileNotExists($file);
+            self::assertFileNotExists($file);
         }
     }
 
-    public function testDebugStream()
+    public function testDebugStream(): void
     {
         $file = self::$logfiles['debug'];
 
-        $this->assertFileNotExists($file);
+        self::assertFileNotExists($file);
         TelegramLog::debug('my debug log');
         TelegramLog::debug('my {place} {holder} debug log', ['place' => 'custom', 'holder' => 'placeholder']);
 
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
         $debug_log = file_get_contents($file);
-        $this->assertStringContainsString('bot_log.DEBUG: my debug log', $debug_log);
-        $this->assertStringContainsString('bot_log.DEBUG: my custom placeholder debug log', $debug_log);
+        self::assertStringContainsString('bot_log.DEBUG: my debug log', $debug_log);
+        self::assertStringContainsString('bot_log.DEBUG: my custom placeholder debug log', $debug_log);
     }
 
-    public function testErrorStream()
+    public function testErrorStream(): void
     {
         $file = self::$logfiles['error'];
 
-        $this->assertFileNotExists($file);
+        self::assertFileNotExists($file);
         TelegramLog::error('my error log');
         TelegramLog::error('my {place} {holder} error log', ['place' => 'custom', 'holder' => 'placeholder']);
 
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
         $error_log = file_get_contents($file);
-        $this->assertStringContainsString('bot_log.ERROR: my error log', $error_log);
-        $this->assertStringContainsString('bot_log.ERROR: my custom placeholder error log', $error_log);
+        self::assertStringContainsString('bot_log.ERROR: my error log', $error_log);
+        self::assertStringContainsString('bot_log.ERROR: my custom placeholder error log', $error_log);
     }
 
-    public function testUpdateStream()
+    public function testUpdateStream(): void
     {
         $file = self::$logfiles['update'];
 
-        $this->assertFileNotExists($file);
+        self::assertFileNotExists($file);
         TelegramLog::update('my update log');
         TelegramLog::update('my {place} {holder} update log', ['place' => 'custom', 'holder' => 'placeholder']);
 
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
         $update_log = file_get_contents($file);
-        $this->assertStringContainsString('my update log', $update_log);
-        $this->assertStringContainsString('my custom placeholder update log', $update_log);
+        self::assertStringContainsString('my update log', $update_log);
+        self::assertStringContainsString('my custom placeholder update log', $update_log);
     }
 }

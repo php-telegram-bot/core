@@ -27,7 +27,7 @@ class ChosenInlineResult extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'from'     => User::class,

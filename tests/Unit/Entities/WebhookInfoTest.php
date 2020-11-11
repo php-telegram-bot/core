@@ -40,91 +40,91 @@ class WebhookInfoTest extends TestCase
         ];
     }
 
-    public function testBaseStageWebhookInfo()
+    public function testBaseStageWebhookInfo(): void
     {
         $webhook = new WebhookInfo($this->data);
-        $this->assertInstanceOf(WebhookInfo::class, $webhook);
+        self::assertInstanceOf(WebhookInfo::class, $webhook);
     }
 
-    public function testGetUrl()
+    public function testGetUrl(): void
     {
         $webhook = new WebhookInfo($this->data);
         $url     = $webhook->getUrl();
-        $this->assertEquals($this->data['url'], $url);
+        self::assertEquals($this->data['url'], $url);
     }
 
-    public function testGetHasCustomCertificate()
+    public function testGetHasCustomCertificate(): void
     {
         $webhook            = new WebhookInfo($this->data);
         $custom_certificate = $webhook->getHasCustomCertificate();
-        $this->assertIsBool($custom_certificate);
-        $this->assertEquals($this->data['has_custom_certificate'], $custom_certificate);
+        self::assertIsBool($custom_certificate);
+        self::assertEquals($this->data['has_custom_certificate'], $custom_certificate);
     }
 
-    public function testGetPendingUpdateCount()
+    public function testGetPendingUpdateCount(): void
     {
         $webhook      = new WebhookInfo($this->data);
         $update_count = $webhook->getPendingUpdateCount();
-        $this->assertIsInt($update_count);
-        $this->assertEquals($this->data['pending_update_count'], $update_count);
+        self::assertIsInt($update_count);
+        self::assertEquals($this->data['pending_update_count'], $update_count);
     }
 
-    public function testGetLastErrorDate()
+    public function testGetLastErrorDate(): void
     {
         $webhook    = new WebhookInfo($this->data);
         $error_date = $webhook->getLastErrorDate();
-        $this->assertIsInt($error_date);
-        $this->assertEquals($this->data['last_error_date'], $error_date);
+        self::assertIsInt($error_date);
+        self::assertEquals($this->data['last_error_date'], $error_date);
     }
 
-    public function testGetLastErrorMessage()
+    public function testGetLastErrorMessage(): void
     {
         $webhook   = new WebhookInfo($this->data);
         $error_msg = $webhook->getLastErrorMessage();
-        $this->assertIsString($error_msg);
-        $this->assertEquals($this->data['last_error_message'], $error_msg);
+        self::assertIsString($error_msg);
+        self::assertEquals($this->data['last_error_message'], $error_msg);
     }
 
-    public function testGetMaxConnections()
+    public function testGetMaxConnections(): void
     {
         $webhook         = new WebhookInfo($this->data);
         $max_connections = $webhook->getMaxConnections();
-        $this->assertIsInt($max_connections);
-        $this->assertEquals($this->data['max_connections'], $max_connections);
+        self::assertIsInt($max_connections);
+        self::assertEquals($this->data['max_connections'], $max_connections);
     }
 
-    public function testGetAllowedUpdates()
+    public function testGetAllowedUpdates(): void
     {
         $webhook         = new WebhookInfo($this->data);
         $allowed_updates = $webhook->getAllowedUpdates();
-        $this->assertIsArray($allowed_updates);
-        $this->assertEquals($this->data['allowed_updates'], $allowed_updates);
+        self::assertIsArray($allowed_updates);
+        self::assertEquals($this->data['allowed_updates'], $allowed_updates);
     }
 
-    public function testGetDataWithoutParams()
+    public function testGetDataWithoutParams(): void
     {
         // Make a copy to not risk failed tests if not run in proper order.
         $data = $this->data;
 
         unset($data['url']);
-        $this->assertNull((new WebhookInfo($data))->getUrl());
+        self::assertNull((new WebhookInfo($data))->getUrl());
 
         unset($data['has_custom_certificate']);
-        $this->assertNull((new WebhookInfo($data))->getHasCustomCertificate());
+        self::assertNull((new WebhookInfo($data))->getHasCustomCertificate());
 
         unset($data['pending_update_count']);
-        $this->assertNull((new WebhookInfo($data))->getPendingUpdateCount());
+        self::assertNull((new WebhookInfo($data))->getPendingUpdateCount());
 
         unset($data['last_error_date']);
-        $this->assertNull((new WebhookInfo($data))->getLastErrorDate());
+        self::assertNull((new WebhookInfo($data))->getLastErrorDate());
 
         unset($data['last_error_message']);
-        $this->assertNull((new WebhookInfo($data))->getLastErrorMessage());
+        self::assertNull((new WebhookInfo($data))->getLastErrorMessage());
 
         unset($data['max_connections']);
-        $this->assertNull((new WebhookInfo($data))->getMaxConnections());
+        self::assertNull((new WebhookInfo($data))->getMaxConnections());
 
         unset($data['allowed_updates']);
-        $this->assertNull((new WebhookInfo($data))->getAllowedUpdates());
+        self::assertNull((new WebhookInfo($data))->getAllowedUpdates());
     }
 }

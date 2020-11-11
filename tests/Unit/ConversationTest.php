@@ -46,75 +46,75 @@ class ConversationTest extends TestCase
         TestHelpers::emptyDb($credentials);
     }
 
-    public function testConversationThatDoesntExistPropertiesSetCorrectly()
+    public function testConversationThatDoesntExistPropertiesSetCorrectly(): void
     {
         $conversation = new Conversation(123, 456);
-        $this->assertSame(123, $conversation->getUserId());
-        $this->assertSame(456, $conversation->getChatId());
-        $this->assertNull($conversation->getCommand());
+        self::assertSame(123, $conversation->getUserId());
+        self::assertSame(456, $conversation->getChatId());
+        self::assertEmpty($conversation->getCommand());
     }
 
-    public function testConversationThatExistsPropertiesSetCorrectly()
+    public function testConversationThatExistsPropertiesSetCorrectly(): void
     {
         $info         = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        $this->assertSame($info['user_id'], $conversation->getUserId());
-        $this->assertSame($info['chat_id'], $conversation->getChatId());
-        $this->assertSame('command', $conversation->getCommand());
+        self::assertSame($info['user_id'], $conversation->getUserId());
+        self::assertSame($info['chat_id'], $conversation->getChatId());
+        self::assertSame('command', $conversation->getCommand());
     }
 
-    public function testConversationThatDoesntExistWithoutCommand()
+    public function testConversationThatDoesntExistWithoutCommand(): void
     {
         $conversation = new Conversation(1, 1);
-        $this->assertFalse($conversation->exists());
-        $this->assertNull($conversation->getCommand());
+        self::assertFalse($conversation->exists());
+        self::assertEmpty($conversation->getCommand());
     }
 
-    public function testConversationThatDoesntExistWithCommand()
+    public function testConversationThatDoesntExistWithCommand(): void
     {
         $this->expectException(TelegramException::class);
         new Conversation(1, 1, 'command');
     }
 
-    public function testNewConversationThatWontExistWithoutCommand()
+    public function testNewConversationThatWontExistWithoutCommand(): void
     {
         TestHelpers::startFakeConversation();
         $conversation = new Conversation(0, 0);
-        $this->assertFalse($conversation->exists());
-        $this->assertNull($conversation->getCommand());
+        self::assertFalse($conversation->exists());
+        self::assertEmpty($conversation->getCommand());
     }
 
-    public function testNewConversationThatWillExistWithCommand()
+    public function testNewConversationThatWillExistWithCommand(): void
     {
         $info         = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        $this->assertTrue($conversation->exists());
-        $this->assertEquals('command', $conversation->getCommand());
+        self::assertTrue($conversation->exists());
+        self::assertEquals('command', $conversation->getCommand());
     }
 
-    public function testStopConversation()
+    public function testStopConversation(): void
     {
         $info         = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        $this->assertTrue($conversation->exists());
+        self::assertTrue($conversation->exists());
         $conversation->stop();
 
         $conversation2 = new Conversation($info['user_id'], $info['chat_id']);
-        $this->assertFalse($conversation2->exists());
+        self::assertFalse($conversation2->exists());
     }
 
-    public function testCancelConversation()
+    public function testCancelConversation(): void
     {
         $info         = TestHelpers::startFakeConversation();
         $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        $this->assertTrue($conversation->exists());
+        self::assertTrue($conversation->exists());
         $conversation->cancel();
 
         $conversation2 = new Conversation($info['user_id'], $info['chat_id']);
-        $this->assertFalse($conversation2->exists());
+        self::assertFalse($conversation2->exists());
     }
 
-    public function testUpdateConversationNotes()
+    public function testUpdateConversationNotes(): void
     {
         $info                = TestHelpers::startFakeConversation();
         $conversation        = new Conversation($info['user_id'], $info['chat_id'], 'command');
@@ -122,9 +122,9 @@ class ConversationTest extends TestCase
         $conversation->update();
 
         $conversation2 = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        $this->assertSame('newnote', $conversation2->notes);
+        self::assertSame('newnote', $conversation2->notes);
 
         $conversation3 = new Conversation($info['user_id'], $info['chat_id']);
-        $this->assertSame('newnote', $conversation3->notes);
+        self::assertSame('newnote', $conversation3->notes);
     }
 }

@@ -33,7 +33,7 @@ class ShippingQuery extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'from'             => User::class,
@@ -49,7 +49,7 @@ class ShippingQuery extends Entity
      *
      * @return ServerResponse
      */
-    public function answer($ok, array $data = [])
+    public function answer(bool $ok, array $data = []): ServerResponse
     {
         return Request::answerShippingQuery(array_merge([
             'shipping_query_id' => $this->getId(),

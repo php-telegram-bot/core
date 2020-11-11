@@ -17,11 +17,11 @@ use Longman\TelegramBot\Tests\Unit\TestCase;
 use Longman\TelegramBot\Tests\Unit\TestHelpers;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class CommandTest extends TestCase
 {
@@ -68,7 +68,7 @@ class CommandTest extends TestCase
     }
 
     // Test idea from here: http://stackoverflow.com/a/4371606
-    public function testCommandConstructorNeedsTelegramObject()
+    public function testCommandConstructorNeedsTelegramObject(): void
     {
         $exception_count = 0;
         $params_to_test  = [
@@ -83,97 +83,89 @@ class CommandTest extends TestCase
         foreach ($params_to_test as $param) {
             try {
                 $this->getMockForAbstractClass($this->command_namespace, $param);
-            } catch (\Exception $e) {
-                $exception_count++;
-            } catch (\Throwable $e) { //For PHP7
+            } catch (\Throwable $e) {
                 $exception_count++;
             }
         }
 
-        $this->assertEquals(5, $exception_count);
+        self::assertEquals(5, $exception_count);
     }
 
-    public function testCommandHasCorrectTelegramObject()
+    public function testCommandHasCorrectTelegramObject(): void
     {
-        $this->assertSame($this->telegram, $this->command_stub->getTelegram());
+        self::assertSame($this->telegram, $this->command_stub->getTelegram());
     }
 
-    public function testDefaultCommandName()
+    public function testDefaultCommandName(): void
     {
-        $this->assertEmpty($this->command_stub->getName());
+        self::assertEmpty($this->command_stub->getName());
     }
 
-    public function testDefaultCommandDescription()
+    public function testDefaultCommandDescription(): void
     {
-        $this->assertEquals('Command description', $this->command_stub->getDescription());
+        self::assertEquals('Command description', $this->command_stub->getDescription());
     }
 
-    public function testDefaultCommandUsage()
+    public function testDefaultCommandUsage(): void
     {
-        $this->assertEquals('Command usage', $this->command_stub->getUsage());
+        self::assertEquals('Command usage', $this->command_stub->getUsage());
     }
 
-    public function testDefaultCommandVersion()
+    public function testDefaultCommandVersion(): void
     {
-        $this->assertEquals('1.0.0', $this->command_stub->getVersion());
+        self::assertEquals('1.0.0', $this->command_stub->getVersion());
     }
 
-    public function testDefaultCommandIsEnabled()
+    public function testDefaultCommandIsEnabled(): void
     {
-        $this->assertTrue($this->command_stub->isEnabled());
+        self::assertTrue($this->command_stub->isEnabled());
     }
 
-    public function testDefaultCommandShownInHelp()
+    public function testDefaultCommandShownInHelp(): void
     {
-        $this->assertTrue($this->command_stub->showInHelp());
+        self::assertTrue($this->command_stub->showInHelp());
     }
 
-    public function testDefaultCommandNeedsMysql()
+    public function testDefaultCommandNeedsMysql(): void
     {
-        $this->markTestSkipped('Think about better test');
-        $this->assertAttributeEquals(false, 'need_mysql', $this->command_stub);
+        self::markTestSkipped('Think about better test');
     }
 
-    public function testDefaultCommandEmptyConfig()
+    public function testDefaultCommandEmptyConfig(): void
     {
-        $this->assertSame([], $this->command_stub->getConfig());
+        self::assertSame([], $this->command_stub->getConfig());
     }
 
-    public function testDefaultCommandUpdateNull()
+    public function testDefaultCommandUpdateNull(): void
     {
-        $this->assertNull($this->command_stub->getUpdate());
+        self::assertNull($this->command_stub->getUpdate());
     }
 
-    public function testCommandSetUpdateAndMessage()
+    public function testCommandSetUpdateAndMessage(): void
     {
         $stub = $this->command_stub;
 
-        $this->assertSame($stub, $stub->setUpdate());
-        $this->assertEquals(null, $stub->getUpdate());
-        $this->assertEquals(null, $stub->getMessage());
-
-        $this->assertSame($stub, $stub->setUpdate(null));
-        $this->assertEquals(null, $stub->getUpdate());
-        $this->assertEquals(null, $stub->getMessage());
+        self::assertEquals(null, $stub->getUpdate());
+        self::assertEquals(null, $stub->getMessage());
 
         $update  = TestHelpers::getFakeUpdateObject();
         $message = $update->getMessage();
         $stub->setUpdate($update);
-        $this->assertEquals($update, $stub->getUpdate());
-        $this->assertEquals($message, $stub->getMessage());
+        self::assertEquals($update, $stub->getUpdate());
+        self::assertEquals($message, $stub->getMessage());
     }
 
-    public function testCommandWithConfigNotEmptyConfig()
+    public function testCommandWithConfigNotEmptyConfig(): void
     {
-        $this->assertNotEmpty($this->command_stub_with_config->getConfig());
+        self::assertNotEmpty($this->command_stub_with_config->getConfig());
     }
 
-    public function testCommandWithConfigCorrectConfig()
+    public function testCommandWithConfigCorrectConfig(): void
     {
-        $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig());
-        $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig(null));
-        $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig());
-        $this->assertEquals('config_value', $this->command_stub_with_config->getConfig('config_key'));
-        $this->assertEquals(null, $this->command_stub_with_config->getConfig('not_config_key'));
+        self::assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig());
+        self::assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig(null));
+        self::assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig());
+        self::assertEquals('config_value', $this->command_stub_with_config->getConfig('config_key'));
+        self::assertEquals(null, $this->command_stub_with_config->getConfig('not_config_key'));
     }
 }

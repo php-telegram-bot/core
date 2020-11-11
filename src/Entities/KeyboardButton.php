@@ -37,7 +37,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 class KeyboardButton extends Entity
 {
     /**
-     * {@inheritdoc}
+     * @param array|string $data
      */
     public function __construct($data)
     {
@@ -54,15 +54,15 @@ class KeyboardButton extends Entity
      *
      * @return bool
      */
-    public static function couldBe($data)
+    public static function couldBe(array $data): bool
     {
-        return is_array($data) && array_key_exists('text', $data);
+        return array_key_exists('text', $data);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function validate()
+    protected function validate(): void
     {
         if ($this->getProperty('text', '') === '') {
             throw new TelegramException('You must add some text to the button!');

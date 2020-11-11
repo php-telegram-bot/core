@@ -70,7 +70,7 @@ class TelegramLog
      * @param LoggerInterface|null $logger
      * @param LoggerInterface|null $update_logger
      */
-    public static function initialize(LoggerInterface $logger = null, LoggerInterface $update_logger = null)
+    public static function initialize(LoggerInterface $logger = null, LoggerInterface $update_logger = null): void
     {
         self::$logger        = $logger ?: new NullLogger();
         self::$update_logger = $update_logger ?: new NullLogger();
@@ -95,7 +95,7 @@ class TelegramLog
      *
      * @param string $message Message (with placeholder) to write to the debug log
      */
-    public static function endDebugLogTempStream($message = '%s')
+    public static function endDebugLogTempStream($message = '%s'): void
     {
         if (is_resource(self::$debug_log_temp_stream_handle)) {
             rewind(self::$debug_log_temp_stream_handle);
@@ -117,7 +117,7 @@ class TelegramLog
      * @param string $name
      * @param array  $arguments
      */
-    public static function __callStatic($name, array $arguments)
+    public static function __callStatic(string $name, array $arguments)
     {
         // Get the correct logger instance.
         $logger = null;
@@ -151,7 +151,7 @@ class TelegramLog
      *
      * @return string
      */
-    protected static function interpolate($message, array $context = [])
+    protected static function interpolate(string $message, array $context = []): string
     {
         // Build a replacement array with braces around the context keys.
         $replace = [];

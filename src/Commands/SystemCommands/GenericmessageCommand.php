@@ -48,7 +48,7 @@ class GenericmessageCommand extends SystemCommand
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function executeNoDb()
+    public function executeNoDb(): ServerResponse
     {
         // Try to execute any deprecated system commands.
         if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
@@ -64,7 +64,7 @@ class GenericmessageCommand extends SystemCommand
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         // Try to continue any active conversation.
         if ($active_conversation_response = $this->executeActiveConversation()) {

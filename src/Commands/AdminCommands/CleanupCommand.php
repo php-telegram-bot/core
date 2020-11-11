@@ -108,7 +108,7 @@ class CleanupCommand extends AdminCommand
      *
      * @return array
      */
-    private function getSettings($custom_time = '')
+    private function getSettings($custom_time = ''): array
     {
         $tables_to_clean      = self::$default_tables_to_clean;
         $user_tables_to_clean = $this->getConfig('tables_to_clean');
@@ -143,7 +143,7 @@ class CleanupCommand extends AdminCommand
      * @return array
      * @throws TelegramException
      */
-    private function getQueries($settings)
+    private function getQueries($settings): array
     {
         if (empty($settings) || !is_array($settings)) {
             throw new TelegramException('Settings variable is not an array or is empty!');
@@ -352,7 +352,7 @@ class CleanupCommand extends AdminCommand
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function executeNoDb()
+    public function executeNoDb(): ServerResponse
     {
         return $this->replyToChat('*No database connection!*', ['parse_mode' => 'Markdown']);
     }
@@ -363,7 +363,7 @@ class CleanupCommand extends AdminCommand
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function execute()
+    public function execute(): ServerResponse
     {
         $message = $this->getMessage();
         $text    = $message->getText(true);

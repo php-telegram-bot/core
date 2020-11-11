@@ -22,7 +22,7 @@ use Longman\TelegramBot\Entities\Update;
  */
 class UpdateTest extends TestCase
 {
-    public function testUpdateCast()
+    public function testUpdateCast(): void
     {
         $json = '{
             "update_id":137809336,

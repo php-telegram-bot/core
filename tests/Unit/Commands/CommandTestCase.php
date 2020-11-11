@@ -49,8 +49,8 @@ class CommandTestCase extends TestCase
     /**
      * Make sure the version number is in the format x.x.x, x.x or x
      */
-    public function testVersionNumberFormat()
+    public function testVersionNumberFormat(): void
     {
-        $this->assertRegExp('/^(\d+\\.)?(\d+\\.)?(\d+)$/', $this->command->getVersion());
+        self::assertRegExp('/^(\d+\\.)?(\d+\\.)?(\d+)$/', $this->command->getVersion());
     }
 }

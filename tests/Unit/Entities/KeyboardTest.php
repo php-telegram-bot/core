@@ -24,21 +24,21 @@ use Longman\TelegramBot\Exception\TelegramException;
  */
 class KeyboardTest extends TestCase
 {
-    public function testKeyboardDataMalformedField()
+    public function testKeyboardDataMalformedField(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('keyboard field is not an array!');
         new Keyboard(['keyboard' => 'wrong']);
     }
 
-    public function testKeyboardDataMalformedSubfield()
+    public function testKeyboardDataMalformedSubfield(): void
     {
         $this->expectException(TelegramException::class);
         $this->expectExceptionMessage('keyboard subfield is not an array!');
         new Keyboard(['keyboard' => ['wrong']]);
     }
 
-    public function testKeyboardSingleButtonSingleRow()
+    public function testKeyboardSingleButtonSingleRow(): void
     {
         $keyboard = (new Keyboard('Button Text 1'))->getProperty('keyboard');
         self::assertSame('Button Text 1', $keyboard[0][0]->getText());
@@ -47,7 +47,7 @@ class KeyboardTest extends TestCase
         self::assertSame('Button Text 2', $keyboard[0][0]->getText());
     }
 
-    public function testKeyboardSingleButtonMultipleRows()
+    public function testKeyboardSingleButtonMultipleRows(): void
     {
         $keyboard = (new Keyboard(
             'Button Text 1',
@@ -68,14 +68,14 @@ class KeyboardTest extends TestCase
         self::assertSame('Button Text 6', $keyboard[2][0]->getText());
     }
 
-    public function testKeyboardMultipleButtonsSingleRow()
+    public function testKeyboardMultipleButtonsSingleRow(): void
     {
         $keyboard = (new Keyboard(['Button Text 1', 'Button Text 2']))->getProperty('keyboard');
         self::assertSame('Button Text 1', $keyboard[0][0]->getText());
         self::assertSame('Button Text 2', $keyboard[0][1]->getText());
     }
 
-    public function testKeyboardMultipleButtonsMultipleRows()
+    public function testKeyboardMultipleButtonsMultipleRows(): void
     {
         $keyboard = (new Keyboard(
             ['Button Text 1', 'Button Text 2'],
@@ -88,7 +88,7 @@ class KeyboardTest extends TestCase
         self::assertSame('Button Text 4', $keyboard[1][1]->getText());
     }
 
-    public function testKeyboardWithButtonObjects()
+    public function testKeyboardWithButtonObjects(): void
     {
         $keyboard = (new Keyboard(
             new KeyboardButton('Button Text 1')
@@ -111,7 +111,7 @@ class KeyboardTest extends TestCase
         self::assertSame('Button Text 6', $keyboard[1][1]->getText());
     }
 
-    public function testKeyboardWithDataArray()
+    public function testKeyboardWithDataArray(): void
     {
         $resize_keyboard   = (bool) mt_rand(0, 1);
         $one_time_keyboard = (bool) mt_rand(0, 1);
@@ -132,7 +132,7 @@ class KeyboardTest extends TestCase
         self::assertSame($selective, $keyboard_obj->getSelective());
     }
 
-    public function testPredefinedKeyboards()
+    public function testPredefinedKeyboards(): void
     {
         $keyboard_remove = Keyboard::remove();
         self::assertTrue($keyboard_remove->getProperty('remove_keyboard'));
@@ -141,7 +141,7 @@ class KeyboardTest extends TestCase
         self::assertTrue($keyboard_force_reply->getProperty('force_reply'));
     }
 
-    public function testKeyboardMethods()
+    public function testKeyboardMethods(): void
     {
         $keyboard_obj = new Keyboard([]);
 
@@ -165,7 +165,7 @@ class KeyboardTest extends TestCase
         self::assertFalse($keyboard_obj->getSelective());
     }
 
-    public function testKeyboardAddRows()
+    public function testKeyboardAddRows(): void
     {
         $keyboard_obj = new Keyboard([]);
 

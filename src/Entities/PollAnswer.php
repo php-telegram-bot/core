@@ -27,7 +27,7 @@ class PollAnswer extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function subEntities()
+    protected function subEntities(): array
     {
         return [
             'user' => User::class,

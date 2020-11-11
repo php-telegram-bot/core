@@ -20,7 +20,7 @@ namespace Longman\TelegramBot\Tests\Unit;
  */
 class MessageTest extends TestCase
 {
-    public function testTextAndCommandRecognise()
+    public function testTextAndCommandRecognise(): void
     {
         // /command
         $message = TestHelpers::getFakeMessageObject(['text' => '/help']);
@@ -43,7 +43,7 @@ class MessageTest extends TestCase
         self::assertEquals('/help@testbot', $message->getText());
         self::assertEquals('', $message->getText(true));
 
-        // /commmad text
+        // /command text
         $message = TestHelpers::getFakeMessageObject(['text' => '/help some text']);
         self::assertEquals('/help', $message->getFullCommand());
         self::assertEquals('help', $message->getCommand());
@@ -57,7 +57,7 @@ class MessageTest extends TestCase
         self::assertEquals('/help@testbot some text', $message->getText());
         self::assertEquals('some text', $message->getText(true));
 
-        // /commmad\n text
+        // /command\n text
         $message = TestHelpers::getFakeMessageObject(['text' => "/help\n some text"]);
         self::assertEquals('/help', $message->getFullCommand());
         self::assertEquals('help', $message->getCommand());
@@ -79,7 +79,7 @@ class MessageTest extends TestCase
         self::assertEquals("\nsome text", $message->getText(true));
     }
 
-    public function testGetType()
+    public function testGetType(): void
     {
         $message = TestHelpers::getFakeMessageObject(['text' => null]);
         self::assertSame('message', $message->getType());
