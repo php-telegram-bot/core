@@ -53,7 +53,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Location                getLocation()                Optional. Message is a shared location, information about the location
  * @method Venue                   getVenue()                   Optional. Message is a venue, information about the venue
  * @method Poll                    getPoll()                    Optional. Message is a native poll, information about the poll
- * @method Dice                    getDice()                    Optional. Message is a dice with random value from 1 to 6
+ * @method Dice                    getDice()                    Optional. Message is a dice with random value, 1-6 for “🎲” and “🎯” base emoji, 1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
  * @method User[]                  getNewChatMembers()          Optional. A new member(s) was added to the group, information about them (one of this members may be the bot itself)
  * @method User                    getLeftChatMember()          Optional. A member was removed from the group, information about them (this member may be the bot itself)
  * @method string                  getNewChatTitle()            Optional. A chat title was changed to this value

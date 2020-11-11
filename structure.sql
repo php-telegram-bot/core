@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `pre_checkout_query` (
 
 CREATE TABLE IF NOT EXISTS `poll` (
   `id` bigint UNSIGNED COMMENT 'Unique poll identifier',
-  `question` char(255) NOT NULL COMMENT 'Poll question',
+  `question` text NOT NULL COMMENT 'Poll question',
   `options` text NOT NULL COMMENT 'List of poll options',
   `total_voter_count` int UNSIGNED COMMENT 'Total number of users that voted in the poll',
   `is_closed` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll is closed',
