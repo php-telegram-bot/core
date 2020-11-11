@@ -720,7 +720,7 @@ class Request
     public static function __callStatic(string $action, array $data)
     {
         // Only argument should be the data array, ignore any others.
-        return static::send($action, reset($data));
+        return static::send($action, reset($data) ?: []);
     }
 
     /**
