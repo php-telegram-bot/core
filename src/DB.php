@@ -993,7 +993,7 @@ class DB
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `migrate_to_chat_id`, `migrate_from_chat_id`,
-                    `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `reply_markup`
+                    `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `proximity_alert_triggered`, `reply_markup`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date,
@@ -1002,7 +1002,7 @@ class DB
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :migrate_to_chat_id, :migrate_from_chat_id,
-                    :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :reply_markup
+                    :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :proximity_alert_triggered, :reply_markup
                 )
             ');
 
@@ -1072,6 +1072,7 @@ class DB
             $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
             $sth->bindValue(':passport_data', $message->getPassportData());
+            $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
             $sth->bindValue(':reply_markup', $message->getReplyMarkup());
 
             return $sth->execute();

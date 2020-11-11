@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `successful_payment` TEXT NULL COMMENT 'Message is a service message about a successful payment, information about the payment',
   `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
   `passport_data` TEXT NULL COMMENT 'Telegram Passport data',
+  `proximity_alert_triggered` TEXT NULL COMMENT 'Service message. A user in the chat triggered another user''s proximity alert while sharing Live Location.',
   `reply_markup` TEXT NULL COMMENT 'Inline keyboard attached to the message',
 
   PRIMARY KEY (`chat_id`, `id`),

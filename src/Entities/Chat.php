@@ -32,6 +32,7 @@ namespace Longman\TelegramBot\Entities;
  * @method int             getSlowModeDelay()               Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
  * @method string          getStickerSetName()              Optional. For supergroups, name of group sticker set. Returned only in getChat.
  * @method bool            getCanSetStickerSet()            Optional. True, if the bot can change the group sticker set. Returned only in getChat.
+ * @method ChatLocation    getLocation                      Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
  */
 class Chat extends Entity
 {
@@ -44,6 +45,7 @@ class Chat extends Entity
             'photo'          => ChatPhoto::class,
             'pinned_message' => Message::class,
             'permissions'    => ChatPermissions::class,
+            'location'       => ChatLocation::class,
         ];
     }
 
