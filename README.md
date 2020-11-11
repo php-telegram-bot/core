@@ -7,7 +7,7 @@
 
 A Telegram Bot based on the official [Telegram Bot API]
 
-[![API Version](https://img.shields.io/badge/Bot%20API-4.9%20%28June%202020%29-32a2da.svg)](https://core.telegram.org/bots/api#june-4-2020)
+[![API Version](https://img.shields.io/badge/Bot%20API-5.0%20%28November%202020%29-32a2da.svg)](https://core.telegram.org/bots/api#november-4-2020)
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 
@@ -18,7 +18,7 @@ A Telegram Bot based on the official [Telegram Bot API]
 [![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core?style=flat)][Tidelift]
 [![Total Downloads](https://img.shields.io/packagist/dt/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D7.2-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
 
 ## Table of Contents
@@ -77,7 +77,7 @@ This Bot aims to provide a platform where one can simply write a bot and have in
 
 The Bot can:
 - Retrieve updates with [webhook](#webhook-installation) and [getUpdates](#getupdates-installation) methods.
-- Supports all types and methods according to Telegram Bot API 4.9 (June 2020).
+- Supports all types and methods according to Telegram Bot API 5.0 (November 2020).
 - Supports supergroups.
 - Handle commands in chat with other bots.
 - Manage Channel from the bot admin interface.
