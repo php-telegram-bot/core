@@ -23,6 +23,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  *
  * @method int                     getMessageId()               Unique message identifier
  * @method User                    getFrom()                    Optional. Sender, can be empty for messages sent to channels
+ * @method Chat                    getSenderChat()              Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                     getDate()                    Date the message was sent in Unix time
  * @method Chat                    getChat()                    Conversation the message belongs to
  * @method User                    getForwardFrom()             Optional. For forwarded messages, sender of the original message
@@ -80,6 +81,7 @@ class Message extends Entity
     {
         return [
             'from'                      => User::class,
+            'sender_chat'               => Chat::class,
             'chat'                      => Chat::class,
             'forward_from'              => User::class,
             'forward_from_chat'         => Chat::class,
