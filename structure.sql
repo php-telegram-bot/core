@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
 
 CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
-  'sender_chat_id' bigint COMMENT 'Sender of the message, sent on behalf of a chat',
+  `sender_chat_id` bigint COMMENT 'Sender of the message, sent on behalf of a chat',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'Unique user identifier',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
