@@ -37,6 +37,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getDocumentFileId()      A valid file identifier for the file
  * @method string               getDescription()         Optional. Short description of the result
  * @method string               getCaption()             Optional. Caption of the document to be sent, 0-200 characters
+ * @method string               getParseMode()           Optional. Mode for parsing entities in the document caption
+ * @method MessageEntity[]      getCaptionEntities()     Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method InlineKeyboard       getReplyMarkup()         Optional. An Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the file
  *
@@ -45,6 +47,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setDocumentFileId(string $document_file_id)                        A valid file identifier for the file
  * @method $this setDescription(string $description)                                Optional. Short description of the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the document to be sent, 0-200 characters
+ * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the document caption
+ * @method $this setCaptionEntities(array $caption_entities)                        Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. An Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the file
  */

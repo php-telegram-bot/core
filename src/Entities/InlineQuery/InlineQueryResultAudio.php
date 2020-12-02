@@ -37,6 +37,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getAudioUrl()            A valid URL for the audio file
  * @method string               getTitle()               Title
  * @method string               getCaption()             Optional. Caption, 0-200 characters
+ * @method string               getParseMode()           Optional. Mode for parsing entities in the audio caption
+ * @method MessageEntity[]      getCaptionEntities()     Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method string               getPerformer()           Optional. Performer
  * @method int                  getAudioDuration()       Optional. Audio duration in seconds
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
@@ -46,6 +48,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setAudioUrl(string $audio_url)                                     A valid URL for the audio file
  * @method $this setTitle(string $title)                                            Title
  * @method $this setCaption(string $caption)                                        Optional. Caption, 0-200 characters
+ * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the audio caption
+ * @method $this setCaptionEntities(array $caption_entities)                        Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method $this setPerformer(string $performer)                                    Optional. Performer
  * @method $this setAudioDuration(int $audio_duration)                              Optional. Audio duration in seconds
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message

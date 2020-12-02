@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `chosen_inline_result` (
 
 CREATE TABLE IF NOT EXISTS `message` (
   `chat_id` bigint COMMENT 'Unique chat identifier',
+  `sender_chat_id` bigint COMMENT 'Sender of the message, sent on behalf of a chat',
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `user_id` bigint NULL COMMENT 'Unique user identifier',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
@@ -117,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `successful_payment` TEXT NULL COMMENT 'Message is a service message about a successful payment, information about the payment',
   `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
   `passport_data` TEXT NULL COMMENT 'Telegram Passport data',
+  `proximity_alert_triggered` TEXT NULL COMMENT 'Service message. A user in the chat triggered another user''s proximity alert while sharing Live Location.',
   `reply_markup` TEXT NULL COMMENT 'Inline keyboard attached to the message',
 
   PRIMARY KEY (`chat_id`, `id`),
@@ -210,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `pre_checkout_query` (
 
 CREATE TABLE IF NOT EXISTS `poll` (
   `id` bigint UNSIGNED COMMENT 'Unique poll identifier',
-  `question` char(255) NOT NULL COMMENT 'Poll question',
+  `question` text NOT NULL COMMENT 'Poll question',
   `options` text NOT NULL COMMENT 'List of poll options',
   `total_voter_count` int UNSIGNED COMMENT 'Total number of users that voted in the poll',
   `is_closed` tinyint(1) DEFAULT 0 COMMENT 'True, if the poll is closed',

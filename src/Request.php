@@ -31,7 +31,10 @@ use Throwable;
  * @method static ServerResponse deleteWebhook()                              Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters.
  * @method static ServerResponse getWebhookInfo()                             Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
  * @method static ServerResponse getMe()                                      A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
+ * @method static ServerResponse logOut()                                     Use this method to log out from the cloud Bot API server before launching the bot locally. Requires no parameters. Returns True on success.
+ * @method static ServerResponse close()                                      Use this method to close the bot instance before moving it from one local server to another. Requires no parameters. Returns True on success.
  * @method static ServerResponse forwardMessage(array $data)                  Use this method to forward messages of any kind. On success, the sent Message is returned.
+ * @method static ServerResponse copyMessage(array $data)                     Use this method to copy messages of any kind. The method is analogous to the method forwardMessages, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
  * @method static ServerResponse sendPhoto(array $data)                       Use this method to send photos. On success, the sent Message is returned.
  * @method static ServerResponse sendAudio(array $data)                       Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendDocument(array $data)                    Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
@@ -64,6 +67,7 @@ use Throwable;
  * @method static ServerResponse setChatDescription(array $data)              Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
  * @method static ServerResponse pinChatMessage(array $data)                  Use this method to pin a message in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
  * @method static ServerResponse unpinChatMessage(array $data)                Use this method to unpin a message in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
+ * @method static ServerResponse unpinAllChatMessages(array $data)            Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in a supergroup or 'can_edit_messages' admin right in a channel. Returns True on success.
  * @method static ServerResponse leaveChat(array $data)                       Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
  * @method static ServerResponse getChat(array $data)                         Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
  * @method static ServerResponse getChatAdministrators(array $data)           Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
@@ -155,8 +159,11 @@ class Request
         'deleteWebhook',
         'getWebhookInfo',
         'getMe',
+        'logOut',
+        'close',
         'sendMessage',
         'forwardMessage',
+        'copyMessage',
         'sendPhoto',
         'sendAudio',
         'sendDocument',
@@ -189,6 +196,7 @@ class Request
         'setChatDescription',
         'pinChatMessage',
         'unpinChatMessage',
+        'unpinAllChatMessages',
         'leaveChat',
         'getChat',
         'getChatAdministrators',
@@ -233,6 +241,8 @@ class Request
         'deleteWebhook',
         'getWebhookInfo',
         'getMe',
+        'logOut',
+        'close',
         'getMyCommands',
     ];
 
@@ -710,7 +720,7 @@ class Request
     public static function __callStatic(string $action, array $data)
     {
         // Only argument should be the data array, ignore any others.
-        return static::send($action, reset($data));
+        return static::send($action, reset($data) ?: []);
     }
 
     /**
@@ -799,6 +809,7 @@ class Request
             $limited_methods = [
                 'sendMessage',
                 'forwardMessage',
+                'copyMessage',
                 'sendPhoto',
                 'sendAudio',
                 'sendDocument',

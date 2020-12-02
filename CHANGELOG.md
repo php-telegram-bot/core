@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Bot API 5.0 (Big update!).
 ### Changed
 - Upgrade code to PHP 7.2. (#1136)
 - Speed up clean query (@dva-re) (#1139)

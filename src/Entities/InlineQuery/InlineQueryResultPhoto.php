@@ -43,6 +43,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getTitle()               Optional. Title for the result
  * @method string               getDescription()         Optional. Short description of the result
  * @method string               getCaption()             Optional. Caption of the photo to be sent, 0-200 characters
+ * @method string               getParseMode()           Optional. Mode for parsing entities in the photo caption
+ * @method MessageEntity[]      getCaptionEntities()     Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the photo
  *
@@ -54,6 +56,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setTitle(string $title)                                            Optional. Title for the result
  * @method $this setDescription(string $description)                                Optional. Short description of the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the photo to be sent, 0-200 characters
+ * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the photo caption
+ * @method $this setCaptionEntities(array $caption_entities)                        Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the photo
  */

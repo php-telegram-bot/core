@@ -39,6 +39,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getId()                  Unique identifier for this result, 1-64 bytes
  * @method string               getTitle()               Title for the result
  * @method string               getCaption()             Optional. Caption of the document to be sent, 0-200 characters
+ * @method string               getParseMode()           Optional. Mode for parsing entities in the document caption
+ * @method MessageEntity[]      getCaptionEntities()     Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method string               getDocumentUrl()         A valid URL for the file
  * @method string               getMimeType()            Mime type of the content of the file, either “application/pdf” or “application/zip”
  * @method string               getDescription()         Optional. Short description of the result
@@ -51,6 +53,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
  * @method $this setTitle(string $title)                                            Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the document to be sent, 0-200 characters
+ * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the document caption
+ * @method $this setCaptionEntities(array $caption_entities)                        Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method $this setDocumentUrl(string $document_url)                               A valid URL for the file
  * @method $this setMimeType(string $mime_type)                                     Mime type of the content of the file, either “application/pdf” or “application/zip”
  * @method $this setDescription(string $description)                                Optional. Short description of the result

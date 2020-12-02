@@ -938,6 +938,12 @@ class DB
         $chat = $message->getChat();
         self::insertChat($chat, $date, $message->getMigrateToChatId());
 
+        $sender_chat_id = null;
+        if ($sender_chat = $message->getSenderChat()) {
+            self::insertChat($sender_chat);
+            $sender_chat_id = $sender_chat->getId();
+        }
+
         // Insert user and the relation with the chat
         if ($user = $message->getFrom()) {
             self::insertUser($user, $date, $chat);
@@ -986,23 +992,23 @@ class DB
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                    `id`, `user_id`, `chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
+                    `id`, `user_id`, `chat_id`, `sender_chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_signature`, `forward_sender_name`, `forward_date`,
                     `reply_to_chat`, `reply_to_message`, `via_bot`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
                     `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `migrate_to_chat_id`, `migrate_from_chat_id`,
-                    `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `reply_markup`
+                    `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `proximity_alert_triggered`, `reply_markup`
                 ) VALUES (
-                    :message_id, :user_id, :chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
+                    :message_id, :user_id, :chat_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date,
                     :reply_to_chat, :reply_to_message, :via_bot, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
                     :audio, :document, :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :migrate_to_chat_id, :migrate_from_chat_id,
-                    :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :reply_markup
+                    :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :proximity_alert_triggered, :reply_markup
                 )
             ');
 
@@ -1019,6 +1025,7 @@ class DB
 
             $sth->bindValue(':message_id', $message->getMessageId());
             $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':sender_chat_id', $sender_chat_id);
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':date', $date);
             $sth->bindValue(':forward_from', $forward_from);
@@ -1072,6 +1079,7 @@ class DB
             $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
             $sth->bindValue(':passport_data', $message->getPassportData());
+            $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
             $sth->bindValue(':reply_markup', $message->getReplyMarkup());
 
             return $sth->execute();

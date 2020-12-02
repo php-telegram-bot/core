@@ -33,6 +33,7 @@ class WebhookInfoTest extends TestCase
             'url'                    => 'http://phpunit',
             'has_custom_certificate' => (bool) mt_rand(0, 1),
             'pending_update_count'   => (int) mt_rand(1, 9),
+            'ip_address'             => '1.2.3.4',
             'last_error_date'        => time(),
             'last_error_message'     => 'Some_error_message',
             'max_connections'        => (int) mt_rand(1, 100),
@@ -67,6 +68,14 @@ class WebhookInfoTest extends TestCase
         $update_count = $webhook->getPendingUpdateCount();
         self::assertIsInt($update_count);
         self::assertEquals($this->data['pending_update_count'], $update_count);
+    }
+
+    public function testGetIpAddress(): void
+    {
+        $webhook    = new WebhookInfo($this->data);
+        $ip_address = $webhook->getIpAddress();
+        self::assertIsString($ip_address);
+        self::assertEquals($this->data['ip_address'], $ip_address);
     }
 
     public function testGetLastErrorDate(): void
@@ -114,6 +123,9 @@ class WebhookInfoTest extends TestCase
 
         unset($data['pending_update_count']);
         self::assertNull((new WebhookInfo($data))->getPendingUpdateCount());
+
+        unset($data['ip_address']);
+        self::assertNull((new WebhookInfo($data))->getIpAddress());
 
         unset($data['last_error_date']);
         self::assertNull((new WebhookInfo($data))->getLastErrorDate());

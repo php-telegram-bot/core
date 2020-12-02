@@ -36,6 +36,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getVoiceUrl()            A valid URL for the voice recording
  * @method string               getTitle()               Recording title
  * @method string               getCaption()             Optional. Caption, 0-200 characters
+ * @method string               getParseMode()           Optional. Mode for parsing entities in the voice caption
+ * @method MessageEntity[]      getCaptionEntities()     Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method int                  getVoiceDuration()       Optional. Recording duration in seconds
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the voice recording
@@ -44,6 +46,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setVoiceUrl(string $voice_url)                                     A valid URL for the voice recording
  * @method $this setTitle(string $title)                                            Recording title
  * @method $this setCaption(string $caption)                                        Optional. Caption, 0-200 characters
+ * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the voice caption
+ * @method $this setCaptionEntities(array $caption_entities)                        Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
  * @method $this setVoiceDuration(int $voice_duration)                              Optional. Recording duration in seconds
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the voice recording
