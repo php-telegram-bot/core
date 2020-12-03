@@ -16,13 +16,14 @@ use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class TestHelpers
 {
@@ -165,7 +166,7 @@ class TestHelpers
         $mime_type = ['audio/ogg', 'audio/mpeg', 'audio/vnd.wave', 'audio/x-ms-wma', 'audio/basic'];
         return [
             'file_id'   => mt_rand(1, 999),
-            'duration'  => (string) mt_rand(1, 99) . ':' . mt_rand(1, 60),
+            'duration'  => mt_rand(1, 99) . ':' . mt_rand(1, 60),
             'performer' => 'phpunit',
             'title'     => 'track from phpunit',
             'mime_type' => $mime_type[array_rand($mime_type, 1)],
@@ -185,19 +186,18 @@ class TestHelpers
     public static function getFakeMessageObject(array $message_data = [], array $user_data = [], array $chat_data = []): Message
     {
         return new Message($message_data + [
-            'message_id' => mt_rand(),
-            'from'       => $user_data + self::$user_template,
-            'chat'       => $chat_data + self::$chat_template,
-            'date'       => time(),
-            'text'       => 'dummy',
-        ], 'testbot');
+                'message_id' => mt_rand(),
+                'from'       => $user_data + self::$user_template,
+                'chat'       => $chat_data + self::$chat_template,
+                'date'       => time(),
+                'text'       => 'dummy',
+            ], 'testbot');
     }
 
     /**
      * Start a fake conversation for the passed command and return the randomly generated ids.
      *
      * @return array|false
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public static function startFakeConversation()
     {
@@ -210,12 +210,16 @@ class TestHelpers
         $user_id    = mt_rand();
         $chat_id    = mt_rand();
 
-        //Make sure we have a valid user and chat available.
-        $message = self::getFakeMessageObject(['message_id' => $message_id], ['id' => $user_id], ['id' => $chat_id]);
-        DB::insertMessageRequest($message);
-        DB::insertUser($message->getFrom(), null, $message->getChat());
+        try {
+            //Make sure we have a valid user and chat available.
+            $message = self::getFakeMessageObject(['message_id' => $message_id], ['id' => $user_id], ['id' => $chat_id]);
+            DB::insertMessageRequest($message);
+            DB::insertUser($message->getFrom(), null, $message->getChat());
 
-        return compact('message_id', 'user_id', 'chat_id');
+            return compact('message_id', 'user_id', 'chat_id');
+        } catch (TelegramException $e) {
+            return false;
+        }
     }
 
     /**

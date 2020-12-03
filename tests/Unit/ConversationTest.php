@@ -16,18 +16,14 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class ConversationTest extends TestCase
 {
-    /**
-     * @var Telegram
-     */
-    private $telegram;
 
     protected function setUp(): void
     {
@@ -39,8 +35,8 @@ class ConversationTest extends TestCase
             'password' => PHPUNIT_DB_PASS,
         ];
 
-        $this->telegram = new Telegram(self::$dummy_api_key, 'testbot');
-        $this->telegram->enableMySql($credentials);
+        $telegram = new Telegram(self::$dummy_api_key, 'testbot');
+        $telegram->enableMySql($credentials);
 
         //Make sure we start with an empty DB for each test.
         TestHelpers::emptyDb($credentials);

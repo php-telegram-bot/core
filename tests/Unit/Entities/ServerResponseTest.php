@@ -11,7 +11,7 @@
  * Written by Marco Boretto
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace Longman\TelegramBot\Tests\Unit\Entities;
 
 use Longman\TelegramBot\Entities\File;
 use Longman\TelegramBot\Entities\Message;
@@ -22,13 +22,15 @@ use Longman\TelegramBot\Entities\StickerSet;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\UserProfilePhotos;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Tests\Unit\TestCase;
+use Longman\TelegramBot\Tests\Unit\TestHelpers;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class ServerResponseTest extends TestCase
 {

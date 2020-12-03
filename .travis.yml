@@ -1,8 +1,8 @@
-dist: trusty
+dist: bionic
 language: php
 
 addons:
-  mariadb: '10.1'
+  mariadb: 10.2
 
 cache:
   directories:
@@ -10,16 +10,14 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - 7.4
   - 7.3
-  - 7.2
+  - 7.4
+  - 8.0snapshot
   - nightly
-  - hhvm
 
-matrix:
+jobs:
   allow_failures:
     - php: nightly
-    - php: hhvm
   fast_finish: true
 
 git:
@@ -38,10 +36,10 @@ before_script:
 script:
   - for SCHEMA_UPDATE_FILE in $(ls utils/db-schema-update); do mysql -u root -e "use telegrambot_migrations; source utils/db-schema-update/${SCHEMA_UPDATE_FILE};"; done;
   - composer check-code
-  - if [ "$TRAVIS_PHP_VERSION" == "7.4" ]; then composer test-cov; else composer test; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov; else composer test; fi
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" == "7.4" ]; then composer test-cov-upload; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then composer test-cov-upload; fi
 
 notifications:
   on_success: never

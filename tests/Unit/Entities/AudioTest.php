@@ -9,16 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace Longman\TelegramBot\Tests\Unit\Entities;
 
 use Longman\TelegramBot\Entities\Audio;
+use Longman\TelegramBot\Tests\Unit\TestCase;
+use Longman\TelegramBot\Tests\Unit\TestHelpers;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Baev Nikolay <gametester3d@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class AudioTest extends TestCase
 {

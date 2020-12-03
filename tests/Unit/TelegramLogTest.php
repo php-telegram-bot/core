@@ -68,7 +68,7 @@ class TelegramLogTest extends TestCase
         TelegramLog::update('my update log');
 
         foreach (self::$logfiles as $file) {
-            self::assertFileNotExists($file);
+            self::assertFileDoesNotExist($file);
         }
     }
 
@@ -76,7 +76,7 @@ class TelegramLogTest extends TestCase
     {
         $file = self::$logfiles['debug'];
 
-        self::assertFileNotExists($file);
+        self::assertFileDoesNotExist($file);
         TelegramLog::debug('my debug log');
         TelegramLog::debug('my {place} {holder} debug log', ['place' => 'custom', 'holder' => 'placeholder']);
 
@@ -90,7 +90,7 @@ class TelegramLogTest extends TestCase
     {
         $file = self::$logfiles['error'];
 
-        self::assertFileNotExists($file);
+        self::assertFileDoesNotExist($file);
         TelegramLog::error('my error log');
         TelegramLog::error('my {place} {holder} error log', ['place' => 'custom', 'holder' => 'placeholder']);
 
@@ -104,7 +104,7 @@ class TelegramLogTest extends TestCase
     {
         $file = self::$logfiles['update'];
 
-        self::assertFileNotExists($file);
+        self::assertFileDoesNotExist($file);
         TelegramLog::update('my update log');
         TelegramLog::update('my {place} {holder} update log', ['place' => 'custom', 'holder' => 'placeholder']);
 
