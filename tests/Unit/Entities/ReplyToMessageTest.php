@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace Longman\TelegramBot\Tests\Unit\Entities;
 
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Tests\Unit\TestCase;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class ReplyToMessageTest extends TestCase
 {

@@ -9,14 +9,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Bot API 5.0 (Big update!).
 ### Changed
-- Upgrade code to PHP 7.2. (#1136)
+- Upgrade code to PHP 7.3. (#1136, )
 - Speed up clean query (@dva-re) (#1139)
 - Various code prettifications (@akalongman) (#1140, #1141, #1142, #1143)
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
-- Minimum PHP 7.2. (#1136)
+- Minimum PHP 7.3. (#1136, )
 
 ## [0.64.0] - 2020-10-04
 ### Notes

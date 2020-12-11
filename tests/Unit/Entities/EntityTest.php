@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Longman\TelegramBot\Tests\Unit;
+namespace Longman\TelegramBot\Tests\Unit\Entities;
 
 use Longman\TelegramBot\Entities\Entity;
+use Longman\TelegramBot\Tests\Unit\TestCase;
 
 /**
  * @link            https://github.com/php-telegram-bot/core

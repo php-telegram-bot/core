@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
-    bootstrap="./tests/bootstrap.php"
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnError="false"
-    stopOnFailure="false"
-    stopOnIncomplete="false"
-    stopOnSkipped="false"
-    timeoutForLargeTests="60"
-    timeoutForMediumTests="10"
-    timeoutForSmallTests="1"
-    verbose="false"
->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd">
+    <coverage>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+        <exclude>
+            <directory suffix=".php">./src/Exception</directory>
+        </exclude>
+    </coverage>
     <php>
+        <ini name="date.timezone" value="UTC"/>
         <ini name="error_reporting" value="-1"/>
         <const name="PHPUNIT_TESTSUITE" value="true"/>
         <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
@@ -33,12 +23,4 @@
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src</directory>
-            <exclude>
-                <directory suffix=".php">./src/Exception</directory>
-            </exclude>
-        </whitelist>
-    </filter>
 </phpunit>
