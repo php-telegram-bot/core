@@ -7,16 +7,24 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 5.0 (Big update!).
 ### Changed
-- Upgrade code to PHP 7.3. (#1136, )
-- Speed up clean query (@dva-re) (#1139)
-- Various code prettifications (@akalongman) (#1140, #1141, #1142, #1143)
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
-- Minimum PHP 7.3. (#1136, )
+
+## [0.70.0] - 2020-12-21
+### Notes
+- [:ledger: View file changes][0.70.0] ∙ [:page_with_curl: DB migration script][0.70.0-sql-migration]
+- [:exclamation:][0.70.0-bc-minimum-php-73] PHP 7.3+ required, so make sure your code is up to date with correct types!
+### Added
+- Bot API 5.0 (Big update!). (#1147)
+### Changed
+- Upgrade code to PHP 7.3. (#1136, #1158)
+- Speed up `/clean` query. (@dva-re) (#1139)
+- Various code prettifications. (@akalongman) (#1140, #1141, #1142, #1143)
+### Security
+- Minimum PHP 7.3, allow PHP 8.0. (#1136, #1158)
 
 ## [0.64.0] - 2020-10-04
 ### Notes
@@ -341,7 +349,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][0.45.0] ∙ [:page_with_curl: DB migration script][0.45.0-sql-migration]
 ### Added
 - Documents can be sent by providing its contents via Psr7 stream (as opposed to passing a file path).
-- Allow setting a custom Guzzle HTTP Client for requests (#511).
+- Allow setting a custom Guzzle HTTP Client for requests (#511, #536).
 - First implementations towards Bots API 3.0.
 ### Changed
 - [:exclamation:][0.45.0-bc-chats-params-array] `Request::sendToActiveChats` and `DB::selectChats` now accept parameters as an options array and allow selecting of channels.
@@ -471,6 +479,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[0.70.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.64.0-0.70.0.sql
+[0.70.0-bc-minimum-php-73]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-73
 [0.63.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.62.0-0.63.0.sql
 [0.63.0-bc-static-method-entityescapemarkdown]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#static-method-entityescapemarkdown
 [0.62.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.61.1-0.62.0.sql
@@ -501,6 +511,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.70.0]: https://github.com/php-telegram-bot/core/compare/0.64.0...0.70.0
 [0.64.0]: https://github.com/php-telegram-bot/core/compare/0.63.1...0.64.0
 [0.63.1]: https://github.com/php-telegram-bot/core/compare/0.63.0...0.63.1
 [0.63.0]: https://github.com/php-telegram-bot/core/compare/0.62.0...0.63.0
