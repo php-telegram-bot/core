@@ -90,14 +90,14 @@ class Telegram
      *
      * @var string
      */
-    protected $upload_path;
+    protected $upload_path = '';
 
     /**
      * Download path
      *
      * @var string
      */
-    protected $download_path;
+    protected $download_path = '';
 
     /**
      * MySQL integration

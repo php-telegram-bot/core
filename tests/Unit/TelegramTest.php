@@ -18,11 +18,11 @@ use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 
 /**
- * @package         TelegramTest
+ * @link            https://github.com/php-telegram-bot/core
  * @author          Avtandil Kikabidze <akalongman@gmail.com>
  * @copyright       Avtandil Kikabidze <akalongman@gmail.com>
  * @license         http://opensource.org/licenses/mit-license.php  The MIT License (MIT)
- * @link            https://github.com/php-telegram-bot/core
+ * @package         TelegramTest
  */
 class TelegramTest extends TestCase
 {
@@ -131,6 +131,18 @@ class TelegramTest extends TestCase
 
         $tg->addCommandsPath($this->custom_commands_paths[0]);
         self::assertCount(4, $tg->getCommandsPaths());
+    }
+
+    public function testSettingDownloadUploadPaths(): void
+    {
+        self::assertEmpty($this->telegram->getDownloadPath());
+        self::assertEmpty($this->telegram->getUploadPath());
+
+        $this->telegram->setDownloadPath('/down/below');
+        $this->telegram->setUploadPath('/up/above');
+
+        self::assertSame('/down/below', $this->telegram->getDownloadPath());
+        self::assertSame('/up/above', $this->telegram->getUploadPath());
     }
 
     public function testGetCommandsList(): void
