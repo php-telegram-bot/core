@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Ensure download and upload path variables are defined.
 ### Security
 
 ## [0.70.0] - 2020-12-21
