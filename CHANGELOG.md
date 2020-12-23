@@ -7,7 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Extra parameter for `Request::sendMessage()` to return all response objects for split messages.
+- Extra parameter for `Request::sendMessage()` to pass options and return all response objects for split messages.
 ### Changed
 ### Deprecated
 ### Removed

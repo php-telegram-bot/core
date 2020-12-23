@@ -686,6 +686,10 @@ class Request
      * Use this method to send text messages. On success, the last sent Message is returned
      *
      * All message responses are saved in `$extras['responses']`.
+     * Custom encoding can be defined in `$extras['encoding']` (default: `mb_internal_encoding()`)
+     * Custom splitting can be defined in `$extras['split']` (default: 4096)
+     *     `$extras['split'] = null;` // force to not split message at all!
+     *     `$extras['split'] = 200;`  // split message into 200 character chunks
      *
      * @link https://core.telegram.org/bots/api#sendmessage
      *
@@ -699,19 +703,24 @@ class Request
      */
     public static function sendMessage(array $data, ?array &$extras = []): ServerResponse
     {
-        $text       = $data['text'];
-        $max_length = 4096;
+        $extras = array_merge([
+            'split'    => 4096,
+            'encoding' => mb_internal_encoding(),
+        ], (array) $extras);
 
-        $extras    = (array) $extras;
+        $text       = $data['text'];
+        $encoding   = $extras['encoding'];
+        $max_length = $extras['split'] ?: mb_strlen($text, $encoding);
+
         $responses = [];
 
         do {
             // Chop off and send the first message.
-            $data['text'] = mb_substr($text, 0, $max_length);
+            $data['text'] = mb_substr($text, 0, $max_length, $encoding);
             $responses[]  = self::send('sendMessage', $data);
 
             // Prepare the next message.
-            $text = mb_substr($text, $max_length);
+            $text = mb_substr($text, $max_length, null, $encoding);
         } while ($text !== '');
 
         // Add all response objects to referenced variable.
