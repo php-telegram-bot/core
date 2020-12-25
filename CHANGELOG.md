@@ -7,13 +7,19 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Extra parameter for `Request::sendMessage()` to pass options and return all response objects for split messages.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- Ensure download and upload path variables are defined.
 ### Security
+
+## [0.70.1] - 2020-12-25
+### Notes
+- [:ledger: View file changes][0.70.1]
+### Added
+- Extra parameter for `Request::sendMessage()` to pass options and return all response objects for split messages. (#1163)
+### Fixed
+- Ensure download and upload path variables are defined. (#1162)
 
 ## [0.70.0] - 2020-12-21
 ### Notes
@@ -513,6 +519,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.70.1]: https://github.com/php-telegram-bot/core/compare/0.70.0...0.70.1
 [0.70.0]: https://github.com/php-telegram-bot/core/compare/0.64.0...0.70.0
 [0.64.0]: https://github.com/php-telegram-bot/core/compare/0.63.1...0.64.0
 [0.63.1]: https://github.com/php-telegram-bot/core/compare/0.63.0...0.63.1
