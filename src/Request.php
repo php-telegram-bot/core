@@ -683,29 +683,50 @@ class Request
     }
 
     /**
-     * Use this method to send text messages. On success, the sent Message is returned
+     * Use this method to send text messages. On success, the last sent Message is returned
+     *
+     * All message responses are saved in `$extras['responses']`.
+     * Custom encoding can be defined in `$extras['encoding']` (default: `mb_internal_encoding()`)
+     * Custom splitting can be defined in `$extras['split']` (default: 4096)
+     *     `$extras['split'] = null;` // force to not split message at all!
+     *     `$extras['split'] = 200;`  // split message into 200 character chunks
      *
      * @link https://core.telegram.org/bots/api#sendmessage
      *
-     * @param array $data
+     * @todo Splitting formatted text may break the message.
+     *
+     * @param array      $data
+     * @param array|null $extras
      *
      * @return ServerResponse
      * @throws TelegramException
      */
-    public static function sendMessage(array $data): ServerResponse
+    public static function sendMessage(array $data, ?array &$extras = []): ServerResponse
     {
-        $text = $data['text'];
+        $extras = array_merge([
+            'split'    => 4096,
+            'encoding' => mb_internal_encoding(),
+        ], (array) $extras);
+
+        $text       = $data['text'];
+        $encoding   = $extras['encoding'];
+        $max_length = $extras['split'] ?: mb_strlen($text, $encoding);
+
+        $responses = [];
 
         do {
-            //Chop off and send the first message
-            $data['text'] = mb_substr($text, 0, 4096);
-            $response     = self::send('sendMessage', $data);
+            // Chop off and send the first message.
+            $data['text'] = mb_substr($text, 0, $max_length, $encoding);
+            $responses[]  = self::send('sendMessage', $data);
 
-            //Prepare the next message
-            $text = mb_substr($text, 4096);
-        } while (mb_strlen($text, 'UTF-8') > 0);
+            // Prepare the next message.
+            $text = mb_substr($text, $max_length, null, $encoding);
+        } while ($text !== '');
 
-        return $response;
+        // Add all response objects to referenced variable.
+        $extras['responses'] = $responses;
+
+        return end($responses);
     }
 
     /**
@@ -717,7 +738,7 @@ class Request
      * @return ServerResponse
      * @throws TelegramException
      */
-    public static function __callStatic(string $action, array $data)
+    public static function __callStatic(string $action, array $data): ServerResponse
     {
         // Only argument should be the data array, ignore any others.
         return static::send($action, reset($data) ?: []);
