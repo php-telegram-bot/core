@@ -8,6 +8,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
+- Improved error messages for empty input.
+- Log update when processing it, not when fetching input.
 ### Deprecated
 ### Removed
 ### Fixed

@@ -293,21 +293,15 @@ class Request
     }
 
     /**
-     * Set input from custom input or stdin and return it
+     * Get input from custom input or stdin and return it
      *
      * @return string
      */
     public static function getInput(): string
     {
         // First check if a custom input has been set, else get the PHP input.
-        $input = self::$telegram->getCustomInput();
-        if (empty($input)) {
-            $input = file_get_contents('php://input');
-        }
-
-        TelegramLog::update($input);
-
-        return $input;
+        return self::$telegram->getCustomInput()
+            ?: file_get_contents('php://input');
     }
 
     /**
@@ -496,11 +490,6 @@ class Request
                 $request_params
             );
             $result   = (string) $response->getBody();
-
-            //Logging getUpdates Update
-            if ($action === 'getUpdates') {
-                TelegramLog::update($result);
-            }
         } catch (RequestException $e) {
             $response = null;
             $result   = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';

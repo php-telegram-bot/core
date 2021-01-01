@@ -417,17 +417,24 @@ class Telegram
 
         //Take custom input into account.
         if ($custom_input = $this->getCustomInput()) {
-            $response = new ServerResponse(json_decode($custom_input, true), $this->bot_username);
+            try {
+                $input = json_decode($this->input, true, 512, JSON_THROW_ON_ERROR);
+                if (empty($input)) {
+                    throw new TelegramException('Custom input is empty');
+                }
+                $response = new ServerResponse($input, $this->bot_username);
+            } catch (\Throwable $e) {
+                throw new TelegramException('Invalid custom input JSON: ' . $e->getMessage());
+            }
         } else {
             if (DB::isDbConnected() && $last_update = DB::selectTelegramUpdate(1)) {
-                //Get last update id from the database
-                $last_update = reset($last_update);
-
+                // Get last Update id from the database.
+                $last_update          = reset($last_update);
                 $this->last_update_id = $last_update['id'] ?? null;
             }
 
             if ($this->last_update_id !== null) {
-                $offset = $this->last_update_id + 1;    //As explained in the telegram bot API documentation
+                $offset = $this->last_update_id + 1; // As explained in the telegram bot API documentation.
             }
 
             $response = Request::getUpdates([
@@ -438,12 +445,13 @@ class Telegram
         }
 
         if ($response->isOk()) {
-            $results = $response->getResult();
+            // Log update.
+            TelegramLog::update($response->toJson());
 
-            //Process all updates
-            /** @var Update $result */
-            foreach ($results as $result) {
-                $this->processUpdate($result);
+            // Process all updates
+            /** @var Update $update */
+            foreach ($response->getResult() as $update) {
+                $this->processUpdate($update);
             }
 
             if (!DB::isDbConnected() && !$custom_input && $this->last_update_id !== null && $offset === 0) {
@@ -472,15 +480,17 @@ class Telegram
             throw new TelegramException('Bot Username is not defined!');
         }
 
-        $this->input = Request::getInput();
-
-        if (empty($this->input)) {
-            throw new TelegramException('Input is empty!');
+        $input = Request::getInput();
+        if (empty($input)) {
+            throw new TelegramException('Input is empty! The webhook must not be called manually, only by Telegram.');
         }
 
-        $post = json_decode($this->input, true);
+        // Log update.
+        TelegramLog::update($input);
+
+        $post = json_decode($input, true);
         if (empty($post)) {
-            throw new TelegramException('Invalid JSON!');
+            throw new TelegramException('Invalid input JSON! The webhook must not be called manually, only by Telegram.');
         }
 
         if ($response = $this->processUpdate(new Update($post, $this->bot_username))) {
