@@ -27,6 +27,7 @@ A Telegram Bot based on the official [Telegram Bot API]
     - [Create your first bot](#create-your-first-bot)
     - [Require this package with Composer](#require-this-package-with-composer)
     - [Choose how to retrieve Telegram updates](#choose-how-to-retrieve-telegram-updates)
+- [Using a custom Bot API server](#using-a-custom-bot-api-server)
 - [Webhook installation](#webhook-installation)
     - [Self Signed Certificate](#self-signed-certificate)
     - [Unset Webhook](#unset-webhook)
@@ -199,6 +200,23 @@ The bot can handle updates with [**Webhook**](#webhook-installation) or [**getUp
 | Description | Telegram sends the updates directly to your host | You have to fetch Telegram updates manually |
 | Host with https | Required | Not required |
 | MySQL | Not required | ([Not](#getupdates-without-database)) Required  |
+
+## Using a custom Bot API server
+
+**For advanced users only!**
+
+As from Telegram Bot API 5.0, users can [run their own Bot API server] to handle updates.
+This means, that the PHP Telegram Bot needs to be configured to serve that custom URI.
+Additionally, you can define the URI where uploaded files to the bot can be downloaded (note the `{API_KEY}` placeholder).
+
+```php
+Longman\TelegramBot\Request::setCustomBotApiUri(
+    $api_base_uri          = 'https://your-bot-api-server', // Default: https://api.telegram.org
+    $api_base_download_uri = '/path/to/files/{API_KEY}'     // Default: /file/bot{API_KEY}
+);
+```
+
+**Note:** If you are running your bot in `--local` mode, you won't need the `Request::downloadFile()` method, since you can then access your files directly from the absolute path returned by `Request::getFile()`.
 
 ## Webhook installation
 
@@ -657,6 +675,7 @@ Credit list in [CREDITS](CREDITS)
 
 [Telegram Bot API]: https://core.telegram.org/bots/api "Telegram Bot API"
 [Composer]: https://getcomposer.org/ "Composer"
+[run their own Bot API server]: https://core.telegram.org/bots/api#using-a-local-bot-api-server "Using a Local Bot API Server"
 [example-bot repository]: https://github.com/php-telegram-bot/example-bot "Example Bot repository"
 [api-setwebhook]: https://core.telegram.org/bots/api#setwebhook "Webhook on Telegram Bot API"
 [set.php]: https://github.com/php-telegram-bot/example-bot/blob/master/set.php "example set.php"
