@@ -391,13 +391,13 @@ class Telegram
     /**
      * Handle getUpdates method
      *
-     * @param int $limit
-     * @param int $timeout
+     * @param int|null $limit
+     * @param int|null $timeout
      *
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function handleGetUpdates(int $limit = 0, int $timeout = 0): ServerResponse
+    public function handleGetUpdates(?int $limit = null, ?int $timeout = null): ServerResponse
     {
         if (empty($this->bot_username)) {
             throw new TelegramException('Bot Username is not defined!');

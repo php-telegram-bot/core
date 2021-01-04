@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- `getUpdates` method wrongly sends only 1 Update when a limit of 0 is passed.
 ### Security
 
 ## [0.70.1] - 2020-12-25
