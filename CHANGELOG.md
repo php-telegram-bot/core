@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Define a custom Bot API server and file download URI.
 ### Changed
 - Improved error messages for empty input.
 - Log update when processing it, not when fetching input.

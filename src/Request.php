@@ -117,6 +117,13 @@ class Request
     private static $api_base_uri = 'https://api.telegram.org';
 
     /**
+     * URI of the Telegram API for downloading files (relative to $api_base_url or absolute)
+     *
+     * @var string
+     */
+    private static $api_base_download_uri = '/file/bot{API_KEY}';
+
+    /**
      * Guzzle Client object
      *
      * @var ClientInterface
@@ -290,6 +297,20 @@ class Request
     public static function setClient(ClientInterface $client): void
     {
         self::$client = $client;
+    }
+
+    /**
+     * Set a custom Bot API URL
+     *
+     * @param string $api_base_uri
+     * @param string $api_base_download_uri
+     */
+    public static function setCustomBotApiUri(string $api_base_uri, string $api_base_download_uri = ''): void
+    {
+        self::$api_base_uri = $api_base_uri;
+        if ($api_base_download_uri !== '') {
+            self::$api_base_download_uri = $api_base_download_uri;
+        }
     }
 
     /**
@@ -532,8 +553,9 @@ class Request
         $debug_handle = TelegramLog::getDebugLogTempStream();
 
         try {
+            $base_download_uri = str_replace('{API_KEY}', self::$telegram->getApiKey(), self::$api_base_download_uri);
             self::$client->get(
-                '/file/bot' . self::$telegram->getApiKey() . '/' . $tg_file_path,
+                "{$base_download_uri}/{$tg_file_path}",
                 ['debug' => $debug_handle, 'sink' => $file_path]
             );
 
