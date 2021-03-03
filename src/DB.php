@@ -1259,13 +1259,13 @@ class DB
     /**
      * Get Telegram API request count for current chat / message
      *
-     * @param int|null    $chat_id
-     * @param string|null $inline_message_id
+     * @param int|string|null $chat_id
+     * @param string|null     $inline_message_id
      *
      * @return array|bool Array containing TOTAL and CURRENT fields or false on invalid arguments
      * @throws TelegramException
      */
-    public static function getTelegramRequestCount(int $chat_id = null, string $inline_message_id = null)
+    public static function getTelegramRequestCount($chat_id = null, string $inline_message_id = null)
     {
         if (!self::isDbConnected()) {
             return false;

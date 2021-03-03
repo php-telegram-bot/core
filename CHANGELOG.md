@@ -16,6 +16,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 - `getUpdates` method wrongly sends only 1 Update when a limit of 0 is passed.
 - `Telegram::runCommands()` now passes the correct message text to the commands.
+- Request limiter accepts chat ID as integer and string.
 ### Security
 
 ## [0.70.1] - 2020-12-25
