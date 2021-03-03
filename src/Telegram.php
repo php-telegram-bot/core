@@ -1036,14 +1036,13 @@ class Telegram
             ]);
         };
 
-        // Required for isAdmin() check inside getCommandObject()
-        $this->update = $newUpdate();
-
-        // Load up-to-date commands list
-        $this->commands_objects = $this->getCommandsList();
-
         foreach ($commands as $command) {
             $this->update = $newUpdate($command);
+
+            // Load up-to-date commands list
+            if (empty($this->commands_objects)) {
+                $this->commands_objects = $this->getCommandsList();
+            }
 
             $this->executeCommand($this->update->getMessage()->getCommand());
         }
