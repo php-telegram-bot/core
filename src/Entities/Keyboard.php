@@ -88,12 +88,6 @@ class Keyboard extends Entity
 
         $data = reset($args);
 
-        // reset() returns false, if the array was empty,
-        // which crashes force-casting $data into an array
-        if ($data === false) {
-            return [];
-        }
-
         if ($from_data = array_key_exists($keyboard_type, (array) $data)) {
             $args = $data[$keyboard_type];
 
@@ -115,7 +109,8 @@ class Keyboard extends Entity
             $data[$keyboard_type] = $new_keyboard;
         }
 
-        return $data;
+        // If $args was empty, $data still contains `false`
+        return $data ?? [];
     }
 
     /**
