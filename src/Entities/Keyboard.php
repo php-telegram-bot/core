@@ -110,7 +110,7 @@ class Keyboard extends Entity
         }
 
         // If $args was empty, $data still contains `false`
-        return $data ?? [];
+        return $data ?: [];
     }
 
     /**
