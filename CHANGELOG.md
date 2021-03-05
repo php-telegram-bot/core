@@ -7,17 +7,25 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Define a custom Bot API server and file download URI.
 ### Changed
-- Improved error messages for empty input.
-- Log update when processing it, not when fetching input.
 ### Deprecated
 ### Removed
 ### Fixed
-- `getUpdates` method wrongly sends only 1 Update when a limit of 0 is passed.
-- `Telegram::runCommands()` now passes the correct message text to the commands.
-- Request limiter accepts chat ID as integer and string.
 ### Security
+
+## [0.71.0] - 2021-03-05
+### Notes
+- [:ledger: View file changes][0.71.0]
+### Added
+- Define a custom Bot API server and file download URI. (#1168)
+### Changed
+- Improved error messages for empty input. (#1164)
+- Log update when processing it, not when fetching input. (#1164)
+### Fixed
+- `getUpdates` method wrongly sends only 1 Update when a limit of 0 is passed. (#1169)
+- `Telegram::runCommands()` now passes the correct message text to the commands. (#1181)
+- Request limiter accepts chat ID as integer and string. (#1182)
+- Calling Keyboard constructor without any parameters. (@hutattedonmyarm) (#1184)
 
 ## [0.70.1] - 2020-12-25
 ### Notes
@@ -525,6 +533,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.71.0]: https://github.com/php-telegram-bot/core/compare/0.70.1...0.71.0
 [0.70.1]: https://github.com/php-telegram-bot/core/compare/0.70.0...0.70.1
 [0.70.0]: https://github.com/php-telegram-bot/core/compare/0.64.0...0.70.0
 [0.64.0]: https://github.com/php-telegram-bot/core/compare/0.63.1...0.64.0
