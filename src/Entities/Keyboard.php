@@ -109,7 +109,8 @@ class Keyboard extends Entity
             $data[$keyboard_type] = $new_keyboard;
         }
 
-        return $data;
+        // If $args was empty, $data still contains `false`
+        return $data ?: [];
     }
 
     /**
