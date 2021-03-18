@@ -20,4 +20,6 @@ namespace Longman\TelegramBot\Entities;
  *
  * @method int        getMessageAutoDeleteTime()       New auto-delete time for messages in the chat
  */
-class MessageAutoDeleteTimerChanged extends Entity {}
+class MessageAutoDeleteTimerChanged extends Entity
+{
+}

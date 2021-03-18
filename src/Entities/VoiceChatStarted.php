@@ -18,4 +18,6 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#voicechatstarted
  */
-class VoiceChatStarted extends Entity {}
+class VoiceChatStarted extends Entity
+{
+}

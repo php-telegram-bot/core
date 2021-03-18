@@ -20,4 +20,6 @@ namespace Longman\TelegramBot\Entities;
  *
  * @method int        getDuration()       Voice chat duration; in seconds
  */
-class VoiceChatEnded extends Entity {}
+class VoiceChatEnded extends Entity
+{
+}
