@@ -5,12 +5,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased]
+- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+- `message.edit_date` is now of type `timestamp`.
 ### Security
 
 ## [0.71.0] - 2021-03-05
@@ -501,6 +502,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.71.0-unreleased.sql
 [0.70.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.64.0-0.70.0.sql
 [0.70.0-bc-minimum-php-73]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-73
 [0.63.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.62.0-0.63.0.sql
