@@ -702,3 +702,7 @@ Credit list in [CREDITS](CREDITS)
 [PayPal-noplanman]: https://paypal.me/noplanman "Donate with PayPal"
 [Bitcoin]: https://www.blockchain.com/btc/address/166NcyE7nDxkRPWidWtG1rqrNJoD5oYNiV "Donate with Bitcoin"
 [Ethereum]: https://etherscan.io/address/0x485855634fa212b0745375e593fAaf8321A81055 "Donate with Ethereum"
+
+
+This is so cool for use ! 
+I suggest this
