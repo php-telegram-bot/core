@@ -557,7 +557,7 @@ class Telegram
             $type    = $message->getType();
 
             // Let's check if the message object has the type field we're looking for...
-            $command_tmp = $type === 'command' ? $message->getCommand() : $this->getCommandFromType($type);
+            $command_tmp = mb_strtolower($type === 'command' ? $message->getCommand() : $this->getCommandFromType($type));
             // ...and if a fitting command class is available.
             $command_obj = $command_tmp ? $this->getCommandObject($command_tmp) : null;
 
