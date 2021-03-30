@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
   `via_bot` bigint NULL DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent',
-  `edit_date` bigint UNSIGNED DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
+  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
   `media_group_id` TEXT COMMENT 'The unique identifier of a media message group this message belongs to',
   `author_signature` TEXT COMMENT 'Signature of the post author for messages in channels',
   `text` TEXT COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',

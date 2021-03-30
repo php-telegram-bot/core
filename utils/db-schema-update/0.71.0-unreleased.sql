@@ -1,3 +1,5 @@
+ALTER TABLE `message` MODIFY `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was last edited in Unix time';
+
 CREATE TABLE IF NOT EXISTS `chat_member_updated` (
     `id` BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
     `chat_id` BIGINT NOT NULL COMMENT 'Chat the user belongs to',

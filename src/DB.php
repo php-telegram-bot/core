@@ -1110,7 +1110,7 @@ class DB
             $sth->bindValue(':reply_to_message', $reply_to_message_id);
 
             $sth->bindValue(':via_bot', $via_bot_id);
-            $sth->bindValue(':edit_date', $message->getEditDate());
+            $sth->bindValue(':edit_date', self::getTimestamp($message->getEditDate()));
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':author_signature', $message->getAuthorSignature());
             $sth->bindValue(':text', $message->getText());
