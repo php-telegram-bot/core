@@ -391,13 +391,14 @@ class Telegram
     /**
      * Handle getUpdates method
      *
-     * @param int|null $limit
-     * @param int|null $timeout
+     * @param int|null   $limit
+     * @param int|null   $timeout
+     * @param array|null $allowed_updates
      *
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function handleGetUpdates(?int $limit = null, ?int $timeout = null): ServerResponse
+    public function handleGetUpdates(?int $limit = null, ?int $timeout = null, ?array $allowed_updates = null): ServerResponse
     {
         if (empty($this->bot_username)) {
             throw new TelegramException('Bot Username is not defined!');
@@ -413,6 +414,10 @@ class Telegram
             );
         }
 
+        // By default, allow ALL known update types.
+        if ($allowed_updates === null) {
+            $allowed_updates = array_keys(Update::$update_type_entities);
+        }
         $offset = 0;
 
         //Take custom input into account.
@@ -437,11 +442,7 @@ class Telegram
                 $offset = $this->last_update_id + 1; // As explained in the telegram bot API documentation.
             }
 
-            $response = Request::getUpdates([
-                'offset'  => $offset,
-                'limit'   => $limit,
-                'timeout' => $timeout,
-            ]);
+            $response = Request::getUpdates(compact('offset', 'limit', 'timeout', 'allowed_updates'));
         }
 
         if ($response->isOk()) {
@@ -455,12 +456,11 @@ class Telegram
             }
 
             if (!DB::isDbConnected() && !$custom_input && $this->last_update_id !== null && $offset === 0) {
-                //Mark update(s) as read after handling
-                Request::getUpdates([
-                    'offset'  => $this->last_update_id + 1,
-                    'limit'   => 1,
-                    'timeout' => $timeout,
-                ]);
+                // Mark update(s) as read after handling
+                $offset = $this->last_update_id + 1;
+                $limit  = 1;
+
+                Request::getUpdates(compact('offset', 'limit', 'timeout', 'allowed_updates'));
             }
         }
 

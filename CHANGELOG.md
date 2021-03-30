@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Removed
 ### Fixed
 - `message.edit_date` is now of type `timestamp`.
+- Allow all update types by default when using `getUpdates` method.
 ### Security
 
 ## [0.71.0] - 2021-03-05

@@ -34,24 +34,26 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  */
 class Update extends Entity
 {
+    public static $update_type_entities = [
+        'message'              => Message::class,
+        'edited_message'       => EditedMessage::class,
+        'channel_post'         => ChannelPost::class,
+        'edited_channel_post'  => EditedChannelPost::class,
+        'inline_query'         => InlineQuery::class,
+        'chosen_inline_result' => ChosenInlineResult::class,
+        'callback_query'       => CallbackQuery::class,
+        'shipping_query'       => ShippingQuery::class,
+        'pre_checkout_query'   => PreCheckoutQuery::class,
+        'poll'                 => Poll::class,
+        'poll_answer'          => PollAnswer::class,
+    ];
+
     /**
      * {@inheritdoc}
      */
     protected function subEntities(): array
     {
-        return [
-            'message'              => Message::class,
-            'edited_message'       => EditedMessage::class,
-            'channel_post'         => ChannelPost::class,
-            'edited_channel_post'  => EditedChannelPost::class,
-            'inline_query'         => InlineQuery::class,
-            'chosen_inline_result' => ChosenInlineResult::class,
-            'callback_query'       => CallbackQuery::class,
-            'shipping_query'       => ShippingQuery::class,
-            'pre_checkout_query'   => PreCheckoutQuery::class,
-            'poll'                 => Poll::class,
-            'poll_answer'          => PollAnswer::class,
-        ];
+        return self::$update_type_entities;
     }
 
     /**
