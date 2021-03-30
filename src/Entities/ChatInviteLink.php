@@ -33,7 +33,7 @@ class ChatInviteLink extends Entity
     protected function subEntities(): array
     {
         return [
-            'creator' => User::class
+            'creator' => User::class,
         ];
     }
 }

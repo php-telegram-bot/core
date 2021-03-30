@@ -78,7 +78,7 @@ class Update extends Entity
     /**
      * Get update content
      *
-     * @return CallbackQuery|ChosenInlineResult|InlineQuery|Message
+     * @return CallbackQuery|ChatMemberUpdated|ChosenInlineResult|InlineQuery|Message|PollAnswer|Poll|PreCheckoutQuery|ShippingQuery
      */
     public function getUpdateContent()
     {

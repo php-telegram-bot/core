@@ -22,4 +22,5 @@ namespace Longman\TelegramBot\Entities;
  */
 class VoiceChatEnded extends Entity
 {
+
 }

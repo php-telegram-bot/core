@@ -28,7 +28,7 @@ class VoiceChatParticipantsInvited extends Entity
     protected function subEntities(): array
     {
         return [
-            'users'    => [User::class],
+            'users' => [User::class],
         ];
     }
 }

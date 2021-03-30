@@ -19,7 +19,7 @@ namespace Longman\TelegramBot\Entities;
  * @link https://core.telegram.org/bots/api#chatmemberupdated
  *
  * @method Chat            getChat()              Chat the user belongs to
- * @method User            getUser()              Performer of the action, which resulted in the change
+ * @method User            getFrom()              Performer of the action, which resulted in the change
  * @method int             getDate()              Date the change was done in Unix time
  * @method ChatMember      getOldChatMember()     Previous information about the chat member
  * @method ChatMember      getNewChatMember()     New information about the chat member
@@ -33,11 +33,11 @@ class ChatMemberUpdated extends Entity
     protected function subEntities(): array
     {
         return [
-            'chat'              => Chat::class,
-            'from'              => User::class,
-            'old_chat_member'   => ChatMember::class,
-            'new_chat_member'   => ChatMember::class,
-            'invite_link'       => ChatInviteLink::class,
+            'chat'            => Chat::class,
+            'from'            => User::class,
+            'old_chat_member' => ChatMember::class,
+            'new_chat_member' => ChatMember::class,
+            'invite_link'     => ChatInviteLink::class,
         ];
     }
 }
