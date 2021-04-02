@@ -28,7 +28,7 @@ use Throwable;
  *
  * @method static ServerResponse getUpdates(array $data)                      Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned.
  * @method static ServerResponse setWebhook(array $data)                      Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns true.
- * @method static ServerResponse deleteWebhook()                              Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters.
+ * @method static ServerResponse deleteWebhook(array $data)                   Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success.
  * @method static ServerResponse getWebhookInfo()                             Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
  * @method static ServerResponse getMe()                                      A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
  * @method static ServerResponse logOut()                                     Use this method to log out from the cloud Bot API server before launching the bot locally. Requires no parameters. Returns True on success.
