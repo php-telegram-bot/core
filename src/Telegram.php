@@ -15,6 +15,7 @@ defined('TB_BASE_PATH') || define('TB_BASE_PATH', __DIR__);
 defined('TB_BASE_COMMANDS_PATH') || define('TB_BASE_COMMANDS_PATH', TB_BASE_PATH . '/Commands');
 
 use Exception;
+use InvalidArgumentException;
 use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Commands\SystemCommand;
@@ -310,10 +311,11 @@ class Telegram
      *
      * @return string|null
      */
-    private function getCommandClassName(string $auth, string $command): ?string
+    public function getCommandClassName(string $auth, string $command): ?string
     {
         $command = mb_strtolower($command);
         $auth = $this->ucFirstUnicode($auth);
+
         if (!empty($this->commandsClasses[$auth][$command])) {
             $className = $this->commandsClasses[$auth][$command];
             if (class_exists($className)){
@@ -774,11 +776,15 @@ class Telegram
     {
         if (!class_exists($className))
         {
-            TelegramLog::error('Command class name: "' . $className . '" does not exist.');
+            $error = 'Command class name: "' . $className . '" does not exist.';
+            TelegramLog::error($error);
+            throw new InvalidArgumentException($error);
         }
-        if (!empty($command))
+        if (empty($command))
         {
-            TelegramLog::error('Command Name "' . $command . '" not set.');
+            $error = 'Command Name "' . $command . '" not set.';
+            TelegramLog::error($error);
+            throw new InvalidArgumentException($error);
         }
 
         if (!is_array($this->commandsClasses))
@@ -842,6 +848,16 @@ class Telegram
     public function getCommandsPaths(): array
     {
         return $this->commands_paths;
+    }
+
+    /**
+     * Return the list of commands classes
+     *
+     * @return array
+     */
+    public function getCommandsClasses(): array
+    {
+        return $this->commandsClasses;
     }
 
     /**
