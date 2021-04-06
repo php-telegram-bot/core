@@ -926,12 +926,14 @@ class Telegram
     /**
      * Delete any assigned webhook
      *
-     * @return mixed
+     * @param array $data
+     *
+     * @return ServerResponse
      * @throws TelegramException
      */
-    public function deleteWebhook()
+    public function deleteWebhook(array $data = []): ServerResponse
     {
-        $result = Request::deleteWebhook();
+        $result = Request::deleteWebhook($data);
 
         if (!$result->isOk()) {
             throw new TelegramException(

@@ -31,6 +31,8 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  * @method PreCheckoutQuery    getPreCheckoutQuery()   Optional. New incoming pre-checkout query. Contains full information about checkout
  * @method Poll                getPoll()               Optional. New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
  * @method PollAnswer          getPollAnswer()         Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
+ * @method ChatMemberUpdated   getMyChatMember()       Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
+ * @method ChatMemberUpdated   getChatMember()         Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
  */
 class Update extends Entity
 {
@@ -76,7 +78,7 @@ class Update extends Entity
     /**
      * Get update content
      *
-     * @return CallbackQuery|ChosenInlineResult|InlineQuery|Message
+     * @return CallbackQuery|ChatMemberUpdated|ChosenInlineResult|InlineQuery|Message|PollAnswer|Poll|PreCheckoutQuery|ShippingQuery
      */
     public function getUpdateContent()
     {
