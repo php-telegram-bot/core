@@ -416,7 +416,7 @@ class Telegram
 
         // By default, allow ALL known update types.
         if ($allowed_updates === null) {
-            $allowed_updates = array_keys(Update::$update_type_entities);
+            $allowed_updates = Update::getUpdateTypes();
         }
         $offset = 0;
 
