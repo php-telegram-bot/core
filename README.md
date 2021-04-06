@@ -372,10 +372,10 @@ $allowed_updates = [
 ];
 
 // When setting the webhook.
-$telegram->setWebhook($hook_url, ['allowed_types' => $allowed_updates]);
+$telegram->setWebhook($hook_url, ['allowed_updates' => $allowed_updates]);
 
 // When handling the getUpdates method.
-$telegram->handleGetUpdates($limit = null, $timeout = null, $allowed_updates);
+$telegram->handleGetUpdates(['allowed_updates' => $allowed_updates]);
 ```
 
 ## Support
