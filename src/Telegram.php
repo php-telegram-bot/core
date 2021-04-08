@@ -415,9 +415,11 @@ class Telegram
             );
         }
 
-        $offset          = 0;
-        $limit           = null;
-        $allowed_updates = null;
+        $offset = 0;
+        $limit  = null;
+
+        // By default, get update types sent by Telegram.
+        $allowed_updates = [];
 
         // @todo Backwards compatibility for old signature, remove in next version.
         if (!is_array($data)) {
@@ -432,11 +434,6 @@ class Telegram
             $limit           = $data['limit'] ?? $limit;
             $timeout         = $data['timeout'] ?? $timeout;
             $allowed_updates = $data['allowed_updates'] ?? $allowed_updates;
-        }
-
-        // By default, allow ALL known update types.
-        if ($allowed_updates === null) {
-            $allowed_updates = Update::getUpdateTypes();
         }
 
         // Take custom input into account.

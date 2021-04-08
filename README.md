@@ -341,7 +341,33 @@ $telegram->useGetUpdatesWithoutDatabase();
 
 ## Filter Update
 
-Update processing can be allowed or denied by defining a custom update filter.
+:exclamation: Note that by default, Telegram will send any new update types that may be added in the future. This may cause commands that don't take this into account to break!
+
+It is suggested that you specifically define which update types your bot can receive and handle correctly.
+
+You can define which update types are sent to your bot by defining them when setting the [webhook](#webhook-installation) or passing an array of allowed types when using [getUpdates](#getupdates-installation).
+
+```php
+use Longman\TelegramBot\Entities\Update;
+
+// For all update types currently implemented in this library:
+// $allowed_updates = Update::getUpdateTypes();
+
+// Define the list of allowed Update types manually:
+$allowed_updates = [
+    Update::TYPE_MESSAGE,
+    Update::TYPE_CHANNEL_POST,
+    // etc.
+];
+
+// When setting the webhook.
+$telegram->setWebhook($hook_url, ['allowed_updates' => $allowed_updates]);
+
+// When handling the getUpdates method.
+$telegram->handleGetUpdates(['allowed_updates' => $allowed_updates]);
+```
+
+Alternatively, Update processing can be allowed or denied by defining a custom update filter.
 
 Let's say we only want to allow messages from a user with ID `428`, we can do the following before handling the request:
 
@@ -358,25 +384,6 @@ $telegram->setUpdateFilter(function (Update $update, Telegram $telegram, &$reaso
 ```
 
 The reason for denying an update can be defined with the `$reason` parameter. This text gets written to the debug log.
-
-Alternatively, you can define which update types are handled by your bot, by defining them when setting the [webhook](#webhook-installation) or passing an array of allowed types when using [getUpdates](#getupdates-installation).
-
-```php
-use Longman\TelegramBot\Entities\Update;
-
-// Define the list of allowed Update types here.
-$allowed_updates = [
-    Update::TYPE_MESSAGE,
-    Update::TYPE_CHANNEL_POST,
-    // etc.
-];
-
-// When setting the webhook.
-$telegram->setWebhook($hook_url, ['allowed_updates' => $allowed_updates]);
-
-// When handling the getUpdates method.
-$telegram->handleGetUpdates(['allowed_updates' => $allowed_updates]);
-```
 
 ## Support
 
