@@ -10,9 +10,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Bot API 5.1 (ChatMember Update types, Improved Invite Links, Voice Chat). (@massadm, @noplanman)
 ### Changed
 ### Deprecated
+- `Telegram::handleGetUpdates` method should be passed a `$data` array for parameters.
 ### Removed
 ### Fixed
 - `message.edit_date` is now of type `timestamp`.
+- Allow all update types by default when using `getUpdates` method.
 ### Security
 
 ## [0.71.0] - 2021-03-05

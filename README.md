@@ -7,7 +7,7 @@
 
 A Telegram Bot based on the official [Telegram Bot API]
 
-[![API Version](https://img.shields.io/badge/Bot%20API-5.1%20%28March%202021%29-32a2da.svg)](https://core.telegram.org/bots/api#november-4-2020)
+[![API Version](https://img.shields.io/badge/Bot%20API-5.1%20%28March%202021%29-32a2da.svg)](https://core.telegram.org/bots/api#march-9-2021)
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 
@@ -33,6 +33,7 @@ A Telegram Bot based on the official [Telegram Bot API]
     - [Unset Webhook](#unset-webhook)
 - [getUpdates installation](#getupdates-installation)
     - [getUpdates without database](#getupdates-without-database)
+- [Filter Update](#filter-update)
 - [Support](#support)
     - [Types](#types)
     - [Inline Query](#inline-query)
@@ -43,7 +44,6 @@ A Telegram Bot based on the official [Telegram Bot API]
     - [getUserProfilePhoto](#getuserprofilephoto)
     - [getFile and downloadFile](#getfile-and-downloadfile)
     - [Send message to all active chats](#send-message-to-all-active-chats)
-    - [Filter Update](#filter-update)
 - [Utils](#utils)
     - [MySQL storage (Recommended)](#mysql-storage-recommended)
         - [External Database connection](#external-database-connection)
@@ -339,6 +339,52 @@ If you choose to / or are obliged to use the `getUpdates` method without a datab
 $telegram->useGetUpdatesWithoutDatabase();
 ```
 
+## Filter Update
+
+:exclamation: Note that by default, Telegram will send any new update types that may be added in the future. This may cause commands that don't take this into account to break!
+
+It is suggested that you specifically define which update types your bot can receive and handle correctly.
+
+You can define which update types are sent to your bot by defining them when setting the [webhook](#webhook-installation) or passing an array of allowed types when using [getUpdates](#getupdates-installation).
+
+```php
+use Longman\TelegramBot\Entities\Update;
+
+// For all update types currently implemented in this library:
+// $allowed_updates = Update::getUpdateTypes();
+
+// Define the list of allowed Update types manually:
+$allowed_updates = [
+    Update::TYPE_MESSAGE,
+    Update::TYPE_CHANNEL_POST,
+    // etc.
+];
+
+// When setting the webhook.
+$telegram->setWebhook($hook_url, ['allowed_updates' => $allowed_updates]);
+
+// When handling the getUpdates method.
+$telegram->handleGetUpdates(['allowed_updates' => $allowed_updates]);
+```
+
+Alternatively, Update processing can be allowed or denied by defining a custom update filter.
+
+Let's say we only want to allow messages from a user with ID `428`, we can do the following before handling the request:
+
+```php
+$telegram->setUpdateFilter(function (Update $update, Telegram $telegram, &$reason = 'Update denied by update_filter') {
+    $user_id = $update->getMessage()->getFrom()->getId();
+    if ($user_id === 428) {
+        return true;
+    }
+
+    $reason = "Invalid user with ID {$user_id}";
+    return false;
+});
+```
+
+The reason for denying an update can be defined with the `$reason` parameter. This text gets written to the debug log.
+
 ## Support
 
 ### Types
@@ -432,26 +478,6 @@ $results = Request::sendToActiveChats(
 ```
 
 You can also broadcast a message to users, from the private chat with your bot. Take a look at the [admin commands](#admin-commands) below.
-
-#### Filter Update
-
-Update processing can be allowed or denied by defining a custom update filter.
-
-Let's say we only want to allow messages from a user with ID 428, we can do the following before handling the request:
-
-```php
-$telegram->setUpdateFilter(function (Update $update, Telegram $telegram, &$reason = 'Update denied by update_filter') {
-    $user_id = $update->getMessage()->getFrom()->getId();
-    if ($user_id === 428) {
-        return true;
-    }
-
-    $reason = "Invalid user with ID {$user_id}";
-    return false;
-});
-```
-
-The reason for denying an update can be defined with the `$reason` parameter. This text gets written to the debug log.
 
 ## Utils
 

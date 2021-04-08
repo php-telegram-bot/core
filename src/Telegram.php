@@ -391,13 +391,15 @@ class Telegram
     /**
      * Handle getUpdates method
      *
-     * @param int|null $limit
-     * @param int|null $timeout
+     * @todo Remove backwards compatibility for old signature and force $data to be an array.
+     *
+     * @param array|int|null $data
+     * @param int|null       $timeout
      *
      * @return ServerResponse
      * @throws TelegramException
      */
-    public function handleGetUpdates(?int $limit = null, ?int $timeout = null): ServerResponse
+    public function handleGetUpdates($data = null, ?int $timeout = null): ServerResponse
     {
         if (empty($this->bot_username)) {
             throw new TelegramException('Bot Username is not defined!');
@@ -414,8 +416,27 @@ class Telegram
         }
 
         $offset = 0;
+        $limit  = null;
 
-        //Take custom input into account.
+        // By default, get update types sent by Telegram.
+        $allowed_updates = [];
+
+        // @todo Backwards compatibility for old signature, remove in next version.
+        if (!is_array($data)) {
+            $limit = $data;
+
+            @trigger_error(
+                sprintf('Use of $limit and $timeout parameters in %s is deprecated. Use $data array instead.', __METHOD__),
+                E_USER_DEPRECATED
+            );
+        } else {
+            $offset          = $data['offset'] ?? $offset;
+            $limit           = $data['limit'] ?? $limit;
+            $timeout         = $data['timeout'] ?? $timeout;
+            $allowed_updates = $data['allowed_updates'] ?? $allowed_updates;
+        }
+
+        // Take custom input into account.
         if ($custom_input = $this->getCustomInput()) {
             try {
                 $input = json_decode($this->input, true, 512, JSON_THROW_ON_ERROR);
@@ -437,11 +458,7 @@ class Telegram
                 $offset = $this->last_update_id + 1; // As explained in the telegram bot API documentation.
             }
 
-            $response = Request::getUpdates([
-                'offset'  => $offset,
-                'limit'   => $limit,
-                'timeout' => $timeout,
-            ]);
+            $response = Request::getUpdates(compact('offset', 'limit', 'timeout', 'allowed_updates'));
         }
 
         if ($response->isOk()) {
@@ -455,12 +472,11 @@ class Telegram
             }
 
             if (!DB::isDbConnected() && !$custom_input && $this->last_update_id !== null && $offset === 0) {
-                //Mark update(s) as read after handling
-                Request::getUpdates([
-                    'offset'  => $this->last_update_id + 1,
-                    'limit'   => 1,
-                    'timeout' => $timeout,
-                ]);
+                // Mark update(s) as read after handling
+                $offset = $this->last_update_id + 1;
+                $limit  = 1;
+
+                Request::getUpdates(compact('offset', 'limit', 'timeout', 'allowed_updates'));
             }
         }
 
