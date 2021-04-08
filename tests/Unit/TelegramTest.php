@@ -13,6 +13,7 @@ namespace Longman\TelegramBot\Tests\Unit;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Exception;
+use Longman\TelegramBot\Commands\AdminCommands\WhoisCommand;
 use Longman\TelegramBot\Commands\UserCommands\StartCommand;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -139,25 +140,26 @@ class TelegramTest extends TestCase
     {
         $tg = $this->telegram;
         $class = StartCommand::class;
+        $aClass = WhoisCommand::class;
 
         self::assertCount(3, $tg->getCommandsClasses());
 
         try {
-            $tg->addCommandsClass('test', 'not\exist\Class', 'user');
+            $tg->addCommandsClass('not\exist\Class');
         }
         catch (\Exception $ex){}
         self::assertCount(0, $tg->getCommandsClasses()['User']);
 
         try {
-            $tg->addCommandsClass('', $class, 'user');
+            $tg->addCommandsClass('');
         }
         catch (\Exception $ex){}
         self::assertCount(0, $tg->getCommandsClasses()['User']);
 
-        $tg->addCommandsClass('test', $class, 'user');
+        $tg->addCommandsClass($class);
         self::assertCount(1, $tg->getCommandsClasses()['User']);
 
-        $tg->addCommandsClass('testadmin', $class, 'admin');
+        $tg->addCommandsClass($aClass);
         self::assertCount(1, $tg->getCommandsClasses()['Admin']);
 
     }
@@ -191,9 +193,10 @@ class TelegramTest extends TestCase
         $class = $this->telegram->getCommandClassName('user', 'notexist');
         self::assertNull($class);
 
-        $this->telegram->addCommandsClass('test', $className, 'user');
-        $class = $this->telegram->getCommandClassName('user', 'test');
+        $this->telegram->addCommandsClass($className);
+        $class = $this->telegram->getCommandClassName('user', 'start');
         self::assertNotNull($class);
+
         self::assertSame($className, $class);
 
     }
