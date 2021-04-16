@@ -525,27 +525,7 @@ With [admin commands](#admin-commands) you can manage your channels directly wit
 
 The bot is able to recognise commands in a chat with multiple bots (/command@mybot).
 
-It can execute commands that get triggered by chat events.
-
-Here's the list:
-
-- *StartCommand.php* (A new user starts to use the bot.)
-- *NewChatMembersCommand.php* (A new member(s) was added to the group, information about them.)
-- *LeftChatMemberCommand.php* (A member was removed from the group, information about them.)
-- *NewChatTitleCommand.php* (A chat title was changed to this value.)
-- *NewChatPhotoCommand.php* (A chat photo was changed to this value.)
-- *DeleteChatPhotoCommand.php* (Service message: the chat photo was deleted.)
-- *GroupChatCreatedCommand.php* (Service message: the group has been created.)
-- *SupergroupChatCreatedCommand.php* (Service message: the supergroup has been created.)
-- *ChannelChatCreatedCommand.php* (Service message: the channel has been created.)
-- *MigrateToChatIdCommand.php* (The group has been migrated to a supergroup with the specified identifier.)
-- *MigrateFromChatIdCommand.php* (The supergroup has been migrated from a group with the specified identifier.)
-- *PinnedMessageCommand.php* (Specified message was pinned.)
-
-- *GenericmessageCommand.php* (Handle any type of message.)
-- *GenericCommand.php* (Handle commands that don't exist or to use commands as a variable.)
-    - Favourite colour? */black, /red*
-    - Favourite number? */1, /134*
+It can also execute commands that get triggered by events, so-called Service Messages.
 
 ### Custom Commands
 
@@ -553,6 +533,18 @@ Maybe you would like to develop your own commands.
 There is a guide to help you [create your own commands][wiki-create-your-own-commands].
 
 Also, be sure to have a look at the [example commands][ExampleCommands-folder] to learn more about custom commands and how they work.
+
+You can add your custom commands in different ways:
+
+```php
+// Add a folder that contains command files
+$telegram->addCommandsPath('/path/to/command/files');
+//$telegram->addCommandsPaths(['/path/to/command/files', '/another/path']);
+
+// Add a command directly using the class name
+$telegram->addCommandClass(MyCommand::class);
+//$telegram->addCommandClasses([MyCommand::class, MyOtherCommand::class]);
+```
 
 ### Commands Configuration
 

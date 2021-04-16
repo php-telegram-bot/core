@@ -44,6 +44,21 @@ use Longman\TelegramBot\Telegram;
 abstract class Command
 {
     /**
+     * Auth level for user commands
+     */
+    public const AUTH_USER = 'User';
+
+    /**
+     * Auth level for system commands
+     */
+    public const AUTH_SYSTEM = 'System';
+
+    /**
+     * Auth level for admin commands
+     */
+    public const AUTH_ADMIN = 'Admin';
+
+    /**
      * Telegram object
      *
      * @var Telegram

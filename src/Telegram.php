@@ -31,19 +31,6 @@ use RegexIterator;
 class Telegram
 {
     /**
-     * Auth name for user commands
-     */
-    const AUTH_USER   = 'User';
-    /**
-     * Auth name tof system commands
-     */
-    const AUTH_SYSTEM = 'System';
-    /**
-     * Auth name for admin commands
-     */
-    const AUTH_ADMIN = 'Admin';
-
-    /**
      * Version
      *
      * @var string
@@ -86,22 +73,23 @@ class Telegram
     protected $commands_paths = [];
 
     /**
-     * Custom commands class names
+     * Custom command class names
      * ```
      * [
-     *  'User' => [
-     *      //commandName => className
-     *      'start' => 'name\space\to\StartCommand',
-     *  ],
-     *  'Admin' => [], //etc
+     *     'User' => [
+     *         // command_name => command_class
+     *         'start' => 'name\space\to\StartCommand',
+     *     ],
+     *     'Admin' => [], //etc
      * ]
      * ```
+     *
      * @var array
      */
-    protected $commandsClasses = [
-        self::AUTH_USER => [],
-        self::AUTH_ADMIN => [],
-        self::AUTH_SYSTEM => [],
+    protected $command_classes = [
+        Command::AUTH_USER   => [],
+        Command::AUTH_ADMIN  => [],
+        Command::AUTH_SYSTEM => [],
     ];
 
     /**
@@ -318,22 +306,37 @@ class Telegram
 
     /**
      * Get classname of predefined commands
-     * @see commandsClasses
-     * @param string $auth Auth of command
-     * @param string $command Command name
+     *
+     * @see command_classes
+     *
+     * @param string $auth     Auth of command
+     * @param string $command  Command name
+     * @param string $filepath Path to the command file
      *
      * @return string|null
      */
-    public function getCommandClassName(string $auth, string $command): ?string
+    public function getCommandClassName(string $auth, string $command, string $filepath = ''): ?string
     {
         $command = mb_strtolower($command);
-        $auth = $this->ucFirstUnicode($auth);
+        $auth    = $this->ucFirstUnicode($auth);
 
-        if (!empty($this->commandsClasses[$auth][$command])) {
-            $className = $this->commandsClasses[$auth][$command];
-            if (class_exists($className)){
-                return $className;
-            }
+        // First, check for directly assigned command class.
+        if ($command_class = $this->command_classes[$auth][$command] ?? null) {
+            return $command_class;
+        }
+
+        // Start with default namespace.
+        $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands';
+
+        // Check if we can get the namespace from the file (if passed).
+        if ($filepath && !($command_namespace = $this->getFileNamespace($filepath))) {
+            return null;
+        }
+
+        $command_class = $command_namespace . '\\' . $this->ucFirstUnicode($command) . 'Command';
+
+        if (class_exists($command_class)) {
+            return $command_class;
         }
 
         return null;
@@ -353,43 +356,24 @@ class Telegram
             return $this->commands_objects[$command];
         }
 
-        $which = [self::AUTH_SYSTEM];
-        $this->isAdmin() && $which[] = self::AUTH_ADMIN;
-        $which[] = self::AUTH_USER;
+        $which = [Command::AUTH_SYSTEM];
+        $this->isAdmin() && $which[] = Command::AUTH_ADMIN;
+        $which[] = Command::AUTH_USER;
 
-        foreach ($which as $auth)
-        {
-            if (!($command_class = $this->getCommandClassName($auth, $command)))
-            {
-                if ($filepath) {
-                    $command_namespace = $this->getFileNamespace($filepath);
-                } else {
-                    $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands';
-                }
-                $command_class = $command_namespace . '\\' . $this->ucFirstUnicode($command) . 'Command';
-            }
+        foreach ($which as $auth) {
+            $command_class = $this->getCommandClassName($auth, $command, $filepath);
 
-            if (class_exists($command_class)) {
+            if ($command_class) {
                 $command_obj = new $command_class($this, $this->update);
 
-                switch ($auth) {
-                    case self::AUTH_SYSTEM:
-                        if ($command_obj instanceof SystemCommand) {
-                            return $command_obj;
-                        }
-                        break;
-
-                    case self::AUTH_ADMIN:
-                        if ($command_obj instanceof AdminCommand) {
-                            return $command_obj;
-                        }
-                        break;
-
-                    case self::AUTH_USER:
-                        if ($command_obj instanceof UserCommand) {
-                            return $command_obj;
-                        }
-                        break;
+                if ($auth === Command::AUTH_SYSTEM && $command_obj instanceof SystemCommand) {
+                    return $command_obj;
+                }
+                if ($auth === Command::AUTH_ADMIN && $command_obj instanceof AdminCommand) {
+                    return $command_obj;
+                }
+                if ($auth === Command::AUTH_USER && $command_obj instanceof UserCommand) {
+                    return $command_obj;
                 }
             }
         }
@@ -605,7 +589,7 @@ class Telegram
             $reason = 'Update denied by update_filter';
             try {
                 $allowed = (bool) call_user_func_array($this->update_filter, [$update, $this, &$reason]);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $allowed = false;
             }
 
@@ -793,49 +777,54 @@ class Telegram
     }
 
     /**
-     * Add a single custom commands class
+     * Add a single custom command class
      *
-     * @param string $className Set full classname
+     * @param string $command_class Full command class name
+     *
      * @return Telegram
      */
-    public function addCommandsClass(string $className): Telegram
+    public function addCommandClass(string $command_class): Telegram
     {
-        if (!$className || !class_exists($className))
-        {
-            $error = 'Command class name: "' . $className . '" does not exist.';
+        if (!$command_class || !class_exists($command_class)) {
+            $error = sprintf('Command class "%s" does not exist.', $command_class);
             TelegramLog::error($error);
             throw new InvalidArgumentException($error);
         }
 
-        if (!is_array($this->commandsClasses))
-        {
-            $this->commandsClasses = [];
-        }
-
-        if (!is_a($className, Command::class, true)) {
-            $error = 'Command class is not a base command class';
+        if (!is_a($command_class, Command::class, true)) {
+            $error = sprintf('Command class "%s" does not extend "%s".', $command_class, Command::class);
             TelegramLog::error($error);
             throw new InvalidArgumentException($error);
         }
 
-        $commandObject = new $className($this);
+        // Dummy object to get data from.
+        $command_object = new $command_class($this);
 
-        $command = $commandObject->getName();
         $auth = null;
-        switch (true) {
-            case $commandObject->isSystemCommand():
-                $auth = self::AUTH_SYSTEM;
-                break;
-            case $commandObject->isAdminCommand():
-                $auth = self::AUTH_ADMIN;
-                break;
-            case $commandObject->isUserCommand():
-                $auth = self::AUTH_USER;
-                break;
-        }
+        $command_object->isSystemCommand() && $auth = Command::AUTH_SYSTEM;
+        $command_object->isAdminCommand() && $auth = Command::AUTH_ADMIN;
+        $command_object->isUserCommand() && $auth = Command::AUTH_USER;
 
         if ($auth) {
-            $this->commandsClasses[$auth][$command] = $className;
+            $command = mb_strtolower($command_object->getName());
+
+            $this->command_classes[$auth][$command] = $command_class;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add multiple custom command classes
+     *
+     * @param array $command_classes List of full command class names
+     *
+     * @return Telegram
+     */
+    public function addCommandClasses(array $command_classes): Telegram
+    {
+        foreach ($command_classes as $command_class) {
+            $this->addCommandClass($command_class);
         }
 
         return $this;
@@ -892,13 +881,13 @@ class Telegram
     }
 
     /**
-     * Return the list of commands classes
+     * Return the list of command classes
      *
      * @return array
      */
-    public function getCommandsClasses(): array
+    public function getCommandClasses(): array
     {
-        return $this->commandsClasses;
+        return $this->command_classes;
     }
 
     /**
