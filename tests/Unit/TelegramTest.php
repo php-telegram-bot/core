@@ -12,8 +12,9 @@
 namespace Longman\TelegramBot\Tests\Unit;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
-use Exception;
-use Longman\TelegramBot\Commands\AdminCommands\WhoisCommand;
+use Dummy\AdminCommands\DummyAdminCommand;
+use Dummy\SystemCommands\DummySystemCommand;
+use Dummy\UserCommands\DummyUserCommand;
 use Longman\TelegramBot\Commands\UserCommands\StartCommand;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -139,29 +140,39 @@ class TelegramTest extends TestCase
     public function testAddCustomCommandsClass(): void
     {
         $tg = $this->telegram;
-        $class = StartCommand::class;
-        $aClass = WhoisCommand::class;
 
-        self::assertCount(3, $tg->getCommandsClasses());
+        // Require dummy commands to test with
+        require_once __DIR__ . '/Commands/CustomTestCommands/DummySystemCommand.php';
+        require_once __DIR__ . '/Commands/CustomTestCommands/DummyAdminCommand.php';
+        require_once __DIR__ . '/Commands/CustomTestCommands/DummyUserCommand.php';
+
+        // Test for base arrays (System, Admin, User)
+        self::assertCount(3, $tg->getCommandClasses());
+
+        // Test for invalid command classes
+        try {
+            $tg->addCommandClass('');
+        } catch (\InvalidArgumentException $ex) {
+        }
+        self::assertEmpty(array_filter($tg->getCommandClasses()));
 
         try {
-            $tg->addCommandsClass('not\exist\Class');
+            $tg->addCommandClass('not\exist\Class');
+        } catch (\InvalidArgumentException $ex) {
         }
-        catch (\Exception $ex){}
-        self::assertCount(0, $tg->getCommandsClasses()['User']);
+        self::assertEmpty(array_filter($tg->getCommandClasses()));
 
-        try {
-            $tg->addCommandsClass('');
-        }
-        catch (\Exception $ex){}
-        self::assertCount(0, $tg->getCommandsClasses()['User']);
+        // Add valid command classes
+        $tg->addCommandClass(DummySystemCommand::class);
+        $tg->addCommandClasses([
+            DummyAdminCommand::class,
+            DummyUserCommand::class,
+        ]);
 
-        $tg->addCommandsClass($class);
-        self::assertCount(1, $tg->getCommandsClasses()['User']);
-
-        $tg->addCommandsClass($aClass);
-        self::assertCount(1, $tg->getCommandsClasses()['Admin']);
-
+        $command_classes = $tg->getCommandClasses();
+        self::assertCount(1, $command_classes['System']);
+        self::assertCount(1, $command_classes['Admin']);
+        self::assertCount(1, $command_classes['User']);
     }
 
     public function testSettingDownloadUploadPaths(): void
@@ -186,19 +197,18 @@ class TelegramTest extends TestCase
     public function testGetCommandClass(): void
     {
         $className = StartCommand::class;
-        $commands = $this->telegram->getCommandsClasses();
+        $commands  = $this->telegram->getCommandClasses();
         self::assertIsArray($commands);
         self::assertCount(3, $commands);
 
         $class = $this->telegram->getCommandClassName('user', 'notexist');
         self::assertNull($class);
 
-        $this->telegram->addCommandsClass($className);
+        $this->telegram->addCommandClass($className);
         $class = $this->telegram->getCommandClassName('user', 'start');
         self::assertNotNull($class);
 
         self::assertSame($className, $class);
-
     }
 
     public function testUpdateFilter(): void

@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
 - Bot API 5.1 (ChatMember Update types, Improved Invite Links, Voice Chat). (@massadm, @noplanman)
+- Method to allow adding command classes directly. (@alligator77, @noplanman)
 ### Changed
 ### Deprecated
 - `Telegram::handleGetUpdates` method should be passed a `$data` array for parameters.
