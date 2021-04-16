@@ -5,18 +5,25 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 5.1 (ChatMember Update types, Improved Invite Links, Voice Chat). (@massadm, @noplanman)
-- Method to allow adding command classes directly. (@alligator77, @noplanman)
 ### Changed
 ### Deprecated
-- `Telegram::handleGetUpdates` method should be passed a `$data` array for parameters.
 ### Removed
 ### Fixed
-- `message.edit_date` is now of type `timestamp`.
-- Allow all update types by default when using `getUpdates` method.
 ### Security
+
+## [0.72.0] - 2021-04-16
+### Notes
+- [:ledger: View file changes][0.72.0] ∙ [:page_with_curl: DB migration script][0.72.0-sql-migration]
+### Added
+- Bot API 5.1 (ChatMember Update types, Improved Invite Links, Voice Chat). (@massadm, @noplanman) (#1199)
+- Method to allow adding command classes directly. (@alligator77, @noplanman) (#1207, #1209)
+### Deprecated
+- `Telegram::handleGetUpdates` method should be passed a `$data` array for parameters. (#1202)
+### Fixed
+- `message.edit_date` is now of type `timestamp`. (#1191)
+- Allow all update types by default when using `getUpdates` method. (#1202)
 
 ## [0.71.0] - 2021-03-05
 ### Notes
@@ -506,7 +513,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.71.0-unreleased.sql
+[0.72.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.71.0-0.72.0.sql
 [0.70.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.64.0-0.70.0.sql
 [0.70.0-bc-minimum-php-73]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-73
 [0.63.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.62.0-0.63.0.sql
@@ -539,6 +546,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.72.0]: https://github.com/php-telegram-bot/core/compare/0.71.0...0.72.0
 [0.71.0]: https://github.com/php-telegram-bot/core/compare/0.70.1...0.71.0
 [0.70.1]: https://github.com/php-telegram-bot/core/compare/0.70.0...0.70.1
 [0.70.0]: https://github.com/php-telegram-bot/core/compare/0.64.0...0.70.0
