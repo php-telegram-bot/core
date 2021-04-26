@@ -613,9 +613,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_INLINE_QUERY . '`
-                (`id`, `user_id`, `location`, `query`, `offset`, `created_at`)
+                (`id`, `user_id`, `location`, `query`, `offset`, `chat_type`, `created_at`)
                 VALUES
-                (:id, :user_id, :location, :query, :offset, :created_at)
+                (:id, :user_id, :location, :query, :offset, :chat_type, :created_at)
             ');
 
             $date    = self::getTimestamp();
@@ -631,6 +631,7 @@ class DB
             $sth->bindValue(':location', $inline_query->getLocation());
             $sth->bindValue(':query', $inline_query->getQuery());
             $sth->bindValue(':offset', $inline_query->getOffset());
+            $sth->bindValue(':chat_type', $inline_query->getChatType());
             $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
@@ -1065,7 +1066,7 @@ class DB
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
                     `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `proximity_alert_triggered`,
-                    `voice_chat_started`, `voice_chat_ended`, `voice_chat_participants_invited`, `reply_markup`
+                    `voice_chat_scheduled`, `voice_chat_started`, `voice_chat_ended`, `voice_chat_participants_invited`, `reply_markup`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date,
@@ -1075,7 +1076,7 @@ class DB
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
                     :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :proximity_alert_triggered,
-                    :voice_chat_started, :voice_chat_ended, :voice_chat_participants_invited, :reply_markup
+                    :voice_chat_scheduled, :voice_chat_started, :voice_chat_ended, :voice_chat_participants_invited, :reply_markup
                 )
             ');
 
@@ -1148,6 +1149,7 @@ class DB
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
             $sth->bindValue(':passport_data', $message->getPassportData());
             $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
+            $sth->bindValue(':voice_chat_scheduled', $message->getVoiceChatScheduled());
             $sth->bindValue(':voice_chat_started', $message->getVoiceChatStarted());
             $sth->bindValue(':voice_chat_ended', $message->getVoiceChatEnded());
             $sth->bindValue(':voice_chat_participants_invited', $message->getVoiceChatParticipantsInvited());

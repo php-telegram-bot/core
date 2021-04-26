@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `inline_query` (
   `location` CHAR(255) NULL DEFAULT NULL COMMENT 'Location of the user',
   `query` TEXT NOT NULL COMMENT 'Text of the query',
   `offset` CHAR(255) NULL DEFAULT NULL COMMENT 'Offset of the result',
+  `chat_type` CHAR(255) NULL DEFAULT NULL COMMENT 'Optional. Type of the chat, from which the inline query was sent.',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 
   PRIMARY KEY (`id`),
@@ -120,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
   `passport_data` TEXT NULL COMMENT 'Telegram Passport data',
   `proximity_alert_triggered` TEXT NULL COMMENT 'Service message. A user in the chat triggered another user''s proximity alert while sharing Live Location.',
+  `voice_chat_scheduled` TEXT COMMENT 'VoiceChatScheduled object. Message is a service message: voice chat scheduled',
   `voice_chat_started` TEXT COMMENT 'VoiceChatStarted object. Message is a service message: voice chat started',
   `voice_chat_ended` TEXT COMMENT 'VoiceChatEnded object. Message is a service message: voice chat ended',
   `voice_chat_participants_invited` TEXT COMMENT 'VoiceChatParticipantsInvited object. Message is a service message: new participants invited to a voice chat',

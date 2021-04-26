@@ -35,13 +35,27 @@ class ChatAction
 
     /**
      * Record Audio chat action
+     *
+     * @deprecated Use ChatAction::RECORD_VOICE instead
      */
-    public const RECORD_AUDIO = 'record_audio';
+    public const RECORD_AUDIO = 'record_voice';
+
+    /**
+     * Record Voice chat action
+     */
+    public const RECORD_VOICE = 'record_voice';
 
     /**
      * Upload Audio chat action
+     *
+     * @deprecated Use ChatAction::UPLOAD_VOICE instead
      */
-    public const UPLOAD_AUDIO = 'upload_audio';
+    public const UPLOAD_AUDIO = 'upload_voice';
+
+    /**
+     * Upload Voice chat action
+     */
+    public const UPLOAD_VOICE = 'upload_voice';
 
     /**
      * Upload Document chat action

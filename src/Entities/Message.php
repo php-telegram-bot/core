@@ -73,6 +73,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+ * @method VoiceChatScheduled                     getVoiceChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VoiceChatStarted                       getVoiceChatStarted()                       Optional. Service message: voice chat started
  * @method VoiceChatEnded                         getVoiceChatEnded()                         Optional. Service message: voice chat ended
  * @method VoiceChatParticipantsInvited           getVoiceChatParticipantsInvited()           Optional. Service message: new participants invited to a voice chat
@@ -118,6 +119,7 @@ class Message extends Entity
             'successful_payment'                => SuccessfulPayment::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
+            'voice_chat_scheduled'              => VoiceChatScheduled::class,
             'voice_chat_started'                => VoiceChatStarted::class,
             'voice_chat_ended'                  => VoiceChatEnded::class,
             'voice_chat_participants_invited'   => VoiceChatParticipantsInvited::class,
@@ -252,6 +254,7 @@ class Message extends Entity
             'successful_payment',
             'passport_data',
             'proximity_alert_triggered',
+            'voice_chat_scheduled',
             'voice_chat_started',
             'voice_chat_ended',
             'voice_chat_participants_invited',
