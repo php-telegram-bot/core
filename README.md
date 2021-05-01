@@ -7,7 +7,7 @@
 
 A Telegram Bot based on the official [Telegram Bot API]
 
-[![API Version](https://img.shields.io/badge/Bot%20API-5.1%20%28March%202021%29-32a2da.svg)](https://core.telegram.org/bots/api#march-9-2021)
+[![API Version](https://img.shields.io/badge/Bot%20API-5.2%20%28April%202021%29-32a2da.svg)](https://core.telegram.org/bots/api#april-26-2021)
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 
@@ -78,7 +78,7 @@ This Bot aims to provide a platform where one can simply write a bot and have in
 
 The Bot can:
 - Retrieve updates with [webhook](#webhook-installation) and [getUpdates](#getupdates-installation) methods.
-- Supports all types and methods according to Telegram Bot API 5.1 (March 2021).
+- Supports all types and methods according to Telegram Bot API 5.2 (April 2021).
 - Supports supergroups.
 - Handle commands in chat with other bots.
 - Manage Channel from the bot admin interface.
@@ -389,15 +389,15 @@ The reason for denying an update can be defined with the `$reason` parameter. Th
 
 ### Types
 
-All types are implemented according to Telegram API 5.1 (March 2021).
+All types are implemented according to Telegram API 5.2 (April 2021).
 
 ### Inline Query
 
-Full support for inline query according to Telegram API 5.1 (March 2021).
+Full support for inline query according to Telegram API 5.2 (April 2021).
 
 ### Methods
 
-All methods are implemented according to Telegram API 5.1 (March 2021).
+All methods are implemented according to Telegram API 5.2 (April 2021).
 
 #### Send Message
 
