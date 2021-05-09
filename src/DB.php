@@ -78,8 +78,13 @@ class DB
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
         }
+        if (isset($credentials['unix_socket'])) {
+            $dsn = 'mysql:unix_socket=' . $credentials['unix_socket'];
+        } else {
+            $dsn = 'mysql:host=' . $credentials['host'];
+        }
+        $dsn .= ';dbname=' . $credentials['database'];
 
-        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         if (!empty($credentials['port'])) {
             $dsn .= ';port=' . $credentials['port'];
         }
