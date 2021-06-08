@@ -13,6 +13,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Regex for namespace extraction from custom command classes.
 - Nested and user-triggered `Telegram::runCommands`.
 ### Security
 
