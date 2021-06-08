@@ -391,7 +391,7 @@ class Telegram
     protected function getFileNamespace(string $src): ?string
     {
         $content = file_get_contents($src);
-        if (preg_match('#^\s+namespace\s+(.+?);#m', $content, $m)) {
+        if (preg_match('#^\s*namespace\s+(.+?);#m', $content, $m)) {
             return $m[1];
         }
 

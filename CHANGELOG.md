@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Regex for namespace extraction from custom command classes.
 ### Security
 
 ## [0.72.0] - 2021-04-16
