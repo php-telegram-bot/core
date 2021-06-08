@@ -20,8 +20,10 @@ use Longman\TelegramBot\Commands\AdminCommand;
 use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Exception\TelegramException;
 use PDO;
 use RecursiveDirectoryIterator;
@@ -1125,38 +1127,49 @@ class Telegram
 
         $this->run_commands = true;
 
-        $result = Request::getMe();
-
-        if ($result->isOk()) {
-            $result = $result->getResult();
-
-            $bot_id       = $result->getId();
-            $bot_name     = $result->getFirstName();
-            $bot_username = $result->getUsername();
+        // Check if this request has a user Update / comes from Telegram.
+        if ($userUpdate = $this->update) {
+            $from = $this->update->getMessage()->getFrom();
+            $chat = $this->update->getMessage()->getChat();
         } else {
-            $bot_id       = $this->getBotId();
-            $bot_name     = $this->getBotUsername();
-            $bot_username = $this->getBotUsername();
+            // Fall back to the Bot user.
+            $from = new User([
+                'id'         => $this->getBotId(),
+                'first_name' => $this->getBotUsername(),
+                'username'   => $this->getBotUsername(),
+            ]);
+
+            // Try to get "live" Bot info.
+            $response = Request::getMe();
+            if ($response->isOk()) {
+                /** @var User $result */
+                $result = $response->getResult();
+
+                $from = new User([
+                    'id'         => $result->getId(),
+                    'first_name' => $result->getFirstName(),
+                    'username'   => $result->getUsername(),
+                ]);
+            }
+
+            // Give Bot access to admin commands.
+            $this->enableAdmin($from->getId());
+
+            // Lock the bot to a private chat context.
+            $chat = new Chat([
+                'id'   => $from->getId(),
+                'type' => 'private',
+            ]);
         }
 
-        // Give bot access to admin commands
-        $this->enableAdmin($bot_id);
-
-        $newUpdate = static function ($text = '') use ($bot_id, $bot_name, $bot_username) {
+        $newUpdate = static function ($text = '') use ($from, $chat) {
             return new Update([
-                'update_id' => 0,
+                'update_id' => -1,
                 'message'   => [
-                    'message_id' => 0,
-                    'from'       => [
-                        'id'         => $bot_id,
-                        'first_name' => $bot_name,
-                        'username'   => $bot_username,
-                    ],
+                    'message_id' => -1,
                     'date'       => time(),
-                    'chat'       => [
-                        'id'   => $bot_id,
-                        'type' => 'private',
-                    ],
+                    'from'       => json_decode($from->toJson(), true),
+                    'chat'       => json_decode($chat->toJson(), true),
                     'text'       => $text,
                 ],
             ]);
@@ -1165,13 +1178,14 @@ class Telegram
         foreach ($commands as $command) {
             $this->update = $newUpdate($command);
 
-            // Load up-to-date commands list
-            if (empty($this->commands_objects)) {
-                $this->commands_objects = $this->getCommandsList();
-            }
+            // Refresh commands list for new Update object.
+            $this->commands_objects = $this->getCommandsList();
 
             $this->executeCommand($this->update->getMessage()->getCommand());
         }
+
+        // Reset Update to initial context.
+        $this->update = $userUpdate;
     }
 
     /**

@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Nested and user-triggered `Telegram::runCommands`.
 ### Security
 
 ## [0.72.0] - 2021-04-16
