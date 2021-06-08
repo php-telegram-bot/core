@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Bot API 5.2 (Payments 2.0).
 ### Changed
+- `Telegram::runCommands` returns array of `ServerResponse` objects of executed commands.
 ### Deprecated
 ### Removed
 ### Fixed

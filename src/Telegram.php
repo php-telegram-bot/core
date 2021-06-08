@@ -1117,9 +1117,11 @@ class Telegram
      *
      * @param array $commands
      *
+     * @return ServerResponse[]
+     *
      * @throws TelegramException
      */
-    public function runCommands(array $commands): void
+    public function runCommands(array $commands): array
     {
         if (empty($commands)) {
             throw new TelegramException('No command(s) provided!');
@@ -1175,17 +1177,21 @@ class Telegram
             ]);
         };
 
+        $responses = [];
+
         foreach ($commands as $command) {
             $this->update = $newUpdate($command);
 
             // Refresh commands list for new Update object.
             $this->commands_objects = $this->getCommandsList();
 
-            $this->executeCommand($this->update->getMessage()->getCommand());
+            $responses[] = $this->executeCommand($this->update->getMessage()->getCommand());
         }
 
         // Reset Update to initial context.
         $this->update = $userUpdate;
+
+        return $responses;
     }
 
     /**
