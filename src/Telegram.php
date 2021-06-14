@@ -37,7 +37,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.72.0';
+    protected $version = '0.73.0';
 
     /**
      * Telegram API key
@@ -190,10 +190,9 @@ class Telegram
     public const GENERIC_COMMAND = 'generic';
 
     /**
-     * Update filter
-     * Filter updates
+     * Update filter method
      *
-     * @var callback
+     * @var callable
      */
     protected $update_filter;
 

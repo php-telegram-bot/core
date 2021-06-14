@@ -7,15 +7,23 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
-- Bot API 5.2 (Payments 2.0).
 ### Changed
-- `Telegram::runCommands` returns array of `ServerResponse` objects of executed commands.
 ### Deprecated
 ### Removed
 ### Fixed
-- Regex for namespace extraction from custom command classes.
-- Nested and user-triggered `Telegram::runCommands`.
 ### Security
+
+## [0.73.0] - 2021-06-14
+### Notes
+- [:ledger: View file changes][0.73.0] ∙ [:page_with_curl: DB migration script][0.73.0-sql-migration]
+### Added
+- Bot API 5.2 (Payments 2.0). (#1216)
+- Possibility to connect to MySQL DB with unix socket. (#1220)
+### Changed
+- `Telegram::runCommands` returns array of `ServerResponse` objects of executed commands. (#1223)
+### Fixed
+- Regex for namespace extraction from custom command classes.
+- Nested and user-triggered `Telegram::runCommands`. (#1223)
 
 ## [0.72.0] - 2021-04-16
 ### Notes
@@ -517,7 +525,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.72.0-unreleased.sql
+[unreleased-sql-migration]: #
+[0.73.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.72.0-0.73.0.sql
 [0.72.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.71.0-0.72.0.sql
 [0.70.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.64.0-0.70.0.sql
 [0.70.0-bc-minimum-php-73]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-73
@@ -551,6 +560,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.73.0]: https://github.com/php-telegram-bot/core/compare/0.72.0...0.73.0
 [0.72.0]: https://github.com/php-telegram-bot/core/compare/0.71.0...0.72.0
 [0.71.0]: https://github.com/php-telegram-bot/core/compare/0.70.1...0.71.0
 [0.70.1]: https://github.com/php-telegram-bot/core/compare/0.70.0...0.70.1
