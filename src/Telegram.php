@@ -1029,6 +1029,7 @@ class Telegram
             'certificate',
             'max_connections',
             'allowed_updates',
+            'drop_pending_updates'
         ]));
         $data['url'] = $url;
 
