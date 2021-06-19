@@ -665,7 +665,7 @@ class Request
      */
     protected static function addDummyParamIfNecessary(string $action, array &$data): void
     {
-        if (in_array($action, self::$actions_need_dummy_param, true)) {
+        if (empty($data) && in_array($action, self::$actions_need_dummy_param, true)) {
             // Can be anything, using a single letter to minimise request size.
             $data = ['d'];
         }
