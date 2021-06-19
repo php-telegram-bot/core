@@ -1027,6 +1027,7 @@ class Telegram
 
         $data        = array_intersect_key($data, array_flip([
             'certificate',
+            'ip_address',
             'max_connections',
             'allowed_updates',
             'drop_pending_updates'
