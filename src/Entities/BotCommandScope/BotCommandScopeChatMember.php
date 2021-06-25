@@ -14,7 +14,7 @@ use Longman\TelegramBot\Entities\Entity;
  * <code>
  * $data = [
  *   'chat_id' => '123456',
- *   'user_id' => '987654',
+ *   'user_id' => 987654,
  * ];
  * </code>
  *
