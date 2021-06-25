@@ -141,7 +141,7 @@ abstract class Entity
                         return $this->makePrettyObjectArray(reset($class), $property_name);
                     }
 
-                    return new $class($property, $this->getProperty('bot_username'));
+                    return Factory::resolveEntityClass($class, $property, $this->getProperty('bot_username'));
                 }
 
                 return $property;
@@ -173,11 +173,12 @@ abstract class Entity
     {
         $new_objects = [];
 
+        $bot_username = $this->getProperty('bot_username');
         try {
             if ($objects = $this->getProperty($property)) {
                 foreach ($objects as $object) {
                     if (!empty($object)) {
-                        $new_objects[] = new $class($object);
+                        $new_objects[] = Factory::resolveEntityClass($class, $object, $bot_username);
                     }
                 }
             }
