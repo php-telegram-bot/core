@@ -11,8 +11,7 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
 {
     public function make(array $data, string $bot_username): Entity
     {
-        $status = $data['status'];
-        switch ($status) {
+        switch ($data['status'] ?? '') {
             case 'creator':
                 return new ChatMemberOwner($data, $bot_username);
             case 'administrator':
