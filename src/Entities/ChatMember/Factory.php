@@ -25,7 +25,7 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
         ];
 
         if (! isset($type[$data['status']])) {
-            throw new TelegramException('Unexpected ChatMember status');
+            return new ChatMemberNotImplemented($data, $bot_username);
         }
 
         $class = $type[$data['status']];
