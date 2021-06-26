@@ -114,15 +114,17 @@ class KeyboardTest extends TestCase
 
     public function testKeyboardWithDataArray(): void
     {
-        $resize_keyboard   = (bool) mt_rand(0, 1);
-        $one_time_keyboard = (bool) mt_rand(0, 1);
-        $selective         = (bool) mt_rand(0, 1);
+        $resize_keyboard         = (bool) mt_rand(0, 1);
+        $one_time_keyboard       = (bool) mt_rand(0, 1);
+        $input_field_placeholder = 'placeholder';
+        $selective               = (bool) mt_rand(0, 1);
 
         $keyboard_obj = new Keyboard([
-            'resize_keyboard'   => $resize_keyboard,
-            'one_time_keyboard' => $one_time_keyboard,
-            'selective'         => $selective,
-            'keyboard'          => [['Button Text 1']],
+            'resize_keyboard'         => $resize_keyboard,
+            'one_time_keyboard'       => $one_time_keyboard,
+            'input_field_placeholder' => $input_field_placeholder,
+            'selective'               => $selective,
+            'keyboard'                => [['Button Text 1']],
         ]);
 
         $keyboard = $keyboard_obj->getProperty('keyboard');
@@ -130,6 +132,7 @@ class KeyboardTest extends TestCase
 
         self::assertSame($resize_keyboard, $keyboard_obj->getResizeKeyboard());
         self::assertSame($one_time_keyboard, $keyboard_obj->getOneTimeKeyboard());
+        self::assertSame($input_field_placeholder, $keyboard_obj->getInputFieldPlaceholder());
         self::assertSame($selective, $keyboard_obj->getSelective());
     }
 

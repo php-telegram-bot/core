@@ -3,7 +3,6 @@
 namespace Longman\TelegramBot\Entities\ChatMember;
 
 use Longman\TelegramBot\Entities\Entity;
-use Longman\TelegramBot\Exception\TelegramException;
 
 class Factory extends \Longman\TelegramBot\Entities\Factory
 {
@@ -18,7 +17,7 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
             'kicked'        => ChatMemberBanned::class,
         ];
 
-        if (! isset($type[$data['status'] ?? ''])) {
+        if (!isset($type[$data['status'] ?? ''])) {
             return new ChatMemberNotImplemented($data, $bot_username);
         }
 

@@ -11,7 +11,6 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use Exception;
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
 use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 
@@ -165,28 +164,21 @@ abstract class Entity
      * mainly for PhotoSize and Entities object arrays.
      *
      * @param string $class
-     * @param string $property
+     * @param string $property_name
      *
      * @return array
      */
-    protected function makePrettyObjectArray(string $class, string $property): array
+    protected function makePrettyObjectArray(string $class, string $property_name): array
     {
-        $new_objects = [];
-
+        $objects      = [];
         $bot_username = $this->getProperty('bot_username');
-        try {
-            if ($objects = $this->getProperty($property)) {
-                foreach ($objects as $object) {
-                    if (!empty($object)) {
-                        $new_objects[] = Factory::resolveEntityClass($class, $object, $bot_username);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            $new_objects = [];
+
+        $properties = array_filter($this->getProperty($property_name) ?: []);
+        foreach ($properties as $property) {
+            $objects[] = Factory::resolveEntityClass($class, $property, $bot_username);
         }
 
-        return $new_objects;
+        return $objects;
     }
 
     /**

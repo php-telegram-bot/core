@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
+- Bot API 5.3 (Personalized Commands, Keyboard Placeholders). (@TiiFuchs, @noplanman) (#1229, #1231)
 ### Changed
 ### Deprecated
 ### Removed
