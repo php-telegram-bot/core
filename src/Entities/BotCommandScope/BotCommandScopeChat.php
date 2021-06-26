@@ -24,7 +24,7 @@ use Longman\TelegramBot\Entities\Entity;
  */
 class BotCommandScopeChat extends Entity implements BotCommandScope
 {
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         $data['type'] = 'chat';
         parent::__construct($data);

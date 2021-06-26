@@ -14,7 +14,7 @@ use Longman\TelegramBot\Entities\InputMedia\InputMediaAnimation;
  */
 class BotCommandScopeDefault extends Entity implements BotCommandScope
 {
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         $data['type'] = 'default';
         parent::__construct($data);

@@ -13,7 +13,7 @@ use Longman\TelegramBot\Entities\Entity;
  */
 class BotCommandScopeAllGroupChats extends Entity implements BotCommandScope
 {
-    public function __construct($data)
+    public function __construct(array $data = [])
     {
         $data['type'] = 'all_group_chats';
         parent::__construct($data);
