@@ -7,12 +7,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
-- Bot API 5.3 (Personalized Commands, Keyboard Placeholders). (@TiiFuchs, @noplanman) (#1229, #1231)
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.74.0] - 2021-06-26
+### Notes
+- [:ledger: View file changes][0.74.0]
+### Added
+- Bot API 5.3 (Personalized Commands, Keyboard Placeholders). (@TiiFuchs, @noplanman) (#1229, #1231)
 
 ## [0.73.1] - 2021-06-20
 ### Notes
@@ -567,6 +572,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.74.0]: https://github.com/php-telegram-bot/core/compare/0.73.1...0.74.0
 [0.73.1]: https://github.com/php-telegram-bot/core/compare/0.73.0...0.73.1
 [0.73.0]: https://github.com/php-telegram-bot/core/compare/0.72.0...0.73.0
 [0.72.0]: https://github.com/php-telegram-bot/core/compare/0.71.0...0.72.0
