@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Longman\TelegramBot\Entities\BotCommandScope;
-
 
 use Longman\TelegramBot\Entities\Entity;
 

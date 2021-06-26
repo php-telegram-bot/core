@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Longman\TelegramBot\Entities\ChatMember;
-
 
 use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Entities\User;
@@ -26,5 +24,4 @@ class ChatMemberLeft extends Entity implements ChatMember
             'user' => User::class
         ];
     }
-
 }
