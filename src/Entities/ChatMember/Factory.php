@@ -11,10 +11,6 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
 {
     public function make(array $data, string $bot_username): Entity
     {
-        if (! isset($data['status'])) {
-            throw new TelegramException('Missing ChatMember status');
-        }
-
         $type = [
             'creator'       => ChatMemberOwner::class,
             'administrator' => ChatMemberAdministrator::class,
@@ -24,7 +20,7 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
             'kicked'        => ChatMemberBanned::class,
         ];
 
-        if (! isset($type[$data['status']])) {
+        if (! isset($type[$data['status'] ?? ''])) {
             return new ChatMemberNotImplemented($data, $bot_username);
         }
 
