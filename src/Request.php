@@ -927,7 +927,7 @@ class Request
      * @param  array  $data
      * @return ServerResponse
      */
-    public static function kickChatMember(array $data = [])
+    public static function kickChatMember(array $data = []): ServerResponse
     {
         return static::banChatMember($data);
     }
@@ -941,7 +941,7 @@ class Request
      * @param  array  $data
      * @return ServerResponse
      */
-    public static function getChatMembersCount(array $data = [])
+    public static function getChatMembersCount(array $data = []): ServerResponse
     {
         return static::getChatMemberCount($data);
     }
