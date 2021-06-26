@@ -11,6 +11,9 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\ChatMember\ChatMember;
+use Longman\TelegramBot\Entities\ChatMember\Factory as ChatMemberFactory;
+
 /**
  * Class ChatMemberUpdated
  *
@@ -35,8 +38,8 @@ class ChatMemberUpdated extends Entity
         return [
             'chat'            => Chat::class,
             'from'            => User::class,
-            'old_chat_member' => ChatMember::class,
-            'new_chat_member' => ChatMember::class,
+            'old_chat_member' => ChatMemberFactory::class,
+            'new_chat_member' => ChatMemberFactory::class,
             'invite_link'     => ChatInviteLink::class,
         ];
     }

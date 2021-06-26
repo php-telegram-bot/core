@@ -9,6 +9,8 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\ChatMember\ChatMember;
+use Longman\TelegramBot\Entities\ChatMember\Factory as ChatMemberFactory;
 use Longman\TelegramBot\Entities\Games\GameHighScore;
 use Longman\TelegramBot\Request;
 
@@ -104,7 +106,7 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return Chat|ChatMember|File|Message|User|UserProfilePhotos|WebhookInfo
+     * @return Chat|ChatMember|File|Message|User|UserProfilePhotos|WebhookInfo|Entity
      */
     private function createResultObject(array $result, string $bot_username)
     {
@@ -115,7 +117,7 @@ class ServerResponse extends Entity
 
         $result_object_types = [
             'getChat'              => Chat::class,
-            'getChatMember'        => ChatMember::class,
+            'getChatMember'        => ChatMemberFactory::class,
             'getFile'              => File::class,
             'getMe'                => User::class,
             'getStickerSet'        => StickerSet::class,
@@ -125,7 +127,7 @@ class ServerResponse extends Entity
 
         $object_class = array_key_exists($action, $result_object_types) ? $result_object_types[$action] : Message::class;
 
-        return new $object_class($result, $bot_username);
+        return Factory::resolveEntityClass($object_class, $result, $bot_username);
     }
 
     /**
@@ -143,7 +145,7 @@ class ServerResponse extends Entity
 
         $result_object_types = [
             'getMyCommands'         => BotCommand::class,
-            'getChatAdministrators' => ChatMember::class,
+            'getChatAdministrators' => ChatMemberFactory::class,
             'getGameHighScores'     => GameHighScore::class,
             'sendMediaGroup'        => Message::class,
         ];
@@ -154,7 +156,7 @@ class ServerResponse extends Entity
             // We don't need to save the raw_data of the response object!
             $data['raw_data'] = null;
 
-            $results[] = new $object_class($data, $bot_username);
+            $results[] = Factory::resolveEntityClass($object_class, $data, $bot_username);
         }
 
         return $results;
