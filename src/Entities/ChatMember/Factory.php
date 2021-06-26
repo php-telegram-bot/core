@@ -1,15 +1,13 @@
 <?php
 
-
 namespace Longman\TelegramBot\Entities\ChatMember;
-
 
 use Longman\TelegramBot\Entities\Entity;
 use Longman\TelegramBot\Exception\TelegramException;
 
 class Factory extends \Longman\TelegramBot\Entities\Factory
 {
-    public function make(array $data, string $bot_username): Entity
+    public static function make(array $data, string $bot_username): Entity
     {
         $type = [
             'creator'       => ChatMemberOwner::class,
