@@ -50,6 +50,7 @@ class CallbackqueryCommand extends SystemCommand
         //$user_id        = $callback_query->getFrom()->getId();
         //$query_id       = $callback_query->getId();
         //$query_data     = $callback_query->getData();
+        //$query_data_array = $this->proper_parse_str($query_data);
 
         $answer         = null;
         $callback_query = $this->getCallbackQuery();
@@ -57,6 +58,7 @@ class CallbackqueryCommand extends SystemCommand
         // Call all registered callbacks.
         foreach (self::$callbacks as $callback) {
             $answer = $callback($callback_query);
+            //$answer = $callback($callback_query, $query_data_array);
         }
 
         return ($answer instanceof ServerResponse) ? $answer : $callback_query->answer();
@@ -69,6 +71,46 @@ class CallbackqueryCommand extends SystemCommand
      */
     public static function addCallbackHandler($callback): void
     {
-        self::$callbacks[] = $callback;
+        if (!in_array($callback, self::$callbacks))
+            self::$callbacks[] = $callback;
+    }
+    
+     /**
+     * Pharses a query string and returns an array of it.
+     * https://www.php.net/manual/en/function.parse-str.php
+     * @param $str
+     */
+
+    private function proper_parse_str($str)
+    {
+        # result array
+        $arr = array();
+
+        # split on outer delimiter
+        $pairs = explode('&', $str);
+
+      # loop through each pair
+      foreach ($pairs as $i) {
+        # split into name and value
+        list($name,$value) = explode('=', $i, 2);
+
+        # if name already exists
+        if( isset($arr[$name]) ) {
+          # stick multiple values into an array
+          if( is_array($arr[$name]) ) {
+            $arr[$name][] = $value;
+          }
+          else {
+            $arr[$name] = array($arr[$name], $value);
+          }
+        }
+        # otherwise, simply stick it in a scalar
+        else {
+          $arr[$name] = $value;
+        }
+      }
+
+      # return result array
+      return $arr;
     }
 }
