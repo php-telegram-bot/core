@@ -17,7 +17,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][0.74.0]
 ### Added
-- Bot API 5.3 (Personalized Commands, Keyboard Placeholders). (@TiiFuchs, @noplanman) (#1229, #1231)
+- [:exclamation:][0.74.0-bc-chatmember-subentities] Bot API 5.3 (Personalized Commands, Keyboard Placeholders). (@TiiFuchs, @noplanman) (#1229, #1231)
 
 ## [0.73.1] - 2021-06-20
 ### Notes
@@ -538,6 +538,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Move `hideKeyboard` to `removeKeyboard`.
 
 [unreleased-sql-migration]: #
+[0.74.0-bc-chatmember-subentities]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chatmember-subentities
 [0.73.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.72.0-0.73.0.sql
 [0.72.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.71.0-0.72.0.sql
 [0.70.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.64.0-0.70.0.sql
