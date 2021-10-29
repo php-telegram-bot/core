@@ -866,7 +866,7 @@ class Telegram
         if (!is_dir($path)) {
             TelegramLog::error('reset commands path "' . $path . '" does not exist.');
         } elseif (!in_array($path, $this->commands_paths, true)) {
-            $this->commands_paths = $path;
+            $this->commands_paths = [$path];
         }
 
         return $this;
