@@ -32,6 +32,7 @@ namespace Longman\TelegramBot\Entities;
  * @method Message         getPinnedMessage()               Optional. Pinned message, for groups, supergroups and channels. Returned only in getChat.
  * @method ChatPermissions getPermissions()                 Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
  * @method int             getSlowModeDelay()               Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
+ * @method bool            getHasProtectedContent()         Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
  * @method string          getStickerSetName()              Optional. For supergroups, name of group sticker set. Returned only in getChat.
  * @method bool            getCanSetStickerSet()            Optional. True, if the bot can change the group sticker set. Returned only in getChat.
  * @method int             getLinkedChatId()                Optional. Unique identifier for the linked chat. Returned only in getChat.

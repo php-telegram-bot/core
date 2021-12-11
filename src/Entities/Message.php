@@ -37,6 +37,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
  * @method int                                    getEditDate()                               Optional. Date the message was last edited in Unix time
+ * @method bool                                   getHasProtectedContent()                    Optional. True, if the message can't be forwarded
  * @method string                                 getMediaGroupId()                           Optional. The unique identifier of a media message group this message belongs to
  * @method string                                 getAuthorSignature()                        Optional. Signature of the post author for messages in channels
  * @method MessageEntity[]                        getEntities()                               Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
