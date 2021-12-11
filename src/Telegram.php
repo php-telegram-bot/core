@@ -855,6 +855,24 @@ class Telegram
     }
 
     /**
+     * change Command folder path (other command folder about to invalid)
+     *
+     * @param  string    $path   Custom commands path
+     * @author Wright <guan1992@gmail.com>
+     * @return Telegram
+     */
+    public function resetCommandsPaths(string $path): Telegram
+    {
+        if (!is_dir($path)) {
+            TelegramLog::error('reset commands path "' . $path . '" does not exist.');
+        } elseif (!in_array($path, $this->commands_paths, true)) {
+            $this->commands_paths = [$path];
+        }
+
+        return $this;
+    }
+
+    /**
      * Add multiple custom commands paths
      *
      * @param array $paths  Custom commands paths to add
