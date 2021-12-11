@@ -7,9 +7,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
+- Bot API 5.4. (@TiiFuchs, @noplanman) (#1266)
+- Bot API 5.5. (@TiiFuchs, @noplanman) (#1267)
 ### Changed
 ### Deprecated
 ### Removed
+- [:exclamation:][unreleased-bc-removed-chatactions] Removed ChatAction::RECORD_AUDIO and ChatAction::UPLOAD_AUDIO since it is deprecated for a while now. Use RECORD_VOICE and UPLOAD_VOICE instead.
 ### Fixed
 ### Security
 
@@ -538,6 +541,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Move `hideKeyboard` to `removeKeyboard`.
 
 [unreleased-sql-migration]: #
+[unreleased-bc-removed-chatactions]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#removed-deprecated-chatactions
 [0.74.0-bc-chatmember-subentities]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chatmember-subentities
 [0.73.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.72.0-0.73.0.sql
 [0.72.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.71.0-0.72.0.sql
