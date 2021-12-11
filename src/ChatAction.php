@@ -34,23 +34,9 @@ class ChatAction
     public const UPLOAD_VIDEO = 'upload_video';
 
     /**
-     * Record Audio chat action
-     *
-     * @deprecated Use ChatAction::RECORD_VOICE instead
-     */
-    public const RECORD_AUDIO = 'record_voice';
-
-    /**
      * Record Voice chat action
      */
     public const RECORD_VOICE = 'record_voice';
-
-    /**
-     * Upload Audio chat action
-     *
-     * @deprecated Use ChatAction::UPLOAD_VOICE instead
-     */
-    public const UPLOAD_AUDIO = 'upload_voice';
 
     /**
      * Upload Voice chat action
@@ -61,6 +47,11 @@ class ChatAction
      * Upload Document chat action
      */
     public const UPLOAD_DOCUMENT = 'upload_document';
+
+    /**
+     * Choose Sticker chat action
+     */
+    public const CHOOSE_STICKER = 'choose_sticker';
 
     /**
      * Find Location chat action
