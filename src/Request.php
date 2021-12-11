@@ -203,6 +203,8 @@ class Request
         'restrictChatMember',
         'promoteChatMember',
         'setChatAdministratorCustomTitle',
+        'banChatSenderChat',
+        'unbanChatSenderChat',
         'setChatPermissions',
         'exportChatInviteLink',
         'createChatInviteLink',
