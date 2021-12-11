@@ -26,11 +26,14 @@ namespace Longman\TelegramBot\Entities;
  * @method string          getLastName()                    Optional. Last name of the other party in a private chat
  * @method ChatPhoto       getPhoto()                       Optional. Chat photo. Returned only in getChat.
  * @method string          getBio()                         Optional. Bio of the other party in a private chat. Returned only in getChat.
+ * @method bool            getHasPrivateForwards()          Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
  * @method string          getDescription()                 Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
  * @method string          getInviteLink()                  Optional. Chat invite link, for groups, supergroups and channel chats. Each administrator in a chat generates their own invite links, so the bot must first generate the link using exportChatInviteLink. Returned only in getChat.
  * @method Message         getPinnedMessage()               Optional. Pinned message, for groups, supergroups and channels. Returned only in getChat.
  * @method ChatPermissions getPermissions()                 Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
  * @method int             getSlowModeDelay()               Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
+ * @method int             getMessageAutoDeleteTime()       Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
+ * @method bool            getHasProtectedContent()         Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
  * @method string          getStickerSetName()              Optional. For supergroups, name of group sticker set. Returned only in getChat.
  * @method bool            getCanSetStickerSet()            Optional. True, if the bot can change the group sticker set. Returned only in getChat.
  * @method int             getLinkedChatId()                Optional. Unique identifier for the linked chat. Returned only in getChat.
