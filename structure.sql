@@ -260,6 +260,21 @@ CREATE TABLE IF NOT EXISTS `chat_member_updated` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `chat_join_request` (
+  `id` BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
+  `chat_id` BIGINT NOT NULL COMMENT 'Chat to which the request was sent',
+  `user_id` BIGINT NOT NULL COMMENT 'User that sent the join request',
+  `date` TIMESTAMP NOT NULL COMMENT 'Date the request was sent in Unix time',
+  `bio` TEXT NOT NULL COMMENT 'Optional. Bio of the user',
+  `invite_link` TEXT NULL COMMENT 'Optional. Chat invite link that was used by the user to send the join request',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'Update''s unique identifier',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
@@ -276,6 +291,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `poll_answer_poll_id` bigint UNSIGNED DEFAULT NULL COMMENT 'A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.',
   `my_chat_member_updated_id` BIGINT UNSIGNED NULL COMMENT 'The bot''s chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.',
   `chat_member_updated_id` BIGINT UNSIGNED NULL COMMENT 'A chat member''s status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.',
+  `chat_join_request_id` BIGINT UNSIGNED NULL COMMENT 'A request to join the chat has been sent',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`message_id`),
@@ -292,6 +308,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   KEY `poll_answer_poll_id` (`poll_answer_poll_id`),
   KEY `my_chat_member_updated_id` (`my_chat_member_updated_id`),
   KEY `chat_member_updated_id` (`chat_member_updated_id`),
+  KEY `chat_join_request_id` (`chat_join_request_id`),
 
   FOREIGN KEY (`chat_id`, `message_id`) REFERENCES `message` (`chat_id`, `id`),
   FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`),
@@ -305,7 +322,8 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`),
   FOREIGN KEY (`poll_answer_poll_id`) REFERENCES `poll_answer` (`poll_id`),
   FOREIGN KEY (`my_chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`),
-  FOREIGN KEY (`chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`)
+  FOREIGN KEY (`chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`),
+  FOREIGN KEY (`chat_join_request_id`) REFERENCES `chat_join_request` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
