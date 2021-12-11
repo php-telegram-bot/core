@@ -7,14 +7,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
+- Ability to directly set commands paths. (@wright-tw, @noplanman) (#1252)
 - Bot API 5.4. (@TiiFuchs, @noplanman) (#1266)
 - Bot API 5.5. (@TiiFuchs, @noplanman) (#1267)
 - The field `message_auto_delete_time` was added to the Chat Entity (@TiiFuchs) (#1265)
 ### Changed
 ### Deprecated
 ### Removed
-- [:exclamation:][unreleased-bc-removed-chatactions] Removed ChatAction::RECORD_AUDIO and ChatAction::UPLOAD_AUDIO since it is deprecated for a while now. Use RECORD_VOICE and UPLOAD_VOICE instead.
+- [:exclamation:][unreleased-bc-removed-chatactions] Removed deprecated `ChatAction::` `RECORD_AUDIO` and `UPLOAD_AUDIO`. Use `RECORD_VOICE` and `UPLOAD_VOICE` instead.
 ### Fixed
+- PHP 8.1 deprecations. (@maxgorovenko) (#1260)
 ### Security
 
 ## [0.74.0] - 2021-06-26
@@ -541,7 +543,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: #
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.74.0-unreleased.sql
 [unreleased-bc-removed-chatactions]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#removed-deprecated-chatactions
 [0.74.0-bc-chatmember-subentities]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chatmember-subentities
 [0.73.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.72.0-0.73.0.sql

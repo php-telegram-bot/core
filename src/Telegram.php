@@ -832,6 +832,22 @@ class Telegram
     }
 
     /**
+     * Set a single custom commands path
+     *
+     * @param string $path Custom commands path to set
+     *
+     * @return Telegram
+     */
+    public function setCommandsPath(string $path): Telegram
+    {
+        $this->commands_paths = [];
+
+        $this->addCommandsPath($path);
+
+        return $this;
+    }
+
+    /**
      * Add a single custom commands path
      *
      * @param string $path   Custom commands path to add
@@ -855,19 +871,17 @@ class Telegram
     }
 
     /**
-     * change Command folder path (other command folder about to invalid)
+     * Set multiple custom commands paths
      *
-     * @param  string    $path   Custom commands path
-     * @author Wright <guan1992@gmail.com>
+     * @param array $paths Custom commands paths to add
+     *
      * @return Telegram
      */
-    public function resetCommandsPaths(string $path): Telegram
+    public function setCommandsPaths(array $paths): Telegram
     {
-        if (!is_dir($path)) {
-            TelegramLog::error('reset commands path "' . $path . '" does not exist.');
-        } elseif (!in_array($path, $this->commands_paths, true)) {
-            $this->commands_paths = [$path];
-        }
+        $this->commands_paths = [];
+
+        $this->addCommandsPaths($paths);
 
         return $this;
     }
@@ -880,7 +894,7 @@ class Telegram
      *
      * @return Telegram
      */
-    public function addCommandsPaths(array $paths, $before = true): Telegram
+    public function addCommandsPaths(array $paths, bool $before = true): Telegram
     {
         foreach ($paths as $path) {
             $this->addCommandsPath($path, $before);
@@ -1048,7 +1062,7 @@ class Telegram
             'ip_address',
             'max_connections',
             'allowed_updates',
-            'drop_pending_updates'
+            'drop_pending_updates',
         ]));
         $data['url'] = $url;
 

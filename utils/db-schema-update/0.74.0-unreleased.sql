@@ -15,3 +15,6 @@ CREATE TABLE IF NOT EXISTS `chat_join_request` (
 
 ALTER TABLE `telegram_update` ADD COLUMN `chat_join_request_id` BIGINT UNSIGNED NULL COMMENT 'A request to join the chat has been sent';
 ALTER TABLE `telegram_update` ADD FOREIGN KEY (`chat_join_request_id`) REFERENCES `chat_join_request` (`id`);
+
+ALTER TABLE `message` ADD COLUMN `is_automatic_forward` tinyint(1) DEFAULT 0 COMMENT 'True, if the message is a channel post that was automatically forwarded to the connected discussion group' AFTER `forward_date`;
+ALTER TABLE `message` ADD COLUMN `has_protected_content` tinyint(1) DEFAULT 0 COMMENT 'True, if the message can''t be forwarded' AFTER `edit_date`;

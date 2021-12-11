@@ -159,8 +159,8 @@ class Message extends Entity
             return $command;
         }
 
-        $full_command = $this->getFullCommand();
-        if (!is_string($full_command) || strpos($full_command, '/') !== 0) {
+        $full_command = $this->getFullCommand() ?? '';
+        if (strpos($full_command, '/') !== 0) {
             return null;
         }
         $full_command = substr($full_command, 1);
@@ -263,7 +263,7 @@ class Message extends Entity
             'reply_markup',
         ];
 
-        $is_command = is_string($command = $this->getCommand()) && strlen($command) > 0;
+        $is_command = $this->getCommand() !== null;
         foreach ($types as $type) {
             if ($this->getProperty($type) !== null) {
                 if ($is_command && $type === 'text') {
