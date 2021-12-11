@@ -10,7 +10,7 @@ namespace Longman\TelegramBot\Entities;
  * @link https://core.telegram.org/bots/api#chatjoinrequest
  *
  * @method Chat           getChat()       Chat to which the request was sent
- * @method User           getUser()       User that sent the join request
+ * @method User           getFrom()       User that sent the join request
  * @method int            getDate()       Date the request was sent in Unix time
  * @method string         getBio()        Optional. Bio of the user.
  * @method ChatInviteLink getInviteLink() Optional. Chat invite link that was used by the user to send the join request
