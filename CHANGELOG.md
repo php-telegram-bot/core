@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Bot API 5.4. (@TiiFuchs, @noplanman) (#1266)
 - Bot API 5.5. (@TiiFuchs, @noplanman) (#1267)
+- The field `message_auto_delete_time` was added to the Chat Entity (@TiiFuchs) (#1265)
 ### Changed
 ### Deprecated
 ### Removed
