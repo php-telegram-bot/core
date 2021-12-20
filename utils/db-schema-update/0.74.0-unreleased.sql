@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `chat_join_request` (
     `chat_id` BIGINT NOT NULL COMMENT 'Chat to which the request was sent',
     `user_id` BIGINT NOT NULL COMMENT 'User that sent the join request',
     `date` TIMESTAMP NOT NULL COMMENT 'Date the request was sent in Unix time',
-    `bio` TEXT NOT NULL COMMENT 'Optional. Bio of the user',
+    `bio` TEXT NULL COMMENT 'Optional. Bio of the user',
     `invite_link` TEXT NULL COMMENT 'Optional. Chat invite link that was used by the user to send the join request',
     `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
 

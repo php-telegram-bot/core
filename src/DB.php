@@ -14,6 +14,7 @@ namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\ChatJoinRequest;
 use Longman\TelegramBot\Entities\ChatMemberUpdated;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
@@ -146,6 +147,7 @@ class DB
         $tables = [
             'callback_query',
             'chat',
+            'chat_join_request',
             'chat_member_updated',
             'chosen_inline_result',
             'edited_message',
@@ -351,7 +353,7 @@ class DB
         ?string $chat_member_updated_id = null,
         ?string $chat_join_request_id = null
     ): ?bool {
-        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null && $my_chat_member_updated_id === null && $chat_member_updated_id === null) {
+        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null && $my_chat_member_updated_id === null && $chat_member_updated_id === null && $chat_join_request_id === null) {
             throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id, my_chat_member_updated_id, chat_member_updated_id are all null');
         }
 
@@ -1021,7 +1023,7 @@ class DB
 
         try {
             $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT_MEMBER_UPDATED . '`
+                INSERT INTO `' . TB_CHAT_JOIN_REQUEST . '`
                 (`chat_id`, `user_id`, `date`, `bio`, `invite_link`, `created_at`)
                 VALUES
                 (:chat_id, :user_id, :date, :bio, :invite_link, :created_at)
