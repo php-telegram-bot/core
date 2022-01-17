@@ -702,7 +702,7 @@ Credit list in [CREDITS](CREDITS)
 [getUpdatesCLI.php]: https://github.com/php-telegram-bot/example-bot/blob/master/getUpdatesCLI.php "example getUpdatesCLI.php"
 [AdminCommands-folder]: https://github.com/php-telegram-bot/core/tree/master/src/Commands/AdminCommands "Admin commands folder"
 [ExampleCommands-folder]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands "Example commands folder"
-[ImageCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/ImageCommand.php "example /image command"
+[ImageCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/Other/ImageCommand.php "example /image command"
 [WhoamiCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/WhoamiCommand.php "example /whoami command"
 [HelpCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/HelpCommand.php "example /help command"
 [SendtochannelCommand.php]: https://github.com/php-telegram-bot/core/blob/master/src/Commands/AdminCommands/SendtochannelCommand.php "/sendtochannel admin command"
