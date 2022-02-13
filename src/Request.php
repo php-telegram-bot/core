@@ -289,8 +289,8 @@ class Request
         'setChatPhoto'        => ['photo'],
         'sendSticker'         => ['sticker'],
         'uploadStickerFile'   => ['png_sticker'],
-        'createNewStickerSet' => ['png_sticker', 'tgs_sticker'],
-        'addStickerToSet'     => ['png_sticker', 'tgs_sticker'],
+        'createNewStickerSet' => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
+        'addStickerToSet'     => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
         'setStickerSetThumb'  => ['thumb'],
     ];
 
