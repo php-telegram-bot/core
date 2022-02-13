@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 - Bot API 5.6 (@TiiFuchs) (#1275)
+- Bot API 5.7 (@TiiFuchs) (#1284)
 ### Changed
 ### Deprecated
 ### Removed
