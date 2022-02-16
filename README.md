@@ -7,7 +7,7 @@
 
 A Telegram Bot based on the official [Telegram Bot API]
 
-[![API Version](https://img.shields.io/badge/Bot%20API-5.7%20%28January%202022%29-32a2da.svg)](https://core.telegram.org/bots/api#december-30-2021)
+[![API Version](https://img.shields.io/badge/Bot%20API-5.7%20%28January%202022%29-32a2da.svg)](https://core.telegram.org/bots/api#january-31-2022)
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 

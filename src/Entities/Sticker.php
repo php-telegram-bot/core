@@ -11,8 +11,6 @@
 
 namespace Longman\TelegramBot\Entities;
 
-use phpDocumentor\Reflection\Types\Boolean;
-
 /**
  * Class Sticker
  *

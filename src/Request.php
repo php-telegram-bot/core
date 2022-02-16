@@ -932,7 +932,8 @@ class Request
      * @deprecated
      * @see Request::banChatMember()
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return ServerResponse
      */
     public static function kickChatMember(array $data = []): ServerResponse
@@ -946,7 +947,8 @@ class Request
      * @deprecated
      * @see Request::getChatMemberCount()
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return ServerResponse
      */
     public static function getChatMembersCount(array $data = []): ServerResponse

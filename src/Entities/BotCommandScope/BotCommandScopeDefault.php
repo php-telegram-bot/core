@@ -3,7 +3,6 @@
 namespace Longman\TelegramBot\Entities\BotCommandScope;
 
 use Longman\TelegramBot\Entities\Entity;
-use Longman\TelegramBot\Entities\InputMedia\InputMediaAnimation;
 
 /**
  * Class BotCommandScopeDefault

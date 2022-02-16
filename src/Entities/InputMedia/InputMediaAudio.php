@@ -11,7 +11,6 @@
 
 namespace Longman\TelegramBot\Entities\InputMedia;
 
-use Longman\TelegramBot\Entities\ChatLocation;
 use Longman\TelegramBot\Entities\Entity;
 
 /**

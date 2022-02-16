@@ -21,7 +21,7 @@ class ChatMemberLeft extends Entity implements ChatMember
     protected function subEntities(): array
     {
         return [
-            'user' => User::class
+            'user' => User::class,
         ];
     }
 }
