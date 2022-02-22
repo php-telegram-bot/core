@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Bot API 5.6 (@TiiFuchs) (#1275)
 - Bot API 5.7 (@TiiFuchs) (#1284)
+- PSR3 (psr/log) version 2 and 3 compatible (@noplanman)
 ### Changed
 ### Deprecated
 ### Removed
