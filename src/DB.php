@@ -161,6 +161,7 @@ class DB
             'telegram_update',
             'user',
             'user_chat',
+            'cart',
         ];
         foreach ($tables as $table) {
             $table_name = 'TB_' . strtoupper($table);
