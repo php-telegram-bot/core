@@ -89,7 +89,7 @@ class Chat extends Entity
      */
     public function isGroupChat(): bool
     {
-        return $this->getType() === 'group' || $this->getId() < 0;
+        return $this->getType() === 'group';
     }
 
     /**
