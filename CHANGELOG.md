@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Bot API 5.7 (@TiiFuchs) (#1284)
 - PSR3 (psr/log) version 2 and 3 compatible (@noplanman)
 ### Changed
+- Bugfix: Fixed condition in \Longman\TelegramBot\Entities\Chat::isGroupChat() that previously also counted super groups and channels.
 ### Deprecated
 ### Removed
 ### Fixed
