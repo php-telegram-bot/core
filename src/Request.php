@@ -327,6 +327,10 @@ class Request
         if ($api_base_download_uri !== '') {
             self::$api_base_download_uri = $api_base_download_uri;
         }
+
+        if (self::$telegram) {
+            self::initialize(self::$telegram);
+        }
     }
 
     /**
