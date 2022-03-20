@@ -8,8 +8,6 @@ services:
 
   database:
     image: mariadb
-    ports:
-      - 3307:3306
     volumes:
       - ./structure.sql:/docker-entrypoint-initdb.d/structure.sql
     environment:
