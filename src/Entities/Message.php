@@ -136,7 +136,7 @@ class Message extends Entity
      */
     public function getFullCommand(): ?string
     {
-        $text = $this->getProperty('text');
+        $text = $this->getProperty('text') ?? '';
         if (strpos($text, '/') !== 0) {
             return null;
         }
