@@ -1,7 +1,6 @@
 version: '3'
 services:
   php:
-    image: php:8.1-fpm
     build: ./docker/php
     volumes:
       - ./:/app
