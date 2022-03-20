@@ -7,16 +7,23 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 5.6 (@TiiFuchs) (#1275)
-- Bot API 5.7 (@TiiFuchs) (#1284)
-- PSR3 (psr/log) version 2 and 3 compatible (@noplanman)
-- Entity implements and uses JsonSerializable now (@TiiFuchs)
 ### Changed
-- Bugfix: Fixed condition in \Longman\TelegramBot\Entities\Chat::isGroupChat() that previously also counted super groups and channels.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.76.0] - 2022-03-20
+### Notes
+- [:ledger: View file changes][0.76.0]
+### Added
+- Bot API 5.6 (@TiiFuchs) (#1275)
+- Bot API 5.7 (@TiiFuchs) (#1284)
+- PSR3 (psr/log) version 2 and 3 compatible (@noplanman) (#1287)
+- Entity implements and uses JsonSerializable now (@TiiFuchs)
+- Test with PHP 8.1 on Travis CI (@osavchenko) (#1291)
+### Changed
+- Bugfix: Fixed condition in \Longman\TelegramBot\Entities\Chat::isGroupChat() that previously also counted super groups and channels. (@TiiFuchs)
 
 ## [0.75.0] - 2021-12-29
 ### Notes
@@ -592,6 +599,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.76.0]: https://github.com/php-telegram-bot/core/compare/0.75.0...0.76.0
 [0.75.0]: https://github.com/php-telegram-bot/core/compare/0.74.0...0.75.0
 [0.74.0]: https://github.com/php-telegram-bot/core/compare/0.73.1...0.74.0
 [0.73.1]: https://github.com/php-telegram-bot/core/compare/0.73.0...0.73.1
