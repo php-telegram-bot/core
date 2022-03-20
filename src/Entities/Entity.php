@@ -24,8 +24,10 @@ use Longman\TelegramBot\Entities\InputMedia\InputMedia;
  * @method array  getRawData()     Get the raw data passed to this entity
  * @method string getBotUsername() Return the bot name passed to this entity
  */
-abstract class Entity
+abstract class Entity implements \JsonSerializable
 {
+
+
     /**
      * Entity constructor.
      *
@@ -51,13 +53,23 @@ abstract class Entity
     }
 
     /**
+     * Return the data that should be serialized for Telegram.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->getRawData();
+    }
+
+    /**
      * Perform to json
      *
      * @return string
      */
     public function toJson(): string
     {
-        return json_encode($this->getRawData());
+        return json_encode($this);
     }
 
     /**
