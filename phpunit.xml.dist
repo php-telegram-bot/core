@@ -12,11 +12,11 @@
         <ini name="date.timezone" value="UTC"/>
         <ini name="error_reporting" value="-1"/>
         <const name="PHPUNIT_TESTSUITE" value="true"/>
-        <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
+        <const name="PHPUNIT_DB_HOST" value="database"/>
         <const name="PHPUNIT_DB_PORT" value="3306"/>
-        <const name="PHPUNIT_DB_NAME" value="telegrambot"/>
-        <const name="PHPUNIT_DB_USER" value="root"/>
-        <const name="PHPUNIT_DB_PASS" value=""/>
+        <const name="PHPUNIT_DB_NAME" value="php_telegram_bot"/>
+        <const name="PHPUNIT_DB_USER" value="php_telegram_bot"/>
+        <const name="PHPUNIT_DB_PASS" value="php_telegram_bot"/>
     </php>
     <testsuites>
         <testsuite name="Package Test Suite">

@@ -1,0 +1,19 @@
+version: '3'
+services:
+  php:
+    image: php:8.1-fpm
+    build: ./docker/php
+    volumes:
+      - ./:/app
+
+  database:
+    image: mariadb
+    ports:
+      - 3307:3306
+    volumes:
+      - ./structure.sql:/docker-entrypoint-initdb.d/structure.sql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: php_telegram_bot
+      MYSQL_USER: php_telegram_bot
+      MYSQL_PASSWORD: php_telegram_bot
