@@ -32,9 +32,9 @@ use Longman\TelegramBot\Exception\TelegramException;
  */
 class Keyboard extends Entity
 {
-    public function __construct()
+    public function __construct(...$rows)
     {
-        $data = $this->createFromParams(...func_get_args());
+        $data = $this->createFromParams(...$rows);
         parent::__construct($data);
 
         // Remove any empty buttons.
@@ -76,11 +76,11 @@ class Keyboard extends Entity
      *
      * @return array
      */
-    protected function createFromParams(): array
+    protected function createFromParams(...$rows): array
     {
         $keyboard_type = $this->getKeyboardType();
 
-        $args = func_get_args();
+        $args = $rows;
 
         // Force button parameters into individual rows.
         foreach ($args as &$arg) {
@@ -120,9 +120,9 @@ class Keyboard extends Entity
      *
      * @return Keyboard
      */
-    public function addRow(): Keyboard
+    public function addRow(...$buttons): Keyboard
     {
-        if (($new_row = $this->parseRow(func_get_args())) !== null) {
+        if (($new_row = $this->parseRow($buttons)) !== null) {
             $this->{$this->getKeyboardType()}[] = $new_row;
         }
 
