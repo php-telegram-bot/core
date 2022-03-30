@@ -186,4 +186,23 @@ class KeyboardTest extends TestCase
         $keyboard = $keyboard_obj->getProperty('keyboard');
         self::assertSame('Button Text 4', $keyboard[2][0]->getText());
     }
+    
+    public function testSetterMethods(): void
+    {
+        $keyboard = (new Keyboard(
+            [
+                ['text' => 'One']
+            ]
+        ))->setResizeKeyboard(true);
+
+        $array = json_decode($keyboard->toJson(), true);
+
+        $this->assertIsArray($array);
+
+        $this->assertArrayHasKey('keyboard', $array);
+        $this->assertArrayHasKey('resize_keyboard', $array);
+
+        $this->assertIsArray($array['keyboard']);
+        $this->assertEquals(true, $array['resize_keyboard']);
+    }
 }
