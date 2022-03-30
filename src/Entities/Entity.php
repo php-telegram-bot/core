@@ -57,7 +57,7 @@ abstract class Entity implements \JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->getRawData();
     }
@@ -161,6 +161,7 @@ abstract class Entity implements \JsonSerializable
             // Limit setters to specific classes.
             if ($this instanceof InlineEntity || $this instanceof InputMedia || $this instanceof Keyboard || $this instanceof KeyboardButton) {
                 $this->$property_name = $args[0];
+                $this->raw_data[$property_name] = $args[0];
 
                 return $this;
             }
