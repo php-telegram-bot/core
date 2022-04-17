@@ -16,6 +16,8 @@ namespace Longman\TelegramBot\Entities;
  *
  * Represents a service message about a voice chat scheduled in the chat.
  *
+ * @deprecated See VideoChatScheduled instead
+ *
  * @link https://core.telegram.org/bots/api#voicechatscheduled
  *
  * @method int getStartDate() Point in time (Unix timestamp) when the voice chat is supposed to be started by a chat administrator

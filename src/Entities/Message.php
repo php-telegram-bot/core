@@ -75,10 +75,10 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
- * @method VoiceChatScheduled                     getVoiceChatScheduled()                     Optional. Service message: voice chat scheduled
- * @method VoiceChatStarted                       getVoiceChatStarted()                       Optional. Service message: voice chat started
- * @method VoiceChatEnded                         getVoiceChatEnded()                         Optional. Service message: voice chat ended
- * @method VoiceChatParticipantsInvited           getVoiceChatParticipantsInvited()           Optional. Service message: new participants invited to a voice chat
+ * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
+ * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
+ * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
+ * @method VideoChatParticipantsInvited           getVideoChatParticipantsInvited()           Optional. Service message: new participants invited to a voice chat
  * @method WebAppData                             getWebAppData()                             Optional. Service message: data sent by a Web App
  * @method InlineKeyboard                         getReplyMarkup()                            Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
  */
@@ -122,10 +122,10 @@ class Message extends Entity
             'successful_payment'                => SuccessfulPayment::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
-            'voice_chat_scheduled'              => VoiceChatScheduled::class,
-            'voice_chat_started'                => VoiceChatStarted::class,
-            'voice_chat_ended'                  => VoiceChatEnded::class,
-            'voice_chat_participants_invited'   => VoiceChatParticipantsInvited::class,
+            'video_chat_scheduled'              => VideoChatScheduled::class,
+            'video_chat_started'                => VideoChatStarted::class,
+            'video_chat_ended'                  => VideoChatEnded::class,
+            'video_chat_participants_invited'   => VideoChatParticipantsInvited::class,
             'web_app_data'                      => WebAppData::class,
             'reply_markup'                      => InlineKeyboard::class,
         ];
@@ -258,10 +258,10 @@ class Message extends Entity
             'successful_payment',
             'passport_data',
             'proximity_alert_triggered',
-            'voice_chat_scheduled',
-            'voice_chat_started',
-            'voice_chat_ended',
-            'voice_chat_participants_invited',
+            'video_chat_scheduled',
+            'video_chat_started',
+            'video_chat_ended',
+            'video_chat_participants_invited',
             'web_app_data',
             'reply_markup',
         ];
