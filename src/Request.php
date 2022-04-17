@@ -86,7 +86,9 @@ use Throwable;
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
  * @method static ServerResponse deleteMyCommands(array $data)                Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
- * @method static ServerResponse getMyCommands()                              Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
+ * @method static ServerResponse getMyCommands(array $data)                   Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
+ * @method static ServerResponse setChatMenuButton(array $data)               Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success.
+ * @method static ServerResponse getChatMenuButton(array $data)               Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns MenuButton on success.
  * @method static ServerResponse editMessageText(array $data)                 Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageCaption(array $data)              Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageMedia(array $data)                Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -232,6 +234,8 @@ class Request
         'setMyCommands',
         'deleteMyCommands',
         'getMyCommands',
+        'setChatMenuButton',
+        'getChatMenuButton',
         'editMessageText',
         'editMessageCaption',
         'editMessageMedia',
@@ -268,7 +272,10 @@ class Request
         'getMe',
         'logOut',
         'close',
+        'deleteMyCommands',
         'getMyCommands',
+        'setChatMenuButton',
+        'getChatMenuButton',
     ];
 
     /**
@@ -299,7 +306,7 @@ class Request
     /**
      * Initialize
      *
-     * @param Telegram $telegram
+     * @param  Telegram  $telegram
      */
     public static function initialize(Telegram $telegram): void
     {
@@ -310,7 +317,7 @@ class Request
     /**
      * Set a custom Guzzle HTTP Client object
      *
-     * @param ClientInterface $client
+     * @param  ClientInterface  $client
      */
     public static function setClient(ClientInterface $client): void
     {
@@ -320,8 +327,8 @@ class Request
     /**
      * Set a custom Bot API URL
      *
-     * @param string $api_base_uri
-     * @param string $api_base_download_uri
+     * @param  string  $api_base_uri
+     * @param  string  $api_base_download_uri
      */
     public static function setCustomBotApiUri(string $api_base_uri, string $api_base_download_uri = ''): void
     {
@@ -346,7 +353,7 @@ class Request
     /**
      * Generate general fake server response
      *
-     * @param array $data Data to add to fake response
+     * @param  array  $data  Data to add to fake response
      *
      * @return array Fake response data
      */
@@ -367,13 +374,13 @@ class Request
         //some data to initialize the class method SendMessage
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
-            $data['date']       = '1441378360';
-            $data['from']       = [
+            $data['date'] = '1441378360';
+            $data['from'] = [
                 'id'         => 123456789,
                 'first_name' => 'botname',
                 'username'   => 'namebot',
             ];
-            $data['chat']       = ['id' => $data['chat_id']];
+            $data['chat'] = ['id' => $data['chat_id']];
 
             $fake_response['result'] = $data;
         }
@@ -387,7 +394,7 @@ class Request
      * If any item of the array is a resource, reformat it to a multipart request.
      * Else, just return the passed data as form params.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return array
      * @throws TelegramException
@@ -395,13 +402,14 @@ class Request
     private static function setUpRequestParams(array $data): array
     {
         $has_resource = false;
-        $multipart    = [];
+        $multipart = [];
 
         foreach ($data as $key => &$item) {
             if ($key === 'media') {
                 // Magical media input helper.
                 $item = self::mediaInputHelper($item, $has_resource, $multipart);
-            } elseif (array_key_exists(self::$current_action, self::$input_file_fields) && in_array($key, self::$input_file_fields[self::$current_action], true)) {
+            } elseif (array_key_exists(self::$current_action, self::$input_file_fields) && in_array($key,
+                    self::$input_file_fields[self::$current_action], true)) {
                 // Allow absolute paths to local files.
                 if (is_string($item) && file_exists($item)) {
                     $item = new Stream(self::encodeFile($item));
@@ -413,7 +421,7 @@ class Request
 
             // Reformat data array in multipart way if it contains a resource
             $has_resource = $has_resource || is_resource($item) || $item instanceof Stream;
-            $multipart[]  = ['name' => $key, 'contents' => $item];
+            $multipart[] = ['name' => $key, 'contents' => $item];
         }
         unset($item);
 
@@ -452,9 +460,9 @@ class Request
      *     ],
      * ]);
      *
-     * @param mixed $item
-     * @param bool  $has_resource
-     * @param array $multipart
+     * @param  mixed  $item
+     * @param  bool  $has_resource
+     * @param  array  $multipart
      *
      * @return mixed
      * @throws TelegramException
@@ -466,7 +474,7 @@ class Request
 
         /** @var InputMedia|null $media_item */
         foreach ($item as $media_item) {
-            if (!($media_item instanceof InputMedia)) {
+            if (! ($media_item instanceof InputMedia)) {
                 continue;
             }
 
@@ -484,11 +492,11 @@ class Request
 
                 if (is_resource($media) || $media instanceof Stream) {
                     $has_resource = true;
-                    $unique_key   = uniqid($type . '_', false);
-                    $multipart[]  = ['name' => $unique_key, 'contents' => $media];
+                    $unique_key = uniqid($type . '_', false);
+                    $multipart[] = ['name' => $unique_key, 'contents' => $media];
 
                     // We're literally overwriting the passed media type data!
-                    $media_item->$type           = 'attach://' . $unique_key;
+                    $media_item->$type = 'attach://' . $unique_key;
                     $media_item->raw_data[$type] = 'attach://' . $unique_key;
                 }
             }
@@ -512,15 +520,15 @@ class Request
     /**
      * Execute HTTP Request
      *
-     * @param string $action Action to execute
-     * @param array  $data   Data to attach to the execution
+     * @param  string  $action  Action to execute
+     * @param  array  $data  Data to attach to the execution
      *
      * @return string Result of the HTTP Request
      * @throws TelegramException
      */
     public static function execute(string $action, array $data = []): string
     {
-        $request_params          = self::setUpRequestParams($data);
+        $request_params = self::setUpRequestParams($data);
         $request_params['debug'] = TelegramLog::getDebugLogTempStream();
 
         try {
@@ -528,10 +536,10 @@ class Request
                 '/bot' . self::$telegram->getApiKey() . '/' . $action,
                 $request_params
             );
-            $result   = (string) $response->getBody();
+            $result = (string) $response->getBody();
         } catch (RequestException $e) {
             $response = null;
-            $result   = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
+            $result = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
         }
 
         //Logging verbose debug output
@@ -547,7 +555,7 @@ class Request
     /**
      * Download file
      *
-     * @param File $file
+     * @param  File  $file
      *
      * @return bool
      * @throws TelegramException
@@ -559,12 +567,12 @@ class Request
         }
 
         $tg_file_path = $file->getFilePath();
-        $file_path    = $download_path . '/' . $tg_file_path;
+        $file_path = $download_path . '/' . $tg_file_path;
 
         $file_dir = dirname($file_path);
         //For safety reasons, first try to create the directory, then check that it exists.
         //This is in case some other process has created the folder in the meantime.
-        if (!@mkdir($file_dir, 0755, true) && !is_dir($file_dir)) {
+        if (! @mkdir($file_dir, 0755, true) && ! is_dir($file_dir)) {
             throw new TelegramException('Directory ' . $file_dir . ' can\'t be created');
         }
 
@@ -589,7 +597,7 @@ class Request
     /**
      * Encode file
      *
-     * @param string $file
+     * @param  string  $file
      *
      * @return resource
      * @throws TelegramException
@@ -610,8 +618,8 @@ class Request
      * @todo Fake response doesn't need json encoding?
      * @todo Write debug entry on failure
      *
-     * @param string $action
-     * @param array  $data
+     * @param  string  $action
+     * @param  array  $data
      *
      * @return ServerResponse
      * @throws TelegramException
@@ -637,7 +645,7 @@ class Request
         self::$current_action = $action;
 
         $raw_response = self::execute($action, $data);
-        $response     = json_decode($raw_response, true);
+        $response = json_decode($raw_response, true);
 
         if (null === $response) {
             TelegramLog::debug($raw_response);
@@ -646,7 +654,7 @@ class Request
 
         $response = new ServerResponse($response, $bot_username);
 
-        if (!$response->isOk() && $response->getErrorCode() === 401 && $response->getDescription() === 'Unauthorized') {
+        if (! $response->isOk() && $response->getErrorCode() === 401 && $response->getDescription() === 'Unauthorized') {
             throw new InvalidBotTokenException();
         }
 
@@ -672,8 +680,8 @@ class Request
      *
      * @todo Would be nice to find a better solution for this!
      *
-     * @param string $action
-     * @param array  $data
+     * @param  string  $action
+     * @param  array  $data
      */
     protected static function addDummyParamIfNecessary(string $action, array &$data): void
     {
@@ -686,7 +694,7 @@ class Request
     /**
      * Make sure the data isn't empty, else throw an exception
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @throws TelegramException
      */
@@ -700,13 +708,13 @@ class Request
     /**
      * Make sure the action is valid, else throw an exception
      *
-     * @param string $action
+     * @param  string  $action
      *
      * @throws TelegramException
      */
     private static function ensureValidAction(string $action): void
     {
-        if (!in_array($action, self::$actions, true)) {
+        if (! in_array($action, self::$actions, true)) {
             throw new TelegramException('The action "' . $action . '" doesn\'t exist!');
         }
     }
@@ -724,8 +732,8 @@ class Request
      *
      * @todo Splitting formatted text may break the message.
      *
-     * @param array      $data
-     * @param array|null $extras
+     * @param  array  $data
+     * @param  array|null  $extras
      *
      * @return ServerResponse
      * @throws TelegramException
@@ -737,8 +745,8 @@ class Request
             'encoding' => mb_internal_encoding(),
         ], (array) $extras);
 
-        $text       = $data['text'];
-        $encoding   = $extras['encoding'];
+        $text = $data['text'];
+        $encoding = $extras['encoding'];
         $max_length = $extras['split'] ?: mb_strlen($text, $encoding);
 
         $responses = [];
@@ -746,7 +754,7 @@ class Request
         do {
             // Chop off and send the first message.
             $data['text'] = mb_substr($text, 0, $max_length, $encoding);
-            $responses[]  = self::send('sendMessage', $data);
+            $responses[] = self::send('sendMessage', $data);
 
             // Prepare the next message.
             $text = mb_substr($text, $max_length, null, $encoding);
@@ -761,8 +769,8 @@ class Request
     /**
      * Any statically called method should be relayed to the `send` method.
      *
-     * @param string $action
-     * @param array  $data
+     * @param  string  $action
+     * @param  array  $data
      *
      * @return ServerResponse
      * @throws TelegramException
@@ -789,9 +797,9 @@ class Request
     /**
      * Send message to all active chats
      *
-     * @param string $callback_function
-     * @param array  $data
-     * @param array  $select_chats_params
+     * @param  string  $callback_function
+     * @param  array  $data
+     * @param  array  $select_chats_params
      *
      * @return array
      * @throws TelegramException
@@ -809,7 +817,7 @@ class Request
         if (is_array($chats)) {
             foreach ($chats as $row) {
                 $data['chat_id'] = $row['chat_id'];
-                $results[]       = self::send($callback_function, $data);
+                $results[] = self::send($callback_function, $data);
             }
         }
 
@@ -819,8 +827,8 @@ class Request
     /**
      * Enable request limiter
      *
-     * @param bool  $enable
-     * @param array $options
+     * @param  bool  $enable
+     * @param  array  $options
      *
      * @throws TelegramException
      */
@@ -833,12 +841,12 @@ class Request
 
             $options = array_merge($options_default, $options);
 
-            if (!is_numeric($options['interval']) || $options['interval'] <= 0) {
+            if (! is_numeric($options['interval']) || $options['interval'] <= 0) {
                 throw new TelegramException('Interval must be a number and must be greater than zero!');
             }
 
             self::$limiter_interval = $options['interval'];
-            self::$limiter_enabled  = $enable;
+            self::$limiter_enabled = $enable;
         }
     }
 
@@ -848,8 +856,8 @@ class Request
      *
      * @link https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this
      *
-     * @param string $action
-     * @param array  $data
+     * @param  string  $action
+     * @param  array  $data
      *
      * @throws TelegramException
      */
@@ -893,7 +901,7 @@ class Request
                 'setPassportDataErrors',
             ];
 
-            $chat_id           = $data['chat_id'] ?? null;
+            $chat_id = $data['chat_id'] ?? null;
             $inline_message_id = $data['inline_message_id'] ?? null;
 
             if (($chat_id || $inline_message_id) && in_array($action, $limited_methods, true)) {
@@ -904,16 +912,16 @@ class Request
                         throw new TelegramException('Timed out while waiting for a request spot!');
                     }
 
-                    if (!($requests = DB::getTelegramRequestCount($chat_id, $inline_message_id))) {
+                    if (! ($requests = DB::getTelegramRequestCount($chat_id, $inline_message_id))) {
                         break;
                     }
 
                     // Make sure we're handling integers here.
                     $requests = array_map('intval', $requests);
 
-                    $chat_per_second   = ($requests['LIMIT_PER_SEC'] === 0);    // No more than one message per second inside a particular chat
-                    $global_per_second = ($requests['LIMIT_PER_SEC_ALL'] < 30); // No more than 30 messages per second to different chats
-                    $groups_per_minute = (((is_numeric($chat_id) && $chat_id > 0) || $inline_message_id !== null) || ((!is_numeric($chat_id) || $chat_id < 0) && $requests['LIMIT_PER_MINUTE'] < 20));    // No more than 20 messages per minute in groups and channels
+                    $chat_per_second = ($requests['LIMIT_PER_SEC'] === 0);                                                                                                                                 // No more than one message per second inside a particular chat
+                    $global_per_second = ($requests['LIMIT_PER_SEC_ALL'] < 30);                                                                                                                            // No more than 30 messages per second to different chats
+                    $groups_per_minute = (((is_numeric($chat_id) && $chat_id > 0) || $inline_message_id !== null) || ((! is_numeric($chat_id) || $chat_id < 0) && $requests['LIMIT_PER_MINUTE'] < 20));    // No more than 20 messages per minute in groups and channels
 
                     if ($chat_per_second && $global_per_second && $groups_per_minute) {
                         break;
@@ -931,12 +939,12 @@ class Request
     /**
      * Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
      *
+     * @param  array  $data
+     *
+     * @return ServerResponse
      * @deprecated
      * @see Request::banChatMember()
      *
-     * @param array $data
-     *
-     * @return ServerResponse
      */
     public static function kickChatMember(array $data = []): ServerResponse
     {
@@ -946,12 +954,12 @@ class Request
     /**
      * Use this method to get the number of members in a chat. Returns Int on success.
      *
+     * @param  array  $data
+     *
+     * @return ServerResponse
      * @deprecated
      * @see Request::getChatMemberCount()
      *
-     * @param array $data
-     *
-     * @return ServerResponse
      */
     public static function getChatMembersCount(array $data = []): ServerResponse
     {
