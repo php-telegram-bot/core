@@ -92,4 +92,14 @@ class KeyboardButtonTest extends TestCase
         self::assertEmpty($button->getRequestPoll());
         self::assertInstanceOf(WebAppInfo::class, $button->getWebApp());
     }
+
+    public function testReturnsSubentitiesOnArray()
+    {
+        $button = new KeyboardButton('message');
+        $button->request_poll = [];
+        $this->assertInstanceOf(KeyboardButtonPollType::class, $button->getRequestPoll());
+
+        $button->web_app = [];
+        $this->assertInstanceOf(WebAppInfo::class, $button->getWebApp());
+    }
 }
