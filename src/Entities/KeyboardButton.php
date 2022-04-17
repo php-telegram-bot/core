@@ -20,24 +20,27 @@ use Longman\TelegramBot\Exception\TelegramException;
  *
  * @link https://core.telegram.org/bots/api#keyboardbutton
  *
- * @property bool                   $request_contact
- * @property bool                   $request_location
+ * @property bool $request_contact
+ * @property bool $request_location
  * @property KeyboardButtonPollType $request_poll
+ * @property WebAppInfo $web_app
  *
  * @method string                 getText()            Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
  * @method bool                   getRequestContact()  Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
  * @method bool                   getRequestLocation() Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
- * @method KeyboardButtonPollType getRequestPoll() Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+ * @method KeyboardButtonPollType getRequestPoll()     Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+ * @method WebAppInfo             getWebApp()          Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
  *
  * @method $this setText(string $text)                                Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
  * @method $this setRequestContact(bool $request_contact)             Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
  * @method $this setRequestLocation(bool $request_location)           Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
  * @method $this setRequestPoll(KeyboardButtonPollType $request_poll) Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+ * @method $this setWebApp(WebAppInfo $web_app)                       Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
  */
 class KeyboardButton extends Entity
 {
     /**
-     * @param array|string $data
+     * @param  array|string  $data
      */
     public function __construct($data)
     {
@@ -47,10 +50,18 @@ class KeyboardButton extends Entity
         parent::__construct($data);
     }
 
+    protected function subEntities(): array
+    {
+        return [
+            'request_poll' => KeyboardButtonPollType::class,
+            'web_app'      => WebAppInfo::class,
+        ];
+    }
+
     /**
      * Check if the passed data array could be a KeyboardButton.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return bool
      */
@@ -73,9 +84,10 @@ class KeyboardButton extends Entity
             $this->getRequestContact(),
             $this->getRequestLocation(),
             $this->getRequestPoll(),
+            $this->getWebApp(),
         ]);
         if (count($field_count) > 1) {
-            throw new TelegramException('You must use only one of these fields: request_contact, request_location, request_poll!');
+            throw new TelegramException('You must use only one of these fields: request_contact, request_location, request_poll, web_app!');
         }
     }
 
@@ -85,8 +97,8 @@ class KeyboardButton extends Entity
     public function __call($method, $args)
     {
         // Only 1 of these can be set, so clear the others when setting a new one.
-        if (in_array($method, ['setRequestContact', 'setRequestLocation', 'setRequestPoll'], true)) {
-            unset($this->request_contact, $this->request_location, $this->request_poll);
+        if (in_array($method, ['setRequestContact', 'setRequestLocation', 'setRequestPoll', 'setWebApp'], true)) {
+            unset($this->request_contact, $this->request_location, $this->request_poll, $this->web_app);
         }
 
         return parent::__call($method, $args);

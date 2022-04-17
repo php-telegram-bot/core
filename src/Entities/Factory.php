@@ -6,9 +6,11 @@ abstract class Factory
 {
     abstract public static function make(array $data, string $bot_username): Entity;
 
-    public static function resolveEntityClass(string $class, array $property, string $bot_username = ''): Entity
+    public static function resolveEntityClass(string $class, mixed $property, string $bot_username = ''): Entity
     {
-        if (is_subclass_of($class, Factory::class)) {
+        if (is_a($property, $class)) {
+            return $property;
+        } elseif (is_subclass_of($class, Factory::class)) {
             return $class::make($property, $bot_username);
         }
 
