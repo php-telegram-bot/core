@@ -7,8 +7,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Bot API 6.0 See https://core.telegram.org/bots/api#april-16-2022 (@TiiFuchs)
 ### Changed
 ### Deprecated
+- Telegram changed voice_chat_scheduled, voice_chat_started, voice_chat_ended and voice_chat_participants_invited to video_chat_scheduled, video_chat_started, video_chat_ended and video_chat_participants_invited.
+To reflect that change we marked the corresponding VoiceChat classes as deprecated and created new classes for the VideoChat events.
 ### Removed
 ### Fixed
 ### Security
