@@ -79,6 +79,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method VoiceChatStarted                       getVoiceChatStarted()                       Optional. Service message: voice chat started
  * @method VoiceChatEnded                         getVoiceChatEnded()                         Optional. Service message: voice chat ended
  * @method VoiceChatParticipantsInvited           getVoiceChatParticipantsInvited()           Optional. Service message: new participants invited to a voice chat
+ * @method WebAppData                             getWebAppData()                             Optional. Service message: data sent by a Web App
  * @method InlineKeyboard                         getReplyMarkup()                            Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
  */
 class Message extends Entity
@@ -125,6 +126,7 @@ class Message extends Entity
             'voice_chat_started'                => VoiceChatStarted::class,
             'voice_chat_ended'                  => VoiceChatEnded::class,
             'voice_chat_participants_invited'   => VoiceChatParticipantsInvited::class,
+            'web_app_data'                      => WebAppData::class,
             'reply_markup'                      => InlineKeyboard::class,
         ];
     }
@@ -141,7 +143,7 @@ class Message extends Entity
             return null;
         }
 
-        $no_EOL   = strtok($text, PHP_EOL);
+        $no_EOL = strtok($text, PHP_EOL);
         $no_space = strtok($text, ' ');
 
         //try to understand which separator \n or space divide /command from text
@@ -167,7 +169,7 @@ class Message extends Entity
 
         //check if command is followed by bot username
         $split_cmd = explode('@', $full_command);
-        if (!isset($split_cmd[1])) {
+        if (! isset($split_cmd[1])) {
             //command is not followed by name
             return $full_command;
         }
@@ -183,7 +185,7 @@ class Message extends Entity
     /**
      * For text messages, the actual UTF-8 text of the message, 0-4096 characters.
      *
-     * @param bool $without_cmd
+     * @param  bool  $without_cmd
      *
      * @return string|null
      */
@@ -260,6 +262,7 @@ class Message extends Entity
             'voice_chat_started',
             'voice_chat_ended',
             'voice_chat_participants_invited',
+            'web_app_data',
             'reply_markup',
         ];
 
