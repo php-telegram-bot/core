@@ -10,7 +10,9 @@ abstract class Factory
     {
         if (is_a($property, $class)) {
             return $property;
-        } elseif (is_subclass_of($class, Factory::class)) {
+        }
+        
+        if (is_subclass_of($class, Factory::class)) {
             return $class::make($property, $bot_username);
         }
 
