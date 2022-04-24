@@ -186,12 +186,12 @@ class KeyboardTest extends TestCase
         $keyboard = $keyboard_obj->getProperty('keyboard');
         self::assertSame('Button Text 4', $keyboard[2][0]->getText());
     }
-    
+
     public function testSetterMethods(): void
     {
         $keyboard = (new Keyboard(
             [
-                ['text' => 'One']
+                ['text' => 'One'],
             ]
         ))->setResizeKeyboard(true);
 

@@ -1,0 +1,74 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ['7.3', '7.4', '8.0', '8.1']
+
+    services:
+      mariadb:
+        image: mariadb:10.3
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Test migrations
+      run: |
+        git fetch origin 0.44.1 && git checkout FETCH_HEAD -- structure.sql
+        mysql -h127.0.0.1 -P3306 -uroot -proot -e "create database telegrambot_migrations; use telegrambot_migrations; source structure.sql;"
+        git checkout HEAD -- structure.sql
+        mysql -h127.0.0.1 -P3306 -uroot -proot -e "create database telegrambot; use telegrambot; source structure.sql;"
+        for SCHEMA_UPDATE_FILE in $(ls utils/db-schema-update); do mysql -h127.0.0.1 -P3306 -uroot -proot -e "use telegrambot_migrations; source utils/db-schema-update/${SCHEMA_UPDATE_FILE};"; done;
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: pdo_mysql
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Check PHP code
+      run: composer check-code
+
+    - name: Run test suite
+      if: ${{ matrix.php != '7.3'}}
+      run: composer test-cov
+
+    - name: Run test suite (with coverage)
+      if: ${{ matrix.php == '7.3'}}
+      run: |
+        composer test-cov
+        composer test-cov-upload

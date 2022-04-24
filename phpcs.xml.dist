@@ -13,5 +13,7 @@
     <file>tests/</file>
     <file>utils/</file>
 
-    <rule ref="PSR12"/>
+    <rule ref="PSR12">
+        <exclude name="PSR12.Classes.OpeningBraceSpace.Found"/>
+    </rule>
 </ruleset>
