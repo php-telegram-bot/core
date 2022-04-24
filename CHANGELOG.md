@@ -13,6 +13,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [0.77.1] - 2022-04-24
+### Notes
+- [:ledger: View file changes][0.77.1]
+### Fixed
+- PHP8+ `mixed` type hint removed
+
 ## [0.77.0] - 2022-04-24
 ### Notes
 - [:ledger: View file changes][0.77.0] ∙ [:page_with_curl: DB migration script][0.77.0-sql-migration]
@@ -616,6 +622,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.77.1]: https://github.com/php-telegram-bot/core/compare/0.77.0...0.77.1
 [0.77.0]: https://github.com/php-telegram-bot/core/compare/0.76.1...0.77.0
 [0.76.1]: https://github.com/php-telegram-bot/core/compare/0.76.0...0.76.1
 [0.76.0]: https://github.com/php-telegram-bot/core/compare/0.75.0...0.76.0
