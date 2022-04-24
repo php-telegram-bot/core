@@ -54,14 +54,17 @@
         }
     },
     "scripts": {
+        "composer-install": [
+            "docker-compose exec php composer install"
+        ],
         "check-code": [
-            "\"vendor/bin/phpcs\""
+            "docker-compose exec php vendor/bin/phpcs"
         ],
         "test": [
-            "\"vendor/bin/phpunit\""
+            "docker-compose exec php vendor/bin/phpunit"
         ],
         "test-cov": [
-            "\"vendor/bin/phpunit\" --coverage-clover clover.xml"
+            "docker-compose exec -e XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover clover.xml"
         ],
         "test-cov-upload": [
             "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover clover.xml"
