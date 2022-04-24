@@ -12,6 +12,7 @@ namespace Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Entities\ChatMember\ChatMember;
 use Longman\TelegramBot\Entities\ChatMember\Factory as ChatMemberFactory;
 use Longman\TelegramBot\Entities\Games\GameHighScore;
+use Longman\TelegramBot\Entities\MenuButton\Factory as MenuButtonFactory;
 use Longman\TelegramBot\Request;
 
 /**
@@ -111,13 +112,16 @@ class ServerResponse extends Entity
     private function createResultObject(array $result, string $bot_username): Entity
     {
         $result_object_types = [
-            'getChat'              => Chat::class,
-            'getChatMember'        => ChatMemberFactory::class,
-            'getFile'              => File::class,
-            'getMe'                => User::class,
-            'getStickerSet'        => StickerSet::class,
-            'getUserProfilePhotos' => UserProfilePhotos::class,
-            'getWebhookInfo'       => WebhookInfo::class,
+            'answerWebAppQuery'               => SentWebAppMessage::class,
+            'getChat'                         => Chat::class,
+            'getMyDefaultAdministratorRights' => ChatAdministratorRights::class,
+            'getChatMember'                   => ChatMemberFactory::class,
+            'getChatMenuButton'               => MenuButtonFactory::class,
+            'getFile'                         => File::class,
+            'getMe'                           => User::class,
+            'getStickerSet'                   => StickerSet::class,
+            'getUserProfilePhotos'            => UserProfilePhotos::class,
+            'getWebhookInfo'                  => WebhookInfo::class,
         ];
 
         $action       = Request::getCurrentAction();
