@@ -16,6 +16,8 @@ namespace Longman\TelegramBot\Entities;
  *
  * Represents a service message about new members invited to a voice chat
  *
+ * @deprecated See VideoChatEnded instead
+ *
  * @link https://core.telegram.org/bots/api#voicechatended
  *
  * @method int        getDuration()       Voice chat duration; in seconds

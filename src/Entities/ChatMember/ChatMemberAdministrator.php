@@ -19,7 +19,7 @@ use Longman\TelegramBot\Entities\User;
  * @method bool   getCanPostMessages()     True, if the administrator can post in the channel; channels only
  * @method bool   getCanEditMessages()     True, if the administrator can edit messages of other users and can pin messages; channels only
  * @method bool   getCanDeleteMessages()   True, if the administrator can delete messages of other users
- * @method bool   getCanManageVoiceChats() True, if the administrator can manage voice chats
+ * @method bool   getCanManageVideoChats() True, if the administrator can manage video chats
  * @method bool   getCanRestrictMembers()  True, if the administrator can restrict, ban or unban chat members
  * @method bool   getCanPromoteMembers()   True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
  * @method bool   getCanChangeInfo()       True, if the user is allowed to change the chat title, photo and other settings

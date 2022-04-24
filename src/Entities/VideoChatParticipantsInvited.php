@@ -12,17 +12,13 @@
 namespace Longman\TelegramBot\Entities;
 
 /**
- * Class VoiceChatParticipantsInvited
+ * This object represents a service message about new members invited to a video chat.
  *
- * Represents a service message about new members invited to a voice chat
+ * @link https://core.telegram.org/bots/api#videochatparticipantsinvited
  *
- * @deprecated See VideoChatParticipantsInvited instead
- *
- * @link https://core.telegram.org/bots/api#voicechatparticipantsinvited
- *
- * @method User[]      getUsers()       Optional. New members that were invited to the voice chat
+ * @method User[]      getUsers()       New members that were invited to the video chat
  */
-class VoiceChatParticipantsInvited extends Entity
+class VideoChatParticipantsInvited extends Entity
 {
     /**
      * {@inheritdoc}

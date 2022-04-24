@@ -13,6 +13,7 @@ namespace Longman\TelegramBot\Tests\Unit\Entities;
 
 use Longman\TelegramBot\Entities\KeyboardButton;
 use Longman\TelegramBot\Entities\KeyboardButtonPollType;
+use Longman\TelegramBot\Entities\WebAppInfo;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Tests\Unit\TestCase;
 
@@ -35,7 +36,7 @@ class KeyboardButtonTest extends TestCase
     public function testKeyboardButtonTooManyParametersFail(): void
     {
         $this->expectException(TelegramException::class);
-        $this->expectExceptionMessage('You must use only one of these fields: request_contact, request_location, request_poll!');
+        $this->expectExceptionMessage('You must use only one of these fields: request_contact, request_location, request_poll, web_app!');
         new KeyboardButton(['text' => 'message', 'request_contact' => true, 'request_location' => true]);
     }
 
@@ -45,6 +46,7 @@ class KeyboardButtonTest extends TestCase
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
         new KeyboardButton(['text' => 'message', 'request_poll' => new KeyboardButtonPollType([])]);
+        new KeyboardButton(['text' => 'message', 'web_app' => new WebAppInfo([])]);
         self::assertTrue(true);
     }
 
@@ -61,6 +63,7 @@ class KeyboardButtonTest extends TestCase
         self::assertEmpty($button->getRequestContact());
         self::assertEmpty($button->getRequestLocation());
         self::assertEmpty($button->getRequestPoll());
+        self::assertEmpty($button->getWebApp());
 
         $button->setText('new message');
         self::assertSame('new message', $button->getText());
@@ -69,15 +72,34 @@ class KeyboardButtonTest extends TestCase
         self::assertTrue($button->getRequestContact());
         self::assertEmpty($button->getRequestLocation());
         self::assertEmpty($button->getRequestPoll());
+        self::assertEmpty($button->getWebApp());
 
         $button->setRequestLocation(true);
         self::assertEmpty($button->getRequestContact());
         self::assertTrue($button->getRequestLocation());
         self::assertEmpty($button->getRequestPoll());
+        self::assertEmpty($button->getWebApp());
 
         $button->setRequestPoll(new KeyboardButtonPollType([]));
         self::assertEmpty($button->getRequestContact());
         self::assertEmpty($button->getRequestLocation());
         self::assertInstanceOf(KeyboardButtonPollType::class, $button->getRequestPoll());
+        self::assertEmpty($button->getWebApp());
+
+        $button->setWebApp(new WebAppInfo([]));
+        self::assertEmpty($button->getRequestContact());
+        self::assertEmpty($button->getRequestLocation());
+        self::assertEmpty($button->getRequestPoll());
+        self::assertInstanceOf(WebAppInfo::class, $button->getWebApp());
+    }
+
+    public function testReturnsSubentitiesOnArray()
+    {
+        $button = new KeyboardButton('message');
+        $button->request_poll = [];
+        $this->assertInstanceOf(KeyboardButtonPollType::class, $button->getRequestPoll());
+
+        $button->web_app = [];
+        $this->assertInstanceOf(WebAppInfo::class, $button->getWebApp());
     }
 }

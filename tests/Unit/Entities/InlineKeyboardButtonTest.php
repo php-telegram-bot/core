@@ -35,14 +35,14 @@ class InlineKeyboardButtonTest extends TestCase
     public function testInlineKeyboardButtonNoParameterFail(): void
     {
         $this->expectException(TelegramException::class);
-        $this->expectExceptionMessage('You must use only one of these fields: url, login_url, callback_data, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!');
+        $this->expectExceptionMessage('You must use only one of these fields: url, login_url, callback_data, web_app, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!');
         new InlineKeyboardButton(['text' => 'message']);
     }
 
     public function testInlineKeyboardButtonTooManyParametersFail(): void
     {
         $this->expectException(TelegramException::class);
-        $this->expectExceptionMessage('You must use only one of these fields: url, login_url, callback_data, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!');
+        $this->expectExceptionMessage('You must use only one of these fields: url, login_url, callback_data, web_app, switch_inline_query, switch_inline_query_current_chat, callback_game, pay!');
         $test_funcs = [
             function () {
                 new InlineKeyboardButton([

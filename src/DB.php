@@ -1137,7 +1137,7 @@ class DB
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
                     `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `proximity_alert_triggered`,
-                    `voice_chat_scheduled`, `voice_chat_started`, `voice_chat_ended`, `voice_chat_participants_invited`, `reply_markup`
+                    `video_chat_scheduled`, `video_chat_started`, `video_chat_ended`, `video_chat_participants_invited`, `web_app_data`, `reply_markup`
                 ) VALUES (
                     :message_id, :user_id, :chat_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date,
@@ -1147,7 +1147,7 @@ class DB
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
                     :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :proximity_alert_triggered,
-                    :voice_chat_scheduled, :voice_chat_started, :voice_chat_ended, :voice_chat_participants_invited, :reply_markup
+                    :video_chat_scheduled, :video_chat_started, :video_chat_ended, :video_chat_participants_invited, :web_app_data, :reply_markup
                 )
             ');
 
@@ -1220,10 +1220,11 @@ class DB
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
             $sth->bindValue(':passport_data', $message->getPassportData());
             $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
-            $sth->bindValue(':voice_chat_scheduled', $message->getVoiceChatScheduled());
-            $sth->bindValue(':voice_chat_started', $message->getVoiceChatStarted());
-            $sth->bindValue(':voice_chat_ended', $message->getVoiceChatEnded());
-            $sth->bindValue(':voice_chat_participants_invited', $message->getVoiceChatParticipantsInvited());
+            $sth->bindValue(':video_chat_scheduled', $message->getVideoChatScheduled());
+            $sth->bindValue(':video_chat_started', $message->getVideoChatStarted());
+            $sth->bindValue(':video_chat_ended', $message->getVideoChatEnded());
+            $sth->bindValue(':video_chat_participants_invited', $message->getVideoChatParticipantsInvited());
+            $sth->bindValue(':web_app_data', $message->getWebAppData());
             $sth->bindValue(':reply_markup', $message->getReplyMarkup());
 
             return $sth->execute();
