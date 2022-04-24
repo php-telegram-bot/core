@@ -389,15 +389,15 @@ The reason for denying an update can be defined with the `$reason` parameter. Th
 
 ### Types
 
-All types are implemented according to Telegram API 5.7 (January 2022).
+All types are implemented according to Telegram API 6.0 (April 2022).
 
 ### Inline Query
 
-Full support for inline query according to Telegram API 5.7 (January 2022).
+Full support for inline query according to Telegram API 6.0 (April 2022).
 
 ### Methods
 
-All methods are implemented according to Telegram API 5.7 (January 2022).
+All methods are implemented according to Telegram API 6.0 (April 2022).
 
 #### Send Message
 

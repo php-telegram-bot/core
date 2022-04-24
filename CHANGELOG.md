@@ -7,14 +7,21 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 6.0 See https://core.telegram.org/bots/api#april-16-2022 (@TiiFuchs)
 ### Changed
 ### Deprecated
-- Telegram changed voice_chat_scheduled, voice_chat_started, voice_chat_ended and voice_chat_participants_invited to video_chat_scheduled, video_chat_started, video_chat_ended and video_chat_participants_invited.
-To reflect that change we marked the corresponding VoiceChat classes as deprecated and created new classes for the VideoChat events.
 ### Removed
 ### Fixed
 ### Security
+
+## [0.77.0] - 2022-04-24
+### Notes
+- [:ledger: View file changes][0.77.0] ∙ [:page_with_curl: DB migration script][0.77.0-sql-migration]
+### Added
+- Bot API 6.0 (@TiiFuchs) (#1318)
+### Deprecated
+- Telegram changed `voice_chat_X` to `video_chat_X`. `VoiceChatX` event classes are deprecated, use new `VideoChatX` event classes instead.
+### Fixed
+- Return correct data in `Entity::jsonSerialize` (@TiiFuchs)
 
 ## [0.76.1] - 2022-03-30
 ### Notes
@@ -571,7 +578,8 @@ To reflect that change we marked the corresponding VoiceChat classes as deprecat
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[0.75.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.74.0-0.75.0.sql
+[0.77.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.76.1-0.77.0.sql
+[0.75.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.74.0-0.75.0.sql
 [0.75.0-bc-removed-chatactions]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#removed-deprecated-chatactions
 [0.74.0-bc-chatmember-subentities]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#chatmember-subentities
 [0.73.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.72.0-0.73.0.sql
@@ -608,6 +616,7 @@ To reflect that change we marked the corresponding VoiceChat classes as deprecat
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.77.0]: https://github.com/php-telegram-bot/core/compare/0.76.1...0.77.0
 [0.76.1]: https://github.com/php-telegram-bot/core/compare/0.76.0...0.76.1
 [0.76.0]: https://github.com/php-telegram-bot/core/compare/0.75.0...0.76.0
 [0.75.0]: https://github.com/php-telegram-bot/core/compare/0.74.0...0.75.0
