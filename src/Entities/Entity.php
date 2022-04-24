@@ -59,7 +59,13 @@ abstract class Entity implements \JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return $this->getRawData();
+        $data = get_object_vars($this);
+
+        // Delete unnecessary data
+        unset($data['raw_data']);
+        unset($data['bot_username']);
+
+        return $data;
     }
 
     /**
