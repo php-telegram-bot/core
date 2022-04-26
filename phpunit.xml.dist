@@ -16,7 +16,7 @@
         <const name="PHPUNIT_DB_PORT" value="3306"/>
         <const name="PHPUNIT_DB_NAME" value="telegrambot"/>
         <const name="PHPUNIT_DB_USER" value="root"/>
-        <const name="PHPUNIT_DB_PASS" value=""/>
+        <const name="PHPUNIT_DB_PASS" value="root"/>
     </php>
     <testsuites>
         <testsuite name="Package Test Suite">

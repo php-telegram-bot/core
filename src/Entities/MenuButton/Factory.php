@@ -6,7 +6,6 @@ use Longman\TelegramBot\Entities\Entity;
 
 class Factory extends \Longman\TelegramBot\Entities\Factory
 {
-
     public static function make(array $data, string $bot_username): Entity
     {
         $type = [
