@@ -645,6 +645,7 @@ Here's a list of projects that feats this library, feel free to add yours!
 - [tg-mentioned-bot](https://github.com/gruessung/tg-mentioned-bot)
 - [OSMdeWikiBot](https://github.com/OSM-de/TelegramWikiBot) ([@OSM_de](https://t.me/OSM_de))
 - [pass-generator-webbot](https://github.com/OxMohsen/pass-generator-webbot)
+- [Chess Quiz Bot](https://github.com/1int/chess-quiz-bot)
 
 ## Troubleshooting
 
