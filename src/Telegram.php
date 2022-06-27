@@ -99,7 +99,7 @@ class Telegram
      *
      * @var array
      */
-    protected $commands_objects = [];
+    public $commands_objects = [];
 
     /**
      * Current Update object
