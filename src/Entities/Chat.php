@@ -27,6 +27,8 @@ namespace Longman\TelegramBot\Entities;
  * @method ChatPhoto       getPhoto()                       Optional. Chat photo. Returned only in getChat.
  * @method string          getBio()                         Optional. Bio of the other party in a private chat. Returned only in getChat.
  * @method bool            getHasPrivateForwards()          Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
+ * @method bool            getJoinToSendMessages()          Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
+ * @method bool            getJoinByRequest()               Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
  * @method string          getDescription()                 Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
  * @method string          getInviteLink()                  Optional. Chat invite link, for groups, supergroups and channel chats. Each administrator in a chat generates their own invite links, so the bot must first generate the link using exportChatInviteLink. Returned only in getChat.
  * @method Message         getPinnedMessage()               Optional. Pinned message, for groups, supergroups and channels. Returned only in getChat.
