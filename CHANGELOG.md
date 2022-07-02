@@ -6,7 +6,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
+- 64 bit PHP installs are required to handle files larger than 2GB!
 ### Added
+- Bot API 6.1 (@jyxjjj, @OxMohsen, @noplanman) (#1333, #1338, #1339)
 ### Changed
 ### Deprecated
 ### Removed
