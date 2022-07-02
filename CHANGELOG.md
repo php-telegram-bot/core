@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - 64 bit PHP installs are required to handle files larger than 2GB!
 ### Added
 - Bot API 6.1 (@jyxjjj, @OxMohsen, @noplanman) (#1333, #1338, #1339)
+- New Update field helpers for Command class.
 ### Changed
 ### Deprecated
 ### Removed
