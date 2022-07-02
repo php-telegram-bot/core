@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'User''s or bot''s last name',
   `username` CHAR(191) DEFAULT NULL COMMENT 'User''s or bot''s username',
   `language_code` CHAR(10) DEFAULT NULL COMMENT 'IETF language tag of the user''s language',
+  `is_premium` tinyint(1) DEFAULT 0 COMMENT 'True, if this user is a Telegram Premium user',
+  `added_to_attachment_menu` tinyint(1) DEFAULT 0 COMMENT 'True, if this user added the bot to the attachment menu',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
 

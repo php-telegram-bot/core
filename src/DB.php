@@ -421,16 +421,18 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
-                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
+                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `is_premium`, `added_to_attachment_menu`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
+                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :is_premium, :added_to_attachment_menu, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
-                    `is_bot`         = VALUES(`is_bot`),
-                    `username`       = VALUES(`username`),
-                    `first_name`     = VALUES(`first_name`),
-                    `last_name`      = VALUES(`last_name`),
-                    `language_code`  = VALUES(`language_code`),
-                    `updated_at`     = VALUES(`updated_at`)
+                    `is_bot`                   = VALUES(`is_bot`),
+                    `username`                 = VALUES(`username`),
+                    `first_name`               = VALUES(`first_name`),
+                    `last_name`                = VALUES(`last_name`),
+                    `language_code`            = VALUES(`language_code`),
+                    `is_premium`               = VALUES(`is_premium`),
+                    `added_to_attachment_menu` = VALUES(`added_to_attachment_menu`),
+                    `updated_at`               = VALUES(`updated_at`)
             ');
 
             $sth->bindValue(':id', $user->getId());
@@ -439,6 +441,8 @@ class DB
             $sth->bindValue(':first_name', $user->getFirstName());
             $sth->bindValue(':last_name', $user->getLastName());
             $sth->bindValue(':language_code', $user->getLanguageCode());
+            $sth->bindValue(':is_premium', $user->getIsPremium(), PDO::PARAM_INT);
+            $sth->bindValue(':added_to_attachment_menu', $user->getAddedToAttachmentMenu(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
