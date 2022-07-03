@@ -6,15 +6,20 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
-- 64 bit PHP installs are required to handle files larger than 2GB!
 ### Added
-- Bot API 6.1 (@jyxjjj, @OxMohsen, @noplanman) (#1333, #1338, #1339)
-- New Update field helpers for Command class.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.78.0] - 2022-07-03
+### Notes
+- [:ledger: View file changes][0.78.0] ∙ [:page_with_curl: DB migration script][0.78.0-sql-migration]
+- 64 bit PHP install required to handle files larger than 2GB!
+### Added
+- Bot API 6.1 (@jyxjjj, @OxMohsen, @noplanman) (#1333, #1338, #1339)
+- New Update field helpers for Command class.
 
 ## [0.77.1] - 2022-04-24
 ### Notes
@@ -587,6 +592,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[0.78.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.77.1-0.78.0.sql
 [0.77.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.76.1-0.77.0.sql
 [0.75.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.74.0-0.75.0.sql
 [0.75.0-bc-removed-chatactions]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#removed-deprecated-chatactions
@@ -625,6 +631,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.78.0]: https://github.com/php-telegram-bot/core/compare/0.77.1...0.78.0
 [0.77.1]: https://github.com/php-telegram-bot/core/compare/0.77.0...0.77.1
 [0.77.0]: https://github.com/php-telegram-bot/core/compare/0.76.1...0.77.0
 [0.76.1]: https://github.com/php-telegram-bot/core/compare/0.76.0...0.76.1
