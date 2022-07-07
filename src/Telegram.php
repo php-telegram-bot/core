@@ -1255,9 +1255,9 @@ class Telegram
     /**
      * Return last update id
      *
-     * @return int
+     * @return int|null
      */
-    public function getLastUpdateId(): int
+    public function getLastUpdateId(): ?int
     {
         return $this->last_update_id;
     }
