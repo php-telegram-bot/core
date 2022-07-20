@@ -135,6 +135,14 @@ class Telegram
      * @var PDO
      */
     protected $pdo;
+    
+    
+    /**
+     * EntityManager object
+     *
+     * @var EntityManagerInterface
+     */
+    public $em;
 
     /**
      * Commands config
@@ -259,6 +267,11 @@ class Telegram
         $this->mysql_enabled = true;
 
         return $this;
+    }
+    
+    public function enableEntityManager(EntityManagerInterface $em): Telegram
+    {
+        $this->em = $em;
     }
 
     /**
