@@ -959,19 +959,4 @@ class Request
     {
         return static::banChatMember($data);
     }
-
-    /**
-     * Use this method to get the number of members in a chat. Returns Int on success.
-     *
-     * @deprecated
-     * @see Request::getChatMemberCount()
-     *
-     * @param array $data
-     *
-     * @return ServerResponse
-     */
-    public static function getChatMembersCount(array $data = []): ServerResponse
-    {
-        return static::getChatMemberCount($data);
-    }
 }

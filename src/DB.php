@@ -493,16 +493,15 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :first_name, :last_name, :all_members_are_administrators, :created_at, :updated_at, :old_id)
+                (:id, :type, :title, :username, :first_name, :last_name, :created_at, :updated_at, :old_id)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = VALUES(`type`),
                     `title`                          = VALUES(`title`),
                     `username`                       = VALUES(`username`),
                     `first_name`                     = VALUES(`first_name`),
                     `last_name`                      = VALUES(`last_name`),
-                    `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
                     `updated_at`                     = VALUES(`updated_at`)
             ');
 
@@ -524,7 +523,6 @@ class DB
             $sth->bindValue(':username', $chat->getUsername());
             $sth->bindValue(':first_name', $chat->getFirstName());
             $sth->bindValue(':last_name', $chat->getLastName());
-            $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);

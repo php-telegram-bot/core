@@ -7,11 +7,11 @@
 
 A Telegram Bot based on the official [Telegram Bot API]
 
-[![API Version](https://img.shields.io/badge/Bot%20API-6.1%20%28June%202022%29-32a2da.svg)](https://core.telegram.org/bots/api#june-20-2022)
+[![API Version](https://img.shields.io/badge/Bot%20API-6.2%20%28August%202022%29-32a2da.svg)](https://core.telegram.org/bots/api#june-20-2022)
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 
-[![Build Status](https://travis-ci.com/php-telegram-bot/core.svg?branch=master)](https://travis-ci.com/github/php-telegram-bot/core)
+[![Tests](https://github.com/php-telegram-bot/core/actions/workflows/tests.yaml/badge.svg)](https://github.com/php-telegram-bot/core/actions/workflows/tests.yaml)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-telegram-bot/core/master.svg?style=flat)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
 [![Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/core/master.svg?style=flat)](https://scrutinizer-ci.com/g/php-telegram-bot/core/?b=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
@@ -78,7 +78,7 @@ This Bot aims to provide a platform where one can simply write a bot and have in
 
 The Bot can:
 - Retrieve updates with [webhook](#webhook-installation) and [getUpdates](#getupdates-installation) methods.
-- Supports all types and methods according to Telegram Bot API 6.1 (June 2022).
+- Supports all types and methods according to Telegram Bot API 6.2 (August 2022).
 - Supports supergroups.
 - Handle commands in chat with other bots.
 - Manage Channel from the bot admin interface.
@@ -389,15 +389,15 @@ The reason for denying an update can be defined with the `$reason` parameter. Th
 
 ### Types
 
-All types are implemented according to Telegram API 6.1 (June 2022).
+All types are implemented according to Telegram API 6.2 (August 2022).
 
 ### Inline Query
 
-Full support for inline query according to Telegram API 6.1 (June 2022).
+Full support for inline query according to Telegram API 6.2 (August 2022).
 
 ### Methods
 
-All methods are implemented according to Telegram API 6.1 (June 2022).
+All methods are implemented according to Telegram API 6.2 (August 2022).
 
 #### Send Message
 

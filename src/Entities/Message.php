@@ -122,10 +122,6 @@ class Message extends Entity
             'successful_payment'                => SuccessfulPayment::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
-            'voice_chat_scheduled'              => VoiceChatScheduled::class,           // deprecated
-            'voice_chat_started'                => VoiceChatStarted::class,             // deprecated
-            'voice_chat_ended'                  => VoiceChatEnded::class,               // deprecated
-            'voice_chat_participants_invited'   => VoiceChatParticipantsInvited::class, // deprecated
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,

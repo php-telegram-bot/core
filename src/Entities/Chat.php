@@ -124,17 +124,4 @@ class Chat extends Entity
     {
         return $this->getType() === 'channel';
     }
-
-    /**
-     * Optional. True if a group has 'All Members Are Admins' enabled.
-     *
-     * @deprecated
-     * @see Chat::getPermissions()
-     *
-     * @return bool|null
-     */
-    public function getAllMembersAreAdministrators(): ?bool
-    {
-        return $this->getProperty('all_members_are_administrators');
-    }
 }

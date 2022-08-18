@@ -7,9 +7,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Bot API 6.2 (@OxMohsen) (#1350)
 ### Changed
 ### Deprecated
 ### Removed
+- `VoiceChatX` entities, use `VideoChatX` entities instead.
+- `all_members_are_administrators` property from `Message` entity. Database column still exists, but may be removed in the future.
+- `Request::getChatMembersCount()`, use `Request::getChatMemberCount()` instead.
+- `Request::kickChatMember()`, use `Request::banChatMember()` instead.
 ### Fixed
 ### Security
 
