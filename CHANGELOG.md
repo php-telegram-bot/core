@@ -7,16 +7,22 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 6.2 (@OxMohsen) (#1350)
 ### Changed
 ### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.79.0] - 2022-09-04
+### Notes
+- [:ledger: View file changes][0.79.0]
+### Added
+- Bot API 6.2 (@OxMohsen) (#1350)
 ### Removed
 - `VoiceChatX` entities, use `VideoChatX` entities instead.
 - `all_members_are_administrators` property from `Message` entity. Database column still exists, but may be removed in the future.
 - `Request::getChatMembersCount()`, use `Request::getChatMemberCount()` instead.
 - `Request::kickChatMember()`, use `Request::banChatMember()` instead.
-### Fixed
-### Security
 
 ## [0.78.0] - 2022-07-03
 ### Notes
@@ -636,6 +642,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.79.0]: https://github.com/php-telegram-bot/core/compare/0.78.0...0.79.0
 [0.78.0]: https://github.com/php-telegram-bot/core/compare/0.77.1...0.78.0
 [0.77.1]: https://github.com/php-telegram-bot/core/compare/0.77.0...0.77.1
 [0.77.0]: https://github.com/php-telegram-bot/core/compare/0.76.1...0.77.0
