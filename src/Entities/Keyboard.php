@@ -120,12 +120,17 @@ class Keyboard extends Entity
      *
      * @return Keyboard
      */
-    public function addRow(): Keyboard
+    public function addRow($button, ...$buttons): Keyboard
     {
-        if (($new_row = $this->parseRow(func_get_args())) !== null) {
-            $this->{$this->getKeyboardType()}[] = $new_row;
+        if (is_array($button)) {
+            if (($new_row = $this->parseRow($button)) !== null) {
+                $this->{$this->getKeyboardType()}[] = $new_row;
+            }
+        } else {
+            if (($new_row = $this->parseRow(func_get_args())) !== null) {
+                $this->{$this->getKeyboardType()}[] = $new_row;
+            }
         }
-
         return $this;
     }
 
