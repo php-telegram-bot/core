@@ -18,7 +18,7 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#chatinvitelink
  *
- * @method string  GetInviteLink()              The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”
+ * @method string  getInviteLink()              The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”
  * @method User    getCreator()                 Creator of the link
  * @method bool    getCreatesJoinRequest()      True, if users joining the chat via the link need to be approved by chat administrators
  * @method bool    getIsPrimary()               True, if the link is primary
