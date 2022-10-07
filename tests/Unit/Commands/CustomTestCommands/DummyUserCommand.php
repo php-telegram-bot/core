@@ -16,14 +16,14 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 /**
- * Test "/dummyuser" command
+ * Test "/dummy_user" command
  */
 class DummyUserCommand extends UserCommand
 {
     /**
      * @var string
      */
-    protected $name = 'dummyuser';
+    protected $name = 'dummy_user';
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class DummyUserCommand extends UserCommand
     /**
      * @var string
      */
-    protected $usage = '/dummyuser';
+    protected $usage = '/dummy_user';
 
     /**
      * Command execute method

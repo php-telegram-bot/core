@@ -283,10 +283,9 @@ class Telegram
 
                 foreach ($files as $file) {
                     //Remove "Command.php" from filename
-                    $command      = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
-                    $command_name = mb_strtolower($command);
+                    $command      = $this->classNameToCommandName(substr($file->getFilename(), 0, -4));
 
-                    if (array_key_exists($command_name, $commands)) {
+                    if (array_key_exists($command, $commands)) {
                         continue;
                     }
 
@@ -294,7 +293,7 @@ class Telegram
 
                     $command_obj = $this->getCommandObject($command, $file->getPathname());
                     if ($command_obj instanceof Command) {
-                        $commands[$command_name] = $command_obj;
+                        $commands[$command] = $command_obj;
                     }
                 }
             } catch (Exception $e) {
@@ -334,7 +333,7 @@ class Telegram
             return null;
         }
 
-        $command_class = $command_namespace . '\\' . $this->ucFirstUnicode($command) . 'Command';
+        $command_class = $command_namespace . '\\' . $this->commandNameToClassName($command);
 
         if (class_exists($command_class)) {
             return $command_class;
@@ -678,7 +677,7 @@ class Telegram
     }
 
     /**
-     * Sanitize Command
+     * @deprecated
      *
      * @param string $command
      *
@@ -1284,5 +1283,57 @@ class Telegram
     public function getUpdateFilter(): ?callable
     {
         return $this->update_filter;
+    }
+
+    /**
+     * Converts the name of a class into the name of a command.
+     *
+     * @param string $class For example FooBarCommand
+     *
+     * @return string for example foo_bar. In case of errors, returns an empty string
+     */
+    protected function classNameToCommandName(string $class): string
+    {
+        if (!preg_match('/^(.+)Command$/', $class, $matches)) {
+            return '';
+        }
+        $temp = $matches[1];
+        $chunks = [];
+        $currentUpperCaseLetter = '';
+        while ($temp !== '') {
+            if (!preg_match('/\p{Lu}/u', $temp, $match, PREG_OFFSET_CAPTURE)) {
+                break;
+            }
+            // $match[0][0] contains first upper case character
+            // $match[0][1] contains the start position (in bytes) of the first upper case character
+            [$upperCaseLetter, $upperCaseLetterOffset] = $match[0];
+            if ($upperCaseLetterOffset > 0) {
+                $chunks[] = $currentUpperCaseLetter . substr($temp, 0, $upperCaseLetterOffset);
+            } elseif ($currentUpperCaseLetter !== '') {
+                $chunks[] = $currentUpperCaseLetter;
+            }
+            $temp = substr($temp, $upperCaseLetterOffset + strlen($upperCaseLetter));
+            $currentUpperCaseLetter = $upperCaseLetter;
+        }
+        $lastChunk = $currentUpperCaseLetter . $temp;
+        if ($lastChunk !== '') {
+            $chunks[] = $lastChunk;
+        }
+        return implode('_', array_map('mb_strtolower', $chunks));
+    }
+
+    /**
+     * Converts a command name into the name of a class.
+     *
+     * @param string $command For example foo_bar
+     *
+     * @return string for example FooBarCommand. In case of errors, returns an empty string
+     */
+    protected function commandNameToClassName(string $command): string
+    {
+        if ($command === '') {
+            return '';
+        }
+        return str_replace(' ', '', $this->ucWordsUnicode(str_replace('_', ' ', $command))) . 'Command';
     }
 }
