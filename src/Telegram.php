@@ -1298,29 +1298,7 @@ class Telegram
         if (substr($class, -7) !== 'Command') {
             return '';
         }
-        $temp = substr($class, 0, -7);
-        $chunks = [];
-        $currentUpperCaseLetter = '';
-        while ($temp !== '') {
-            if (!preg_match('/\p{Lu}/u', $temp, $match, PREG_OFFSET_CAPTURE)) {
-                break;
-            }
-            // $match[0][0] contains first upper case character
-            // $match[0][1] contains the start position (in bytes) of the first upper case character
-            [$upperCaseLetter, $upperCaseLetterOffset] = $match[0];
-            if ($upperCaseLetterOffset > 0) {
-                $chunks[] = $currentUpperCaseLetter . substr($temp, 0, $upperCaseLetterOffset);
-            } elseif ($currentUpperCaseLetter !== '') {
-                $chunks[] = $currentUpperCaseLetter;
-            }
-            $temp = substr($temp, $upperCaseLetterOffset + strlen($upperCaseLetter));
-            $currentUpperCaseLetter = $upperCaseLetter;
-        }
-        $lastChunk = $currentUpperCaseLetter . $temp;
-        if ($lastChunk !== '') {
-            $chunks[] = $lastChunk;
-        }
-        return implode('_', array_map('mb_strtolower', $chunks));
+        return mb_strtolower(preg_replace('/(.)(?=[\p{Lu}])/u', '$1_', substr($class, 0, -7)));
     }
 
     /**
