@@ -1294,10 +1294,11 @@ class Telegram
      */
     protected function classNameToCommandName(string $class): string
     {
-        if (!preg_match('/^(.+)Command$/', $class, $matches)) {
+        // 7 is the length of 'Command'
+        if (substr($class, -7) !== 'Command') {
             return '';
         }
-        $temp = $matches[1];
+        $temp = substr($class, 0, -7);
         $chunks = [];
         $currentUpperCaseLetter = '';
         while ($temp !== '') {
