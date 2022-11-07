@@ -16,6 +16,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Added support for Multiple Usernames via the field `active_usernames` in the class `Chat`.
 - Added the field `emoji_status_custom_emoji_id` to the class `Chat`.
 ### Changed
+- ❗ Commands can now contain underscores. (@mlocati) This changes how File/Class names are converted to Commands and vice versa. 
+  A class with the name `FooBarCommand` in `FooBarCommand.php` was previously used for handling the `/foobar` command. This version changes this to `/foo_bar`. Be aware of this change if you have any classes with multiple uppercase letters.
 ### Deprecated
 ### Removed
 ### Fixed
