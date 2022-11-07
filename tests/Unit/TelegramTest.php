@@ -170,9 +170,9 @@ class TelegramTest extends TestCase
         ]);
 
         $command_classes = $tg->getCommandClasses();
-        self::assertCount(1, $command_classes['System']);
-        self::assertCount(1, $command_classes['Admin']);
-        self::assertCount(1, $command_classes['User']);
+        self::assertSame(['dummy_system' => 'Dummy\SystemCommands\DummySystemCommand'], $command_classes['System']);
+        self::assertSame(['dummy_admin' => 'Dummy\AdminCommands\DummyAdminCommand'], $command_classes['Admin']);
+        self::assertSame(['dummy_user' => 'Dummy\UserCommands\DummyUserCommand'], $command_classes['User']);
     }
 
     public function testSettingDownloadUploadPaths(): void
