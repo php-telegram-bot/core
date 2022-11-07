@@ -5,8 +5,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased]
+- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][0.80.0-sql-migration]
+- This update adds support for [Bot API 6.3](https://core.telegram.org/bots/api#november-5-2022) (@TiiFuchs)
 ### Added
+- Added the field `is_forum` to the class `Chat`.
+- Added the fields `is_topic_message` and `message_thread_id` to the class `Message` to allow detection of messages belonging to a forum topic and their message thread identifier.
+- Added the classes `ForumTopicCreated`, `ForumTopicClosed`, and `ForumTopicReopened` and the fields `forum_topic_created`, `forum_topic_closed`, and `forum_topic_reopened` to the class `Message`.
+- Added the field `can_manage_topics` to the classes `ChatAdministratorRights`, `ChatPermissions`, `ChatMemberAdministrator`, and `ChatMemberRestricted`.
+- Added the methods `createForumTopic`, `editForumTopic`, `closeForumTopic`, `reopenForumTopic`, `deleteForumTopic`, `unpinAllForumTopicMessages`, and `getForumTopicIconStickers` for forum topic management.
+- Added support for Multiple Usernames via the field `active_usernames` in the class `Chat`.
+- Added the field `emoji_status_custom_emoji_id` to the class `Chat`.
 ### Changed
 ### Deprecated
 ### Removed
@@ -603,6 +611,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/new-release.sql
 [0.78.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.77.1-0.78.0.sql
 [0.77.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.76.1-0.77.0.sql
 [0.75.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.74.0-0.75.0.sql

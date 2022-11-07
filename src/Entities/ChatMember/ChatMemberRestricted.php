@@ -16,6 +16,7 @@ use Longman\TelegramBot\Entities\User;
  * @method bool   getCanChangeInfo()         True, if the user is allowed to change the chat title, photo and other settings
  * @method bool   getCanInviteUsers()        True, if the user is allowed to invite new users to the chat
  * @method bool   getCanPinMessages()        True, if the user is allowed to pin messages; groups and supergroups only
+ * @method bool   getCanManageTopics()       True, if the user is allowed to create forum topics
  * @method bool   getCanSendMessages()       True, if the user is allowed to send text messages, contacts, locations and venues
  * @method bool   getCanSendMediaMessages()  True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
  * @method bool   getCanSendPolls()          True, if the user is allowed to send polls

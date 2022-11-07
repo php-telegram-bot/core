@@ -15,6 +15,9 @@ use Longman\TelegramBot\Entities\Games\Game;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
+use Longman\TelegramBot\Entities\Topics\ForumTopicClosed;
+use Longman\TelegramBot\Entities\Topics\ForumTopicCreated;
+use Longman\TelegramBot\Entities\Topics\ForumTopicReopened;
 
 /**
  * Class Message
@@ -24,6 +27,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @link https://core.telegram.org/bots/api#message
  *
  * @method int                                    getMessageId()                              Unique message identifier
+ * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
  * @method User                                   getFrom()                                   Optional. Sender, can be empty for messages sent to channels
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                                    getDate()                                   Date the message was sent in Unix time
@@ -34,6 +38,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string                                 getForwardSignature()                       Optional. For messages forwarded from channels, signature of the post author if present
  * @method string                                 getForwardSenderName()                      Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
  * @method int                                    getForwardDate()                            Optional. For forwarded messages, date the original message was sent in Unix time
+ * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic
  * @method bool                                   getIsAutomaticForward()                     Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
@@ -75,6 +80,9 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+ * @method ForumTopicCreated                      getForumTopicCreated()                      Optional. Service message: forum topic created
+ * @method ForumTopicClosed                       getForumTopicClosed()                       Optional. Service message: forum topic closed
+ * @method ForumTopicReopened                     getForumTopicReopened()                     Optional. Service message: forum topic reopened
  * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
  * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
@@ -122,6 +130,9 @@ class Message extends Entity
             'successful_payment'                => SuccessfulPayment::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
+            'forum_topic_created'               => ForumTopicCreated::class,
+            'forum_topic_closed'                => ForumTopicClosed::class,
+            'forum_topic_reopened'              => ForumTopicReopened::class,
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,
