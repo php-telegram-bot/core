@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `username` CHAR(255) DEFAULT NULL COMMENT 'Username, for private chats, supergroups and channels if available',
   `first_name` CHAR(255) DEFAULT NULL COMMENT 'First name of the other party in a private chat',
   `last_name` CHAR(255) DEFAULT NULL COMMENT 'Last name of the other party in a private chat',
+  `is_forum` TINYINT(1) DEFAULT 0 COMMENT 'True, if the supergroup chat is a forum (has topics enabled)',
   `all_members_are_administrators` tinyint(1) DEFAULT 0 COMMENT 'True if a all members of this group are admins',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',

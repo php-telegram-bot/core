@@ -493,15 +493,16 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `is_forum`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :first_name, :last_name, :created_at, :updated_at, :old_id)
+                (:id, :type, :title, :username, :first_name, :last_name, :is_forum, :created_at, :updated_at, :old_id)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = VALUES(`type`),
                     `title`                          = VALUES(`title`),
                     `username`                       = VALUES(`username`),
                     `first_name`                     = VALUES(`first_name`),
                     `last_name`                      = VALUES(`last_name`),
+                    `is_forum`                       = VALUES(`is_forum`),
                     `updated_at`                     = VALUES(`updated_at`)
             ');
 
@@ -523,6 +524,7 @@ class DB
             $sth->bindValue(':username', $chat->getUsername());
             $sth->bindValue(':first_name', $chat->getFirstName());
             $sth->bindValue(':last_name', $chat->getLastName());
+            $sth->bindValue(':is_forum', $chat->getIsForum());
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
