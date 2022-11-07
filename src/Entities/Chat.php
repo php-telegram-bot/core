@@ -24,6 +24,7 @@ namespace Longman\TelegramBot\Entities;
  * @method string          getUsername()                           Optional. Username, for private chats, supergroups and channels if available
  * @method string          getFirstName()                          Optional. First name of the other party in a private chat
  * @method string          getLastName()                           Optional. Last name of the other party in a private chat
+ * @method bool            getIsForum()                            Optional. True, if the supergroup chat is a forum (has topics enabled)
  * @method ChatPhoto       getPhoto()                              Optional. Chat photo. Returned only in getChat.
  * @method string          getBio()                                Optional. Bio of the other party in a private chat. Returned only in getChat.
  * @method bool            getHasPrivateForwards()                 Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
