@@ -282,9 +282,15 @@ class Telegram
                 );
 
                 foreach ($files as $file) {
-                    //Remove "Command.php" from filename
-                    $command      = $this->classNameToCommandName(substr($file->getFilename(), 0, -4));
+                    // Convert filename to command
+                    $command = $this->classNameToCommandName(substr($file->getFilename(), 0, -4));
 
+                    // Invalid Classname
+                    if (is_null($command)) {
+                        continue;
+                    }
+
+                    // Already registered
                     if (array_key_exists($command, $commands)) {
                         continue;
                     }
@@ -318,6 +324,12 @@ class Telegram
     public function getCommandClassName(string $auth, string $command, string $filepath = ''): ?string
     {
         $command = mb_strtolower($command);
+
+        // Invalid command
+        if (trim($command) === '') {
+            return null;
+        }
+
         $auth    = $this->ucFirstUnicode($auth);
 
         // First, check for directly assigned command class.
@@ -1290,14 +1302,15 @@ class Telegram
      *
      * @param string $class For example FooBarCommand
      *
-     * @return string for example foo_bar. In case of errors, returns an empty string
+     * @return string|null for example foo_bar. In case of errors, returns null.
      */
-    protected function classNameToCommandName(string $class): string
+    protected function classNameToCommandName(string $class): ?string
     {
-        // 7 is the length of 'Command'
+        // If $class doesn't end with 'Command'
         if (substr($class, -7) !== 'Command') {
-            return '';
+            return null;
         }
+
         return mb_strtolower(preg_replace('/(.)(?=[\p{Lu}])/u', '$1_', substr($class, 0, -7)));
     }
 
@@ -1306,13 +1319,14 @@ class Telegram
      *
      * @param string $command For example foo_bar
      *
-     * @return string for example FooBarCommand. In case of errors, returns an empty string
+     * @return string|null for example FooBarCommand. In case of errors, returns null.
      */
-    protected function commandNameToClassName(string $command): string
+    protected function commandNameToClassName(string $command): ?string
     {
-        if ($command === '') {
-            return '';
+        if (trim($command) === '') {
+            return null;
         }
+
         return str_replace(' ', '', $this->ucWordsUnicode(str_replace('_', ' ', $command))) . 'Command';
     }
 }
