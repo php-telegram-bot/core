@@ -15,6 +15,9 @@ use Longman\TelegramBot\Entities\Games\Game;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
+use Longman\TelegramBot\Entities\Topics\ForumTopicClosed;
+use Longman\TelegramBot\Entities\Topics\ForumTopicCreated;
+use Longman\TelegramBot\Entities\Topics\ForumTopicReopened;
 
 /**
  * Class Message
@@ -77,6 +80,9 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+ * @method ForumTopicCreated                      getForumTopicCreated()                      Optional. Service message: forum topic created
+ * @method ForumTopicClosed                       getForumTopicClosed()                       Optional. Service message: forum topic closed
+ * @method ForumTopicReopened                     getForumTopicReopened()                     Optional. Service message: forum topic reopened
  * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
  * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
@@ -124,6 +130,9 @@ class Message extends Entity
             'successful_payment'                => SuccessfulPayment::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
+            'forum_topic_created'               => ForumTopicCreated::class,
+            'forum_topic_closed'                => ForumTopicClosed::class,
+            'forum_topic_reopened'              => ForumTopicReopened::class,
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,
