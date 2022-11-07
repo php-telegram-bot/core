@@ -16,6 +16,7 @@ namespace Longman\TelegramBot\Entities;
  * @method bool getCanPostMessages()     Optional. True, if the administrator can post in the channel; channels only
  * @method bool getCanEditMessages()     Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
  * @method bool getCanPinMessages()      Optional. True, if the user is allowed to pin messages; groups and supergroups only
+ * @method bool getCanManageTopics()     Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
  *
  * @method $this setIsAnonymous(bool $is_anonymous)                   True, if the user's presence in the chat is hidden
  * @method $this setCanManageChat(bool $can_manage_chat)              True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
@@ -28,6 +29,7 @@ namespace Longman\TelegramBot\Entities;
  * @method $this setCanPostMessages(bool $can_post_messages)          Optional. True, if the administrator can post in the channel; channels only
  * @method $this setCanEditMessages(bool $can_edit_messages)          Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
  * @method $this setCanPinMessages(bool $can_pin_messages)            Optional. True, if the user is allowed to pin messages; groups and supergroups only
+ * @method $this setCanManageTopics(bool $can_manage_topics)          Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
  */
 class ChatAdministratorRights extends Entity
 {

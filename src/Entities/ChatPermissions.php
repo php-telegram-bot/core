@@ -24,6 +24,7 @@ namespace Longman\TelegramBot\Entities;
  * @method bool getCanChangeInfo()         Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
  * @method bool getCanInviteUsers()        Optional. True, if the user is allowed to invite new users to the chat
  * @method bool getCanPinMessages()        Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
+ * @method bool getCanManageTopics()       Optional. True, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages
  */
 class ChatPermissions extends Entity
 {
