@@ -5,8 +5,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][0.80.0-sql-migration]
-- This update adds support for [Bot API 6.3](https://core.telegram.org/bots/api#november-5-2022) (@TiiFuchs)
+- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- This update adds support for [Bot API 6.3](https://core.telegram.org/bots/api#november-5-2022) (@TiiFuchs, #1371)
 ### Added
 - Added the field `is_forum` to the class `Chat`.
 - Added the fields `is_topic_message` and `message_thread_id` to the class `Message` to allow detection of messages belonging to a forum topic and their message thread identifier.
@@ -16,7 +16,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Added support for Multiple Usernames via the field `active_usernames` in the class `Chat`.
 - Added the field `emoji_status_custom_emoji_id` to the class `Chat`.
 ### Changed
-- ❗ Commands can now contain underscores. (@mlocati) This changes how File/Class names are converted to Commands and vice versa. 
+- ❗ Commands can now contain underscores. (@mlocati, #1365) This changes how File/Class names are converted to Commands and vice versa. 
   A class with the name `FooBarCommand` in `FooBarCommand.php` was previously used for handling the `/foobar` command. This version changes this to `/foo_bar`. Be aware of this change if you have any classes with multiple uppercase letters.
 ### Deprecated
 ### Removed
