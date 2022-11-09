@@ -5,23 +5,21 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
-- This update adds support for [Bot API 6.3](https://core.telegram.org/bots/api#november-5-2022) (@TiiFuchs, #1371)
+- [:ledger: View file changes][Unreleased]
 ### Added
-- Added the field `is_forum` to the class `Chat`.
-- Added the fields `is_topic_message` and `message_thread_id` to the class `Message` to allow detection of messages belonging to a forum topic and their message thread identifier.
-- Added the classes `ForumTopicCreated`, `ForumTopicClosed`, and `ForumTopicReopened` and the fields `forum_topic_created`, `forum_topic_closed`, and `forum_topic_reopened` to the class `Message`.
-- Added the field `can_manage_topics` to the classes `ChatAdministratorRights`, `ChatPermissions`, `ChatMemberAdministrator`, and `ChatMemberRestricted`.
-- Added the methods `createForumTopic`, `editForumTopic`, `closeForumTopic`, `reopenForumTopic`, `deleteForumTopic`, `unpinAllForumTopicMessages`, and `getForumTopicIconStickers` for forum topic management.
-- Added support for Multiple Usernames via the field `active_usernames` in the class `Chat`.
-- Added the field `emoji_status_custom_emoji_id` to the class `Chat`.
 ### Changed
-- ❗ Commands can now contain underscores. (@mlocati, #1365) This changes how File/Class names are converted to Commands and vice versa. 
-  A class with the name `FooBarCommand` in `FooBarCommand.php` was previously used for handling the `/foobar` command. This version changes this to `/foo_bar`. Be aware of this change if you have any classes with multiple uppercase letters.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [0.80.0] - 2022-11-09
+### Notes
+- [:ledger: View file changes][0.80.0] ∙ [:page_with_curl: DB migration script][0.80.0-sql-migration]
+### Added
+- Bot API 6.3 (@TiiFuchs) (#1371)
+### Changed
+- [:exclamation:][0.80.0-bc-commands-with-underscores] Commands can now contain underscores (`FooBarCommand` is handled by `/foo_bar`). (@mlocati) (#1365)
 
 ## [0.79.0] - 2022-09-04
 ### Notes
@@ -613,7 +611,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/new-release.sql
+[0.80.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.79.0-0.80.0.sql
+[0.80.0-bc-commands-with-underscores]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#commands-with-underscores
 [0.78.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.77.1-0.78.0.sql
 [0.77.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.76.1-0.77.0.sql
 [0.75.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.74.0-0.75.0.sql
@@ -653,6 +652,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.80.0]: https://github.com/php-telegram-bot/core/compare/0.79.0...0.80.0
 [0.79.0]: https://github.com/php-telegram-bot/core/compare/0.78.0...0.79.0
 [0.78.0]: https://github.com/php-telegram-bot/core/compare/0.77.1...0.78.0
 [0.77.1]: https://github.com/php-telegram-bot/core/compare/0.77.0...0.77.1
