@@ -272,7 +272,7 @@ class Message extends Entity
             'proximity_alert_triggered',
             'forum_topic_created',
             'forum_topic_closed',
-            'forum_topic_reopened'
+            'forum_topic_reopened',
             'video_chat_scheduled',
             'video_chat_started',
             'video_chat_ended',
