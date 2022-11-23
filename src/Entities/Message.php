@@ -253,6 +253,7 @@ class Message extends Entity
             'location',
             'venue',
             'poll',
+            'dice',
             'new_chat_members',
             'left_chat_member',
             'new_chat_title',
@@ -269,6 +270,9 @@ class Message extends Entity
             'successful_payment',
             'passport_data',
             'proximity_alert_triggered',
+            'forum_topic_created',
+            'forum_topic_closed',
+            'forum_topic_reopened'
             'video_chat_scheduled',
             'video_chat_started',
             'video_chat_ended',
