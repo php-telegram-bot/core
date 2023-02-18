@@ -682,7 +682,7 @@ class Telegram
         } else {
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
-            $this->last_command_response = $command_obj->preExecute();
+            $this->last_command_response = $command_obj->setUpdate($this->update)->preExecute();
         }
 
         return $this->last_command_response;
