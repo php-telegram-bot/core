@@ -20,27 +20,33 @@ use Longman\TelegramBot\Exception\TelegramException;
  *
  * @link https://core.telegram.org/bots/api#keyboardbutton
  *
+ * @property KeyboardButtonRequestUser $request_user
+ * @property KeyboardButtonRequestChat $request_chat
  * @property bool $request_contact
  * @property bool $request_location
  * @property KeyboardButtonPollType $request_poll
  * @property WebAppInfo $web_app
  *
- * @method string                 getText()            Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
- * @method bool                   getRequestContact()  Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
- * @method bool                   getRequestLocation() Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
- * @method KeyboardButtonPollType getRequestPoll()     Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
- * @method WebAppInfo             getWebApp()          Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
+ * @method string                    getText()            Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
+ * @method KeyboardButtonRequestUser getRequestUser()     Optional. If specified, pressing the button will open a list of suitable users. Tapping on any user will send their identifier to the bot in a “user_shared” service message. Available in private chats only.
+ * @method KeyboardButtonRequestChat getRequestChat()     Optional. If specified, pressing the button will open a list of suitable chats. Tapping on a chat will send its identifier to the bot in a “chat_shared” service message. Available in private chats only.
+ * @method bool                      getRequestContact()  Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
+ * @method bool                      getRequestLocation() Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
+ * @method KeyboardButtonPollType    getRequestPoll()     Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+ * @method WebAppInfo                getWebApp()          Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
  *
- * @method $this setText(string $text)                                Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
- * @method $this setRequestContact(bool $request_contact)             Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
- * @method $this setRequestLocation(bool $request_location)           Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
- * @method $this setRequestPoll(KeyboardButtonPollType $request_poll) Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
- * @method $this setWebApp(WebAppInfo $web_app)                       Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
+ * @method $this setText(string $text)                                   Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
+ * @method $this setRequestUser(KeyboardButtonRequestUser $request_user) Optional. If specified, pressing the button will open a list of suitable users. Tapping on any user will send their identifier to the bot in a “user_shared” service message. Available in private chats only.
+ * @method $this setRequestChat(KeyboardButtonRequestChat $request_chat) Optional. If specified, pressing the button will open a list of suitable chats. Tapping on a chat will send its identifier to the bot in a “chat_shared” service message. Available in private chats only.
+ * @method $this setRequestContact(bool $request_contact)                Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
+ * @method $this setRequestLocation(bool $request_location)              Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
+ * @method $this setRequestPoll(KeyboardButtonPollType $request_poll)    Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+ * @method $this setWebApp(WebAppInfo $web_app)                          Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
  */
 class KeyboardButton extends Entity
 {
     /**
-     * @param  array|string  $data
+     * @param array|string $data
      */
     public function __construct($data)
     {
@@ -53,6 +59,8 @@ class KeyboardButton extends Entity
     protected function subEntities(): array
     {
         return [
+            'request_user' => KeyboardButtonRequestUser::class,
+            'request_chat' => KeyboardButtonRequestChat::class,
             'request_poll' => KeyboardButtonPollType::class,
             'web_app'      => WebAppInfo::class,
         ];
@@ -61,7 +69,7 @@ class KeyboardButton extends Entity
     /**
      * Check if the passed data array could be a KeyboardButton.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return bool
      */
@@ -81,13 +89,15 @@ class KeyboardButton extends Entity
 
         // Make sure only 1 of the optional request fields is set.
         $field_count = array_filter([
+            $this->getRequestUser(),
+            $this->getRequestChat(),
             $this->getRequestContact(),
             $this->getRequestLocation(),
             $this->getRequestPoll(),
             $this->getWebApp(),
         ]);
         if (count($field_count) > 1) {
-            throw new TelegramException('You must use only one of these fields: request_contact, request_location, request_poll, web_app!');
+            throw new TelegramException('You must use only one of these fields: request_user, request_chat, request_contact, request_location, request_poll, web_app!');
         }
     }
 
@@ -97,8 +107,8 @@ class KeyboardButton extends Entity
     public function __call($method, $args)
     {
         // Only 1 of these can be set, so clear the others when setting a new one.
-        if (in_array($method, ['setRequestContact', 'setRequestLocation', 'setRequestPoll', 'setWebApp'], true)) {
-            unset($this->request_contact, $this->request_location, $this->request_poll, $this->web_app);
+        if (in_array($method, ['setRequestUser', 'setRequestChat', 'setRequestContact', 'setRequestLocation', 'setRequestPoll', 'setWebApp'], true)) {
+            unset($this->reqest_user, $this->request_chat, $this->request_contact, $this->request_location, $this->request_poll, $this->web_app);
         }
 
         return parent::__call($method, $args);

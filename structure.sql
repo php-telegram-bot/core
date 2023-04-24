@@ -126,6 +126,8 @@ CREATE TABLE IF NOT EXISTS `message` (
   `pinned_message` TEXT NULL COMMENT 'Message object. Specified message was pinned',
   `invoice` TEXT NULL COMMENT 'Message is an invoice for a payment, information about the invoice',
   `successful_payment` TEXT NULL COMMENT 'Message is a service message about a successful payment, information about the payment',
+  `user_shared` TEXT NULL COMMENT 'Optional. Service message: a user was shared with the bot',
+  `chat_shared` TEXT NULL COMMENT 'Optional. Service message: a chat was shared with the bot',
   `connected_website` TEXT NULL COMMENT 'The domain name of the website on which the user has logged in.',
   `write_access_allowed` TEXT DEFAULT NULL COMMENT 'Service message: the user allowed the bot added to the attachment menu to write messages',
   `passport_data` TEXT NULL COMMENT 'Telegram Passport data',
