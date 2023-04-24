@@ -39,6 +39,7 @@ use Longman\TelegramBot\Entities\Entity;
  * @method int             getWidth()           Optional. Animation width
  * @method int             getHeight()          Optional. Animation height
  * @method int             getDuration()        Optional. Animation duration
+ * @method bool            getHasSpoiler()      Optional. Pass True if the animation needs to be covered with a spoiler animation
  *
  * @method $this setMedia(string $media)                     File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
  * @method $this setThumb(string $thumb)                     Optional. Thumbnail of the file sent. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 90. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
@@ -48,6 +49,7 @@ use Longman\TelegramBot\Entities\Entity;
  * @method $this setWidth(int $width)                        Optional. Animation width
  * @method $this setHeight(int $height)                      Optional. Animation height
  * @method $this setDuration(int $duration)                  Optional. Animation duration
+ * @method $this setHasSpoiler(bool $has_spoiler)            Optional. Pass True if the animation needs to be covered with a spoiler animation
  */
 class InputMediaAnimation extends Entity implements InputMedia
 {

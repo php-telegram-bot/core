@@ -17,7 +17,10 @@ use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
 use Longman\TelegramBot\Entities\Topics\ForumTopicClosed;
 use Longman\TelegramBot\Entities\Topics\ForumTopicCreated;
+use Longman\TelegramBot\Entities\Topics\ForumTopicEdited;
 use Longman\TelegramBot\Entities\Topics\ForumTopicReopened;
+use Longman\TelegramBot\Entities\Topics\GeneralForumTopicHidden;
+use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
 
 /**
  * Class Message
@@ -58,6 +61,7 @@ use Longman\TelegramBot\Entities\Topics\ForumTopicReopened;
  * @method Voice                                  getVoice()                                  Optional. Message is a voice message, information about the file
  * @method VideoNote                              getVideoNote()                              Optional. Message is a video note message, information about the video
  * @method string                                 getCaption()                                Optional. Caption for the document, photo or video, 0-200 characters
+ * @method bool                                   getHasMediaSpoiler()                        Optional. True, if the message media is covered by a spoiler animation
  * @method Contact                                getContact()                                Optional. Message is a shared contact, information about the contact
  * @method Location                               getLocation()                               Optional. Message is a shared location, information about the location
  * @method Venue                                  getVenue()                                  Optional. Message is a venue, information about the venue
@@ -78,11 +82,15 @@ use Longman\TelegramBot\Entities\Topics\ForumTopicReopened;
  * @method Invoice                                getInvoice()                                Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment                      getSuccessfulPayment()                      Optional. Message is a service message about a successful payment, information about the payment.
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
+ * @method WriteAccessAllowed                     getWriteAccessAllowed()                     Optional. Service message: the user allowed the bot added to the attachment menu to write messages
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
  * @method ForumTopicCreated                      getForumTopicCreated()                      Optional. Service message: forum topic created
+ * @method ForumTopicEdited                       getForumTopicEdited()                       Optional. Service message: forum topic edited
  * @method ForumTopicClosed                       getForumTopicClosed()                       Optional. Service message: forum topic closed
  * @method ForumTopicReopened                     getForumTopicReopened()                     Optional. Service message: forum topic reopened
+ * @method GeneralForumTopicHidden                getGeneralForumTopicHidden()                Optional. Service message: the 'General' forum topic hidden
+ * @method GeneralForumTopicUnhidden              getGeneralForumTopicUnhidden()              Optional. Service message: the 'General' forum topic unhidden
  * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
  * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
@@ -128,11 +136,15 @@ class Message extends Entity
             'pinned_message'                    => __CLASS__,
             'invoice'                           => Invoice::class,
             'successful_payment'                => SuccessfulPayment::class,
+            'write_access_allowed'              => WriteAccessAllowed::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
             'forum_topic_created'               => ForumTopicCreated::class,
+            'forum_topic_edited'                => ForumTopicEdited::class,
             'forum_topic_closed'                => ForumTopicClosed::class,
             'forum_topic_reopened'              => ForumTopicReopened::class,
+            'general_forum_topic_hidden'        => GeneralForumTopicHidden::class,
+            'general_forum_topic_unhidden'      => GeneralForumTopicUnhidden::class,
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,
@@ -268,11 +280,15 @@ class Message extends Entity
             'pinned_message',
             'invoice',
             'successful_payment',
+            'write_access_allowed',
             'passport_data',
             'proximity_alert_triggered',
             'forum_topic_created',
+            'forum_topic_edited',
             'forum_topic_closed',
             'forum_topic_reopened',
+            'general_forum_topic_hidden',
+            'general_forum_topic_unhidden',
             'video_chat_scheduled',
             'video_chat_started',
             'video_chat_ended',

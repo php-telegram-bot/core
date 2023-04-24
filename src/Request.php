@@ -89,6 +89,11 @@ use Throwable;
  * @method static ServerResponse reopenForumTopic(array $data)                Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
  * @method static ServerResponse deleteForumTopic(array $data)                Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
  * @method static ServerResponse unpinAllForumTopicMessages(array $data)      Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
+ * @method static ServerResponse editGeneralForumTopic(array $data)           Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.
+ * @method static ServerResponse closeGeneralForumTopic(array $data)          Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+ * @method static ServerResponse reopenGeneralForumTopic(array $data)         Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
+ * @method static ServerResponse hideGeneralForumTopic(array $data)           Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
+ * @method static ServerResponse unhideGeneralForumTopic(array $data)         Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
@@ -247,6 +252,11 @@ class Request
         'reopenForumTopic',
         'deleteForumTopic',
         'unpinAllForumTopicMessages',
+        'editGeneralForumTopic',
+        'closeGeneralForumTopic',
+        'reopenGeneralForumTopic',
+        'hideGeneralForumTopic',
+        'unhideGeneralForumTopic',
         'answerCallbackQuery',
         'answerInlineQuery',
         'setMyCommands',
