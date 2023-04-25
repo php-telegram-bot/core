@@ -107,7 +107,7 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return BotDescription|BotShortDescription|Chat|ChatAdministratorRights|ChatMember|File|Message|MenuButton|Poll|SentWebAppMessage|StickerSet|User|UserProfilePhotos|WebhookInfo
+     * @return BotDescription|BotName|BotShortDescription|Chat|ChatAdministratorRights|ChatMember|File|Message|MenuButton|Poll|SentWebAppMessage|StickerSet|User|UserProfilePhotos|WebhookInfo
      */
     private function createResultObject(array $result, string $bot_username): Entity
     {
@@ -118,6 +118,7 @@ class ServerResponse extends Entity
             'getFile'                         => File::class,
             'getChat'                         => Chat::class,
             'getChatMember'                   => ChatMemberFactory::class,
+            'getMyName'                       => BotName::class,
             'getMyDescription'                => BotDescription::class,
             'getMyShortDescription'           => BotShortDescription::class,
             'getChatMenuButton'               => MenuButtonFactory::class,

@@ -99,6 +99,8 @@ use Throwable;
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
  * @method static ServerResponse deleteMyCommands(array $data)                Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
  * @method static ServerResponse getMyCommands(array $data)                   Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
+ * @method static ServerResponse setMyName(array $data)                       Use this method to change the bot's name. Returns True on success.
+ * @method static ServerResponse getMyName(array $data)                       Use this method to get the current bot name for the given user language. Returns BotName on success.
  * @method static ServerResponse setMyDescription(array $data)                Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
  * @method static ServerResponse getMyDescription(array $data)                Use this method to get the current bot description for the given user language. Returns BotDescription on success.
  * @method static ServerResponse setMyShortDescription(array $data)           Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
@@ -272,6 +274,8 @@ class Request
         'setMyCommands',
         'deleteMyCommands',
         'getMyCommands',
+        'setMyName',
+        'getMyName',
         'setMyDescription',
         'getMyDescription',
         'setMyShortDescription',
@@ -326,6 +330,8 @@ class Request
         'close',
         'deleteMyCommands',
         'getMyCommands',
+        'setMyName',
+        'getMyName',
         'setMyDescription',
         'getMyDescription',
         'setMyShortDescription',
