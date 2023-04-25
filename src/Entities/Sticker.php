@@ -23,12 +23,13 @@ namespace Longman\TelegramBot\Entities;
  * @method int          getHeight()           Sticker height
  * @method bool         getIsAnimated()       True, if the sticker is animated
  * @method bool         getIsVideo()          True, if the sticker is a video sticker
- * @method PhotoSize    getThumb()            Optional. Sticker thumbnail in .webp or .jpg format
+ * @method PhotoSize    getThumbnail()        Optional. Sticker thumbnail in .webp or .jpg format
  * @method string       getEmoji()            Optional. Emoji associated with the sticker
  * @method string       getSetName()          Optional. Name of the sticker set to which the sticker belongs
  * @method File         getPremiumAnimation() Optional. Premium animation for the sticker, if the sticker is premium
  * @method MaskPosition getMaskPosition()     Optional. For mask stickers, the position where the mask should be placed
  * @method string       getCustomEmojiId()    Optional. For custom emoji stickers, unique identifier of the custom emoji
+ * @method bool         getNeedsRepainting()  Optional. True, if the sticker must be repainted to a text color in messages, the color of the Telegram Premium badge in emoji status, white color on chat photos, or another appropriate color in other places
  * @method int          getFileSize()         Optional. File size
  */
 class Sticker extends Entity
@@ -39,7 +40,7 @@ class Sticker extends Entity
     protected function subEntities(): array
     {
         return [
-            'thumb'             => PhotoSize::class,
+            'thumbnail'         => PhotoSize::class,
             'premium_animation' => File::class,
             'mask_position'     => MaskPosition::class,
         ];

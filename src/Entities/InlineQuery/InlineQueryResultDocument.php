@@ -29,9 +29,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'description'           => '',
  *   'reply_markup'          => <InlineKeyboard>,
  *   'input_message_content' => <InputMessageContent>,
- *   'thumb_url'             => '',
- *   'thumb_width'           => 30,
- *   'thumb_height'          => 30,
+ *   'thumbnail_url'         => '',
+ *   'thumbnail_width'       => 30,
+ *   'thumbnail_height'      => 30,
  * ];
  * </code>
  *
@@ -46,9 +46,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getDescription()         Optional. Short description of the result
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method InputMessageContent  getInputMessageContent() Optional. Content of the message to be sent instead of the file
- * @method string               getThumbUrl()            Optional. URL of the thumbnail (jpeg only) for the file
- * @method int                  getThumbWidth()          Optional. Thumbnail width
- * @method int                  getThumbHeight()         Optional. Thumbnail height
+ * @method string               getThumbnailUrl()        Optional. URL of the thumbnail (jpeg only) for the file
+ * @method int                  getThumbnailWidth()      Optional. Thumbnail width
+ * @method int                  getThumbnailHeight()     Optional. Thumbnail height
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
  * @method $this setTitle(string $title)                                            Title for the result
@@ -60,9 +60,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setDescription(string $description)                                Optional. Short description of the result
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the file
- * @method $this setThumbUrl(string $thumb_url)                                     Optional. URL of the thumbnail (jpeg only) for the file
- * @method $this setThumbWidth(int $thumb_width)                                    Optional. Thumbnail width
- * @method $this setThumbHeight(int $thumb_height)                                  Optional. Thumbnail height
+ * @method $this setThumbnailUrl(string $thumbnail_url)                             Optional. URL of the thumbnail (jpeg only) for the file
+ * @method $this setThumbnailWidth(int $thumbnail_width)                            Optional. Thumbnail width
+ * @method $this setThumbnailHeight(int $thumbnail_height)                          Optional. Thumbnail height
  */
 class InlineQueryResultDocument extends InlineEntity implements InlineQueryResult
 {

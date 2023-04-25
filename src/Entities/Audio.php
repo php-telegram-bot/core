@@ -24,7 +24,7 @@ namespace Longman\TelegramBot\Entities;
  * @method string    getFileName()     Optional. Original filename as defined by sender
  * @method string    getMimeType()     Optional. MIME type of the file as defined by sender
  * @method int       getFileSize()     Optional. File size
- * @method PhotoSize getThumb()        Optional. Thumbnail of the album cover to which the music file belongs
+ * @method PhotoSize getThumbnail()    Optional. Thumbnail of the album cover to which the music file belongs
  */
 class Audio extends Entity
 {
@@ -34,7 +34,7 @@ class Audio extends Entity
     protected function subEntities(): array
     {
         return [
-            'thumb' => PhotoSize::class,
+            'thumbnail' => PhotoSize::class,
         ];
     }
 }

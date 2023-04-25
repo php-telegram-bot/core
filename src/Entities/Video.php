@@ -21,7 +21,7 @@ namespace Longman\TelegramBot\Entities;
  * @method int       getWidth()        Video width as defined by sender
  * @method int       getHeight()       Video height as defined by sender
  * @method int       getDuration()     Duration of the video in seconds as defined by sender
- * @method PhotoSize getThumb()        Optional. Video thumbnail
+ * @method PhotoSize getThumbnail()    Optional. Video thumbnail
  * @method string    getFileName()     Optional. Original filename as defined by sender
  * @method string    getMimeType()     Optional. Mime type of a file as defined by sender
  * @method int       getFileSize()     Optional. File size
@@ -34,7 +34,7 @@ class Video extends Entity
     protected function subEntities(): array
     {
         return [
-            'thumb' => PhotoSize::class,
+            'thumbnail' => PhotoSize::class,
         ];
     }
 }
