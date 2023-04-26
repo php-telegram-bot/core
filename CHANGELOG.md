@@ -12,6 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Fixed a bug where new incoming updates are not correctly passed to the Command object after the first time when getUpdates is used. (@uspilot) (#1384)
 ### Security
 
 ## [0.80.0] - 2022-11-09
