@@ -7,11 +7,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
+- Added AllowDynamicProperties attribute to Entities to support newer PHP versions (@alesinicio) (#1388)
 - Bot API 6.4, 6.5, 6.6, 6.7 (@noplanman)
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+- Fixed a bug where new incoming updates are not correctly passed to the Command object after the first time when getUpdates is used. (@uspilot) (#1384)
 ### Security
 
 ## [0.80.0] - 2022-11-09
