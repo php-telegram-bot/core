@@ -107,21 +107,25 @@ class ServerResponse extends Entity
      * @param array  $result
      * @param string $bot_username
      *
-     * @return Chat|ChatMember|File|Message|User|UserProfilePhotos|WebhookInfo
+     * @return BotDescription|BotName|BotShortDescription|Chat|ChatAdministratorRights|ChatMember|File|Message|MenuButton|Poll|SentWebAppMessage|StickerSet|User|UserProfilePhotos|WebhookInfo
      */
     private function createResultObject(array $result, string $bot_username): Entity
     {
         $result_object_types = [
-            'answerWebAppQuery'               => SentWebAppMessage::class,
-            'getChat'                         => Chat::class,
-            'getMyDefaultAdministratorRights' => ChatAdministratorRights::class,
-            'getChatMember'                   => ChatMemberFactory::class,
-            'getChatMenuButton'               => MenuButtonFactory::class,
-            'getFile'                         => File::class,
-            'getMe'                           => User::class,
-            'getStickerSet'                   => StickerSet::class,
-            'getUserProfilePhotos'            => UserProfilePhotos::class,
             'getWebhookInfo'                  => WebhookInfo::class,
+            'getMe'                           => User::class,
+            'getUserProfilePhotos'            => UserProfilePhotos::class,
+            'getFile'                         => File::class,
+            'getChat'                         => Chat::class,
+            'getChatMember'                   => ChatMemberFactory::class,
+            'getMyName'                       => BotName::class,
+            'getMyDescription'                => BotDescription::class,
+            'getMyShortDescription'           => BotShortDescription::class,
+            'getChatMenuButton'               => MenuButtonFactory::class,
+            'getMyDefaultAdministratorRights' => ChatAdministratorRights::class,
+            'getStickerSet'                   => StickerSet::class,
+            'stopPoll'                        => Poll::class,
+            'answerWebAppQuery'               => SentWebAppMessage::class,
         ];
 
         $action       = Request::getCurrentAction();
@@ -139,15 +143,18 @@ class ServerResponse extends Entity
      * @param array  $results
      * @param string $bot_username
      *
-     * @return BotCommand[]|ChatMember[]|GameHighScore[]|Message[]|Update[]
+     * @return BotCommand[]|ChatMember[]|GameHighScore[]|Message[]|Sticker[]|Update[]
      */
     private function createResultObjects(array $results, string $bot_username): array
     {
         $result_object_types = [
-            'getMyCommands'         => BotCommand::class,
-            'getChatAdministrators' => ChatMemberFactory::class,
-            'getGameHighScores'     => GameHighScore::class,
-            'sendMediaGroup'        => Message::class,
+            'getUpdates'                => Update::class,
+            'getChatAdministrators'     => ChatMemberFactory::class,
+            'getForumTopicIconStickers' => Sticker::class,
+            'getMyCommands'             => BotCommand::class,
+            'getCustomEmojiStickers'    => Sticker::class,
+            'getGameHighScores'         => GameHighScore::class,
+            'sendMediaGroup'            => Message::class,
         ];
 
         $action       = Request::getCurrentAction();

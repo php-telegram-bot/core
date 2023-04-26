@@ -27,7 +27,7 @@ use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 #[\AllowDynamicProperties]
 abstract class Entity implements \JsonSerializable
 {
-
+    public static $fixThumbnailRename = true;
 
     /**
      * Entity constructor.
@@ -97,6 +97,7 @@ abstract class Entity implements \JsonSerializable
     protected function assignMemberVariables(array $data): void
     {
         foreach ($data as $key => $value) {
+            $key = $this->fixThumbnailRename($key);
             $this->$key = $value;
         }
     }
@@ -141,8 +142,11 @@ abstract class Entity implements \JsonSerializable
      */
     public function __call($method, $args)
     {
+        $method = $this->fixThumbnailRename($method);
+
         //Convert method to snake_case (which is the name of the property)
         $property_name = mb_strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', substr($method, 3)), '_'));
+        $property_name = $this->fixThumbnailRename($property_name);
 
         $action = substr($method, 0, 3);
         if ($action === 'get') {
@@ -175,6 +179,23 @@ abstract class Entity implements \JsonSerializable
         }
 
         return null;
+    }
+
+    /**
+     * BC for renamed thumb -> thumbnail methods and fields
+     *
+     * @todo Remove after a few versions.
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function fixThumbnailRename(string $name): string
+    {
+        return self::$fixThumbnailRename ? preg_replace('/([Tt])humb(nail)?/', '$1humbnail', $name, -1, $count) : $name;
+
+        /*if ($count) {
+            // Notify user that there are still outdated method calls?
+        }*/
     }
 
     /**

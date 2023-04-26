@@ -5,9 +5,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased]
+- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 ### Added
 - Added AllowDynamicProperties attribute to Entities to support newer PHP versions (@alesinicio) (#1388)
+- Bot API 6.4, 6.5, 6.6, 6.7 (@noplanman)
 ### Changed
 ### Deprecated
 ### Removed
@@ -613,6 +614,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.80.0-unreleased.sql
 [0.80.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.79.0-0.80.0.sql
 [0.80.0-bc-commands-with-underscores]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#commands-with-underscores
 [0.78.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.77.1-0.78.0.sql

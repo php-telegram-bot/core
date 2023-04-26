@@ -22,7 +22,7 @@ namespace Longman\TelegramBot\Entities;
  * @method bool      getIsAnimated()    True, if the sticker set contains animated stickers
  * @method bool      getIsVideo()       True, if the sticker set contains video stickers
  * @method Sticker[] getStickers()      List of all set stickers
- * @method PhotoSize getThumb()         Optional. Sticker set thumbnail in the .WEBP or .TGS format
+ * @method PhotoSize getThumbnail()     Optional. Sticker set thumbnail in the .WEBP or .TGS format
  */
 class StickerSet extends Entity
 {
@@ -32,8 +32,8 @@ class StickerSet extends Entity
     protected function subEntities(): array
     {
         return [
-            'stickers' => [Sticker::class],
-            'thumb'    => PhotoSize::class,
+            'stickers'  => [Sticker::class],
+            'thumbnail' => PhotoSize::class,
         ];
     }
 }

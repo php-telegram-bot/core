@@ -28,9 +28,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'url'                   => '',
  *   'hide_url'              => true,
  *   'description'           => '',
- *   'thumb_url'             => '',
- *   'thumb_width'           => 30,
- *   'thumb_height'          => 30,
+ *   'thumbnail_url'         => '',
+ *   'thumbnail_width'       => 30,
+ *   'thumbnail_height'      => 30,
  * ];
  * </code>
  *
@@ -42,9 +42,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getUrl()                 Optional. URL of the result
  * @method bool                 getHideUrl()             Optional. Pass True, if you don't want the URL to be shown in the message
  * @method string               getDescription()         Optional. Short description of the result
- * @method string               getThumbUrl()            Optional. Url of the thumbnail for the result
- * @method int                  getThumbWidth()          Optional. Thumbnail width
- * @method int                  getThumbHeight()         Optional. Thumbnail height
+ * @method string               getThumbnailUrl()        Optional. Url of the thumbnail for the result
+ * @method int                  getThumbnailWidth()      Optional. Thumbnail width
+ * @method int                  getThumbnailHeight()     Optional. Thumbnail height
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 Bytes
  * @method $this setTitle(string $title)                                            Title of the result
@@ -53,9 +53,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setUrl(string $url)                                                Optional. URL of the result
  * @method $this setHideUrl(bool $hide_url)                                         Optional. Pass True, if you don't want the URL to be shown in the message
  * @method $this setDescription(string $description)                                Optional. Short description of the result
- * @method $this setThumbUrl(string $thumb_url)                                     Optional. Url of the thumbnail for the result
- * @method $this setThumbWidth(int $thumb_width)                                    Optional. Thumbnail width
- * @method $this setThumbHeight(int $thumb_height)                                  Optional. Thumbnail height
+ * @method $this setThumbnailUrl(string $thumbnail_url)                             Optional. Url of the thumbnail for the result
+ * @method $this setThumbnailWidth(int $thumbnail_width)                            Optional. Thumbnail width
+ * @method $this setThumbnailHeight(int $thumbnail_height)                          Optional. Thumbnail height
  */
 class InlineQueryResultArticle extends InlineEntity implements InlineQueryResult
 {

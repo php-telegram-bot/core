@@ -25,7 +25,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'mpeg4_url'             => '',
  *   'mpeg4_width'           => 30,
  *   'mpeg4_height'          => 30,
- *   'thumb_url'             => '',
+ *   'thumbnail_url'         => '',
  *   'title'                 => '',
  *   'caption'               => '',
  *   'reply_markup'          => <InlineKeyboard>,
@@ -39,8 +39,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method int                  getMpeg4Width()          Optional. Video width
  * @method int                  getMpeg4Height()         Optional. Video height
  * @method int                  getMpeg4Duration()       Optional. Video duration
- * @method string               getThumbUrl()            URL of the static thumbnail (jpeg or gif) for the result
- * @method string               getThumbMimeType()       Optional. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
+ * @method string               getThumbnailUrl()        URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
+ * @method string               getThumbnailMimeType()   Optional. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
  * @method string               getTitle()               Optional. Title for the result
  * @method string               getCaption()             Optional. Caption of the MPEG-4 file to be sent, 0-200 characters
  * @method string               getParseMode()           Optional. Mode for parsing entities in the caption
@@ -53,8 +53,8 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setMpeg4Width(int $mpeg4_width)                                    Optional. Video width
  * @method $this setMpeg4Height(int $mpeg4_height)                                  Optional. Video height
  * @method $this setMpeg4Duration(int $mpeg4_duration)                              Optional. Video duration
- * @method $this setThumbUrl(string $thumb_url)                                     URL of the static thumbnail (jpeg or gif) for the result
- * @method $this setThumbMimeType(string $thumb_mime_type)                          Optional. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
+ * @method $this setThumbnailUrl(string $thumbnail_url)                             URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
+ * @method $this setThumbnailMimeType(string $thumbnail_mime_type)                  Optional. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
  * @method $this setTitle(string $title)                                            Optional. Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the MPEG-4 file to be sent, 0-200 characters
  * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the caption

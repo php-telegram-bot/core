@@ -20,7 +20,7 @@ namespace Longman\TelegramBot\Entities;
  * @method string    getFileUniqueId() Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
  * @method int       getLength()       Video width and height as defined by sender
  * @method int       getDuration()     Duration of the audio in seconds as defined by sender
- * @method PhotoSize getThumb()        Optional. Video thumbnail as defined by sender
+ * @method PhotoSize getThumbnail()    Optional. Video thumbnail as defined by sender
  * @method int       getFileSize()     Optional. File size
  */
 class VideoNote extends Entity
@@ -31,7 +31,7 @@ class VideoNote extends Entity
     protected function subEntities(): array
     {
         return [
-            'thumb' => PhotoSize::class,
+            'thumbnail' => PhotoSize::class,
         ];
     }
 }

@@ -31,9 +31,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'proximity_alert_radius' => 300,
  *   'reply_markup'           => <InlineKeyboard>,
  *   'input_message_content'  => <InputMessageContent>,
- *   'thumb_url'              => '',
- *   'thumb_width'            => 30,
- *   'thumb_height'           => 30,
+ *   'thumbnail_url'          => '',
+ *   'thumbnail_width'        => 30,
+ *   'thumbnail_height'       => 30,
  * ];
  * </code>
  *
@@ -48,9 +48,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method int                 getProximityAlertRadius() Optional. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
  * @method InlineKeyboard      getReplyMarkup()          Optional. Inline keyboard attached to the message
  * @method InputMessageContent getInputMessageContent()  Optional. Content of the message to be sent instead of the location
- * @method string              getThumbUrl()             Optional. Url of the thumbnail for the result
- * @method int                 getThumbWidth()           Optional. Thumbnail width
- * @method int                 getThumbHeight()          Optional. Thumbnail height
+ * @method string              getThumbnailUrl()         Optional. Url of the thumbnail for the result
+ * @method int                 getThumbnailWidth()       Optional. Thumbnail width
+ * @method int                 getThumbnailHeight()      Optional. Thumbnail height
  *
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 Bytes
  * @method $this setLatitude(float $latitude)                                       Location latitude in degrees
@@ -62,9 +62,9 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setProximityAlertRadius(int $proximity_alert_radius)               Optional. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Optional. Content of the message to be sent instead of the location
- * @method $this setThumbUrl(string $thumb_url)                                     Optional. Url of the thumbnail for the result
- * @method $this setThumbWidth(int $thumb_width)                                    Optional. Thumbnail width
- * @method $this setThumbHeight(int $thumb_height)                                  Optional. Thumbnail height
+ * @method $this setThumbnailUrl(string $thumbnail_url)                             Optional. Url of the thumbnail for the result
+ * @method $this setThumbnailWidth(int $thumbnail_width)                            Optional. Thumbnail width
+ * @method $this setThumbnailHeight(int $thumbnail_height)                          Optional. Thumbnail height
  */
 class InlineQueryResultLocation extends InlineEntity implements InlineQueryResult
 {

@@ -39,6 +39,8 @@ namespace Longman\TelegramBot\Entities;
  * @method ChatPermissions getPermissions()                        Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
  * @method int             getSlowModeDelay()                      Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
  * @method int             getMessageAutoDeleteTime()              Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
+ * @method bool            getHasAggressiveAntiSpamEnabled()       Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators. Returned only in getChat.
+ * @method bool            getHasHiddenMembers()                   Optional. True, if non-administrators can only get the list of bots and administrators in the chat. Returned only in getChat.
  * @method bool            getHasProtectedContent()                Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
  * @method string          getStickerSetName()                     Optional. For supergroups, name of group sticker set. Returned only in getChat.
  * @method bool            getCanSetStickerSet()                   Optional. True, if the bot can change the group sticker set. Returned only in getChat.

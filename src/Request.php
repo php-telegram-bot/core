@@ -89,11 +89,22 @@ use Throwable;
  * @method static ServerResponse reopenForumTopic(array $data)                Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
  * @method static ServerResponse deleteForumTopic(array $data)                Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
  * @method static ServerResponse unpinAllForumTopicMessages(array $data)      Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
+ * @method static ServerResponse editGeneralForumTopic(array $data)           Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.
+ * @method static ServerResponse closeGeneralForumTopic(array $data)          Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+ * @method static ServerResponse reopenGeneralForumTopic(array $data)         Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
+ * @method static ServerResponse hideGeneralForumTopic(array $data)           Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
+ * @method static ServerResponse unhideGeneralForumTopic(array $data)         Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
  * @method static ServerResponse deleteMyCommands(array $data)                Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
  * @method static ServerResponse getMyCommands(array $data)                   Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
+ * @method static ServerResponse setMyName(array $data)                       Use this method to change the bot's name. Returns True on success.
+ * @method static ServerResponse getMyName(array $data)                       Use this method to get the current bot name for the given user language. Returns BotName on success.
+ * @method static ServerResponse setMyDescription(array $data)                Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
+ * @method static ServerResponse getMyDescription(array $data)                Use this method to get the current bot description for the given user language. Returns BotDescription on success.
+ * @method static ServerResponse setMyShortDescription(array $data)           Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
+ * @method static ServerResponse getMyShortDescription(array $data)           Use this method to get the current bot short description for the given user language. Returns BotShortDescription on success.
  * @method static ServerResponse setChatMenuButton(array $data)               Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success.
  * @method static ServerResponse getChatMenuButton(array $data)               Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns MenuButton on success.
  * @method static ServerResponse setMyDefaultAdministratorRights(array $data) Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns True on success.
@@ -111,7 +122,13 @@ use Throwable;
  * @method static ServerResponse addStickerToSet(array $data)                 Use this method to add a new sticker to a set created by the bot. Returns True on success.
  * @method static ServerResponse setStickerPositionInSet(array $data)         Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.
  * @method static ServerResponse deleteStickerFromSet(array $data)            Use this method to delete a sticker from a set created by the bot. Returns True on success.
- * @method static ServerResponse setStickerSetThumb(array $data)              Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success.
+ * @method static ServerResponse setStickerEmojiList(array $data)             Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+ * @method static ServerResponse setStickerKeywords(array $data)              Use this method to change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+ * @method static ServerResponse setStickerMaskPosition(array $data)          Use this method to change the mask position of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns True on success.
+ * @method static ServerResponse setStickerSetTitle(array $data)              Use this method to set the title of a created sticker set. Returns True on success.
+ * @method static ServerResponse setStickerSetThumbnail(array $data)          Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success.
+ * @method static ServerResponse setCustomEmojiStickerSetThumbnail(array $data) Use this method to set the thumbnail of a custom emoji sticker set. Returns True on success.
+ * @method static ServerResponse deleteStickerSet(array $data)                Use this method to delete a sticker set that was created by the bot. Returns True on success.
  * @method static ServerResponse answerWebAppQuery(array $data)               Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.
  * @method static ServerResponse sendInvoice(array $data)                     Use this method to send invoices. On success, the sent Message is returned.
  * @method static ServerResponse createInvoiceLink(array $data)               Use this method to create a link for an invoice. Returns the created invoice link as String on success.
@@ -247,11 +264,22 @@ class Request
         'reopenForumTopic',
         'deleteForumTopic',
         'unpinAllForumTopicMessages',
+        'editGeneralForumTopic',
+        'closeGeneralForumTopic',
+        'reopenGeneralForumTopic',
+        'hideGeneralForumTopic',
+        'unhideGeneralForumTopic',
         'answerCallbackQuery',
         'answerInlineQuery',
         'setMyCommands',
         'deleteMyCommands',
         'getMyCommands',
+        'setMyName',
+        'getMyName',
+        'setMyDescription',
+        'getMyDescription',
+        'setMyShortDescription',
+        'getMyShortDescription',
         'setChatMenuButton',
         'getChatMenuButton',
         'setMyDefaultAdministratorRights',
@@ -269,7 +297,13 @@ class Request
         'addStickerToSet',
         'setStickerPositionInSet',
         'deleteStickerFromSet',
-        'setStickerSetThumb',
+        'setStickerEmojiList',
+        'setStickerKeywords',
+        'setStickerMaskPosition',
+        'setStickerSetTitle',
+        'setStickerSetThumbnail',
+        'setCustomEmojiStickerSetThumbnail',
+        'deleteStickerSet',
         'answerWebAppQuery',
         'sendInvoice',
         'createInvoiceLink',
@@ -282,7 +316,7 @@ class Request
     ];
 
     /**
-     * Some methods need a dummy param due to certain cURL issues.
+     * Methods that don't require any data need a dummy param due to certain cURL issues.
      *
      * @see Request::addDummyParamIfNecessary()
      *
@@ -296,6 +330,12 @@ class Request
         'close',
         'deleteMyCommands',
         'getMyCommands',
+        'setMyName',
+        'getMyName',
+        'setMyDescription',
+        'getMyDescription',
+        'setMyShortDescription',
+        'getMyShortDescription',
         'setChatMenuButton',
         'getChatMenuButton',
         'setMyDefaultAdministratorRights',
@@ -306,25 +346,26 @@ class Request
      * Available fields for InputFile helper
      *
      * This is basically the list of all fields that allow InputFile objects
-     * for which input can be simplified by providing local path directly  as string.
+     * for which input can be simplified by providing local path directly as string.
      *
      * @var array
      */
     private static $input_file_fields = [
         'setWebhook'          => ['certificate'],
         'sendPhoto'           => ['photo'],
-        'sendAudio'           => ['audio', 'thumb'],
-        'sendDocument'        => ['document', 'thumb'],
-        'sendVideo'           => ['video', 'thumb'],
-        'sendAnimation'       => ['animation', 'thumb'],
-        'sendVoice'           => ['voice', 'thumb'],
-        'sendVideoNote'       => ['video_note', 'thumb'],
+        'sendAudio'           => ['audio', 'thumbnail'],
+        'sendDocument'        => ['document', 'thumbnail'],
+        'sendVideo'           => ['video', 'thumbnail'],
+        'sendAnimation'       => ['animation', 'thumbnail'],
+        'sendVoice'           => ['voice'],
+        'sendVideoNote'       => ['video_note', 'thumbnail'],
         'setChatPhoto'        => ['photo'],
         'sendSticker'         => ['sticker'],
-        'uploadStickerFile'   => ['png_sticker'],
-        'createNewStickerSet' => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
-        'addStickerToSet'     => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
-        'setStickerSetThumb'  => ['thumb'],
+        'uploadStickerFile'   => ['sticker'],
+        // @todo Look into new InputSticker field and see if we can do the same there.
+        // 'createNewStickerSet' => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
+        // 'addStickerToSet'     => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
+        'setStickerSetThumbnail' => ['thumbnail'],
     ];
 
     /**
@@ -503,8 +544,8 @@ class Request
 
             // Make a list of all possible media that can be handled by the helper.
             $possible_medias = array_filter([
-                'media' => $media_item->getMedia(),
-                'thumb' => $media_item->getThumb(),
+                'media'     => $media_item->getMedia(),
+                'thumbnail' => $media_item->getThumbnail(),
             ]);
 
             foreach ($possible_medias as $type => $media) {
