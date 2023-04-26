@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Added AllowDynamicProperties attribute to Entities to support newer PHP versions (@alesinicio)
 ### Changed
 ### Deprecated
 ### Removed
