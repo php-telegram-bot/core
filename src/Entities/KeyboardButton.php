@@ -81,29 +81,6 @@ class KeyboardButton extends Entity
     /**
      * {@inheritdoc}
      */
-    protected function validate(): void
-    {
-        if ($this->getProperty('text', '') === '') {
-            throw new TelegramException('You must add some text to the button!');
-        }
-
-        // Make sure only 1 of the optional request fields is set.
-        $field_count = array_filter([
-            $this->getRequestUser(),
-            $this->getRequestChat(),
-            $this->getRequestContact(),
-            $this->getRequestLocation(),
-            $this->getRequestPoll(),
-            $this->getWebApp(),
-        ]);
-        if (count($field_count) > 1) {
-            throw new TelegramException('You must use only one of these fields: request_user, request_chat, request_contact, request_location, request_poll, web_app!');
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function __call($method, $args)
     {
         // Only 1 of these can be set, so clear the others when setting a new one.

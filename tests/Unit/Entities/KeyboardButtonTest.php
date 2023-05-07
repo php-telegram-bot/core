@@ -28,20 +28,6 @@ use Longman\TelegramBot\Tests\Unit\TestCase;
  */
 class KeyboardButtonTest extends TestCase
 {
-    public function testKeyboardButtonNoTextFail(): void
-    {
-        $this->expectException(TelegramException::class);
-        $this->expectExceptionMessage('You must add some text to the button!');
-        new KeyboardButton([]);
-    }
-
-    public function testKeyboardButtonTooManyParametersFail(): void
-    {
-        $this->expectException(TelegramException::class);
-        $this->expectExceptionMessage('You must use only one of these fields: request_user, request_chat, request_contact, request_location, request_poll, web_app!');
-        new KeyboardButton(['text' => 'message', 'request_contact' => true, 'request_location' => true]);
-    }
-
     public function testKeyboardButtonSuccess(): void
     {
         new KeyboardButton(['text' => 'message']);

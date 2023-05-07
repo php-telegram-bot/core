@@ -68,34 +68,6 @@ class InlineKeyboardButton extends KeyboardButton
     /**
      * {@inheritdoc}
      */
-    protected function validate(): void
-    {
-        if ($this->getProperty('text', '') === '') {
-            throw new TelegramException('You must add some text to the button!');
-        }
-
-        $num_params = 0;
-
-        foreach (['url', 'login_url', 'callback_data', 'web_app', 'callback_game', 'pay'] as $param) {
-            if ($this->getProperty($param, '') !== '') {
-                $num_params++;
-            }
-        }
-
-        foreach (['switch_inline_query', 'switch_inline_query_current_chat', 'switch_inline_query_chosen_chat'] as $param) {
-            if ($this->getProperty($param) !== null) {
-                $num_params++;
-            }
-        }
-
-        if ($num_params !== 1) {
-            throw new TelegramException('You must use only one of these fields: url, login_url, callback_data, web_app, switch_inline_query, switch_inline_query_current_chat, switch_inline_query_chosen_chat, callback_game, pay!');
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function __call($method, $args)
     {
         // Only 1 of these can be set, so clear the others when setting a new one.
