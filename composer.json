@@ -72,5 +72,10 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "process-timeout": 3600
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.81.x-dev"
+        }
     }
 }
