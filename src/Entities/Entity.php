@@ -24,10 +24,10 @@ use Longman\TelegramBot\Entities\InputMedia\InputMedia;
  * @method array  getRawData()     Get the raw data passed to this entity
  * @method string getBotUsername() Return the bot name passed to this entity
  */
-#[\AllowDynamicProperties]
 abstract class Entity implements \JsonSerializable
 {
     public static $fixThumbnailRename = true;
+    private $parameters = [];
 
     /**
      * Entity constructor.
@@ -51,6 +51,27 @@ abstract class Entity implements \JsonSerializable
         $data['bot_username'] = $bot_username;
         $this->assignMemberVariables($data);
         $this->validate();
+    }
+
+    /**
+     * Dynamically sets a parameter.
+     *
+     * @param string $name
+     * @param        $value
+     * @return void
+     */
+    public function __set(string $name, $value) : void {
+        $this->parameters[$name] = $value;
+    }
+
+    /**
+     * Gets a dynamic parameter.
+     *
+     * @param string $name
+     * @return mixed|null
+     */
+    public function __get(string $name) {
+        return $this->parameters[$name] ?? null;
     }
 
     /**
