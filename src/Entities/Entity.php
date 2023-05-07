@@ -13,6 +13,7 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
 use Longman\TelegramBot\Entities\InputMedia\InputMedia;
+use Longman\TelegramBot\Exception\UndefinedPropertyException;
 
 /**
  * Class Entity
@@ -27,7 +28,8 @@ use Longman\TelegramBot\Entities\InputMedia\InputMedia;
 abstract class Entity implements \JsonSerializable
 {
     public static $fixThumbnailRename = true;
-    private $parameters = [];
+
+    private $fields = [];
 
     /**
      * Entity constructor.
@@ -60,8 +62,9 @@ abstract class Entity implements \JsonSerializable
      * @param        $value
      * @return void
      */
-    public function __set(string $name, $value) : void {
-        $this->parameters[$name] = $value;
+    public function __set(string $name, $value) : void
+    {
+        $this->fields[$name] = $value;
     }
 
     /**
@@ -70,8 +73,14 @@ abstract class Entity implements \JsonSerializable
      * @param string $name
      * @return mixed|null
      */
-    public function __get(string $name) {
-        return $this->parameters[$name] ?? null;
+    public function __get(string $name)
+    {
+        if (! isset($this->fields[$name])) {
+            $class = static::class;
+            throw new UndefinedPropertyException("Undefined property: {$class}::\${$name}");
+        }
+
+        return $this->fields[$name];
     }
 
     /**
@@ -81,13 +90,7 @@ abstract class Entity implements \JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        $data = get_object_vars($this);
-
-        // Delete unnecessary data
-        unset($data['raw_data']);
-        unset($data['bot_username']);
-
-        return $data;
+        return $this->fields;
     }
 
     /**
