@@ -13,7 +13,6 @@ namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\InlineQuery\InlineEntity;
 use Longman\TelegramBot\Entities\InputMedia\InputMedia;
-use Longman\TelegramBot\Exception\UndefinedPropertyException;
 
 /**
  * Class Entity
@@ -29,6 +28,9 @@ abstract class Entity implements \JsonSerializable
 {
     public static $fixThumbnailRename = true;
 
+    public $bot_username = '';
+    public $raw_data = [];
+
     private $fields = [];
 
     /**
@@ -41,46 +43,34 @@ abstract class Entity implements \JsonSerializable
      */
     public function __construct(array $data, string $bot_username = '')
     {
-        //Make sure we're not raw_data inception-ing
-        if (array_key_exists('raw_data', $data)) {
-            if ($data['raw_data'] === null) {
-                unset($data['raw_data']);
-            }
-        } else {
-            $data['raw_data'] = $data;
-        }
+        $this->bot_username = $bot_username;
+        $this->raw_data     = $data;
 
-        $data['bot_username'] = $bot_username;
         $this->assignMemberVariables($data);
         $this->validate();
     }
 
     /**
-     * Dynamically sets a parameter.
+     * Dynamically set a field.
      *
      * @param string $name
-     * @param        $value
+     * @param mixed  $value
      * @return void
      */
-    public function __set(string $name, $value) : void
+    public function __set(string $name, mixed $value): void
     {
         $this->fields[$name] = $value;
     }
 
     /**
-     * Gets a dynamic parameter.
+     * Gets a dynamic field.
      *
      * @param string $name
      * @return mixed|null
      */
     public function __get(string $name)
     {
-        if (! isset($this->fields[$name])) {
-            $class = static::class;
-            throw new UndefinedPropertyException("Undefined property: {$class}::\${$name}");
-        }
-
-        return $this->fields[$name];
+        return $this->fields[$name] ?? null;
     }
 
     /**
