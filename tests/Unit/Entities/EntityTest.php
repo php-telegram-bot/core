@@ -35,16 +35,20 @@ class EntityTest extends TestCase
         self::assertEquals('\_\*\[\]\(\)\~\`\>\#\+\-\=\|\{\}\.\!', Entity::escapeMarkdownV2('_*[]()~`>#+-=|{}.!'));
         self::assertEquals('\*mark\*\_down\_\~test\~', Entity::escapeMarkdownV2('*mark*_down_~test~'));
     }
-    public function testSettingDynamicParameterWorks(): void {
-        $anonClass = new class([]) extends Entity {};
 
-        $anonClass->newParameter = 'test';
+    public function testSettingDynamicParameterWorks(): void
+    {
+        $entity = new class ( [] ) extends Entity { }; // phpcs:ignore
 
-        $this->assertEquals('test', $anonClass->newParameter);
+        $entity->newParameter = 'test';
+
+        $this->assertEquals('test', $entity->newParameter);
     }
-    public function testGettingUnknownDynamicParameterReturnsNull(): void {
-        $anonClass = new class([]) extends Entity {};
 
-        $this->assertEquals(null, $anonClass->unknownParameter);
+    public function testGettingUnknownDynamicParameterReturnsNull(): void
+    {
+        $entity = new class ( [] ) extends Entity { }; // phpcs:ignore
+
+        $this->assertNull($entity->unknownParameter);
     }
 }
