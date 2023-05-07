@@ -37,10 +37,6 @@ class ServerResponse extends Entity
      */
     public function __construct(array $data, string $bot_username = '')
     {
-        // Make sure we don't double-save the raw_data
-        unset($data['raw_data']);
-        $data['raw_data'] = $data;
-
         $is_ok  = (bool) ($data['ok'] ?? false);
         $result = $data['result'] ?? null;
 
@@ -131,9 +127,6 @@ class ServerResponse extends Entity
         $action       = Request::getCurrentAction();
         $object_class = $result_object_types[$action] ?? Message::class;
 
-        // We don't need to save the raw_data of the response object!
-        $result['raw_data'] = null;
-
         return Factory::resolveEntityClass($object_class, $result, $bot_username);
     }
 
@@ -163,9 +156,6 @@ class ServerResponse extends Entity
         $objects = [];
 
         foreach ($results as $result) {
-            // We don't need to save the raw_data of the response object!
-            $result['raw_data'] = null;
-
             $objects[] = Factory::resolveEntityClass($object_class, $result, $bot_username);
         }
 
