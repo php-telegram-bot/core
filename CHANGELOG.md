@@ -5,17 +5,25 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- [:ledger: View file changes][Unreleased]
 ### Added
-- Added AllowDynamicProperties attribute to Entities to support newer PHP versions (@alesinicio) (#1388)
-- Bot API 6.4, 6.5, 6.6, 6.7 (@noplanman)
 ### Changed
 ### Deprecated
 ### Removed
-- Keyboard validations (@noplanman)
+### Fixed
+### Security
+
+## [0.81.0] - 2023-05-27
+### Notes
+- [:ledger: View file changes][0.81.0] ∙ [:page_with_curl: DB migration script][0.81.0-sql-migration]
+- Last version that supports PHP 7.
+### Added
+- Support dynamic Entity properties for newer PHP versions (@alesinicio, @TiiFuchs) (#1390)
+- Bot API 6.4, 6.5, 6.6, 6.7 (@noplanman) (#1389)
+### Removed
+- Keyboard validations (@noplanman) (#1395)
 ### Fixed
 - Fixed a bug where new incoming updates are not correctly passed to the Command object after the first time when getUpdates is used. (@uspilot) (#1384)
-### Security
 
 ## [0.80.0] - 2022-11-09
 ### Notes
@@ -615,7 +623,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.80.0-unreleased.sql
+[0.81.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.80.0-0.81.0.sql
 [0.80.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.79.0-0.80.0.sql
 [0.80.0-bc-commands-with-underscores]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#commands-with-underscores
 [0.78.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.77.1-0.78.0.sql
@@ -657,6 +665,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.81.0]: https://github.com/php-telegram-bot/core/compare/0.80.0...0.81.0
 [0.80.0]: https://github.com/php-telegram-bot/core/compare/0.79.0...0.80.0
 [0.79.0]: https://github.com/php-telegram-bot/core/compare/0.78.0...0.79.0
 [0.78.0]: https://github.com/php-telegram-bot/core/compare/0.77.1...0.78.0
