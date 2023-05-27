@@ -125,7 +125,11 @@ class Keyboard extends Entity
     public function addRow(): Keyboard
     {
         if (($new_row = $this->parseRow(func_get_args())) !== null) {
-            $this->{$this->getKeyboardType()}[] = $new_row;
+            // Workaround for "Indirect modification of overloaded property has no effect" notice in PHP 8.2.
+            // https://stackoverflow.com/a/19749730/3757422
+            $keyboard                         = $this->{$this->getKeyboardType()};
+            $keyboard[]                       = $new_row;
+            $this->{$this->getKeyboardType()} = $keyboard;
         }
 
         return $this;
