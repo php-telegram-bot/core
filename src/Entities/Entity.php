@@ -57,7 +57,7 @@ abstract class Entity implements \JsonSerializable
      * @param mixed  $value
      * @return void
      */
-    public function __set(string $name, mixed $value): void
+    public function __set(string $name, $value): void
     {
         $this->fields[$name] = $value;
     }
