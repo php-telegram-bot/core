@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Missing `thumbnail_url` renaming.
 ### Security
 
 ## [0.81.0] - 2023-05-27

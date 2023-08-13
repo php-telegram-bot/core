@@ -24,7 +24,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'id'                    => '',
  *   'video_url'             => '',
  *   'mime_type'             => '',
- *   'thumb_url'             => '',
+ *   'thumbnail_url'         => '',
  *   'title'                 => '',
  *   'caption'               => '',
  *   'video_width'           => 30,
@@ -40,7 +40,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method string               getId()                  Unique identifier for this result, 1-64 bytes
  * @method string               getVideoUrl()            A valid URL for the embedded video player or video file
  * @method string               getMimeType()            Mime type of the content of video url, “text/html” or “video/mp4”
- * @method string               getThumbUrl()            URL of the thumbnail (jpeg only) for the video
+ * @method string               getThumbnailUrl()        URL of the thumbnail (jpeg only) for the video
  * @method string               getTitle()               Title for the result
  * @method string               getCaption()             Optional. Caption of the video to be sent, 0-200 characters
  * @method string               getParseMode()           Optional. Mode for parsing entities in the video caption
@@ -55,7 +55,7 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setId(string $id)                                                  Unique identifier for this result, 1-64 bytes
  * @method $this setVideoUrl(string $video_url)                                     A valid URL for the embedded video player or video file
  * @method $this setMimeType(string $mime_type)                                     Mime type of the content of video url, “text/html” or “video/mp4”
- * @method $this setThumbUrl(string $thumb_url)                                     URL of the thumbnail (jpeg only) for the video
+ * @method $this setThumbnailUrl(string $thumbnail_url)                             URL of the thumbnail (jpeg only) for the video
  * @method $this setTitle(string $title)                                            Title for the result
  * @method $this setCaption(string $caption)                                        Optional. Caption of the video to be sent, 0-200 characters
  * @method $this setParseMode(string $parse_mode)                                   Optional. Mode for parsing entities in the video caption
