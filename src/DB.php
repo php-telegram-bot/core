@@ -1136,7 +1136,7 @@ class DB
                     `id`, `user_id`, `chat_id`, `message_thread_id`, `sender_chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_signature`, `forward_sender_name`, `forward_date`, `is_topic_message`,
                     `reply_to_chat`, `reply_to_message`, `via_bot`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
-                    `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `has_media_spoiler`, `contact`,
+                    `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `story`, `video`, `voice`, `video_note`, `caption`, `has_media_spoiler`, `contact`,
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
@@ -1147,7 +1147,7 @@ class DB
                     :message_id, :user_id, :chat_id, :message_thread_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date, :is_topic_message,
                     :reply_to_chat, :reply_to_message, :via_bot, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
-                    :audio, :document, :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :has_media_spoiler, :contact,
+                    :audio, :document, :animation, :game, :photo, :sticker, :story, :video, :voice, :video_note, :caption, :has_media_spoiler, :contact,
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
@@ -1202,6 +1202,7 @@ class DB
             $sth->bindValue(':game', $message->getGame());
             $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto() ?: []));
             $sth->bindValue(':sticker', $message->getSticker());
+            $sth->bindValue(':story', $message->getStory());
             $sth->bindValue(':video', $message->getVideo());
             $sth->bindValue(':voice', $message->getVoice());
             $sth->bindValue(':video_note', $message->getVideoNote());

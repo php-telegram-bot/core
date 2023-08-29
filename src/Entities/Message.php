@@ -57,6 +57,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method Game                                   getGame()                                   Optional. Message is a game, information about the game.
  * @method PhotoSize[]                            getPhoto()                                  Optional. Message is a photo, available sizes of the photo
  * @method Sticker                                getSticker()                                Optional. Message is a sticker, information about the sticker
+ * @method Story                                  getStory()                                  Optional. Message is a forwarded story
  * @method Video                                  getVideo()                                  Optional. Message is a video, information about the video
  * @method Voice                                  getVoice()                                  Optional. Message is a voice message, information about the file
  * @method VideoNote                              getVideoNote()                              Optional. Message is a video note message, information about the video
@@ -121,6 +122,7 @@ class Message extends Entity
             'document'                          => Document::class,
             'photo'                             => [PhotoSize::class],
             'sticker'                           => Sticker::class,
+            'story'                             => Story::class,
             'video'                             => Video::class,
             'video_note'                        => VideoNote::class,
             'voice'                             => Voice::class,
