@@ -94,6 +94,7 @@ use Throwable;
  * @method static ServerResponse reopenGeneralForumTopic(array $data)         Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
  * @method static ServerResponse hideGeneralForumTopic(array $data)           Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
  * @method static ServerResponse unhideGeneralForumTopic(array $data)         Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+ * @method static ServerResponse unpinAllGeneralForumTopicMessages(array $data) Use this method to clear the list of pinned messages in a General forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
@@ -269,6 +270,7 @@ class Request
         'reopenGeneralForumTopic',
         'hideGeneralForumTopic',
         'unhideGeneralForumTopic',
+        'unpinAllGeneralForumTopicMessages',
         'answerCallbackQuery',
         'answerInlineQuery',
         'setMyCommands',

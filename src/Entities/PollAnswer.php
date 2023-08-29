@@ -19,7 +19,8 @@ namespace Longman\TelegramBot\Entities;
  * @link https://core.telegram.org/bots/api#pollanswer
  *
  * @method string getPollId()    Unique poll identifier
- * @method User   getUser()      The user, who changed the answer to the poll
+ * @method Chat   getVoterChat() Optional. The chat that changed the answer to the poll, if the voter is anonymous
+ * @method User   getUser()      Optional. The user, who changed the answer to the poll
  * @method array  getOptionIds() 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.
  */
 class PollAnswer extends Entity
@@ -30,7 +31,8 @@ class PollAnswer extends Entity
     protected function subEntities(): array
     {
         return [
-            'user' => User::class,
+            'voter_chat' => Chat::class,
+            'user'       => User::class,
         ];
     }
 }
