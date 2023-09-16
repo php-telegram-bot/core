@@ -15,6 +15,12 @@ use Longman\TelegramBot\Entities\Games\Game;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
+use Longman\TelegramBot\Entities\Topics\ForumTopicClosed;
+use Longman\TelegramBot\Entities\Topics\ForumTopicCreated;
+use Longman\TelegramBot\Entities\Topics\ForumTopicEdited;
+use Longman\TelegramBot\Entities\Topics\ForumTopicReopened;
+use Longman\TelegramBot\Entities\Topics\GeneralForumTopicHidden;
+use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
 
 /**
  * Class Message
@@ -24,6 +30,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @link https://core.telegram.org/bots/api#message
  *
  * @method int                                    getMessageId()                              Unique message identifier
+ * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
  * @method User                                   getFrom()                                   Optional. Sender, can be empty for messages sent to channels
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                                    getDate()                                   Date the message was sent in Unix time
@@ -34,6 +41,7 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method string                                 getForwardSignature()                       Optional. For messages forwarded from channels, signature of the post author if present
  * @method string                                 getForwardSenderName()                      Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
  * @method int                                    getForwardDate()                            Optional. For forwarded messages, date the original message was sent in Unix time
+ * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic
  * @method bool                                   getIsAutomaticForward()                     Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
@@ -49,10 +57,12 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Game                                   getGame()                                   Optional. Message is a game, information about the game.
  * @method PhotoSize[]                            getPhoto()                                  Optional. Message is a photo, available sizes of the photo
  * @method Sticker                                getSticker()                                Optional. Message is a sticker, information about the sticker
+ * @method Story                                  getStory()                                  Optional. Message is a forwarded story
  * @method Video                                  getVideo()                                  Optional. Message is a video, information about the video
  * @method Voice                                  getVoice()                                  Optional. Message is a voice message, information about the file
  * @method VideoNote                              getVideoNote()                              Optional. Message is a video note message, information about the video
  * @method string                                 getCaption()                                Optional. Caption for the document, photo or video, 0-200 characters
+ * @method bool                                   getHasMediaSpoiler()                        Optional. True, if the message media is covered by a spoiler animation
  * @method Contact                                getContact()                                Optional. Message is a shared contact, information about the contact
  * @method Location                               getLocation()                               Optional. Message is a shared location, information about the location
  * @method Venue                                  getVenue()                                  Optional. Message is a venue, information about the venue
@@ -72,9 +82,18 @@ use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
  * @method Message                                getPinnedMessage()                          Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice                                getInvoice()                                Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment                      getSuccessfulPayment()                      Optional. Message is a service message about a successful payment, information about the payment.
+ * @method UserShared                             getUserShared()                             Optional. Service message: a user was shared with the bot
+ * @method ChatShared                             getChatShared()                             Optional. Service message: a chat was shared with the bot
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
+ * @method WriteAccessAllowed                     getWriteAccessAllowed()                     Optional. Service message: the user allowed the bot added to the attachment menu to write messages
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+ * @method ForumTopicCreated                      getForumTopicCreated()                      Optional. Service message: forum topic created
+ * @method ForumTopicEdited                       getForumTopicEdited()                       Optional. Service message: forum topic edited
+ * @method ForumTopicClosed                       getForumTopicClosed()                       Optional. Service message: forum topic closed
+ * @method ForumTopicReopened                     getForumTopicReopened()                     Optional. Service message: forum topic reopened
+ * @method GeneralForumTopicHidden                getGeneralForumTopicHidden()                Optional. Service message: the 'General' forum topic hidden
+ * @method GeneralForumTopicUnhidden              getGeneralForumTopicUnhidden()              Optional. Service message: the 'General' forum topic unhidden
  * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
  * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
@@ -98,21 +117,22 @@ class Message extends Entity
             'reply_to_message'                  => ReplyToMessage::class,
             'via_bot'                           => User::class,
             'entities'                          => [MessageEntity::class],
-            'caption_entities'                  => [MessageEntity::class],
+            'animation'                         => Animation::class,
             'audio'                             => Audio::class,
             'document'                          => Document::class,
-            'animation'                         => Animation::class,
-            'game'                              => Game::class,
             'photo'                             => [PhotoSize::class],
             'sticker'                           => Sticker::class,
+            'story'                             => Story::class,
             'video'                             => Video::class,
-            'voice'                             => Voice::class,
             'video_note'                        => VideoNote::class,
+            'voice'                             => Voice::class,
+            'caption_entities'                  => [MessageEntity::class],
             'contact'                           => Contact::class,
-            'location'                          => Location::class,
-            'venue'                             => Venue::class,
-            'poll'                              => Poll::class,
             'dice'                              => Dice::class,
+            'game'                              => Game::class,
+            'poll'                              => Poll::class,
+            'venue'                             => Venue::class,
+            'location'                          => Location::class,
             'new_chat_members'                  => [User::class],
             'left_chat_member'                  => User::class,
             'new_chat_photo'                    => [PhotoSize::class],
@@ -120,12 +140,17 @@ class Message extends Entity
             'pinned_message'                    => __CLASS__,
             'invoice'                           => Invoice::class,
             'successful_payment'                => SuccessfulPayment::class,
+            'user_shared'                       => UserShared::class,
+            'chat_shared'                       => ChatShared::class,
+            'write_access_allowed'              => WriteAccessAllowed::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
-            'voice_chat_scheduled'              => VoiceChatScheduled::class,           // deprecated
-            'voice_chat_started'                => VoiceChatStarted::class,             // deprecated
-            'voice_chat_ended'                  => VoiceChatEnded::class,               // deprecated
-            'voice_chat_participants_invited'   => VoiceChatParticipantsInvited::class, // deprecated
+            'forum_topic_created'               => ForumTopicCreated::class,
+            'forum_topic_edited'                => ForumTopicEdited::class,
+            'forum_topic_closed'                => ForumTopicClosed::class,
+            'forum_topic_reopened'              => ForumTopicReopened::class,
+            'general_forum_topic_hidden'        => GeneralForumTopicHidden::class,
+            'general_forum_topic_unhidden'      => GeneralForumTopicUnhidden::class,
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,
@@ -233,19 +258,20 @@ class Message extends Entity
     {
         $types = [
             'text',
-            'audio',
             'animation',
+            'audio',
             'document',
-            'game',
             'photo',
             'sticker',
             'video',
-            'voice',
             'video_note',
+            'voice',
             'contact',
-            'location',
-            'venue',
+            'dice',
+            'game',
             'poll',
+            'venue',
+            'location',
             'new_chat_members',
             'left_chat_member',
             'new_chat_title',
@@ -260,8 +286,17 @@ class Message extends Entity
             'pinned_message',
             'invoice',
             'successful_payment',
+            'user_shared',
+            'chat_shared',
+            'write_access_allowed',
             'passport_data',
             'proximity_alert_triggered',
+            'forum_topic_created',
+            'forum_topic_edited',
+            'forum_topic_closed',
+            'forum_topic_reopened',
+            'general_forum_topic_hidden',
+            'general_forum_topic_unhidden',
             'video_chat_scheduled',
             'video_chat_started',
             'video_chat_ended',

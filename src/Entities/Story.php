@@ -12,15 +12,11 @@
 namespace Longman\TelegramBot\Entities;
 
 /**
- * Class VoiceChatStarted
+ * Class Story
  *
- * Represents a service message about a voice chat started in the chat
- *
- * @deprecated See VideoChatStarted instead
- *
- * @link https://core.telegram.org/bots/api#voicechatstarted
+ * @link https://core.telegram.org/bots/api#story
  */
-class VoiceChatStarted extends Entity
+class Story extends Entity
 {
 
 }

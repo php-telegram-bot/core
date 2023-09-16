@@ -37,7 +37,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.77.1';
+    protected $version = '0.81.0';
 
     /**
      * Telegram API key
@@ -282,11 +282,16 @@ class Telegram
                 );
 
                 foreach ($files as $file) {
-                    //Remove "Command.php" from filename
-                    $command      = $this->sanitizeCommand(substr($file->getFilename(), 0, -11));
-                    $command_name = mb_strtolower($command);
+                    // Convert filename to command
+                    $command = $this->classNameToCommandName(substr($file->getFilename(), 0, -4));
 
-                    if (array_key_exists($command_name, $commands)) {
+                    // Invalid Classname
+                    if (is_null($command)) {
+                        continue;
+                    }
+
+                    // Already registered
+                    if (array_key_exists($command, $commands)) {
                         continue;
                     }
 
@@ -294,7 +299,7 @@ class Telegram
 
                     $command_obj = $this->getCommandObject($command, $file->getPathname());
                     if ($command_obj instanceof Command) {
-                        $commands[$command_name] = $command_obj;
+                        $commands[$command] = $command_obj;
                     }
                 }
             } catch (Exception $e) {
@@ -319,6 +324,12 @@ class Telegram
     public function getCommandClassName(string $auth, string $command, string $filepath = ''): ?string
     {
         $command = mb_strtolower($command);
+
+        // Invalid command
+        if (trim($command) === '') {
+            return null;
+        }
+
         $auth    = $this->ucFirstUnicode($auth);
 
         // First, check for directly assigned command class.
@@ -334,7 +345,7 @@ class Telegram
             return null;
         }
 
-        $command_class = $command_namespace . '\\' . $this->ucFirstUnicode($command) . 'Command';
+        $command_class = $command_namespace . '\\' . $this->commandNameToClassName($command);
 
         if (class_exists($command_class)) {
             return $command_class;
@@ -671,14 +682,18 @@ class Telegram
         } else {
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
-            $this->last_command_response = $command_obj->preExecute();
+            if ($this->update) {
+                $this->last_command_response = $command_obj->setUpdate($this->update)->preExecute();
+            } else {
+                $this->last_command_response = $command_obj->preExecute();
+            }
         }
 
         return $this->last_command_response;
     }
 
     /**
-     * Sanitize Command
+     * @deprecated
      *
      * @param string $command
      *
@@ -1063,6 +1078,7 @@ class Telegram
             'max_connections',
             'allowed_updates',
             'drop_pending_updates',
+            'secret_token',
         ]));
         $data['url'] = $url;
 
@@ -1254,9 +1270,9 @@ class Telegram
     /**
      * Return last update id
      *
-     * @return int
+     * @return int|null
      */
-    public function getLastUpdateId(): int
+    public function getLastUpdateId(): ?int
     {
         return $this->last_update_id;
     }
@@ -1283,5 +1299,38 @@ class Telegram
     public function getUpdateFilter(): ?callable
     {
         return $this->update_filter;
+    }
+
+    /**
+     * Converts the name of a class into the name of a command.
+     *
+     * @param string $class For example FooBarCommand
+     *
+     * @return string|null for example foo_bar. In case of errors, returns null.
+     */
+    protected function classNameToCommandName(string $class): ?string
+    {
+        // If $class doesn't end with 'Command'
+        if (substr($class, -7) !== 'Command') {
+            return null;
+        }
+
+        return mb_strtolower(preg_replace('/(.)(?=[\p{Lu}])/u', '$1_', substr($class, 0, -7)));
+    }
+
+    /**
+     * Converts a command name into the name of a class.
+     *
+     * @param string $command For example foo_bar
+     *
+     * @return string|null for example FooBarCommand. In case of errors, returns null.
+     */
+    protected function commandNameToClassName(string $command): ?string
+    {
+        if (trim($command) === '') {
+            return null;
+        }
+
+        return str_replace(' ', '', $this->ucWordsUnicode(str_replace('_', ' ', $command))) . 'Command';
     }
 }
