@@ -5,15 +5,24 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- [:ledger: View file changes][Unreleased]
 ### Added
-- Bot API 6.8, 6.9 (@noplanman)
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- Missing `thumbnail_url` renaming.
 ### Security
+
+## [0.82.0] - 2023-10-26
+### Notes
+- [:ledger: View file changes][0.82.0] ∙ [:page_with_curl: DB migration script][0.82.0-sql-migration]
+- Really the last version that supports PHP 7! Only PHP 8 after this one.
+### Added
+- Bot API 6.8, 6.9 (@noplanman) (#1418, #1427)
+- Test against PHP 8.3 (@sergiy-petrov) (#1421)
+### Fixed
+- Missing `thumbnail_url` renaming.
+- Fix broken exception handling (@mlocati) (#1425)
 
 ## [0.81.0] - 2023-05-27
 ### Notes
@@ -625,7 +634,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.81.0-unreleased.sql
+[0.82.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.81.0-0.82.0.sql
 [0.81.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.80.0-0.81.0.sql
 [0.80.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.79.0-0.80.0.sql
 [0.80.0-bc-commands-with-underscores]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#commands-with-underscores
@@ -668,6 +677,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.82.0]: https://github.com/php-telegram-bot/core/compare/0.81.0...0.82.0
 [0.81.0]: https://github.com/php-telegram-bot/core/compare/0.80.0...0.81.0
 [0.80.0]: https://github.com/php-telegram-bot/core/compare/0.79.0...0.80.0
 [0.79.0]: https://github.com/php-telegram-bot/core/compare/0.78.0...0.79.0
