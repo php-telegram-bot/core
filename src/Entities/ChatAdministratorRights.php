@@ -16,6 +16,9 @@ namespace Longman\TelegramBot\Entities;
  * @method bool getCanPostMessages()     Optional. True, if the administrator can post in the channel; channels only
  * @method bool getCanEditMessages()     Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
  * @method bool getCanPinMessages()      Optional. True, if the user is allowed to pin messages; groups and supergroups only
+ * @method bool getCanPostStories()      Optional. True, if the administrator can post stories in the channel; channels only
+ * @method bool getCanEditStories()      Optional. True, if the administrator can edit stories posted by other users; channels only
+ * @method bool getCanDeleteStories()    Optional. True, if the administrator can delete stories posted by other users; channels only
  * @method bool getCanManageTopics()     Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
  *
  * @method $this setIsAnonymous(bool $is_anonymous)                   True, if the user's presence in the chat is hidden
@@ -29,6 +32,9 @@ namespace Longman\TelegramBot\Entities;
  * @method $this setCanPostMessages(bool $can_post_messages)          Optional. True, if the administrator can post in the channel; channels only
  * @method $this setCanEditMessages(bool $can_edit_messages)          Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
  * @method $this setCanPinMessages(bool $can_pin_messages)            Optional. True, if the user is allowed to pin messages; groups and supergroups only
+ * @method $this setCanPostStories(bool $can_post_stories)            Optional. True, if the administrator can post stories in the channel; channels only
+ * @method $this setCanEditStories(bool $can_edit_stories)            Optional. True, if the administrator can edit stories posted by other users; channels only
+ * @method $this setCanDeleteStories(bool $can_delete_stories)        Optional. True, if the administrator can delete stories posted by other users; channels only
  * @method $this setCanManageTopics(bool $can_manage_topics)          Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
  */
 class ChatAdministratorRights extends Entity

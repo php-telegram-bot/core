@@ -24,6 +24,9 @@ use Longman\TelegramBot\Entities\User;
  * @method bool   getCanPostMessages()     Optional. True, if the administrator can post in the channel; channels only
  * @method bool   getCanEditMessages()     Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
  * @method bool   getCanPinMessages()      Optional. True, if the user is allowed to pin messages; groups and supergroups only
+ * @method bool   getCanPostStories()      Optional. True, if the administrator can post stories in the channel; channels only
+ * @method bool   getCanEditStories()      Optional. True, if the administrator can edit stories posted by other users; channels only
+ * @method bool   getCanDeleteStories()    Optional. True, if the administrator can delete stories posted by other users; channels only
  * @method bool   getCanManageTopics()     Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
  * @method string getCustomTitle()         Custom title for this user
  */
