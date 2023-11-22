@@ -13,6 +13,7 @@ namespace Longman\TelegramBot;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Stream;
 use Longman\TelegramBot\Entities\File;
@@ -603,6 +604,9 @@ class Request
                 $request_params
             );
             $result   = (string) $response->getBody();
+        } catch (ConnectException $e) {
+            $response = null;
+            $result   = $e->getMessage();
         } catch (RequestException $e) {
             $response = null;
             $result   = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
