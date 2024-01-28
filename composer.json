@@ -1,13 +1,13 @@
 {
-    "name": "longman/telegram-bot",
+    "name": "ayaya118/php-telegram-bot",
     "type": "library",
     "description": "PHP Telegram bot",
     "keywords": ["telegram", "bot", "api"],
     "license": "MIT",
-    "homepage": "https://github.com/php-telegram-bot/core",
+    "homepage": "https://github.com/ayaya118/php-telegram-bot-core",
     "support": {
-        "issues": "https://github.com/php-telegram-bot/core/issues",
-        "source": "https://github.com/php-telegram-bot/core"
+        "issues": "https://github.com/ayaya118/php-telegram-bot-core/issues",
+        "source": "https://github.com/ayaya118/php-telegram-bot-core"
     },
     "authors": [
         {
