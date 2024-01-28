@@ -48,7 +48,7 @@ try {
                 printf(
                     'Update ID %d %s' . PHP_EOL,
                     $update->getUpdateId(),
-                    DB::insertRequest($update) ? '(success)' : '(failed) ' . implode(' ', DB::getPdo()->errorInfo())
+                    DB::insertRequest($update) ? '(success)' : '(failed) ' . implode(' ', DB::getPdo()->errorInfo(),0)
                 );
             }
         }

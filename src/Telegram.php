@@ -234,9 +234,9 @@ class Telegram
      * @return Telegram
      * @throws TelegramException
      */
-    public function enableMySql(array $credentials, string $table_prefix = '', string $encoding = 'utf8mb4'): Telegram
+    public function enableMySql(array $credentials, int $enterprise_id = 0, string $table_prefix = '', string $encoding = 'utf8mb4'): Telegram
     {
-        $this->pdo = DB::initialize($credentials, $this, $table_prefix, $encoding);
+        $this->pdo = DB::initialize($credentials, $this, $enterprise_id, $table_prefix, $encoding);
         ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
 
