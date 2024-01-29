@@ -11,8 +11,11 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\ReactionType\Factory as ReactionTypeFactory;
+use Longman\TelegramBot\Entities\ReactionType\ReactionType;
+
 /**
- * Class Chat
+ * This object represents a chat.
  *
  * @link https://core.telegram.org/bots/api#chat
  *
@@ -27,6 +30,7 @@ namespace Longman\TelegramBot\Entities;
  * @method bool            getIsForum()                            Optional. True, if the supergroup chat is a forum (has topics enabled)
  * @method ChatPhoto       getPhoto()                              Optional. Chat photo. Returned only in getChat.
  * @method string[]        getActiveUsernames()                    Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
+ * @method ReactionType[]  getAvailableReactions()                 Optional. List of available reactions allowed in the chat. If omitted, then all emoji reactions are allowed. Returned only in getChat.
  * @method string          getEmojiStatusCustomEmojiId()           Optional. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in getChat.
  * @method int             getEmojiStatusExpirationDate()          Optional. Expiration date of the emoji status of the other party in a private chat in Unix time, if any. Returned only in getChat.
  * @method string          getBio()                                Optional. Bio of the other party in a private chat. Returned only in getChat.
@@ -56,14 +60,15 @@ class Chat extends Entity
     protected function subEntities(): array
     {
         return [
-            'photo'          => ChatPhoto::class,
-            'pinned_message' => Message::class,
-            'permissions'    => ChatPermissions::class,
-            'location'       => ChatLocation::class,
+            'photo'               => ChatPhoto::class,
+            'available_reactions' => [ReactionTypeFactory::class],
+            'pinned_message'      => Message::class,
+            'permissions'         => ChatPermissions::class,
+            'location'            => ChatLocation::class,
         ];
     }
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         parent::__construct($data);
 

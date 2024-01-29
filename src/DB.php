@@ -19,6 +19,8 @@ use Longman\TelegramBot\Entities\ChatMemberUpdated;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\MessageReactionCountUpdated;
+use Longman\TelegramBot\Entities\MessageReactionUpdated;
 use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
 use Longman\TelegramBot\Entities\Payments\ShippingQuery;
 use Longman\TelegramBot\Entities\Poll;
@@ -153,6 +155,8 @@ class DB
             'edited_message',
             'inline_query',
             'message',
+            'message_reaction',
+            'message_reaction_count',
             'poll',
             'poll_answer',
             'pre_checkout_query',
@@ -316,23 +320,6 @@ class DB
     /**
      * Insert entry to telegram_update table
      *
-     * @param int         $update_id
-     * @param int|null    $chat_id
-     * @param int|null    $message_id
-     * @param int|null    $edited_message_id
-     * @param int|null    $channel_post_id
-     * @param int|null    $edited_channel_post_id
-     * @param string|null $inline_query_id
-     * @param string|null $chosen_inline_result_id
-     * @param string|null $callback_query_id
-     * @param string|null $shipping_query_id
-     * @param string|null $pre_checkout_query_id
-     * @param string|null $poll_id
-     * @param string|null $poll_answer_poll_id
-     * @param string|null $my_chat_member_updated_id
-     * @param string|null $chat_member_updated_id
-     *
-     * @return bool If the insert was successful
      * @throws TelegramException
      */
     protected static function insertTelegramUpdate(
@@ -342,6 +329,8 @@ class DB
         ?int $edited_message_id = null,
         ?int $channel_post_id = null,
         ?int $edited_channel_post_id = null,
+        ?string $message_reaction_id = null,
+        ?string $message_reaction_count_id = null,
         ?string $inline_query_id = null,
         ?string $chosen_inline_result_id = null,
         ?string $callback_query_id = null,
@@ -353,8 +342,8 @@ class DB
         ?string $chat_member_updated_id = null,
         ?string $chat_join_request_id = null
     ): ?bool {
-        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null && $my_chat_member_updated_id === null && $chat_member_updated_id === null && $chat_join_request_id === null) {
-            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id, my_chat_member_updated_id, chat_member_updated_id are all null');
+        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $message_reaction_id === null && $message_reaction_count_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null && $my_chat_member_updated_id === null && $chat_member_updated_id === null && $chat_join_request_id === null) {
+            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, message_reaction_id, message_reaction_count_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id, my_chat_member_updated_id, chat_member_updated_id are all null');
         }
 
         if (!self::isDbConnected()) {
@@ -366,13 +355,15 @@ class DB
                 INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
                 (
                     `id`, `chat_id`, `message_id`, `edited_message_id`,
-                    `channel_post_id`, `edited_channel_post_id`, `inline_query_id`, `chosen_inline_result_id`,
+                    `channel_post_id`, `edited_channel_post_id`, `message_reaction_id`, `message_reaction_count_id`,
+                    `inline_query_id`, `chosen_inline_result_id`,
                     `callback_query_id`, `shipping_query_id`, `pre_checkout_query_id`,
                     `poll_id`, `poll_answer_poll_id`, `my_chat_member_updated_id`, `chat_member_updated_id`,
                     `chat_join_request_id`
                 ) VALUES (
                     :id, :chat_id, :message_id, :edited_message_id,
-                    :channel_post_id, :edited_channel_post_id, :inline_query_id, :chosen_inline_result_id,
+                    :channel_post_id, :edited_channel_post_id, :message_reaction_id, :message_reaction_count_id,
+                    :inline_query_id, :chosen_inline_result_id,
                     :callback_query_id, :shipping_query_id, :pre_checkout_query_id,
                     :poll_id, :poll_answer_poll_id, :my_chat_member_updated_id, :chat_member_updated_id,
                     :chat_join_request_id
@@ -385,6 +376,8 @@ class DB
             $sth->bindValue(':edited_message_id', $edited_message_id);
             $sth->bindValue(':channel_post_id', $channel_post_id);
             $sth->bindValue(':edited_channel_post_id', $edited_channel_post_id);
+            $sth->bindValue(':message_reaction_id', $message_reaction_id);
+            $sth->bindValue(':message_reaction_count_id', $message_reaction_count_id);
             $sth->bindValue(':inline_query_id', $inline_query_id);
             $sth->bindValue(':chosen_inline_result_id', $chosen_inline_result_id);
             $sth->bindValue(':callback_query_id', $callback_query_id);
@@ -556,6 +549,8 @@ class DB
         $edited_message_id         = null;
         $channel_post_id           = null;
         $edited_channel_post_id    = null;
+        $message_reaction_id       = null;
+        $message_reaction_count_id = null;
         $inline_query_id           = null;
         $chosen_inline_result_id   = null;
         $callback_query_id         = null;
@@ -579,6 +574,14 @@ class DB
         } elseif (($edited_channel_post = $update->getEditedChannelPost()) && self::insertEditedMessageRequest($edited_channel_post)) {
             $chat_id                = $edited_channel_post->getChat()->getId();
             $edited_channel_post_id = (int) self::$pdo->lastInsertId();
+        } elseif (($message_reaction = $update->getMessageReaction()) && self::insertMessageReaction($message_reaction)) {
+            $chat_id             = $message_reaction->getChat()->getId();
+            $message_id          = $message_reaction->getMessageId();
+            $message_reaction_id = self::$pdo->lastInsertId();
+        } elseif (($message_reaction_count = $update->getMessageReactionCount()) && self::insertMessageReactionCount($message_reaction_count)) {
+            $chat_id                   = $message_reaction_count->getChat()->getId();
+            $message_id                = $message_reaction_count->getMessageId();
+            $message_reaction_count_id = self::$pdo->lastInsertId();
         } elseif (($inline_query = $update->getInlineQuery()) && self::insertInlineQueryRequest($inline_query)) {
             $inline_query_id = $inline_query->getId();
         } elseif (($chosen_inline_result = $update->getChosenInlineResult()) && self::insertChosenInlineResultRequest($chosen_inline_result)) {
@@ -610,6 +613,8 @@ class DB
             $edited_message_id,
             $channel_post_id,
             $edited_channel_post_id,
+            $message_reaction_id,
+            $message_reaction_count_id,
             $inline_query_id,
             $chosen_inline_result_id,
             $callback_query_id,
@@ -621,6 +626,85 @@ class DB
             $chat_member_updated_id,
             $chat_join_request_id
         );
+    }
+
+    public static function insertMessageReaction(MessageReactionUpdated $message_reaction): bool
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_MESSAGE_REACTION . '`
+                (`chat_id`, `message_id`, `user_id`, `actor_chat_id`, `old_reaction`, `new_reaction`, `created_at`)
+                VALUES
+                (:chat_id, :message_id, :user_id, :actor_chat_id, :old_reaction, :new_reaction, :created_at)
+            ');
+
+            $date          = self::getTimestamp($message_reaction->getDate());
+            $chat_id       = null;
+            $user_id       = null;
+            $actor_chat_id = null;
+
+            if ($chat = $message_reaction->getChat()) {
+                $chat_id = $chat->getId();
+                self::insertChat($chat, $date);
+            }
+            if ($user = $message_reaction->getUser()) {
+                $user_id = $user->getId();
+                self::insertUser($user, $date);
+            }
+            if ($actor_chat = $message_reaction->getActorChat()) {
+                $actor_chat_id = $actor_chat->getId();
+                self::insertChat($actor_chat, $date);
+            }
+
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':message_id', $message_reaction->getMessageId());
+            $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':actor_chat_id', $actor_chat_id);
+            $sth->bindValue(':old_reaction', self::entitiesArrayToJson($message_reaction->getOldReaction() ?: []));
+            $sth->bindValue(':new_reaction', self::entitiesArrayToJson($message_reaction->getNewReaction() ?: []));
+            $sth->bindValue(':created_at', $date);
+
+            return $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
+    }
+
+    public static function insertMessageReactionCount(MessageReactionCountUpdated $message_reaction_count): bool
+    {
+        if (!self::isDbConnected()) {
+            return false;
+        }
+
+        try {
+            $sth = self::$pdo->prepare('
+                INSERT IGNORE INTO `' . TB_MESSAGE_REACTION_COUNT . '`
+                (`chat_id`, `message_id`, `reactions`, `created_at`)
+                VALUES
+                (:chat_id, :message_id, :reactions, :created_at)
+            ');
+
+            $date    = self::getTimestamp($message_reaction_count->getDate());
+            $chat_id = null;
+
+            if ($chat = $message_reaction->getChat()) {
+                $chat_id = $chat->getId();
+                self::insertChat($chat, $date);
+            }
+
+            $sth->bindValue(':chat_id', $chat_id);
+            $sth->bindValue(':message_id', $message_reaction_count->getMessageId());
+            $sth->bindValue(':reactions', $message_reaction_count->getReactions());
+            $sth->bindValue(':created_at', $date);
+
+            return $sth->execute();
+        } catch (PDOException $e) {
+            throw new TelegramException($e->getMessage());
+        }
     }
 
     /**
