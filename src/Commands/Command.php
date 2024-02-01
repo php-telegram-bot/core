@@ -128,11 +128,11 @@ abstract class Command
      */
     protected $need_mysql = false;
 
-    /*
-    * Make sure this command only executes on a private chat.
-    *
-    * @var bool
-    */
+    /**
+     * Make sure this command only executes on a private chat.
+     *
+     * @var bool
+     */
     protected $private_only = false;
 
     /**
