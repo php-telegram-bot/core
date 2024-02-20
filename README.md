@@ -646,6 +646,7 @@ Here's a list of projects that feats this library, feel free to add yours!
 - [OSMdeWikiBot](https://github.com/OSM-de/TelegramWikiBot) ([@OSM_de](https://t.me/OSM_de))
 - [pass-generator-webbot](https://github.com/OxMohsen/pass-generator-webbot)
 - [Chess Quiz Bot](https://github.com/1int/chess-quiz-bot)
+- [PHP Telegram Bot - Symfony Bundle](https://github.com/m4n50n/telegram_bot_bundle)
 
 ## Troubleshooting
 
