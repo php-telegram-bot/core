@@ -581,7 +581,12 @@ class Telegram
      */
     protected function getCommandFromType(string $type): string
     {
-        return $this->ucFirstUnicode(str_replace('_', '', $type));
+        switch ($type) {
+            case 'web_app_data':
+                return $type;
+            default:
+                return $this->ucFirstUnicode(str_replace('_', '', $type));
+        }
     }
 
     /**
