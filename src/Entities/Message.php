@@ -51,6 +51,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method bool                                   getHasProtectedContent()                    Optional. True, if the message can't be forwarded
  * @method string                                 getMediaGroupId()                           Optional. The unique identifier of a media message group this message belongs to
  * @method string                                 getAuthorSignature()                        Optional. Signature of the post author for messages in channels
+ * @method LinkPreviewOptions                     getLinkPreviewOptions()                     Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
  * @method MessageEntity[]                        getEntities()                               Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
  * @method MessageEntity[]                        getCaptionEntities()                        Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
  * @method Audio                                  getAudio()                                  Optional. Message is an audio file, information about the file
@@ -120,6 +121,7 @@ class Message extends Entity
             'external_reply'                    => ExternalReplyInfo::class,
             'quote'                             => TextQuote::class,
             'via_bot'                           => User::class,
+            'link_preview_options'              => LinkPreviewOptions::class,
             'entities'                          => [MessageEntity::class],
             'animation'                         => Animation::class,
             'audio'                             => Audio::class,

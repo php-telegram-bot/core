@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
   `external_reply` TEXT NULL DEFAULT NULL COMMENT 'Optional. Information about the message that is being replied to, which may come from another chat or forum topic',
   `via_bot` bigint NULL DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent',
+  `link_preview_options` TEXT NULL DEFAULT NULL COMMENT 'Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed',
   `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
   `has_protected_content` tinyint(1) DEFAULT 0 COMMENT 'True, if the message can''t be forwarded',
   `media_group_id` TEXT COMMENT 'The unique identifier of a media message group this message belongs to',
