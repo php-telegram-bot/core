@@ -44,6 +44,8 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic
  * @method bool                                   getIsAutomaticForward()                     Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
+ * @method ExternalReplyInfo                      getExternalReply()                          Optional. Information about the message that is being replied to, which may come from another chat or forum topic
+ * @method TextQuote                              getQuote()                                  Optional. For replies that quote part of the original message, the quoted part of the message
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
  * @method int                                    getEditDate()                               Optional. Date the message was last edited in Unix time
  * @method bool                                   getHasProtectedContent()                    Optional. True, if the message can't be forwarded
@@ -115,6 +117,8 @@ class Message extends Entity
             'forward_from'                      => User::class,
             'forward_from_chat'                 => Chat::class,
             'reply_to_message'                  => ReplyToMessage::class,
+            'external_reply'                    => ExternalReplyInfo::class,
+            'quote'                             => TextQuote::class,
             'via_bot'                           => User::class,
             'entities'                          => [MessageEntity::class],
             'animation'                         => Animation::class,

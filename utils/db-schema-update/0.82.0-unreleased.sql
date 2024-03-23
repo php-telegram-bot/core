@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS `message_reaction_count` (
   FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+ALTER TABLE `message`
+    ADD COLUMN `external_reply` TEXT NULL DEFAULT NULL COMMENT 'Optional. Information about the message that is being replied to, which may come from another chat or forum topic' AFTER `reply_to_message`;
+
 ALTER TABLE `telegram_update`
     ADD COLUMN `message_reaction_id`       bigint UNSIGNED DEFAULT NULL COMMENT 'A reaction to a message was changed by a user' AFTER `edited_channel_post_id`,
     ADD COLUMN `message_reaction_count_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Reactions to a message with anonymous reactions were changed' AFTER `message_reaction_id`;

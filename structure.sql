@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `is_automatic_forward` tinyint(1) DEFAULT 0 COMMENT 'True, if the message is a channel post that was automatically forwarded to the connected discussion group',
   `reply_to_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
   `reply_to_message` bigint UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
+  `external_reply` TEXT NULL DEFAULT NULL COMMENT 'Optional. Information about the message that is being replied to, which may come from another chat or forum topic',
   `via_bot` bigint NULL DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent',
   `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
   `has_protected_content` tinyint(1) DEFAULT 0 COMMENT 'True, if the message can''t be forwarded',
