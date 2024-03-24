@@ -100,6 +100,7 @@ use Throwable;
  * @method static ServerResponse unpinAllGeneralForumTopicMessages(array $data) Use this method to clear the list of pinned messages in a General forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
+ * @method static ServerResponse getUserChatBoosts(array $data)               Use this method to get the list of boosts added to a chat by a user. Requires administrator rights in the chat. Returns a UserChatBoosts object.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
  * @method static ServerResponse deleteMyCommands(array $data)                Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
  * @method static ServerResponse getMyCommands(array $data)                   Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
@@ -280,6 +281,7 @@ class Request
         'unpinAllGeneralForumTopicMessages',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'getUserChatBoosts',
         'setMyCommands',
         'deleteMyCommands',
         'getMyCommands',

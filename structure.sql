@@ -329,6 +329,32 @@ CREATE TABLE IF NOT EXISTS `chat_join_request` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `chat_boost_updated` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
+  `chat_id` bigint COMMENT 'Chat which was boosted',
+  `boost` TEXT NOT NULL COMMENT 'Information about the chat boost',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+  KEY `chat_id` (`chat_id`),
+
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `chat_boost_removed` (
+  `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
+  `chat_id` bigint COMMENT 'Chat which was boosted',
+  `boost_id` varchar NOT NULL COMMENT 'Unique identifier of the boost',
+  `remove_date` timestamp NOT NULL COMMENT 'Point in time (Unix timestamp) when the boost was removed',
+  `source` TEXT NOT NULL COMMENT 'Source of the removed boost',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+
+  PRIMARY KEY (`id`),
+  KEY `chat_id` (`chat_id`),
+
+  FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `telegram_update` (
   `id` bigint UNSIGNED COMMENT 'Update''s unique identifier',
   `chat_id` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier',
