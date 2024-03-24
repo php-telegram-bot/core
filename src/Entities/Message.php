@@ -85,7 +85,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method Message                                getPinnedMessage()                          Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice                                getInvoice()                                Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment                      getSuccessfulPayment()                      Optional. Message is a service message about a successful payment, information about the payment.
- * @method UserShared                             getUserShared()                             Optional. Service message: a user was shared with the bot
+ * @method UsersShared                            getUsersShared()                            Optional. Service message: users were shared with the bot
  * @method ChatShared                             getChatShared()                             Optional. Service message: a chat was shared with the bot
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
  * @method WriteAccessAllowed                     getWriteAccessAllowed()                     Optional. Service message: the user allowed the bot added to the attachment menu to write messages
@@ -146,7 +146,7 @@ class Message extends Entity
             'pinned_message'                    => __CLASS__,
             'invoice'                           => Invoice::class,
             'successful_payment'                => SuccessfulPayment::class,
-            'user_shared'                       => UserShared::class,
+            'users_shared'                      => UsersShared::class,
             'chat_shared'                       => ChatShared::class,
             'write_access_allowed'              => WriteAccessAllowed::class,
             'passport_data'                     => PassportData::class,
@@ -292,7 +292,7 @@ class Message extends Entity
             'pinned_message',
             'invoice',
             'successful_payment',
-            'user_shared',
+            'users_shared',
             'chat_shared',
             'write_access_allowed',
             'passport_data',

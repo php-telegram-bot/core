@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `message_reaction_count` (
 
 ALTER TABLE `message`
     ADD COLUMN `external_reply`       TEXT NULL DEFAULT NULL COMMENT 'Optional. Information about the message that is being replied to, which may come from another chat or forum topic' AFTER `reply_to_message`,
-    ADD COLUMN `link_preview_options` TEXT NULL DEFAULT NULL COMMENT 'Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed' AFTER `via_bot`;
+    ADD COLUMN `link_preview_options` TEXT NULL DEFAULT NULL COMMENT 'Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed' AFTER `via_bot`,
+    RENAME COLUMN `user_shared` TO `users_shared`;
 
 ALTER TABLE `telegram_update`
     ADD COLUMN `message_reaction_id`       bigint UNSIGNED DEFAULT NULL COMMENT 'A reaction to a message was changed by a user' AFTER `edited_channel_post_id`,
