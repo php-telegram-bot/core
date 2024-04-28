@@ -184,7 +184,7 @@ abstract class Command
         }
 
         if ($this->isPrivateOnly() && $this->removeNonPrivateMessage()) {
-            $message = $this->getMessage();
+            $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
 
             if ($user = $message->getFrom()) {
                 return Request::sendMessage([
