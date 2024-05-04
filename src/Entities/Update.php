@@ -36,6 +36,8 @@ use Longman\TelegramBot\Entities\Payments\ShippingQuery;
  * @method ChatMemberUpdated           getMyChatMember()         Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
  * @method ChatMemberUpdated           getChatMember()           Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
  * @method ChatJoinRequest             getChatJoinRequest()      Optional. A request to join the chat has been sent. The bot must have the can_invite_users administrator right in the chat to receive these updates.
+ * @method ChatBoostUpdated            getChatBoost()            Optional. A chat boost was added or changed. The bot must be an administrator in the chat to receive these updates.
+ * @method ChatBoostRemoved            getRemovedChatBoost()     Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
  */
 class Update extends Entity
 {
@@ -55,6 +57,8 @@ class Update extends Entity
     public const TYPE_MY_CHAT_MEMBER         = 'my_chat_member';
     public const TYPE_CHAT_MEMBER            = 'chat_member';
     public const TYPE_CHAT_JOIN_REQUEST      = 'chat_join_request';
+    public const TYPE_CHAT_BOOST             = 'chat_boost';
+    public const TYPE_REMOVED_CHAT_BOOST     = 'removed_chat_boost';
 
     /**
      * {@inheritdoc}
@@ -78,6 +82,8 @@ class Update extends Entity
             self::TYPE_MY_CHAT_MEMBER         => ChatMemberUpdated::class,
             self::TYPE_CHAT_MEMBER            => ChatMemberUpdated::class,
             self::TYPE_CHAT_JOIN_REQUEST      => ChatJoinRequest::class,
+            self::TYPE_CHAT_BOOST             => ChatBoostUpdated::class,
+            self::TYPE_REMOVED_CHAT_BOOST     => ChatBoostRemoved::class,
         ];
     }
 
@@ -110,7 +116,7 @@ class Update extends Entity
     /**
      * Get update content
      *
-     * @return CallbackQuery|ChatMemberUpdated|ChosenInlineResult|InlineQuery|Message|PollAnswer|Poll|PreCheckoutQuery|ShippingQuery
+     * @return Message|EditedMessage|ChannelPost|EditedChannelPost|MessageReactionUpdated|MessageReactionCountUpdated|InlineQuery|ChosenInlineResult|CallbackQuery|ShippingQuery|PreCheckoutQuery|Poll|PollAnswer|ChatMemberUpdated|ChatJoinRequest|ChatBoostUpdated|ChatBoostRemoved
      */
     public function getUpdateContent()
     {

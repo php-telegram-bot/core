@@ -8,6 +8,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 ### Added
 ### Changed
+BC
+    Renamed the class KeyboardButtonRequestUser to KeyboardButtonRequestUsers.
+    Renamed the field request_user to request_users in KeyboardButton.
+    Renamed DB field message.user_shared to message.users_shared.
+
 ### Deprecated
 ### Removed
 ### Fixed
