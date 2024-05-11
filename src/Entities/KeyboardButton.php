@@ -85,7 +85,7 @@ class KeyboardButton extends Entity
     {
         // Only 1 of these can be set, so clear the others when setting a new one.
         if (in_array($method, ['setRequestUser', 'setRequestChat', 'setRequestContact', 'setRequestLocation', 'setRequestPoll', 'setWebApp'], true)) {
-            unset($this->reqest_user, $this->request_chat, $this->request_contact, $this->request_location, $this->request_poll, $this->web_app);
+            unset($this->request_user, $this->request_chat, $this->request_contact, $this->request_location, $this->request_poll, $this->web_app);
         }
 
         return parent::__call($method, $args);
