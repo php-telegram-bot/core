@@ -12,6 +12,10 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\Games\Game;
+use Longman\TelegramBot\Entities\Giveaway\Giveaway;
+use Longman\TelegramBot\Entities\Giveaway\GiveawayCompleted;
+use Longman\TelegramBot\Entities\Giveaway\GiveawayCreated;
+use Longman\TelegramBot\Entities\Giveaway\GiveawayWinners;
 use Longman\TelegramBot\Entities\Message\Factory as MaybeInaccessibleMessageFactory;
 use Longman\TelegramBot\Entities\Message\MaybeInaccessibleMessage;
 use Longman\TelegramBot\Entities\MessageOrigin\Factory as MessageOriginFactory;
@@ -96,6 +100,10 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method ForumTopicReopened                     getForumTopicReopened()                     Optional. Service message: forum topic reopened
  * @method GeneralForumTopicHidden                getGeneralForumTopicHidden()                Optional. Service message: the 'General' forum topic hidden
  * @method GeneralForumTopicUnhidden              getGeneralForumTopicUnhidden()              Optional. Service message: the 'General' forum topic unhidden
+ * @method GiveawayCreated                        getGiveawayCreated()                        Optional. Service message: a scheduled giveaway was created
+ * @method Giveaway                               getGiveaway()                               Optional. The message is a scheduled giveaway message
+ * @method GiveawayWinners                        getGiveawayWinners()                        Optional. A giveaway with public winners was completed
+ * @method GiveawayCompleted                      getGiveawayCompleted()                      Optional. Service message: a giveaway without public winners was completed
  * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
  * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
@@ -155,6 +163,10 @@ class Message extends Entity implements MaybeInaccessibleMessage
             'forum_topic_reopened'              => ForumTopicReopened::class,
             'general_forum_topic_hidden'        => GeneralForumTopicHidden::class,
             'general_forum_topic_unhidden'      => GeneralForumTopicUnhidden::class,
+            'giveaway_created'                  => GiveawayCreated::class,
+            'giveaway'                          => Giveaway::class,
+            'giveaway_winners'                  => GiveawayWinners::class,
+            'giveaway_completed'                => GiveawayCompleted::class,
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,
