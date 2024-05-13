@@ -12,6 +12,8 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\Games\Game;
+use Longman\TelegramBot\Entities\Message\Factory as MaybeInaccessibleMessageFactory;
+use Longman\TelegramBot\Entities\Message\MaybeInaccessibleMessage;
 use Longman\TelegramBot\Entities\MessageOrigin\Factory as MessageOriginFactory;
 use Longman\TelegramBot\Entities\MessageOrigin\MessageOrigin;
 use Longman\TelegramBot\Entities\Payments\Invoice;
@@ -79,7 +81,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method bool                                   getChannelChatCreated()                     Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can’t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
  * @method int                                    getMigrateToChatId()                        Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
  * @method int                                    getMigrateFromChatId()                      Optional. The supergroup has been migrated from a group with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
- * @method Message                                getPinnedMessage()                          Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
+ * @method MaybeInaccessibleMessage               getPinnedMessage()                          Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice                                getInvoice()                                Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment                      getSuccessfulPayment()                      Optional. Message is a service message about a successful payment, information about the payment.
  * @method UsersShared                            getUsersShared()                            Optional. Service message: users were shared with the bot
@@ -101,7 +103,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method WebAppData                             getWebAppData()                             Optional. Service message: data sent by a Web App
  * @method InlineKeyboard                         getReplyMarkup()                            Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
  */
-class Message extends Entity
+class Message extends Entity implements MaybeInaccessibleMessage
 {
     /**
      * {@inheritdoc}
@@ -139,7 +141,7 @@ class Message extends Entity
             'left_chat_member'                  => User::class,
             'new_chat_photo'                    => [PhotoSize::class],
             'message_auto_delete_timer_changed' => MessageAutoDeleteTimerChanged::class,
-            'pinned_message'                    => __CLASS__,
+            'pinned_message'                    => MaybeInaccessibleMessageFactory::class,
             'invoice'                           => Invoice::class,
             'successful_payment'                => SuccessfulPayment::class,
             'users_shared'                      => UsersShared::class,
