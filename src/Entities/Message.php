@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\Games\Game;
+use Longman\TelegramBot\Entities\MessageOrigin\Factory as MessageOriginFactory;
 use Longman\TelegramBot\Entities\MessageOrigin\MessageOrigin;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
@@ -111,8 +112,7 @@ class Message extends Entity
             'from'                              => User::class,
             'sender_chat'                       => Chat::class,
             'chat'                              => Chat::class,
-            'forward_from'                      => User::class,
-            'forward_from_chat'                 => Chat::class,
+            'forward_origin'                    => MessageOriginFactory::class,
             'reply_to_message'                  => ReplyToMessage::class,
             'external_reply'                    => ExternalReplyInfo::class,
             'quote'                             => TextQuote::class,
