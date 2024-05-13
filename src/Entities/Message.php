@@ -12,6 +12,7 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\Games\Game;
+use Longman\TelegramBot\Entities\MessageOrigin\MessageOrigin;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
@@ -35,12 +36,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                                    getDate()                                   Date the message was sent in Unix time
  * @method Chat                                   getChat()                                   Conversation the message belongs to
- * @method User                                   getForwardFrom()                            Optional. For forwarded messages, sender of the original message
- * @method Chat                                   getForwardFromChat()                        Optional. For messages forwarded from a channel, information about the original channel
- * @method int                                    getForwardFromMessageId()                   Optional. For forwarded channel posts, identifier of the original message in the channel
- * @method string                                 getForwardSignature()                       Optional. For messages forwarded from channels, signature of the post author if present
- * @method string                                 getForwardSenderName()                      Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
- * @method int                                    getForwardDate()                            Optional. For forwarded messages, date the original message was sent in Unix time
+ * @method MessageOrigin                          getForwardOrigin()                          Optional. Information about the original message for forwarded messages
  * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic
  * @method bool                                   getIsAutomaticForward()                     Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
