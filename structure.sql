@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `chat_boost_updated` (
 CREATE TABLE IF NOT EXISTS `chat_boost_removed` (
   `id` bigint UNSIGNED AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
   `chat_id` bigint COMMENT 'Chat which was boosted',
-  `boost_id` varchar NOT NULL COMMENT 'Unique identifier of the boost',
+  `boost_id` varchar(200) NOT NULL COMMENT 'Unique identifier of the boost',
   `remove_date` timestamp NOT NULL COMMENT 'Point in time (Unix timestamp) when the boost was removed',
   `source` TEXT NOT NULL COMMENT 'Source of the removed boost',
   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
