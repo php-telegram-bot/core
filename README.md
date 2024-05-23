@@ -334,7 +334,7 @@ $ ./getUpdatesCLI.php
 
 ### getUpdates without database
 
-If you choose to / or are obliged to use the `getUpdates` method without a database, you can replace the `$telegram->useMySQL(...);` line above with:
+If you choose to / or are obliged to use the `getUpdates` method without a database, you can replace the `$telegram->enableMySql(...);` line above with:
 ```php
 $telegram->useGetUpdatesWithoutDatabase();
 ```
