@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
+        php: ['8.1', '8.2', '8.3']
 
     services:
       mariadb:
@@ -70,11 +70,11 @@ jobs:
       run: composer check-code
 
     - name: Run test suite
-      if: ${{ matrix.php != '7.3'}}
+      if: ${{ matrix.php != '8.1'}}
       run: composer test-cov
 
     - name: Run test suite (with coverage)
-      if: ${{ matrix.php == '7.3'}}
+      if: ${{ matrix.php == '8.1'}}
       run: |
         composer test-cov
         composer test-cov-upload
