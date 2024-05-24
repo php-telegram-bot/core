@@ -193,7 +193,7 @@ abstract class Command
                     'text'       => sprintf(
                         "/%s command is only available in a private chat.\n(`%s`)",
                         $this->getName(),
-                        $message->getText()
+                        $message->getText(),
                     ),
                 ]);
             }
@@ -422,11 +422,11 @@ abstract class Command
                 'chat_id' => $message->getChat()->getId(),
                 'text'    => $text,
             ];
-            
+
             if ($message->getIsTopicMessage()) {
                 $reply['message_thread_id'] = $message->getMessageThreadId();
             }
-            
+
             return Request::sendMessage(array_merge($reply, $data));
         }
 
