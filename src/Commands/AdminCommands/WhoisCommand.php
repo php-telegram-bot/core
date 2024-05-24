@@ -60,7 +60,7 @@ class WhoisCommand extends AdminCommand
      */
     public function execute(): ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
 
         $chat_id = $message->getChat()->getId();
         $command = $message->getCommand();
