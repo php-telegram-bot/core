@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `id` bigint UNSIGNED COMMENT 'Unique message identifier',
   `message_thread_id` bigint(20) DEFAULT NULL COMMENT 'Unique identifier of a message thread to which the message belongs; for supergroups only',
   `user_id` bigint NULL COMMENT 'Unique user identifier',
+  `sender_boost_count` bigint NULL COMMENT 'If the sender of the message boosted the chat, the number of boosts added by the user',
   `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
   `forward_from` bigint NULL DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
   `forward_from_chat` bigint NULL DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',

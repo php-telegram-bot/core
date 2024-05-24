@@ -63,7 +63,8 @@ ALTER TABLE `message`
     CHANGE COLUMN `user_shared` `users_shared` TEXT,
     ADD COLUMN `boost_added` TEXT NULL COMMENT 'Service message: user boosted the chat' AFTER `proximity_alert_triggered`,
     ADD COLUMN `quote` TEXT NULL DEFAULT NULL COMMENT 'Optional. For replies that quote part of the original message, the quoted part of the message' AFTER `external_reply`,
-    ADD COLUMN `reply_to_story` TEXT NULL DEFAULT NULL COMMENT 'Optional. For replies to a story, the original story' AFTER `quote`;
+    ADD COLUMN `reply_to_story` TEXT NULL DEFAULT NULL COMMENT 'Optional. For replies to a story, the original story' AFTER `quote`,
+    ADD COLUMN `sender_boost_count` bigint NULL COMMENT 'If the sender of the message boosted the chat, the number of boosts added by the user' AFTER `user_id`;
 
 ALTER TABLE `telegram_update`
     ADD COLUMN `message_reaction_id`       bigint UNSIGNED DEFAULT NULL COMMENT 'A reaction to a message was changed by a user' AFTER `edited_channel_post_id`,
