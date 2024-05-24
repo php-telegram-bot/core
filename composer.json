@@ -64,7 +64,7 @@
             "XDEBUG_MODE=coverage \"vendor/bin/phpunit\" --coverage-clover clover.xml"
         ],
         "test-cov-upload": [
-            "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover clover.xml"
+            "@php ocular.phar code-coverage:upload --format=php-clover clover.xml"
         ]
     },
     "config": {

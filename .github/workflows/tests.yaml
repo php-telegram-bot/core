@@ -70,11 +70,15 @@ jobs:
       run: composer check-code
 
     - name: Run test suite
-      if: ${{ matrix.php != '8.1'}}
-      run: composer test-cov
+      run: composer test
 
-    - name: Run test suite (with coverage)
-      if: ${{ matrix.php == '8.1'}}
-      run: |
-        composer test-cov
-        composer test-cov-upload
+#     - name: Run test suite
+#       if: ${{ matrix.php != '8.1'}}
+#       run: composer test-cov
+
+#     - name: Run test suite (with coverage)
+#       if: ${{ matrix.php == '8.1'}}
+#       run: |
+#         wget https://scrutinizer-ci.com/ocular.phar
+#         composer test-cov
+#         composer test-cov-upload

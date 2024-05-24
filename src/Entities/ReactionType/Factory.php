@@ -2,7 +2,6 @@
 
 namespace Longman\TelegramBot\Entities\ReactionType;
 
-use Longman\TelegramBot\Entities\ChatMember\ReactionTypeNotImplemented;
 use Longman\TelegramBot\Entities\Entity;
 
 class Factory extends \Longman\TelegramBot\Entities\Factory

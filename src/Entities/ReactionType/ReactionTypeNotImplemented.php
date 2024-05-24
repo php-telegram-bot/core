@@ -1,9 +1,8 @@
 <?php
 
-namespace Longman\TelegramBot\Entities\ChatMember;
+namespace Longman\TelegramBot\Entities\ReactionType;
 
 use Longman\TelegramBot\Entities\Entity;
-use Longman\TelegramBot\Entities\ReactionType\ReactionType;
 
 class ReactionTypeNotImplemented extends Entity implements ReactionType
 {
