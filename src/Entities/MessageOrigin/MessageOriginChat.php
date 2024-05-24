@@ -23,5 +23,4 @@ class MessageOriginChat extends Entity implements MessageOrigin
             'sender_chat' => Chat::class,
         ];
     }
-
 }

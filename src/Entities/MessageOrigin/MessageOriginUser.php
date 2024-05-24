@@ -22,5 +22,4 @@ class MessageOriginUser extends Entity implements MessageOrigin
             'sender_user' => User::class,
         ];
     }
-
 }

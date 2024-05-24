@@ -3,7 +3,6 @@
 namespace Longman\TelegramBot\Entities\MessageOrigin;
 
 use Longman\TelegramBot\Entities\Entity;
-use Longman\TelegramBot\Entities\MessageOrigin\MessageOrigin;
 
 /**
  * The message was originally sent by an unknown user.

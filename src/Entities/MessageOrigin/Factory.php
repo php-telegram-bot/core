@@ -22,5 +22,4 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
         $class = $type[$data['type']];
         return new $class($data, $bot_username);
     }
-
 }

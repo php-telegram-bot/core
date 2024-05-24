@@ -16,7 +16,6 @@ use Longman\TelegramBot\Entities\Message;
  */
 class GiveawayCompleted extends Entity
 {
-
     protected function subEntities(): array
     {
         return [

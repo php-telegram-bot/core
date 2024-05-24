@@ -18,5 +18,4 @@ class InaccessibleMessage extends Entity implements MaybeInaccessibleMessage
             'chat' => Chat::class,
         ];
     }
-
 }

@@ -25,11 +25,10 @@ use Longman\TelegramBot\Entities\User;
  */
 class GiveawayWinners extends Entity
 {
-
     protected function subEntities(): array
     {
         return [
-            'chat' => Chat::class,
+            'chat'    => Chat::class,
             'winners' => [User::class],
         ];
     }

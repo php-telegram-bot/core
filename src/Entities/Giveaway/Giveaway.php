@@ -18,17 +18,13 @@ use Longman\TelegramBot\Entities\Entity;
  * @method string        getPrizeDescription()              Optional. Description of additional giveaway prize
  * @method array<string> getCountryCodes()                  Optional. A list of two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which eligible users for the giveaway must come. If empty, then all users can participate in the giveaway. Users with a phone number that was bought on Fragment can always participate in giveaways.
  * @method int           getPremiumSubscriptionMonthCount() Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for
-
- *
  */
 class Giveaway extends Entity
 {
-
     protected function subEntities(): array
     {
         return [
             'chats' => [Chat::class],
         ];
     }
-
 }
