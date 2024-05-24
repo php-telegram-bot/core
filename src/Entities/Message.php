@@ -12,6 +12,14 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\Games\Game;
+use Longman\TelegramBot\Entities\Giveaway\Giveaway;
+use Longman\TelegramBot\Entities\Giveaway\GiveawayCompleted;
+use Longman\TelegramBot\Entities\Giveaway\GiveawayCreated;
+use Longman\TelegramBot\Entities\Giveaway\GiveawayWinners;
+use Longman\TelegramBot\Entities\Message\Factory as MaybeInaccessibleMessageFactory;
+use Longman\TelegramBot\Entities\Message\MaybeInaccessibleMessage;
+use Longman\TelegramBot\Entities\MessageOrigin\Factory as MessageOriginFactory;
+use Longman\TelegramBot\Entities\MessageOrigin\MessageOrigin;
 use Longman\TelegramBot\Entities\Payments\Invoice;
 use Longman\TelegramBot\Entities\Payments\SuccessfulPayment;
 use Longman\TelegramBot\Entities\TelegramPassport\PassportData;
@@ -35,20 +43,18 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                                    getDate()                                   Date the message was sent in Unix time
  * @method Chat                                   getChat()                                   Conversation the message belongs to
- * @method User                                   getForwardFrom()                            Optional. For forwarded messages, sender of the original message
- * @method Chat                                   getForwardFromChat()                        Optional. For messages forwarded from a channel, information about the original channel
- * @method int                                    getForwardFromMessageId()                   Optional. For forwarded channel posts, identifier of the original message in the channel
- * @method string                                 getForwardSignature()                       Optional. For messages forwarded from channels, signature of the post author if present
- * @method string                                 getForwardSenderName()                      Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
- * @method int                                    getForwardDate()                            Optional. For forwarded messages, date the original message was sent in Unix time
+ * @method MessageOrigin                          getForwardOrigin()                          Optional. Information about the original message for forwarded messages
  * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic
  * @method bool                                   getIsAutomaticForward()                     Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
+ * @method ExternalReplyInfo                      getExternalReply()                          Optional. Information about the message that is being replied to, which may come from another chat or forum topic
+ * @method TextQuote                              getQuote()                                  Optional. For replies that quote part of the original message, the quoted part of the message
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
  * @method int                                    getEditDate()                               Optional. Date the message was last edited in Unix time
  * @method bool                                   getHasProtectedContent()                    Optional. True, if the message can't be forwarded
  * @method string                                 getMediaGroupId()                           Optional. The unique identifier of a media message group this message belongs to
  * @method string                                 getAuthorSignature()                        Optional. Signature of the post author for messages in channels
+ * @method LinkPreviewOptions                     getLinkPreviewOptions()                     Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
  * @method MessageEntity[]                        getEntities()                               Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
  * @method MessageEntity[]                        getCaptionEntities()                        Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
  * @method Audio                                  getAudio()                                  Optional. Message is an audio file, information about the file
@@ -79,10 +85,10 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method bool                                   getChannelChatCreated()                     Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can’t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
  * @method int                                    getMigrateToChatId()                        Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
  * @method int                                    getMigrateFromChatId()                      Optional. The supergroup has been migrated from a group with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
- * @method Message                                getPinnedMessage()                          Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
+ * @method MaybeInaccessibleMessage               getPinnedMessage()                          Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  * @method Invoice                                getInvoice()                                Optional. Message is an invoice for a payment, information about the invoice.
  * @method SuccessfulPayment                      getSuccessfulPayment()                      Optional. Message is a service message about a successful payment, information about the payment.
- * @method UserShared                             getUserShared()                             Optional. Service message: a user was shared with the bot
+ * @method UsersShared                            getUsersShared()                            Optional. Service message: users were shared with the bot
  * @method ChatShared                             getChatShared()                             Optional. Service message: a chat was shared with the bot
  * @method string                                 getConnectedWebsite()                       Optional. The domain name of the website on which the user has logged in.
  * @method WriteAccessAllowed                     getWriteAccessAllowed()                     Optional. Service message: the user allowed the bot added to the attachment menu to write messages
@@ -94,6 +100,10 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method ForumTopicReopened                     getForumTopicReopened()                     Optional. Service message: forum topic reopened
  * @method GeneralForumTopicHidden                getGeneralForumTopicHidden()                Optional. Service message: the 'General' forum topic hidden
  * @method GeneralForumTopicUnhidden              getGeneralForumTopicUnhidden()              Optional. Service message: the 'General' forum topic unhidden
+ * @method GiveawayCreated                        getGiveawayCreated()                        Optional. Service message: a scheduled giveaway was created
+ * @method Giveaway                               getGiveaway()                               Optional. The message is a scheduled giveaway message
+ * @method GiveawayWinners                        getGiveawayWinners()                        Optional. A giveaway with public winners was completed
+ * @method GiveawayCompleted                      getGiveawayCompleted()                      Optional. Service message: a giveaway without public winners was completed
  * @method VideoChatScheduled                     getVideoChatScheduled()                     Optional. Service message: voice chat scheduled
  * @method VideoChatStarted                       getVideoChatStarted()                       Optional. Service message: voice chat started
  * @method VideoChatEnded                         getVideoChatEnded()                         Optional. Service message: voice chat ended
@@ -101,7 +111,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method WebAppData                             getWebAppData()                             Optional. Service message: data sent by a Web App
  * @method InlineKeyboard                         getReplyMarkup()                            Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
  */
-class Message extends Entity
+class Message extends Entity implements MaybeInaccessibleMessage
 {
     /**
      * {@inheritdoc}
@@ -112,10 +122,12 @@ class Message extends Entity
             'from'                              => User::class,
             'sender_chat'                       => Chat::class,
             'chat'                              => Chat::class,
-            'forward_from'                      => User::class,
-            'forward_from_chat'                 => Chat::class,
+            'forward_origin'                    => MessageOriginFactory::class,
             'reply_to_message'                  => ReplyToMessage::class,
+            'external_reply'                    => ExternalReplyInfo::class,
+            'quote'                             => TextQuote::class,
             'via_bot'                           => User::class,
+            'link_preview_options'              => LinkPreviewOptions::class,
             'entities'                          => [MessageEntity::class],
             'animation'                         => Animation::class,
             'audio'                             => Audio::class,
@@ -137,10 +149,10 @@ class Message extends Entity
             'left_chat_member'                  => User::class,
             'new_chat_photo'                    => [PhotoSize::class],
             'message_auto_delete_timer_changed' => MessageAutoDeleteTimerChanged::class,
-            'pinned_message'                    => __CLASS__,
+            'pinned_message'                    => MaybeInaccessibleMessageFactory::class,
             'invoice'                           => Invoice::class,
             'successful_payment'                => SuccessfulPayment::class,
-            'user_shared'                       => UserShared::class,
+            'users_shared'                      => UsersShared::class,
             'chat_shared'                       => ChatShared::class,
             'write_access_allowed'              => WriteAccessAllowed::class,
             'passport_data'                     => PassportData::class,
@@ -151,6 +163,10 @@ class Message extends Entity
             'forum_topic_reopened'              => ForumTopicReopened::class,
             'general_forum_topic_hidden'        => GeneralForumTopicHidden::class,
             'general_forum_topic_unhidden'      => GeneralForumTopicUnhidden::class,
+            'giveaway_created'                  => GiveawayCreated::class,
+            'giveaway'                          => Giveaway::class,
+            'giveaway_winners'                  => GiveawayWinners::class,
+            'giveaway_completed'                => GiveawayCompleted::class,
             'video_chat_scheduled'              => VideoChatScheduled::class,
             'video_chat_started'                => VideoChatStarted::class,
             'video_chat_ended'                  => VideoChatEnded::class,
@@ -286,7 +302,7 @@ class Message extends Entity
             'pinned_message',
             'invoice',
             'successful_payment',
-            'user_shared',
+            'users_shared',
             'chat_shared',
             'write_access_allowed',
             'passport_data',

@@ -35,7 +35,9 @@ use Throwable;
  * @method static ServerResponse logOut()                                     Use this method to log out from the cloud Bot API server before launching the bot locally. Requires no parameters. Returns True on success.
  * @method static ServerResponse close()                                      Use this method to close the bot instance before moving it from one local server to another. Requires no parameters. Returns True on success.
  * @method static ServerResponse forwardMessage(array $data)                  Use this method to forward messages of any kind. On success, the sent Message is returned.
+ * @method static ServerResponse forwardMessages(array $data)                 Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned.
  * @method static ServerResponse copyMessage(array $data)                     Use this method to copy messages of any kind. The method is analogous to the method forwardMessages, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
+ * @method static ServerResponse copyMessages(array $data)                    Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.
  * @method static ServerResponse sendPhoto(array $data)                       Use this method to send photos. On success, the sent Message is returned.
  * @method static ServerResponse sendAudio(array $data)                       Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
  * @method static ServerResponse sendDocument(array $data)                    Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
@@ -53,6 +55,7 @@ use Throwable;
  * @method static ServerResponse sendPoll(array $data)                        Use this method to send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
  * @method static ServerResponse sendDice(array $data)                        Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent Message is returned.
  * @method static ServerResponse sendChatAction(array $data)                  Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
+ * @method static ServerResponse setMessageReaction(array $data)              Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.
  * @method static ServerResponse getUserProfilePhotos(array $data)            Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
  * @method static ServerResponse getFile(array $data)                         Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
  * @method static ServerResponse banChatMember(array $data)                   Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
@@ -98,6 +101,7 @@ use Throwable;
  * @method static ServerResponse unpinAllGeneralForumTopicMessages(array $data) Use this method to clear the list of pinned messages in a General forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
+ * @method static ServerResponse getUserChatBoosts(array $data)               Use this method to get the list of boosts added to a chat by a user. Requires administrator rights in the chat. Returns a UserChatBoosts object.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
  * @method static ServerResponse deleteMyCommands(array $data)                Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
  * @method static ServerResponse getMyCommands(array $data)                   Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
@@ -117,6 +121,7 @@ use Throwable;
  * @method static ServerResponse editMessageReplyMarkup(array $data)          Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse stopPoll(array $data)                        Use this method to stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.
  * @method static ServerResponse deleteMessage(array $data)                   Use this method to delete a message, including service messages, with certain limitations. Returns True on success.
+ * @method static ServerResponse deleteMessages(array $data)                  Use this method to delete multiple messages simultaneously. If some of the specified messages can't be found, they are skipped. Returns True on success.
  * @method static ServerResponse getStickerSet(array $data)                   Use this method to get a sticker set. On success, a StickerSet object is returned.
  * @method static ServerResponse getCustomEmojiStickers(array $data)          Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
  * @method static ServerResponse uploadStickerFile(array $data)               Use this method to upload a .png file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
@@ -211,7 +216,9 @@ class Request
         'close',
         'sendMessage',
         'forwardMessage',
+        'forwardMessages',
         'copyMessage',
+        'copyMessages',
         'sendPhoto',
         'sendAudio',
         'sendDocument',
@@ -229,6 +236,7 @@ class Request
         'sendPoll',
         'sendDice',
         'sendChatAction',
+        'setMessageReaction',
         'getUserProfilePhotos',
         'getFile',
         'banChatMember',
@@ -274,6 +282,7 @@ class Request
         'unpinAllGeneralForumTopicMessages',
         'answerCallbackQuery',
         'answerInlineQuery',
+        'getUserChatBoosts',
         'setMyCommands',
         'deleteMyCommands',
         'getMyCommands',
@@ -293,6 +302,7 @@ class Request
         'editMessageReplyMarkup',
         'stopPoll',
         'deleteMessage',
+        'deleteMessages',
         'getStickerSet',
         'getCustomEmojiStickers',
         'uploadStickerFile',
@@ -937,7 +947,9 @@ class Request
             $limited_methods = [
                 'sendMessage',
                 'forwardMessage',
+                'forwardMessages',
                 'copyMessage',
+                'copyMessages',
                 'sendPhoto',
                 'sendAudio',
                 'sendDocument',
@@ -954,6 +966,7 @@ class Request
                 'sendContact',
                 'sendPoll',
                 'sendDice',
+                'setMessageReaction',
                 'sendInvoice',
                 'sendGame',
                 'setGameScore',
@@ -964,6 +977,8 @@ class Request
                 'editMessageMedia',
                 'editMessageReplyMarkup',
                 'stopPoll',
+                'deleteMessage',
+                'deleteMessages',
                 'setChatTitle',
                 'setChatDescription',
                 'setChatStickerSet',

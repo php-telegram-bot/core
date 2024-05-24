@@ -11,8 +11,11 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\ReactionType\Factory as ReactionTypeFactory;
+use Longman\TelegramBot\Entities\ReactionType\ReactionType;
+
 /**
- * Class Chat
+ * This object represents a chat.
  *
  * @link https://core.telegram.org/bots/api#chat
  *
@@ -25,8 +28,13 @@ namespace Longman\TelegramBot\Entities;
  * @method string          getFirstName()                          Optional. First name of the other party in a private chat
  * @method string          getLastName()                           Optional. Last name of the other party in a private chat
  * @method bool            getIsForum()                            Optional. True, if the supergroup chat is a forum (has topics enabled)
+ * @method int             getAccentColorId()                      Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details.
  * @method ChatPhoto       getPhoto()                              Optional. Chat photo. Returned only in getChat.
  * @method string[]        getActiveUsernames()                    Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
+ * @method ReactionType[]  getAvailableReactions()                 Optional. List of available reactions allowed in the chat. If omitted, then all emoji reactions are allowed. Returned only in getChat.
+ * @method string          getBackgroundCustomEmojiId()            Optional. Custom emoji identifier of the emoji chosen by the chat for the reply header and link preview background
+ * @method int             getProfileAccentColorId()               Optional. Identifier of the accent color for the chat's profile background. See profile accent colors for more details.
+ * @method string          getProfileBackgroundCustomEmojiId()     Optional. Custom emoji identifier of the emoji chosen by the chat for its profile background
  * @method string          getEmojiStatusCustomEmojiId()           Optional. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in getChat.
  * @method int             getEmojiStatusExpirationDate()          Optional. Expiration date of the emoji status of the other party in a private chat in Unix time, if any. Returned only in getChat.
  * @method string          getBio()                                Optional. Bio of the other party in a private chat. Returned only in getChat.
@@ -43,6 +51,7 @@ namespace Longman\TelegramBot\Entities;
  * @method bool            getHasAggressiveAntiSpamEnabled()       Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators. Returned only in getChat.
  * @method bool            getHasHiddenMembers()                   Optional. True, if non-administrators can only get the list of bots and administrators in the chat. Returned only in getChat.
  * @method bool            getHasProtectedContent()                Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
+ * @method bool            getHasVisibleHistory()                  Optional. True, if new chat members will have access to old messages; available only to chat administrators
  * @method string          getStickerSetName()                     Optional. For supergroups, name of group sticker set. Returned only in getChat.
  * @method bool            getCanSetStickerSet()                   Optional. True, if the bot can change the group sticker set. Returned only in getChat.
  * @method int             getLinkedChatId()                       Optional. Unique identifier for the linked chat. Returned only in getChat.
@@ -56,14 +65,15 @@ class Chat extends Entity
     protected function subEntities(): array
     {
         return [
-            'photo'          => ChatPhoto::class,
-            'pinned_message' => Message::class,
-            'permissions'    => ChatPermissions::class,
-            'location'       => ChatLocation::class,
+            'photo'               => ChatPhoto::class,
+            'available_reactions' => [ReactionTypeFactory::class],
+            'pinned_message'      => Message::class,
+            'permissions'         => ChatPermissions::class,
+            'location'            => ChatLocation::class,
         ];
     }
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         parent::__construct($data);
 
