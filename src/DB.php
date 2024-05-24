@@ -78,7 +78,7 @@ class DB
         array $credentials,
         Telegram $telegram,
         $table_prefix = '',
-        $encoding = 'utf8mb4'
+        $encoding = 'utf8mb4',
     ): PDO {
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
@@ -127,7 +127,7 @@ class DB
     public static function externalInitialize(
         PDO $external_pdo_connection,
         Telegram $telegram,
-        string $table_prefix = ''
+        string $table_prefix = '',
     ): PDO {
         if ($external_pdo_connection === null) {
             throw new TelegramException('MySQL external connection not provided!');
@@ -300,12 +300,12 @@ class DB
     /**
      * Convert array of Entity items to a JSON array
      *
-     * @todo Find a better way, as json_* functions are very heavy
-     *
      * @param array $entities
      * @param mixed $default
      *
      * @return mixed
+     * @todo Find a better way, as json_* functions are very heavy
+     *
      */
     public static function entitiesArrayToJson(array $entities, $default = null)
     {
@@ -346,7 +346,7 @@ class DB
         ?string $chat_member_updated_id = null,
         ?string $chat_join_request_id = null,
         ?string $chat_boost_updated_id = null,
-        ?string $chat_boost_removed_id = null
+        ?string $chat_boost_removed_id = null,
     ): ?bool {
         if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $message_reaction_id === null && $message_reaction_count_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null && $my_chat_member_updated_id === null && $chat_member_updated_id === null && $chat_join_request_id === null && $chat_boost_updated_id === null && $chat_boost_removed_id === null) {
             throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, message_reaction_id, message_reaction_count_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id, my_chat_member_updated_id, chat_member_updated_id, chat_join_request_id, chat_boost_updated_id, chat_boost_removed_id are all null');
@@ -539,12 +539,12 @@ class DB
     /**
      * Insert request into database
      *
-     * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
-     *
      * @param Update $update
      *
      * @return bool
      * @throws TelegramException
+     * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
+     *
      */
     public static function insertRequest(Update $update): bool
     {
@@ -640,7 +640,7 @@ class DB
             $chat_member_updated_id,
             $chat_join_request_id,
             $chat_boost_updated_id,
-            $chat_boost_removed_id
+            $chat_boost_removed_id,
         );
     }
 
@@ -1322,7 +1322,7 @@ class DB
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
-                    `pinned_message`, `invoice`, `successful_payment`, `user_shared`, `chat_shared`, `connected_website`, `write_access_allowed`, `passport_data`, `proximity_alert_triggered`,
+                    `pinned_message`, `invoice`, `successful_payment`, `users_shared`, `chat_shared`, `connected_website`, `write_access_allowed`, `passport_data`, `proximity_alert_triggered`,
                     `forum_topic_created`, `forum_topic_edited`, `forum_topic_closed`, `forum_topic_reopened`, `general_forum_topic_hidden`, `general_forum_topic_unhidden`,
                     `video_chat_scheduled`, `video_chat_started`, `video_chat_ended`, `video_chat_participants_invited`, `web_app_data`, `reply_markup`
                 ) VALUES (
@@ -1333,7 +1333,7 @@ class DB
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
-                    :pinned_message, :invoice, :successful_payment, :user_shared, :chat_shared, :connected_website, :write_access_allowed, :passport_data, :proximity_alert_triggered,
+                    :pinned_message, :invoice, :successful_payment, :users_shared, :chat_shared, :connected_website, :write_access_allowed, :passport_data, :proximity_alert_triggered,
                     :forum_topic_created, :forum_topic_edited, :forum_topic_closed, :forum_topic_reopened, :general_forum_topic_hidden, :general_forum_topic_unhidden,
                     :video_chat_scheduled, :video_chat_started, :video_chat_ended, :video_chat_participants_invited, :web_app_data, :reply_markup
                 )
@@ -1411,7 +1411,7 @@ class DB
             $sth->bindValue(':pinned_message', $message->getPinnedMessage());
             $sth->bindValue(':invoice', $message->getInvoice());
             $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
-            $sth->bindValue(':user_shared', $message->getUserShared());
+            $sth->bindValue(':users_shared', $message->getUsersShared());
             $sth->bindValue(':chat_shared', $message->getChatShared());
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
             $sth->bindValue(':write_access_allowed', $message->getWriteAccessAllowed());
