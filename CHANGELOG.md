@@ -5,14 +5,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased]
+- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- [:exclamation:][unreleased-bc-minimum-php-81] PHP 8.1+ required!
 ### Added
+- Bot API 7.0 (@noplanman, @TiiFuchs) (#1459)
 ### Changed
-BC
-    Renamed the class KeyboardButtonRequestUser to KeyboardButtonRequestUsers.
-    Renamed the field request_user to request_users in KeyboardButton.
-    Renamed DB field message.user_shared to message.users_shared.
-
+- [:exclamation:][unreleased-bc-user-to-users] Various fields have been pluralised from "user" to "users".
 ### Deprecated
 ### Removed
 ### Fixed
@@ -639,6 +637,9 @@ BC
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.82.0-unreleased.sql
+[unreleased-bc-unreleased-bc-minimum-php-81]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-81
+[unreleased-bc-unreleased-bc-user-to-users]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#user-to-users
 [0.82.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.81.0-0.82.0.sql
 [0.81.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.80.0-0.81.0.sql
 [0.80.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.79.0-0.80.0.sql
