@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:exclamation:][unreleased-bc-minimum-php-81] PHP 8.1+ required!
 ### Added
 - Bot API 7.0 (@noplanman, @TiiFuchs) (#1459)
+- Bot API 7.1 (@noplanman)
 ### Changed
 - [:exclamation:][unreleased-bc-user-to-users] Various fields have been pluralised from "user" to "users".
 ### Deprecated

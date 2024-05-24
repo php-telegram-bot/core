@@ -60,7 +60,10 @@ CREATE TABLE IF NOT EXISTS `chat_boost_removed` (
 ALTER TABLE `message`
     ADD COLUMN `external_reply`       TEXT NULL DEFAULT NULL COMMENT 'Optional. Information about the message that is being replied to, which may come from another chat or forum topic' AFTER `reply_to_message`,
     ADD COLUMN `link_preview_options` TEXT NULL DEFAULT NULL COMMENT 'Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed' AFTER `via_bot`,
-    CHANGE COLUMN `user_shared` `users_shared` TEXT;
+    CHANGE COLUMN `user_shared` `users_shared` TEXT,
+    ADD COLUMN `boost_added` TEXT NULL COMMENT 'Service message: user boosted the chat' AFTER `proximity_alert_triggered`,
+    ADD COLUMN `quote` TEXT NULL DEFAULT NULL COMMENT 'Optional. For replies that quote part of the original message, the quoted part of the message' AFTER `external_reply`,
+    ADD COLUMN `reply_to_story` TEXT NULL DEFAULT NULL COMMENT 'Optional. For replies to a story, the original story' AFTER `quote`;
 
 ALTER TABLE `telegram_update`
     ADD COLUMN `message_reaction_id`       bigint UNSIGNED DEFAULT NULL COMMENT 'A reaction to a message was changed by a user' AFTER `edited_channel_post_id`,
