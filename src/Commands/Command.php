@@ -418,10 +418,16 @@ abstract class Command
     public function replyToChat(string $text, array $data = []): ServerResponse
     {
         if ($message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost()) {
-            return Request::sendMessage(array_merge([
+            $reply = [
                 'chat_id' => $message->getChat()->getId(),
                 'text'    => $text,
-            ], $data));
+            ];
+            
+            if ($message->getIsTopicMessage()) {
+                $reply['message_thread_id'] = $message->getMessageThreadId();
+            }
+            
+            return Request::sendMessage(array_merge($reply, $data));
         }
 
         return Request::emptyResponse();
