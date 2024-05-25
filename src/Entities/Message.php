@@ -38,8 +38,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @link https://core.telegram.org/bots/api#message
  *
  * @method int                                    getMessageId()                              Unique message identifier
- * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs;
-for supergroups only
+ * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
  * @method User                                   getFrom()                                   Optional. Sender, can be empty for messages sent to channels
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                                    getSenderBoostCount()                       Optional. If the sender of the message boosted the chat, the number of boosts added by the user
