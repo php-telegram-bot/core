@@ -1315,25 +1315,25 @@ class DB
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                    `id`, `user_id`, `chat_id`, `message_thread_id`, `sender_chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
+                    `id`, `user_id`, `chat_id`, `message_thread_id`, `sender_chat_id`, `sender_boost_count`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
                     `forward_signature`, `forward_sender_name`, `forward_date`, `is_topic_message`,
-                    `reply_to_chat`, `reply_to_message`, `external_reply`, `via_bot`, `link_preview_options`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
+                    `reply_to_chat`, `reply_to_message`, `external_reply`, `quote`, `reply_to_story`, `via_bot`, `link_preview_options`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
                     `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `story`, `video`, `voice`, `video_note`, `caption`, `has_media_spoiler`, `contact`,
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
-                    `pinned_message`, `invoice`, `successful_payment`, `users_shared`, `chat_shared`, `connected_website`, `write_access_allowed`, `passport_data`, `proximity_alert_triggered`,
+                    `pinned_message`, `invoice`, `successful_payment`, `users_shared`, `chat_shared`, `connected_website`, `write_access_allowed`, `passport_data`, `proximity_alert_triggered`, `boost_added`,
                     `forum_topic_created`, `forum_topic_edited`, `forum_topic_closed`, `forum_topic_reopened`, `general_forum_topic_hidden`, `general_forum_topic_unhidden`,
                     `video_chat_scheduled`, `video_chat_started`, `video_chat_ended`, `video_chat_participants_invited`, `web_app_data`, `reply_markup`
                 ) VALUES (
-                    :message_id, :user_id, :chat_id, :message_thread_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
+                    :message_id, :user_id, :chat_id, :message_thread_id, :sender_chat_id, :sender_boost_count, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
                     :forward_signature, :forward_sender_name, :forward_date, :is_topic_message,
-                    :reply_to_chat, :reply_to_message, :external_reply, :via_bot, :link_preview_options, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
+                    :reply_to_chat, :reply_to_message, :external_reply, :quote, :reply_to_story, :via_bot, :link_preview_options, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
                     :audio, :document, :animation, :game, :photo, :sticker, :story, :video, :voice, :video_note, :caption, :has_media_spoiler, :contact,
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
-                    :pinned_message, :invoice, :successful_payment, :users_shared, :chat_shared, :connected_website, :write_access_allowed, :passport_data, :proximity_alert_triggered,
+                    :pinned_message, :invoice, :successful_payment, :users_shared, :chat_shared, :connected_website, :write_access_allowed, :passport_data, :proximity_alert_triggered, :boost_added,
                     :forum_topic_created, :forum_topic_edited, :forum_topic_closed, :forum_topic_reopened, :general_forum_topic_hidden, :general_forum_topic_unhidden,
                     :video_chat_scheduled, :video_chat_started, :video_chat_ended, :video_chat_participants_invited, :web_app_data, :reply_markup
                 )
@@ -1355,6 +1355,7 @@ class DB
             $sth->bindValue(':sender_chat_id', $sender_chat_id);
             $sth->bindValue(':message_thread_id', $message->getMessageThreadId());
             $sth->bindValue(':user_id', $user_id);
+            $sth->bindValue(':sender_boost_count', $message->getSenderBoostCount());
             $sth->bindValue(':date', $date);
             $sth->bindValue(':forward_from', $forward_from);
             $sth->bindValue(':forward_from_chat', $forward_from_chat);
@@ -1372,6 +1373,8 @@ class DB
             $sth->bindValue(':reply_to_message', $reply_to_message_id);
             $sth->bindValue(':external_reply', $message->getExternalReply());
 
+            $sth->bindValue(':quote', $message->getQuote());
+            $sth->bindValue(':reply_to_story', $message->getReplyToStory());
             $sth->bindValue(':via_bot', $via_bot_id);
             $sth->bindValue(':link_preview_options', $message->getLinkPreviewOptions());
             $sth->bindValue(':edit_date', self::getTimestamp($message->getEditDate()));
@@ -1417,6 +1420,7 @@ class DB
             $sth->bindValue(':write_access_allowed', $message->getWriteAccessAllowed());
             $sth->bindValue(':passport_data', $message->getPassportData());
             $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
+            $sth->bindValue(':boost_added', $message->getBoostAdded());
             $sth->bindValue(':forum_topic_created', $message->getForumTopicCreated());
             $sth->bindValue(':forum_topic_edited', $message->getForumTopicEdited());
             $sth->bindValue(':forum_topic_closed', $message->getForumTopicClosed());

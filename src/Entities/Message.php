@@ -38,9 +38,11 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @link https://core.telegram.org/bots/api#message
  *
  * @method int                                    getMessageId()                              Unique message identifier
- * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
+ * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs;
+for supergroups only
  * @method User                                   getFrom()                                   Optional. Sender, can be empty for messages sent to channels
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
+ * @method int                                    getSenderBoostCount()                       Optional. If the sender of the message boosted the chat, the number of boosts added by the user
  * @method int                                    getDate()                                   Date the message was sent in Unix time
  * @method Chat                                   getChat()                                   Conversation the message belongs to
  * @method MessageOrigin                          getForwardOrigin()                          Optional. Information about the original message for forwarded messages
@@ -49,6 +51,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method ExternalReplyInfo                      getExternalReply()                          Optional. Information about the message that is being replied to, which may come from another chat or forum topic
  * @method TextQuote                              getQuote()                                  Optional. For replies that quote part of the original message, the quoted part of the message
+ * @method Story                                  getReplyToStory()                           Optional. For replies to a story, the original story
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
  * @method int                                    getEditDate()                               Optional. Date the message was last edited in Unix time
  * @method bool                                   getHasProtectedContent()                    Optional. True, if the message can't be forwarded
@@ -94,6 +97,7 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method WriteAccessAllowed                     getWriteAccessAllowed()                     Optional. Service message: the user allowed the bot added to the attachment menu to write messages
  * @method PassportData                           getPassportData()                           Optional. Telegram Passport data
  * @method ProximityAlertTriggered                getProximityAlertTriggered()                Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+ * @method ChatBoostAdded                         getBoostAdded()                             Optional. Service message: user boosted the chat
  * @method ForumTopicCreated                      getForumTopicCreated()                      Optional. Service message: forum topic created
  * @method ForumTopicEdited                       getForumTopicEdited()                       Optional. Service message: forum topic edited
  * @method ForumTopicClosed                       getForumTopicClosed()                       Optional. Service message: forum topic closed
@@ -126,6 +130,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
             'reply_to_message'                  => ReplyToMessage::class,
             'external_reply'                    => ExternalReplyInfo::class,
             'quote'                             => TextQuote::class,
+            'reply_to_story'                    => Story::class,
             'via_bot'                           => User::class,
             'link_preview_options'              => LinkPreviewOptions::class,
             'entities'                          => [MessageEntity::class],
@@ -157,6 +162,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
             'write_access_allowed'              => WriteAccessAllowed::class,
             'passport_data'                     => PassportData::class,
             'proximity_alert_triggered'         => ProximityAlertTriggered::class,
+            'boost_added'                       => ChatBoostAdded::class,
             'forum_topic_created'               => ForumTopicCreated::class,
             'forum_topic_edited'                => ForumTopicEdited::class,
             'forum_topic_closed'                => ForumTopicClosed::class,
@@ -188,7 +194,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
             return null;
         }
 
-        $no_EOL = strtok($text, PHP_EOL);
+        $no_EOL   = strtok($text, PHP_EOL);
         $no_space = strtok($text, ' ');
 
         //try to understand which separator \n or space divide /command from text
@@ -214,7 +220,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
 
         //check if command is followed by bot username
         $split_cmd = explode('@', $full_command);
-        if (! isset($split_cmd[1])) {
+        if (!isset($split_cmd[1])) {
             //command is not followed by name
             return $full_command;
         }
@@ -230,7 +236,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
     /**
      * For text messages, the actual UTF-8 text of the message, 0-4096 characters.
      *
-     * @param  bool  $without_cmd
+     * @param bool $without_cmd
      *
      * @return string|null
      */
@@ -307,6 +313,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
             'write_access_allowed',
             'passport_data',
             'proximity_alert_triggered',
+            'boost_added',
             'forum_topic_created',
             'forum_topic_edited',
             'forum_topic_closed',
