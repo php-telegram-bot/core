@@ -1273,15 +1273,21 @@ class DB
         }
 
         // Insert the forwarded message user in users table
-        $forward_date = $message->getForwardDate() ? self::getTimestamp($message->getForwardDate()) : null;
+        $forward_date = $message->getForwardDate() ? self::getTimestamp($message->getForwardOrigin()->getDate()) : null;
 
-        if ($forward_from = $message->getForwardFrom()) {
-            self::insertUser($forward_from);
-            $forward_from = $forward_from->getId();
+        $forward_origin = $message->getForwardOrigin();
+        if($forward_origin instanceof MessageOriginUser){
+            self::insertUser($forward_origin->getUser());
+            $forward_from = $forward_origin->getUser()->getId();
         }
-        if ($forward_from_chat = $message->getForwardFromChat()) {
-            self::insertChat($forward_from_chat);
-            $forward_from_chat = $forward_from_chat->getId();
+        if($forward_origin instanceof MessageOriginChat){
+            self::insertChat($forward_origin->getChat());
+            $forward_from_chat = $forward_origin->getChat()->getId();
+        }
+        if($forward_origin instanceof MessageOriginChannel){
+            self::insertChat($forward_origin->getChat());
+            $forward_from_chat = $forward_origin->getChat()->getId();
+
         }
 
         $via_bot_id = null;
