@@ -21,6 +21,10 @@ use Longman\TelegramBot\Entities\ChatMemberUpdated;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginChannel;
+use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginChat;
+use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginHiddenUser;
+use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginUser;
 use Longman\TelegramBot\Entities\MessageReactionCountUpdated;
 use Longman\TelegramBot\Entities\MessageReactionUpdated;
 use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
@@ -1273,21 +1277,31 @@ class DB
         }
 
         // Insert the forwarded message user in users table
-        $forward_date = $message->getForwardDate() ? self::getTimestamp($message->getForwardOrigin()->getDate()) : null;
+        $forward_from = null;
+        $forward_from_chat = null;
+        $forward_from_message_id = null;
+        $forward_signature = null;
+        $forward_sender_name = null;
+        $forward_date = null;
 
-        $forward_origin = $message->getForwardOrigin();
-        if($forward_origin instanceof MessageOriginUser){
-            self::insertUser($forward_origin->getUser());
-            $forward_from = $forward_origin->getUser()->getId();
-        }
-        if($forward_origin instanceof MessageOriginChat){
-            self::insertChat($forward_origin->getChat());
-            $forward_from_chat = $forward_origin->getChat()->getId();
-        }
-        if($forward_origin instanceof MessageOriginChannel){
-            self::insertChat($forward_origin->getChat());
-            $forward_from_chat = $forward_origin->getChat()->getId();
+        if ($forward_origin = $message->getForwardOrigin()) {
+            $forward_date = self::getTimestamp($forward_origin->getDate());
 
+            if ($forward_origin instanceof MessageOriginUser) {
+                self::insertUser($forward_origin->getSenderUser());
+                $forward_from = $forward_origin->getSenderUser()->getId();
+            } elseif ($forward_origin instanceof MessageOriginHiddenUser) {
+                $forward_sender_name = $forward_origin->getSenderUserName();
+            } elseif ($forward_origin instanceof MessageOriginChat) {
+                self::insertChat($forward_origin->getChat());
+                $forward_from_chat = $forward_origin->getChat()->getId();
+                $forward_signature = $forward_origin->getAuthorSignature();
+            } elseif ($forward_origin instanceof MessageOriginChannel) {
+                self::insertChat($forward_origin->getChat());
+                $forward_from_chat = $forward_origin->getChat()->getId();
+                $forward_from_message_id = $forward_origin->getMessageId();
+                $forward_signature = $forward_origin->getAuthorSignature();
+            }
         }
 
         $via_bot_id = null;
@@ -1365,9 +1379,9 @@ class DB
             $sth->bindValue(':date', $date);
             $sth->bindValue(':forward_from', $forward_from);
             $sth->bindValue(':forward_from_chat', $forward_from_chat);
-            $sth->bindValue(':forward_from_message_id', $message->getForwardFromMessageId());
-            $sth->bindValue(':forward_signature', $message->getForwardSignature());
-            $sth->bindValue(':forward_sender_name', $message->getForwardSenderName());
+            $sth->bindValue(':forward_from_message_id', $forward_from_message_id);
+            $sth->bindValue(':forward_signature', $forward_signature);
+            $sth->bindValue(':forward_sender_name', $forward_sender_name);
             $sth->bindValue(':forward_date', $forward_date);
             $sth->bindValue(':is_topic_message', $message->getIsTopicMessage());
 
