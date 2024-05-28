@@ -410,6 +410,10 @@ class Request
      */
     public static function setCustomBotApiUri(string $api_base_uri, string $api_base_download_uri = ''): void
     {
+        if (self::$client) {
+            throw new TelegramException('setCustomBotApiUri() needs to be called before the Telegram object gets instantiated.');
+        }
+
         self::$api_base_uri = $api_base_uri;
         if ($api_base_download_uri !== '') {
             self::$api_base_download_uri = $api_base_download_uri;
