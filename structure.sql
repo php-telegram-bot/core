@@ -378,6 +378,8 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   `my_chat_member_updated_id` BIGINT UNSIGNED NULL COMMENT 'The bot''s chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.',
   `chat_member_updated_id` BIGINT UNSIGNED NULL COMMENT 'A chat member''s status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.',
   `chat_join_request_id` BIGINT UNSIGNED NULL COMMENT 'A request to join the chat has been sent',
+  `chat_boost_updated_id` BIGINT UNSIGNED NULL COMMENT 'A chat boost was added or changed.',
+  `chat_boost_removed_id` BIGINT UNSIGNED NULL COMMENT 'A boost was removed from a chat.',
 
   PRIMARY KEY (`id`),
   KEY `message_id` (`message_id`),
@@ -409,7 +411,9 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   FOREIGN KEY (`poll_answer_poll_id`) REFERENCES `poll_answer` (`poll_id`),
   FOREIGN KEY (`my_chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`),
   FOREIGN KEY (`chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`),
-  FOREIGN KEY (`chat_join_request_id`) REFERENCES `chat_join_request` (`id`)
+  FOREIGN KEY (`chat_join_request_id`) REFERENCES `chat_join_request` (`id`),
+  FOREIGN KEY (`chat_boost_updated_id`) REFERENCES `chat_boost_updated` (`id`),
+  FOREIGN KEY (`chat_boost_removed_id`) REFERENCES `chat_boost_removed` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `conversation` (
