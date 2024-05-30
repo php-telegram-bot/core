@@ -69,3 +69,9 @@ ALTER TABLE `message`
 ALTER TABLE `telegram_update`
     ADD COLUMN `message_reaction_id`       bigint UNSIGNED DEFAULT NULL COMMENT 'A reaction to a message was changed by a user' AFTER `edited_channel_post_id`,
     ADD COLUMN `message_reaction_count_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Reactions to a message with anonymous reactions were changed' AFTER `message_reaction_id`;
+
+ALTER TABLE `telegram_update` ADD COLUMN `chat_boost_updated_id` BIGINT UNSIGNED NULL COMMENT 'A boost update the chat has been sent';
+ALTER TABLE `telegram_update` ADD FOREIGN KEY (`chat_boost_updated_id`) REFERENCES `chat_boost_updated` (`id`);
+
+ALTER TABLE `telegram_update` ADD COLUMN `chat_boost_removed_id` BIGINT UNSIGNED NULL COMMENT 'A boost remove from the chat has been sent';
+ALTER TABLE `telegram_update` ADD FOREIGN KEY (`chat_boost_removed_id`) REFERENCES `chat_boost_removed` (`id`);
