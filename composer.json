@@ -1,81 +1,73 @@
 {
-    "name": "longman/telegram-bot",
-    "type": "library",
-    "description": "PHP Telegram bot",
-    "keywords": ["telegram", "bot", "api"],
-    "license": "MIT",
-    "homepage": "https://github.com/php-telegram-bot/core",
-    "support": {
-        "issues": "https://github.com/php-telegram-bot/core/issues",
-        "source": "https://github.com/php-telegram-bot/core"
+  "name": "php-telegram-bot/core",
+  "type": "library",
+  "description": "PHP Telegram Bot",
+  "keywords": [
+    "telegram",
+    "bot",
+    "api"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/php-telegram-bot/core",
+  "support": {
+    "issues": "https://github.com/php-telegram-bot/core/issues",
+    "source": "https://github.com/php-telegram-bot/core"
+  },
+  "authors": [
+    {
+      "name": "Avtandil Kikabidze aka LONGMAN",
+      "email": "akalongman@gmail.com",
+      "homepage": "http://longman.me",
+      "role": "Developer"
     },
-    "authors": [
-        {
-            "name": "Avtandil Kikabidze aka LONGMAN",
-            "email": "akalongman@gmail.com",
-            "homepage": "http://longman.me",
-            "role": "Developer"
-        },
-        {
-            "name": "Armando Lüscher",
-            "email": "armando@noplanman.ch",
-            "homepage": "https://noplanman.ch",
-            "role": "Developer"
-        },
-        {
-            "name": "PHP Telegram Bot Team",
-            "homepage": "https://github.com/php-telegram-bot/core/graphs/contributors",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^8.1",
-        "ext-pdo": "*",
-        "ext-curl": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "psr/log": "^1.1|^2.0|^3.0",
-        "guzzlehttp/guzzle": "^6.0|^7.0"
+    {
+      "name": "Armando Lüscher",
+      "email": "armando@noplanman.ch",
+      "homepage": "https://noplanman.ch",
+      "role": "Developer"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.6",
-        "dms/phpunit-arraysubset-asserts": "^0.2",
-        "monolog/monolog": "^2.1"
+    {
+      "name": "Tii",
+      "email": "mail@tii.one",
+      "role": "Developer"
     },
-    "autoload": {
-        "psr-4": {
-            "Longman\\TelegramBot\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Longman\\TelegramBot\\Tests\\Unit\\": "tests/Unit"
-        }
-    },
-    "scripts": {
-        "check-code": [
-            "\"vendor/bin/phpcs\""
-        ],
-        "test": [
-            "\"vendor/bin/phpunit\""
-        ],
-        "test-cov": [
-            "XDEBUG_MODE=coverage \"vendor/bin/phpunit\" --coverage-clover clover.xml"
-        ],
-        "test-cov-upload": [
-            "@php ocular.phar code-coverage:upload --format=php-clover clover.xml"
-        ]
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "process-timeout": 3600
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.83.x-dev"
-        }
+    {
+      "name": "PHP Telegram Bot Team",
+      "homepage": "https://github.com/php-telegram-bot/core/graphs/contributors",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^8.1",
+    "php-http/discovery": "^1.17",
+    "php-http/multipart-stream-builder": "^1.3",
+    "psr/http-client": "*",
+    "psr/http-client-implementation": "*",
+    "psr/http-message": "*"
+  },
+  "require-dev": {
+    "guzzlehttp/psr7": "^2.6",
+    "laravel/pint": "^1.16",
+    "php-http/guzzle7-adapter": "^1.0",
+    "spatie/ray": "^1.41"
+  },
+  "autoload": {
+    "psr-4": {
+      "PhpTelegramBot\\Core\\": "src"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "process-timeout": 3600,
+    "allow-plugins": {
+      "php-http/discovery": false
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "1.x-dev"
+    }
+  }
 }
