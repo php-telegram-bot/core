@@ -19,7 +19,7 @@
     <img src="logo.png" alt="Php Telegram Bot Logo" width="128" height="128">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">PHP Telegram Bot</h3>
 
   <p align="center">
     A Telegram Bot based on the official <a href="https://core.telegram.org/bots/api">Telegram Bot API</a>
@@ -61,6 +61,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 _TODO_
@@ -70,6 +71,7 @@ _TODO_
 
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 _TODO_
@@ -87,6 +89,7 @@ _TODO_
 
 
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 _TODO_
@@ -96,9 +99,10 @@ _TODO_
 
 
 <!-- ROADMAP -->
+
 ## Roadmap
 
-- [ ] Adding Telegram Types 
+- [ ] Adding Telegram Types
 - [ ] Adding base functionality to call API Methods
 - [ ] Adding base functionality to receive Updates
 - [ ] ...
@@ -108,11 +112,14 @@ _TODO_
 
 
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also
+simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -126,6 +133,7 @@ Don't forget to give the project a star! Thanks again!
 
 
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
@@ -135,6 +143,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 
 <!-- CONTACT -->
+
 ## Contact
 
 Tii - [@Tii@chaos.social](https://chaos.social/@Tii)
@@ -146,6 +155,7 @@ Project Link: [https://github.com/php-telegram-bot/core](https://github.com/php-
 
 
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
 * Big Thanks to [Avtandil Kikabidze aka LONGMAN](https://github.com/akalongman), who created this library
@@ -156,13 +166,23 @@ Project Link: [https://github.com/php-telegram-bot/core](https://github.com/php-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/php-telegram-bot/core.svg?style=for-the-badge
+
 [contributors-url]: https://github.com/php-telegram-bot/core/graphs/contributors
+
 [forks-shield]: https://img.shields.io/github/forks/php-telegram-bot/core.svg?style=for-the-badge
+
 [forks-url]: https://github.com/php-telegram-bot/core/network/members
+
 [stars-shield]: https://img.shields.io/github/stars/php-telegram-bot/core.svg?style=for-the-badge
+
 [stars-url]: https://github.com/php-telegram-bot/core/stargazers
+
 [issues-shield]: https://img.shields.io/github/issues/php-telegram-bot/core.svg?style=for-the-badge
+
 [issues-url]: https://github.com/php-telegram-bot/core/issues
+
 [license-shield]: https://img.shields.io/github/license/php-telegram-bot/core.svg?style=for-the-badge
+
 [license-url]: https://github.com/php-telegram-bot/core/blob/master/LICENSE.txt
