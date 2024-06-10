@@ -15,9 +15,9 @@ class Game extends Entity
     protected static function subEntities(): array
     {
         return [
-            'photo' => [PhotoSize::class],
+            'photo'         => [PhotoSize::class],
             'text_entities' => [MessageEntity::class],
-            'animation' => Animation::class,
+            'animation'     => Animation::class,
         ];
     }
 }

@@ -15,8 +15,8 @@ class ChatJoinRequest extends Entity
     protected static function subEntities(): array
     {
         return [
-            'chat' => Chat::class,
-            'from' => User::class,
+            'chat'        => Chat::class,
+            'from'        => User::class,
             'invite_link' => ChatInviteLink::class,
         ];
     }

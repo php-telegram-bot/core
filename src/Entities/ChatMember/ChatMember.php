@@ -25,12 +25,12 @@ class ChatMember extends Entity implements Factory
     public static function make(array $data): static
     {
         return match ($data['type']) {
-            self::TYPE_CREATOR => new ChatMemberOwner($data),
+            self::TYPE_CREATOR       => new ChatMemberOwner($data),
             self::TYPE_ADMINISTRATOR => new ChatMemberAdministrator($data),
-            self::TYPE_MEMBER => new ChatMemberMember($data),
-            self::TYPE_RESTRICTED => new ChatMemberRestricted($data),
-            self::TYPE_LEFT => new ChatMemberLeft($data),
-            self::TYPE_KICKED => new ChatMemberBanned($data),
+            self::TYPE_MEMBER        => new ChatMemberMember($data),
+            self::TYPE_RESTRICTED    => new ChatMemberRestricted($data),
+            self::TYPE_LEFT          => new ChatMemberLeft($data),
+            self::TYPE_KICKED        => new ChatMemberBanned($data),
         };
     }
 }

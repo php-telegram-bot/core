@@ -21,9 +21,9 @@ abstract class BackgroundType extends Entity implements Factory
     public static function make(array $data): static
     {
         return match ($data['type']) {
-            self::TYPE_FILL => new BackgroundTypeFill($data),
-            self::TYPE_WALLPAPER => new BackgroundTypeWallpaper($data),
-            self::TYPE_PATTERN => new BackgroundTypePattern($data),
+            self::TYPE_FILL       => new BackgroundTypeFill($data),
+            self::TYPE_WALLPAPER  => new BackgroundTypeWallpaper($data),
+            self::TYPE_PATTERN    => new BackgroundTypePattern($data),
             self::TYPE_CHAT_THEME => new BackgroundTypeChatTheme($data),
         };
     }

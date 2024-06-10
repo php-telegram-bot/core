@@ -26,7 +26,7 @@ class Telegram
 
         $response = match (true) {
             $data === null => $this->client->get($requestUri),
-            default => $this->client->postJson($requestUri, $data),
+            default        => $this->client->postJson($requestUri, $data),
         };
 
         $result = json_decode($response->getBody()->getContents(), true);

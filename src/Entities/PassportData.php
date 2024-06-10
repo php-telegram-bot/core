@@ -11,7 +11,7 @@ class PassportData extends Entity
     protected static function subEntities(): array
     {
         return [
-            'data' => [EncryptedPassportElement::class],
+            'data'        => [EncryptedPassportElement::class],
             'credentials' => EncryptedCredentials::class,
         ];
     }

@@ -17,7 +17,7 @@ class ReactionType extends Entity implements Factory
     public static function make(array $data): static
     {
         return match ($data['type']) {
-            self::TYPE_EMOJI => new ReactionTypeEmoji($data),
+            self::TYPE_EMOJI        => new ReactionTypeEmoji($data),
             self::TYPE_CUSTOM_EMOJI => new ReactionTypeCustomEmoji($data),
         };
     }

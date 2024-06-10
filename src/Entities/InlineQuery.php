@@ -15,7 +15,7 @@ class InlineQuery extends Entity
     protected static function subEntities(): array
     {
         return [
-            'from' => User::class,
+            'from'     => User::class,
             'location' => Location::class,
         ];
     }

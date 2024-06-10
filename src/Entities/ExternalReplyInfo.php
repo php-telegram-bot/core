@@ -2,6 +2,7 @@
 
 namespace PhpTelegramBot\Core\Entities;
 
+use PhpTelegramBot\Core\Contracts\AllowsBypassingGet;
 use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
 
 /**
@@ -18,7 +19,7 @@ use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
  * @method Video|null              getVideo()              Optional. Message is a video, information about the video
  * @method VideoNote|null          getVideoNote()          Optional. Message is a video note, information about the video message
  * @method Voice|null              getVoice()              Optional. Message is a voice message, information about the file
- * @method true|null               getHasMediaSpoiler()    Optional. True, if the message media is covered by a spoiler animation
+ * @method bool                    hasMediaSpoiler()       Optional. True, if the message media is covered by a spoiler animation
  * @method Contact|null            getContact()            Optional. Message is a shared contact, information about the contact
  * @method Dice|null               getDice()               Optional. Message is a dice with random value
  * @method Game|null               getGame()               Optional. Message is a game, information about the game. More about games »
@@ -29,32 +30,39 @@ use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
  * @method Poll|null               getPoll()               Optional. Message is a native poll, information about the poll
  * @method Venue|null              getVenue()              Optional. Message is a venue, information about the venue
  */
-class ExternalReplyInfo extends Entity
+class ExternalReplyInfo extends Entity implements AllowsBypassingGet
 {
     protected static function subEntities(): array
     {
         return [
-            'origin' => MessageOrigin::class,
-            'chat' => Chat::class,
+            'origin'               => MessageOrigin::class,
+            'chat'                 => Chat::class,
             'link_preview_options' => LinkPreviewOptions::class,
-            'animation' => Animation::class,
-            'audio' => Audio::class,
-            'document' => Document::class,
-            'photo' => [PhotoSize::class],
-            'sticker' => Sticker::class,
-            'story' => Story::class,
-            'video' => Video::class,
-            'video_note' => VideoNote::class,
-            'voice' => Voice::class,
-            'contact' => Contact::class,
-            'dice' => Dice::class,
-            'game' => Game::class,
-            'giveaway' => Giveaway::class,
-            'giveaway_winners' => GiveawayWinners::class,
-            'invoice' => Invoice::class,
-            'location' => Location::class,
-            'poll' => Poll::class,
-            'venue' => Venue::class,
+            'animation'            => Animation::class,
+            'audio'                => Audio::class,
+            'document'             => Document::class,
+            'photo'                => [PhotoSize::class],
+            'sticker'              => Sticker::class,
+            'story'                => Story::class,
+            'video'                => Video::class,
+            'video_note'           => VideoNote::class,
+            'voice'                => Voice::class,
+            'contact'              => Contact::class,
+            'dice'                 => Dice::class,
+            'game'                 => Game::class,
+            'giveaway'             => Giveaway::class,
+            'giveaway_winners'     => GiveawayWinners::class,
+            'invoice'              => Invoice::class,
+            'location'             => Location::class,
+            'poll'                 => Poll::class,
+            'venue'                => Venue::class,
+        ];
+    }
+
+    public static function fieldsBypassingGet(): array
+    {
+        return [
+            'has_media_spoiler' => false,
         ];
     }
 }

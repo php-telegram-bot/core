@@ -30,9 +30,9 @@ class Sticker extends Entity
     protected static function subEntities(): array
     {
         return [
-            'thumbnail' => PhotoSize::class,
+            'thumbnail'         => PhotoSize::class,
             'premium_animation' => File::class,
-            'mask_position' => MaskPosition::class,
+            'mask_position'     => MaskPosition::class,
         ];
     }
 }

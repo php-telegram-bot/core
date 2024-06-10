@@ -13,7 +13,7 @@ class ProximityAlertTriggered extends Entity
     {
         return [
             'traveler' => User::class,
-            'watcher' => User::class,
+            'watcher'  => User::class,
         ];
     }
 }

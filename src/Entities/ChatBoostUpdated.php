@@ -11,7 +11,7 @@ class ChatBoostUpdated extends Entity
     protected static function subEntities(): array
     {
         return [
-            'chat' => Chat::class,
+            'chat'  => Chat::class,
             'boost' => ChatBoost::class,
         ];
     }

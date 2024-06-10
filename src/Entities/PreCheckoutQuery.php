@@ -16,7 +16,7 @@ class PreCheckoutQuery extends Entity
     protected static function subEntities(): array
     {
         return [
-            'from' => User::class,
+            'from'       => User::class,
             'order_info' => OrderInfo::class,
         ];
     }

@@ -45,11 +45,11 @@ class EncryptedPassportElement extends Entity
     protected static function subEntities(): array
     {
         return [
-            'files' => [PassportFile::class],
-            'front_side' => PassportFile::class,
+            'files'        => [PassportFile::class],
+            'front_side'   => PassportFile::class,
             'reverse_side' => PassportFile::class,
-            'selfie' => PassportFile::class,
-            'translation' => [PassportFile::class],
+            'selfie'       => PassportFile::class,
+            'translation'  => [PassportFile::class],
         ];
     }
 }

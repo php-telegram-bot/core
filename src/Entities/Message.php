@@ -2,6 +2,7 @@
 
 namespace PhpTelegramBot\Core\Entities;
 
+use PhpTelegramBot\Core\Contracts\AllowsBypassingGet;
 use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
 
 /**
@@ -15,16 +16,16 @@ use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
  * @method string|null                        getBusinessConnectionId()          Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.
  * @method Chat                               getChat()                          Chat the message belongs to
  * @method MessageOrigin|null                 getForwardOrigin()                 Optional. Information about the original message for forwarded messages
- * @method true|null                          getIsTopicMessage()                Optional. True, if the message is sent to a forum topic
- * @method true|null                          getIsAutomaticForward()            Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
+ * @method bool                               isTopicMessage()                   Optional. True, if the message is sent to a forum topic
+ * @method bool                               isAutomaticForward()               Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method Message|null                       getReplyToMessage()                Optional. For replies in the same chat and message thread, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method ExternalReplyInfo|null             getExternalReply()                 Optional. Information about the message that is being replied to, which may come from another chat or forum topic
  * @method TextQuote|null                     getQuote()                         Optional. For replies that quote part of the original message, the quoted part of the message
  * @method Story|null                         getReplyToStory()                  Optional. For replies to a story, the original story
  * @method User|null                          getViaBot()                        Optional. Bot through which the message was sent
  * @method int|null                           getEditDate()                      Optional. Date the message was last edited in Unix time
- * @method true|null                          getHasProtectedContent()           Optional. True, if the message can't be forwarded
- * @method true|null                          getIsFromOffline()                 Optional. True, if the message was sent by an implicit action, for example, as an away or a greeting business message, or as a scheduled message
+ * @method bool                               hasProtectedContent()              Optional. True, if the message can't be forwarded
+ * @method bool                               isFromOffline()                    Optional. True, if the message was sent by an implicit action, for example, as an away or a greeting business message, or as a scheduled message
  * @method string|null                        getMediaGroupId()                  Optional. The unique identifier of a media message group this message belongs to
  * @method string|null                        getAuthorSignature()               Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
  * @method string|null                        getText()                          Optional. For text messages, the actual UTF-8 text of the message
@@ -43,7 +44,7 @@ use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
  * @method string|null                        getCaption()                       Optional. Caption for the animation, audio, document, photo, video or voice
  * @method MessageEntity[]|null               getCaptionEntities()               Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
  * @method true|null                          getShowCaptionAboveMedia()         Optional. True, if the caption must be shown above the message media
- * @method true|null                          getHasMediaSpoiler()               Optional. True, if the message media is covered by a spoiler animation
+ * @method bool                               hasMediaSpoiler()                  Optional. True, if the message media is covered by a spoiler animation
  * @method Contact|null                       getContact()                       Optional. Message is a shared contact, information about the contact
  * @method Dice|null                          getDice()                          Optional. Message is a dice with random value
  * @method Game|null                          getGame()                          Optional. Message is a game, information about the game.
@@ -89,69 +90,80 @@ use PhpTelegramBot\Core\Entities\MessageOrigin\MessageOrigin;
  * @method WebAppData|null                    getWebAppData()                    Optional. Service message: data sent by a Web App
  * @method InlineKeyboardMarkup               getReplyMarkup()                   Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
  */
-class Message extends MaybeInaccessibleMessage
+class Message extends MaybeInaccessibleMessage implements AllowsBypassingGet
 {
     protected static function subEntities(): array
     {
         return [
-            'from' => User::class,
-            'sender_chat' => Chat::class,
-            'sender_business_bot' => User::class,
-            'chat' => Chat::class,
-            'forward_origin' => MessageOrigin::class,
-            'reply_to_message' => Message::class,
-            'external_reply' => ExternalReplyInfo::class,
-            'quote' => TextQuote::class,
-            'reply_to_story' => Story::class,
-            'via_bot' => User::class,
-            'entities' => [MessageEntity::class],
-            'link_preview_options' => LinkPreviewOptions::class,
-            'animation' => Animation::class,
-            'audio' => Audio::class,
-            'document' => Document::class,
-            'photo' => [PhotoSize::class],
-            'sticker' => Sticker::class,
-            'story' => Story::class,
-            'video' => Video::class,
-            'video_note' => VideoNote::class,
-            'voice' => Voice::class,
-            'caption_entities' => [MessageEntity::class],
-            'contact' => Contact::class,
-            'dice' => Dice::class,
-            'game' => Game::class,
-            'poll' => Poll::class,
-            'venue' => Venue::class,
-            'location' => Location::class,
-            'new_chat_members' => [User::class],
-            'left_chat_member' => User::class,
-            'new_chat_photo' => [PhotoSize::class],
+            'from'                              => User::class,
+            'sender_chat'                       => Chat::class,
+            'sender_business_bot'               => User::class,
+            'chat'                              => Chat::class,
+            'forward_origin'                    => MessageOrigin::class,
+            'reply_to_message'                  => Message::class,
+            'external_reply'                    => ExternalReplyInfo::class,
+            'quote'                             => TextQuote::class,
+            'reply_to_story'                    => Story::class,
+            'via_bot'                           => User::class,
+            'entities'                          => [MessageEntity::class],
+            'link_preview_options'              => LinkPreviewOptions::class,
+            'animation'                         => Animation::class,
+            'audio'                             => Audio::class,
+            'document'                          => Document::class,
+            'photo'                             => [PhotoSize::class],
+            'sticker'                           => Sticker::class,
+            'story'                             => Story::class,
+            'video'                             => Video::class,
+            'video_note'                        => VideoNote::class,
+            'voice'                             => Voice::class,
+            'caption_entities'                  => [MessageEntity::class],
+            'contact'                           => Contact::class,
+            'dice'                              => Dice::class,
+            'game'                              => Game::class,
+            'poll'                              => Poll::class,
+            'venue'                             => Venue::class,
+            'location'                          => Location::class,
+            'new_chat_members'                  => [User::class],
+            'left_chat_member'                  => User::class,
+            'new_chat_photo'                    => [PhotoSize::class],
             'message_auto_delete_timer_changed' => MessageAutoDeleteTimerChanged::class,
-            'pinned_message' => MaybeInaccessibleMessage::class,
-            'invoice' => Invoice::class,
-            'successful_payment' => SuccessfulPayment::class,
-            'users_shared' => UsersShared::class,
-            'chat_shared' => ChatShared::class,
-            'write_access_allowed' => WriteAccessAllowed::class,
-            'passport_data' => PassportData::class,
-            'proximity_alert_triggered' => ProximityAlertTriggered::class,
-            'boost_added' => ChatBoostAdded::class,
-            'chat_background_set' => ChatBackground::class,
-            'forum_topic_created' => ForumTopicCreated::class,
-            'forum_topic_edited' => ForumTopicEdited::class,
-            'forum_topic_closed' => ForumTopicClosed::class,
-            'forum_topic_reopened' => ForumTopicReopened::class,
-            'general_forum_topic_hidden' => GeneralForumTopicHidden::class,
-            'general_forum_topic_unhidden' => GeneralForumTopicUnhidden::class,
-            'giveaway_created' => GiveawayCreated::class,
-            'giveaway' => Giveaway::class,
-            'giveaway_winners' => GiveawayWinners::class,
-            'giveaway_completed' => GiveawayCompleted::class,
-            'video_chat_scheduled' => VideoChatScheduled::class,
-            'video_chat_started' => VideoChatStarted::class,
-            'video_chat_ended' => VideoChatEnded::class,
-            'video_chat_participants_invited' => VideoChatParticipantsInvited::class,
-            'web_app_data' => WebAppData::class,
-            'reply_markup' => InlineKeyboardMarkup::class,
+            'pinned_message'                    => MaybeInaccessibleMessage::class,
+            'invoice'                           => Invoice::class,
+            'successful_payment'                => SuccessfulPayment::class,
+            'users_shared'                      => UsersShared::class,
+            'chat_shared'                       => ChatShared::class,
+            'write_access_allowed'              => WriteAccessAllowed::class,
+            'passport_data'                     => PassportData::class,
+            'proximity_alert_triggered'         => ProximityAlertTriggered::class,
+            'boost_added'                       => ChatBoostAdded::class,
+            'chat_background_set'               => ChatBackground::class,
+            'forum_topic_created'               => ForumTopicCreated::class,
+            'forum_topic_edited'                => ForumTopicEdited::class,
+            'forum_topic_closed'                => ForumTopicClosed::class,
+            'forum_topic_reopened'              => ForumTopicReopened::class,
+            'general_forum_topic_hidden'        => GeneralForumTopicHidden::class,
+            'general_forum_topic_unhidden'      => GeneralForumTopicUnhidden::class,
+            'giveaway_created'                  => GiveawayCreated::class,
+            'giveaway'                          => Giveaway::class,
+            'giveaway_winners'                  => GiveawayWinners::class,
+            'giveaway_completed'                => GiveawayCompleted::class,
+            'video_chat_scheduled'              => VideoChatScheduled::class,
+            'video_chat_started'                => VideoChatStarted::class,
+            'video_chat_ended'                  => VideoChatEnded::class,
+            'video_chat_participants_invited'   => VideoChatParticipantsInvited::class,
+            'web_app_data'                      => WebAppData::class,
+            'reply_markup'                      => InlineKeyboardMarkup::class,
+        ];
+    }
+
+    public static function fieldsBypassingGet(): array
+    {
+        return [
+            'is_topic_message'      => false,
+            'is_automatic_forward'  => false,
+            'has_protected_content' => false,
+            'is_from_offline'       => false,
+            'has_media_spoiler'     => false,
         ];
     }
 }

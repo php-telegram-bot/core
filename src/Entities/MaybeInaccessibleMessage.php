@@ -13,7 +13,7 @@ class MaybeInaccessibleMessage extends Entity implements Factory
     {
         return match (true) {
             $data['date'] === 0 => new InaccessibleMessage($data),
-            default => new Message($data),
+            default             => new Message($data),
         };
     }
 

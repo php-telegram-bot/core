@@ -19,9 +19,9 @@ class ChatBoostSource extends Entity implements Factory
     public static function make(array $data): static
     {
         return match ($data['source']) {
-            self::SOURCE_PREMIUM => new ChatBoostSourcePremium($data),
+            self::SOURCE_PREMIUM   => new ChatBoostSourcePremium($data),
             self::SOURCE_GIFT_CODE => new ChatBoostSourceGiftCode($data),
-            self::SOURCE_GIVEAWAY => new ChatBoostSourceGiveaway($data),
+            self::SOURCE_GIVEAWAY  => new ChatBoostSourceGiveaway($data),
         };
     }
 }

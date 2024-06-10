@@ -19,11 +19,11 @@ class ChatMemberUpdated extends Entity
     protected static function subEntities(): array
     {
         return [
-            'chat' => Chat::class,
-            'from' => User::class,
+            'chat'            => Chat::class,
+            'from'            => User::class,
             'old_chat_member' => ChatMember::class,
             'new_chat_member' => ChatMember::class,
-            'invite_link' => ChatInviteLink::class,
+            'invite_link'     => ChatInviteLink::class,
         ];
     }
 }

@@ -13,7 +13,7 @@ class MessageReactionCountUpdated extends Entity
     protected static function subEntities(): array
     {
         return [
-            'chat' => Chat::class,
+            'chat'      => Chat::class,
             'reactions' => [ReactionCount::class],
         ];
     }

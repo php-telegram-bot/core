@@ -19,8 +19,8 @@ class BackgroundFill extends Entity implements Factory
     public static function make(array $data): static
     {
         return match ($data['type']) {
-            self::TYPE_SOLID => new BackgroundFillSolid($data),
-            self::TYPE_GRADIENT => new BackgroundFillGradient($data),
+            self::TYPE_SOLID             => new BackgroundFillSolid($data),
+            self::TYPE_GRADIENT          => new BackgroundFillGradient($data),
             self::TYPE_FREEFORM_GRADIENT => new BackgroundFillFreeformGradient($data),
         };
     }

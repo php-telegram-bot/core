@@ -14,7 +14,7 @@ class PollAnswer extends Entity
     {
         return [
             'voter_chat' => Chat::class,
-            'user' => User::class,
+            'user'       => User::class,
         ];
     }
 }

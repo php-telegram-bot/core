@@ -18,10 +18,10 @@ class InlineKeyboardButton extends Entity
     protected static function subEntities(): array
     {
         return [
-            'web_app' => WebAppInfo::class,
-            'login_url' => LoginUrl::class,
+            'web_app'                         => WebAppInfo::class,
+            'login_url'                       => LoginUrl::class,
             'switch_inline_query_chosen_chat' => SwitchInlineQueryChosenChat::class,
-            'callback_game' => CallbackGame::class,
+            'callback_game'                   => CallbackGame::class,
         ];
     }
 }

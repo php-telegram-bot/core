@@ -18,9 +18,9 @@ class MessageReactionUpdated extends Entity
     protected static function subEntities(): array
     {
         return [
-            'chat' => Chat::class,
-            'user' => User::class,
-            'actor_chat' => Chat::class,
+            'chat'         => Chat::class,
+            'user'         => User::class,
+            'actor_chat'   => Chat::class,
             'old_reaction' => [ReactionType::class],
             'new_reaction' => [ReactionType::class],
         ];

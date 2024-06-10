@@ -14,10 +14,10 @@ abstract class MessageOrigin extends Entity implements Factory
     public static function make(array $data): static
     {
         return match ($data['type']) {
-            'user' => new MessageOriginUser($data),
+            'user'        => new MessageOriginUser($data),
             'hidden_user' => new MessageOriginHiddenUser($data),
-            'chat' => new MessageOriginChat($data),
-            'channel' => new MessageOriginChannel($data),
+            'chat'        => new MessageOriginChat($data),
+            'channel'     => new MessageOriginChannel($data),
         };
     }
 }

@@ -2,6 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities;
 
+use PhpTelegramBot\Core\Contracts\AllowsBypassingGet;
+
 abstract class Entity implements \JsonSerializable
 {
     protected array $fields = [];
@@ -32,7 +34,7 @@ abstract class Entity implements \JsonSerializable
         $this->fields[$name] = $value;
     }
 
-    protected function getField(string $name): mixed
+    private function getField(string $name): mixed
     {
         $data = $this->fields[$name];
 
@@ -70,11 +72,25 @@ abstract class Entity implements \JsonSerializable
         $snakeName = strtolower(ltrim(preg_replace('/[[:upper:]]/', '_$0', $name), '_'));
 
         if (str_starts_with($snakeName, 'get_')) {
+            // Getter for fields
             return $this->getField(substr($snakeName, 4));
         } elseif (str_starts_with($snakeName, 'set_')) {
+            // Setter for fields
             $this->setField(substr($snakeName, 4), $arguments[0] ?? null);
 
             return $this;
+        } elseif (is_subclass_of($this, AllowsBypassingGet::class)) {
+            $fields = $this::fieldsBypassingGet();
+
+            if (array_key_exists($snakeName, $fields)) {
+
+                return $this->getField($snakeName) ?? $fields[$snakeName];
+
+            } elseif (in_array($snakeName, $fields)) {
+
+                return $this->getField($snakeName);
+
+            }
         }
 
         $method = get_class($this).'::'.$name.'()';

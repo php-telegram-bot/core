@@ -13,7 +13,7 @@ class ShippingQuery extends Entity
     protected static function subEntities(): array
     {
         return [
-            'from' => User::class,
+            'from'             => User::class,
             'shipping_address' => ShippingAddress::class,
         ];
     }
