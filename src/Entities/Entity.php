@@ -2,24 +2,22 @@
 
 namespace PhpTelegramBot\Core\Entities;
 
+use BadMethodCallException;
+use JsonSerializable;
 use PhpTelegramBot\Core\Contracts\AllowsBypassingGet;
 
-abstract class Entity implements \JsonSerializable
+abstract class Entity implements JsonSerializable
 {
     protected array $fields = [];
-
-    /**
-     * @return array<string, class-string>
-     */
-    protected static function subEntities(): array
-    {
-        return [];
-    }
 
     public function __construct(
         array $data = []
     ) {
         foreach ($data as $key => $value) {
+            $this->fields[$key] = $value;
+        }
+
+        foreach (static::presetData() as $key => $value) {
             $this->fields[$key] = $value;
         }
     }
@@ -30,39 +28,6 @@ abstract class Entity implements \JsonSerializable
     }
 
     public function __set(string $name, $value): void
-    {
-        $this->fields[$name] = $value;
-    }
-
-    private function getField(string $name): mixed
-    {
-        $data = $this->fields[$name];
-
-        $subEntities = static::subEntities();
-        if (! isset($subEntities[$name])) {
-            return $data;
-        }
-
-        if ($subEntities[$name] instanceof Entity) {
-            $class = $subEntities[$name];
-
-            return new $class($data);
-        } elseif (is_array($subEntities[$name]) && $subEntities[$name][0] instanceof Entity) {
-            // Arrays like PhotoSize[]
-            $class = $subEntities[$name][0];
-
-            return array_map(fn ($item) => new $class($item), $data);
-        } elseif (is_array($subEntities[$name]) && is_array($subEntities[$name][0]) && $subEntities[$name][0][0] instanceof Entity) {
-            // Edge case currently only needed for Keyboards: Array of Array of InlineKeyboardButton
-            $class = $subEntities[$name][0][0];
-
-            return array_map(fn ($row) => array_map(fn ($button) => new $class($button), $row), $data);
-        }
-
-        return $data;
-    }
-
-    protected function setField(string $name, mixed $value): void
     {
         $this->fields[$name] = $value;
     }
@@ -94,11 +59,57 @@ abstract class Entity implements \JsonSerializable
         }
 
         $method = get_class($this).'::'.$name.'()';
-        throw new \BadMethodCallException("Call to undefined method $method");
+        throw new BadMethodCallException("Call to undefined method $method");
+    }
+
+    private function getField(string $name): mixed
+    {
+        $data = $this->fields[$name];
+
+        $subEntities = static::subEntities();
+        if (! isset($subEntities[$name])) {
+            return $data;
+        }
+
+        if (is_subclass_of($subEntities[$name], Entity::class)) {
+            $class = $subEntities[$name];
+
+            return new $class($data);
+        } elseif (is_array($subEntities[$name]) && is_subclass_of($subEntities[$name][0], Entity::class)) {
+            // Arrays like PhotoSize[]
+            $class = $subEntities[$name][0];
+
+            return array_map(fn ($item) => new $class($item), $data);
+        } elseif (is_array($subEntities[$name]) && is_array($subEntities[$name][0]) && is_subclass_of($subEntities[$name][0][0], Entity::class)) {
+            // Edge case currently only needed for Keyboards: Array of Array of InlineKeyboardButton
+            $class = $subEntities[$name][0][0];
+
+            return array_map(fn ($row) => array_map(fn ($button) => new $class($button), $row), $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return array<string, class-string>
+     */
+    protected static function subEntities(): array
+    {
+        return [];
+    }
+
+    protected static function presetData(): array
+    {
+        return [];
+    }
+
+    private function setField(string $name, mixed $value): void
+    {
+        $this->fields[$name] = $value;
     }
 
     public function jsonSerialize(): mixed
     {
-        return $this->fields;
+        return array_filter($this->fields, fn ($item) => ! is_null($item));
     }
 }

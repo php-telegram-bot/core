@@ -102,10 +102,13 @@ _TODO_
 
 ## Roadmap
 
-- [ ] Adding Telegram Types
-- [ ] Adding base functionality to call API Methods
-- [ ] Adding base functionality to receive Updates
-- [ ] ...
+- [x] Adding Telegram Types
+- [x] Adding base functionality to call API Methods
+- [x] Adding base functionality to parse Telegram Entities
+- [ ] Test editMessageText with its return types Message or bool
+- [ ] "must be article" etc should be set via presetData static function
+- [ ] File Downloads/Uploads
+- [ ] Custom Bot API Server
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
