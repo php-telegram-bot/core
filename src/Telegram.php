@@ -3,6 +3,7 @@
 namespace PhpTelegramBot\Core;
 
 use PhpTelegramBot\Core\Entities\Factory;
+use PhpTelegramBot\Core\Entities\Update;
 use PhpTelegramBot\Core\Exceptions\NotYetImplementedException;
 use PhpTelegramBot\Core\Exceptions\TelegramException;
 use PhpTelegramBot\Core\Methods\AnswersInlineQueries;
@@ -78,9 +79,21 @@ class Telegram
         return new $returnType($result);
     }
 
-    public function handleGetUpdates()
+    public function handleGetUpdates(int $pollingInterval = 30, ?array $allowedUpdates = null)
     {
-        throw new NotYetImplementedException();
+        $offset = null;
+        while (true) {
+            $updates = $this->getUpdates([
+                'offset'          => $offset,
+                'timeout'         => 30,
+                'allowed_updates' => $allowedUpdates,
+            ]);
+
+            foreach ($updates as $update) {
+                $this->processUpdate($update);
+                $offset = $update->getUpdateId() + 1;
+            }
+        }
     }
 
     public function handle()
@@ -88,8 +101,8 @@ class Telegram
         throw new NotYetImplementedException();
     }
 
-    protected function processUpdate()
+    protected function processUpdate(Update $update)
     {
-        throw new NotYetImplementedException();
+        //
     }
 }
