@@ -4,7 +4,6 @@ namespace PhpTelegramBot\Core;
 
 use PhpTelegramBot\Core\Entities\Factory;
 use PhpTelegramBot\Core\Entities\Update;
-use PhpTelegramBot\Core\Exceptions\NotYetImplementedException;
 use PhpTelegramBot\Core\Exceptions\TelegramException;
 use PhpTelegramBot\Core\Methods\AnswersInlineQueries;
 use PhpTelegramBot\Core\Methods\SendsInvoices;
@@ -98,7 +97,12 @@ class Telegram
 
     public function handle()
     {
-        throw new NotYetImplementedException();
+        $data = file_get_contents('php://input');
+        $json = json_decode($data, true);
+
+        $update = new Update($json);
+
+        $this->processUpdate($update);
     }
 
     protected function processUpdate(Update $update)
