@@ -2,14 +2,14 @@
 
 namespace PhpTelegramBot\Core;
 
+use PhpTelegramBot\Core\ApiMethods\AnswersInlineQueries;
+use PhpTelegramBot\Core\ApiMethods\SendsInvoices;
+use PhpTelegramBot\Core\ApiMethods\SendsMessages;
+use PhpTelegramBot\Core\ApiMethods\SendsStickers;
+use PhpTelegramBot\Core\ApiMethods\UpdatesMessages;
 use PhpTelegramBot\Core\Entities\Factory;
 use PhpTelegramBot\Core\Entities\Update;
 use PhpTelegramBot\Core\Exceptions\TelegramException;
-use PhpTelegramBot\Core\Methods\AnswersInlineQueries;
-use PhpTelegramBot\Core\Methods\SendsInvoices;
-use PhpTelegramBot\Core\Methods\SendsMessages;
-use PhpTelegramBot\Core\Methods\SendsStickers;
-use PhpTelegramBot\Core\Methods\UpdatesMessages;
 
 class Telegram
 {
@@ -35,20 +35,33 @@ class Telegram
         return $this->send($methodName, $arguments[0] ?? null, $arguments[1] ?? null);
     }
 
+    protected function dataContainsFiles(array $data): bool
+    {
+        foreach ($data as $key => $value) {
+            if (str_starts_with($key, '__file_')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected function send(string $methodName, ?array $data = null, string|array|null $returnType = null): mixed
     {
         $requestUri = $this->apiBaseUri.'/bot'.$this->botToken.'/'.$methodName;
 
         $response = match (true) {
-            empty($data) => $this->client->get($requestUri),
-            default      => $this->client->postJson($requestUri, $data),
+            empty($data)                    => $this->client->get($requestUri),
+            $this->dataContainsFiles($data) => $this->client->postMultipart($requestUri, $data),
+            default                         => $this->client->postJson($requestUri, $data),
         };
 
         $result = json_decode($response->getBody()->getContents(), true);
-        if ($result['ok'] !== true) {
+
+        if ($result === null || $result['ok'] !== true) {
             throw new TelegramException(
-                $result['description'],
-                $result['error_code'] ?? 0,
+                $result['description'] ?? $response->getReasonPhrase(),
+                $result['error_code'] ?? $response->getStatusCode(),
             );
         }
 
@@ -84,7 +97,7 @@ class Telegram
         while (true) {
             $updates = $this->getUpdates([
                 'offset'          => $offset,
-                'timeout'         => 30,
+                'timeout'         => $pollingInterval,
                 'allowed_updates' => $allowedUpdates,
             ]);
 

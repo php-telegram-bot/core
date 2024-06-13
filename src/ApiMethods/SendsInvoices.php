@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTelegramBot\Core\Methods;
+namespace PhpTelegramBot\Core\ApiMethods;
 
 use PhpTelegramBot\Core\Entities\InlineKeyboardMarkup;
 use PhpTelegramBot\Core\Entities\LabeledPrice;

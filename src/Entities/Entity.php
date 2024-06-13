@@ -110,6 +110,6 @@ abstract class Entity implements JsonSerializable
 
     public function jsonSerialize(): mixed
     {
-        return array_filter($this->fields, fn ($item) => ! is_null($item));
+        return array_filter($this->fields, fn ($value, $key) => ! is_null($value) && str_starts_with($key, '__'), ARRAY_FILTER_USE_BOTH);
     }
 }

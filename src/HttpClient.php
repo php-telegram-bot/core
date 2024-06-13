@@ -4,6 +4,7 @@ namespace PhpTelegramBot\Core;
 
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,6 +39,35 @@ class HttpClient
                 ->withBody(
                     $this->streamFactory->createStream($json)
                 )
+        );
+    }
+
+    public function postMultipart(string $uri, array $data): ResponseInterface
+    {
+        $builder = new MultipartStreamBuilder(
+            Psr17FactoryDiscovery::findStreamFactory()
+        );
+
+        foreach ($data as $key => $value) {
+            if (str_starts_with($key, '__file_')) {
+                $key = substr($key, 7);
+            }
+
+            $value = match (true) {
+                is_array($value)    => json_encode($value),
+                is_resource($value) => $value,
+                default             => (string) $value,
+            };
+
+            $builder->addResource($key, $value);
+        }
+
+        $boundary = $builder->getBoundary();
+
+        return $this->client->sendRequest(
+            $this->requestFactory->createRequest('POST', $uri)
+                ->withHeader('Content-Type', "multipart/form-data; boundary=\"$boundary\"")
+                ->withBody($builder->build())
         );
     }
 }
