@@ -40,10 +40,10 @@ trait SendsMessages
 {
     /**
      * @param  array{
-     *     offset: ?int,
-     *     limit: ?int,
-     *     timeout: ?int,
-     *     allowed_updates: ?array<string>
+     *     offset: int,
+     *     limit: int,
+     *     timeout: int,
+     *     allowed_updates: array<string>
      * } $data
      * @return array<Update>
      *
@@ -57,12 +57,12 @@ trait SendsMessages
     /**
      * @param array{
      *     url: string,
-     *     certificate: ?InputFile,
-     *     ip_address: ?string,
-     *     max_connections: ?int,
-     *     allowed_updates: ?array<string>,
-     *     drop_pending_updates: ?bool,
-     *     secret_token: ?string
+     *     certificate: InputFile,
+     *     ip_address: string,
+     *     max_connections: int,
+     *     allowed_updates: array<string>,
+     *     drop_pending_updates: bool,
+     *     secret_token: string
      * } $data
      *
      * @throws Exceptions\TelegramException
@@ -74,7 +74,7 @@ trait SendsMessages
 
     /**
      * @param array{
-     *     drop_pending_updates: ?bool
+     *     drop_pending_updates: bool
      * } $data
      *
      * @throws Exceptions\TelegramException
@@ -115,18 +115,18 @@ trait SendsMessages
 
     /**
      * @param array{
-     *     business_connection_id: ?string,
+     *     business_connection_id: string,
      *     chat_id: int|string,
-     *     message_thread_id: ?int,
+     *     message_thread_id: int,
      *     text: string,
-     *     parse_mode: ?string,
-     *     entities: MessageEntity[]|null,
-     *     link_preview_options: ?LinkPreviewOptions,
-     *     disable_notification: ?bool,
-     *     protect_content: ?bool,
-     *     message_effect_id: ?string,
-     *     reply_parameters: ?ReplyParameters,
-     *     reply_markup: InlineKeyboardMarkup|ReplyKeyboardMarkup|ReplyKeyboardRemove|ForceReply|null,
+     *     parse_mode: string,
+     *     entities: MessageEntity[],
+     *     link_preview_options: LinkPreviewOptions,
+     *     disable_notification: bool,
+     *     protect_content: bool,
+     *     message_effect_id: string,
+     *     reply_parameters: ReplyParameters,
+     *     reply_markup: InlineKeyboardMarkup|ReplyKeyboardMarkup|ReplyKeyboardRemove|ForceReply
      * } $data
      *
      * @throws Exceptions\TelegramException
@@ -139,10 +139,10 @@ trait SendsMessages
     /**
      * @param array{
      *     chat_id: int|string,
-     *     message_thread_id: ?int,
+     *     message_thread_id: int,
      *     from_chat_id: int|string,
-     *     disable_notification: ?bool,
-     *     protect_content: ?bool,
+     *     disable_notification: bool,
+     *     protect_content: bool,
      *     message_id: int,
      * } $data
      *
@@ -156,11 +156,11 @@ trait SendsMessages
     /**
      * @param array{
      *     chat_id: int|string,
-     *     message_thread_id: ?int,
+     *     message_thread_id: int,
      *     from_chat_id: int|string,
      *     message_ids: int[],
-     *     disable_notification: ?bool,
-     *     protect_content: ?bool,
+     *     disable_notification: bool,
+     *     protect_content: bool,
      * } $data
      * @return MessageId[]
      *
