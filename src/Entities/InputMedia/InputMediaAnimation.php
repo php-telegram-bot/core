@@ -27,6 +27,13 @@ class InputMediaAnimation extends InputMedia implements AllowsBypassingGet
         ];
     }
 
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_ANIMATION,
+        ];
+    }
+
     public static function fieldsBypassingGet(): array
     {
         return [

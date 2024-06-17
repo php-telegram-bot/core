@@ -7,5 +7,10 @@ namespace PhpTelegramBot\Core\Entities\BotCommandScope;
  */
 class BotCommandScopeChat extends BotCommandScope
 {
-    //
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_CHAT,
+        ];
+    }
 }

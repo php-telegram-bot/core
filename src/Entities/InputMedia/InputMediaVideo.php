@@ -3,7 +3,6 @@
 namespace PhpTelegramBot\Core\Entities\InputMedia;
 
 use PhpTelegramBot\Core\Contracts\AllowsBypassingGet;
-use PhpTelegramBot\Core\Entities\Entity;
 use PhpTelegramBot\Core\Entities\InputFile;
 use PhpTelegramBot\Core\Entities\MessageEntity;
 
@@ -20,12 +19,19 @@ use PhpTelegramBot\Core\Entities\MessageEntity;
  * @method bool|null            getSupportsStreaming()     Optional. Pass True if the uploaded video is suitable for streaming
  * @method bool                 hasSpoiler()               Optional. Pass True if the video needs to be covered with a spoiler animation
  */
-class InputMediaVideo extends Entity implements AllowsBypassingGet
+class InputMediaVideo extends InputMedia implements AllowsBypassingGet
 {
     protected static function subEntities(): array
     {
         return [
             'caption_entities' => [MessageEntity::class],
+        ];
+    }
+
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_VIDEO,
         ];
     }
 

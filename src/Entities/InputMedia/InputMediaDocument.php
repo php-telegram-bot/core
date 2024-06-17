@@ -21,4 +21,11 @@ class InputMediaDocument extends InputMedia
             'caption_entites' => [MessageEntity::class],
         ];
     }
+
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_DOCUMENT,
+        ];
+    }
 }

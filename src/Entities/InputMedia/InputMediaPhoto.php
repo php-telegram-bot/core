@@ -22,6 +22,13 @@ class InputMediaPhoto extends InputMedia implements AllowsBypassingGet
         ];
     }
 
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_PHOTO,
+        ];
+    }
+
     public static function fieldsBypassingGet(): array
     {
         return [

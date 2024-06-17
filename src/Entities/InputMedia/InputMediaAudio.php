@@ -23,4 +23,11 @@ class InputMediaAudio extends InputMedia
             'caption_entities' => [MessageEntity::class],
         ];
     }
+
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_AUDIO,
+        ];
+    }
 }

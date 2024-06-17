@@ -16,4 +16,11 @@ class MenuButtonWebApp extends MenuButton
             'web_app' => WebAppInfo::class,
         ];
     }
+
+    protected static function presetData(): array
+    {
+        return [
+            'type' => self::TYPE_WEB_APP,
+        ];
+    }
 }
