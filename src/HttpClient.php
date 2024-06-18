@@ -9,6 +9,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 
 class HttpClient
 {
@@ -42,24 +43,28 @@ class HttpClient
         );
     }
 
-    public function postMultipart(string $uri, array $data): ResponseInterface
+    /**
+     * @param array<StreamInterface> $streams
+     *
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
+    public function postMultipart(string $uri, array $data, array $streams): ResponseInterface
     {
-        $builder = new MultipartStreamBuilder(
-            Psr17FactoryDiscovery::findStreamFactory()
-        );
+        $builder = new MultipartStreamBuilder();
 
+        // Add data
         foreach ($data as $key => $value) {
-            if (str_starts_with($key, '__file_')) {
-                $key = substr($key, 7);
-            }
-
             $value = match (true) {
                 is_array($value)    => json_encode($value),
-                is_resource($value) => $value,
                 default             => (string) $value,
             };
 
             $builder->addResource($key, $value);
+        }
+
+        // Add file streams
+        foreach ($streams as $fileId => $stream) {
+            $builder->addResource($fileId, $stream);
         }
 
         $boundary = $builder->getBoundary();
@@ -69,5 +74,10 @@ class HttpClient
                 ->withHeader('Content-Type', "multipart/form-data; boundary=\"$boundary\"")
                 ->withBody($builder->build())
         );
+    }
+
+    public function streamFactory(): StreamFactoryInterface
+    {
+        return $this->streamFactory;
     }
 }

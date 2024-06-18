@@ -55,7 +55,10 @@
   "autoload": {
     "psr-4": {
       "PhpTelegramBot\\Core\\": "src"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "config": {
     "optimize-autoloader": true,
