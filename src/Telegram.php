@@ -74,13 +74,13 @@ class Telegram
     /**
      * @return StreamInterface[]
      */
-    public function extractFiles(array $fields, array &$data): array
+    protected function extractFiles(array $fields, array &$data): array
     {
         $streams = [];
         foreach ($fields as $key => $value) {
 
             if (is_string($value)) {
-                if (! isset($data[$value])) {
+                if (!isset($data[$value])) {
                     continue;
                 }
 
@@ -96,19 +96,15 @@ class Telegram
                         $file instanceof StreamInterface   => $file,
                     };
                 }
-
-            } elseif (! array_is_assoc($data[$key])) {
+            } elseif (!array_is_assoc($data[$key])) {
 
                 foreach ($data[$key] as &$item) {
                     $streams += $this->extractFiles($value, $item);
                 }
-
             } else {
 
                 $streams += $this->extractFiles($value, $data[$key]);
-
             }
-
         }
 
         return $streams;
@@ -150,7 +146,7 @@ class Telegram
 
     protected function makeResultObject(mixed $result, string|array|null $returnType = null): mixed
     {
-        if (! is_array($result)) {
+        if (!is_array($result)) {
             return $result;
         }
 
