@@ -27,14 +27,24 @@ class Telegram
     public static function inputFileFields(): array
     {
         return [
-            'addStickerToSet'        => ['sticker' => ['sticker']],
-            'createNewStickerSet'    => ['stickers' => ['sticker']],
-            'editMessageMedia'       => ['media' => ['media']],
-            'replaceStickerInSet'    => ['sticker' => ['sticker']],
+            'addStickerToSet'        => [
+                'sticker' => ['sticker']
+            ],
+            'createNewStickerSet'    => [
+                'stickers' => ['sticker']
+            ],
+            'editMessageMedia'       => [
+                'media' => ['media']
+            ],
+            'replaceStickerInSet'    => [
+                'sticker' => ['sticker']
+            ],
             'sendAnimation'          => ['animation', 'thumbnail'],
             'sendAudio'              => ['audio', 'thumbnail'],
             'sendDocument'           => ['document', 'thumbnail'],
-            'sendMediaGroup'         => ['media' => ['media', 'thumbnail']],
+            'sendMediaGroup'         => [
+                'media' => ['media', 'thumbnail']
+            ],
             'sendPhoto'              => ['photo'],
             'sendSticker'            => ['sticker'],
             'sendVideo'              => ['video', 'thumbnail'],

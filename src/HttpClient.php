@@ -50,7 +50,7 @@ class HttpClient
      */
     public function postMultipart(string $uri, array $data, array $streams): ResponseInterface
     {
-        $builder = new MultipartStreamBuilder();
+        $builder = new MultipartStreamBuilder($this->streamFactory);
 
         // Add data
         foreach ($data as $key => $value) {
