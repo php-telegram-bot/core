@@ -7,6 +7,7 @@ use PhpTelegramBot\Core\Entities\LabeledPrice;
 use PhpTelegramBot\Core\Entities\Message;
 use PhpTelegramBot\Core\Entities\ReplyParameters;
 use PhpTelegramBot\Core\Entities\ShippingOption;
+use PhpTelegramBot\Core\Entities\StarTransactions;
 
 trait SendsInvoices
 {
@@ -107,6 +108,19 @@ trait SendsInvoices
     public function answerPreCheckoutQuery(array $data = []): bool
     {
         return $this->send(__FUNCTION__, $data, null);
+    }
+
+    /**
+     * @param array{
+     *     offset: int,
+     *     limit: int,
+     * } $data
+     *
+     * @throws \PhpTelegramBot\Core\Exceptions\TelegramException
+     */
+    public function getStarTransactions(array $data = []): StarTransactions
+    {
+        return $this->send(__FUNCTION__, $data, StarTransactions::class);
     }
 
     /**

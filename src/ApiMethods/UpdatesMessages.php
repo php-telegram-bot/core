@@ -14,6 +14,7 @@ trait UpdatesMessages
 {
     /**
      * @param array{
+     *     business_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     inline_message_id: string,
@@ -33,6 +34,7 @@ trait UpdatesMessages
 
     /**
      * @param array{
+     *     business_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     inline_message_id: string,
@@ -52,6 +54,7 @@ trait UpdatesMessages
 
     /**
      * @param array{
+     *     business_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     inline_message_id: string,
@@ -68,6 +71,7 @@ trait UpdatesMessages
 
     /**
      * @param array{
+     *     business_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     inline_message_id: string,
@@ -89,6 +93,7 @@ trait UpdatesMessages
 
     /**
      * @param array{
+     *     business_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     inline_message_id: string,
@@ -104,6 +109,7 @@ trait UpdatesMessages
 
     /**
      * @param array{
+     *     businss_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     inline_message_id: string,
@@ -119,6 +125,7 @@ trait UpdatesMessages
 
     /**
      * @param array{
+     *     business_connection_id: string,
      *     chat_id: int|string,
      *     message_id: int,
      *     reply_markup: InlineKeyboardMarkup,
