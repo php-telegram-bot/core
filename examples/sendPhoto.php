@@ -4,7 +4,7 @@ require 'bootstrap.php';
 
 $bot = new \PhpTelegramBot\Core\Telegram($_SERVER['BOT_TOKEN']);
 $recipient = $_SERVER['RECIPIENT_CHAT_ID'];
-$filepath = __DIR__.'/files/example_photo.jpeg';
+$filepath = __DIR__ . '/files/example_photo.jpeg';
 
 try {
 
@@ -33,6 +33,6 @@ try {
 
 } catch (\PhpTelegramBot\Core\Exceptions\TelegramException $e) {
 
-    echo 'ERROR: '.$e->getMessage();
+    echo 'ERROR: ' . $e->getMessage();
 
 }

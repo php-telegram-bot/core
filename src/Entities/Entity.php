@@ -58,7 +58,7 @@ abstract class Entity implements JsonSerializable
             }
         }
 
-        $method = get_class($this).'::'.$name.'()';
+        $method = get_class($this) . '::' . $name . '()';
         throw new BadMethodCallException("Call to undefined method $method");
     }
 

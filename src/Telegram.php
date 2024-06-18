@@ -77,8 +77,8 @@ class Telegram
                 $file = $data[$value];
 
                 if (is_string($file) && is_file($file) || is_resource($file) || $file instanceof StreamInterface) {
-                    $fileId = uniqid($value.'_');
-                    $data[$value] = 'attach://'.$fileId;
+                    $fileId = uniqid($value . '_');
+                    $data[$value] = 'attach://' . $fileId;
 
                     $streams[$fileId] = match (true) {
                         is_string($file) && is_file($file) => $this->client->streamFactory()->createStreamFromFile($file),
@@ -106,7 +106,7 @@ class Telegram
 
     protected function send(string $methodName, ?array $data = null, string|array|null $returnType = null): mixed
     {
-        $requestUri = $this->apiBaseUri.'/bot'.$this->botToken.'/'.$methodName;
+        $requestUri = $this->apiBaseUri . '/bot' . $this->botToken . '/' . $methodName;
 
         $streams = $this->extractFiles(self::inputFileFields()[$methodName] ?? null, $data);
 
