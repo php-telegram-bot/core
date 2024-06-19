@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\RevenueWithdrawalState;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getType() Type of the state

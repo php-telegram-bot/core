@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\TransactionPartner;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getType() Type of the transaction partner

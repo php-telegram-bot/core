@@ -2,6 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities;
 
+use PhpTelegramBot\Core\Contracts\Factory;
+
 /**
  * @method Chat getChat()      Chat the message belonged to
  * @method int  getMessageId() Unique message identifier inside the chat

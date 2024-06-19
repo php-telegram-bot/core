@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTelegramBot\Core\Entities;
+namespace PhpTelegramBot\Core\Contracts;
 
 interface Factory
 {

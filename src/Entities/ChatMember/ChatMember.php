@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\ChatMember;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getStatus() The member's status in the chat

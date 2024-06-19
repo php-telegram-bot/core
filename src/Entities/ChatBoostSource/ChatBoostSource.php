@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\ChatBoostSource;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getSource() Source of the boost

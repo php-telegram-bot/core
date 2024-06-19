@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\MenuButton;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getType() Type of the button

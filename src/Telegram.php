@@ -7,7 +7,7 @@ use PhpTelegramBot\Core\ApiMethods\SendsInvoices;
 use PhpTelegramBot\Core\ApiMethods\SendsMessages;
 use PhpTelegramBot\Core\ApiMethods\SendsStickers;
 use PhpTelegramBot\Core\ApiMethods\UpdatesMessages;
-use PhpTelegramBot\Core\Entities\Factory;
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Update;
 use PhpTelegramBot\Core\Exceptions\TelegramException;
 use Psr\Http\Message\StreamInterface;
@@ -28,22 +28,22 @@ class Telegram
     {
         return [
             'addStickerToSet'        => [
-                'sticker' => ['sticker']
+                'sticker' => ['sticker'],
             ],
             'createNewStickerSet'    => [
-                'stickers' => ['sticker']
+                'stickers' => ['sticker'],
             ],
             'editMessageMedia'       => [
-                'media' => ['media']
+                'media' => ['media'],
             ],
             'replaceStickerInSet'    => [
-                'sticker' => ['sticker']
+                'sticker' => ['sticker'],
             ],
             'sendAnimation'          => ['animation', 'thumbnail'],
             'sendAudio'              => ['audio', 'thumbnail'],
             'sendDocument'           => ['document', 'thumbnail'],
             'sendMediaGroup'         => [
-                'media' => ['media', 'thumbnail']
+                'media' => ['media', 'thumbnail'],
             ],
             'sendPhoto'              => ['photo'],
             'sendSticker'            => ['sticker'],
@@ -80,7 +80,7 @@ class Telegram
         foreach ($fields as $key => $value) {
 
             if (is_string($value)) {
-                if (!isset($data[$value])) {
+                if (! isset($data[$value])) {
                     continue;
                 }
 
@@ -96,7 +96,7 @@ class Telegram
                         $file instanceof StreamInterface   => $file,
                     };
                 }
-            } elseif (!array_is_assoc($data[$key])) {
+            } elseif (! array_is_assoc($data[$key])) {
 
                 foreach ($data[$key] as &$item) {
                     $streams += $this->extractFiles($value, $item);
@@ -146,7 +146,7 @@ class Telegram
 
     protected function makeResultObject(mixed $result, string|array|null $returnType = null): mixed
     {
-        if (!is_array($result)) {
+        if (! is_array($result)) {
             return $result;
         }
 

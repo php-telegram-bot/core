@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\BotCommandScope;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getType() Scope type

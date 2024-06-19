@@ -2,8 +2,8 @@
 
 namespace PhpTelegramBot\Core\Entities\InputMedia;
 
+use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Entity;
-use PhpTelegramBot\Core\Entities\Factory;
 
 /**
  * @method string getType() Type of the result
