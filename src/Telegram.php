@@ -9,6 +9,9 @@ use PhpTelegramBot\Core\ApiMethods\SendsStickers;
 use PhpTelegramBot\Core\ApiMethods\UpdatesMessages;
 use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Update;
+use PhpTelegramBot\Core\Events\Event;
+use PhpTelegramBot\Core\Events\IncomingUpdate;
+use PhpTelegramBot\Core\Exceptions\InvalidArgumentException;
 use PhpTelegramBot\Core\Exceptions\TelegramException;
 use Psr\Http\Message\StreamInterface;
 
@@ -101,6 +104,7 @@ class Telegram
                 foreach ($data[$key] as &$item) {
                     $streams += $this->extractFiles($value, $item);
                 }
+
             } else {
 
                 $streams += $this->extractFiles($value, $data[$key]);
@@ -114,7 +118,7 @@ class Telegram
     {
         $requestUri = $this->apiBaseUri . '/bot' . $this->botToken . '/' . $methodName;
 
-        $streams = $this->extractFiles(self::inputFileFields()[$methodName] ?? null, $data);
+        $streams = $this->extractFiles(self::inputFileFields()[$methodName] ?? [], $data);
 
         $response = match (true) {
             empty($data)        => $this->client->get($requestUri),
@@ -177,6 +181,11 @@ class Telegram
     public function handle()
     {
         $data = file_get_contents('php://input');
+
+        if (empty($data)) {
+            return;
+        }
+
         $json = json_decode($data, true);
 
         $update = new Update($json);
@@ -184,8 +193,198 @@ class Telegram
         $this->processUpdate($update);
     }
 
+    protected function dispatch(Event $event)
+    {
+        $listeners = $this->eventListeners[$event::class] ?? [];
+
+        foreach ($listeners as $callback) {
+            $callback($event, $this);
+        }
+    }
+
     protected function processUpdate(Update $update)
     {
-        //
+        // IncomingUpdate Event
+        $this->dispatch(new IncomingUpdate($update));
+
+        // Update Types
+        foreach ($this->updateTypeCallbacks as $key => $callbacks) {
+            if (! is_null($update->$key)) {
+                foreach ($callbacks as $callback) {
+                    $callback($update, $this);
+                }
+            }
+        }
+
+        // Message Types
+        $message = $update->getMessage();
+        if ($message !== null) {
+            foreach ($this->messageTypeCallbacks as $key => $callbacks) {
+                if (! is_null($message->$key)) {
+                    foreach ($callbacks as $callback) {
+                        $callback($update, $this);
+                    }
+                }
+            }
+        }
+
+        // Commands
+        $command = $update->getMessage()?->getText() ?? null;
+        if ($command !== null && str_starts_with($command, '/')) {
+            // Cut / from beginning
+            $command = ltrim($command, '/');
+
+            // Cut username
+            $command = explode(' ', $command, 2)[0];
+            [$command, $username] = explode('@', $command, 2) + [null, null];
+
+            // TODO: Check if the username belongs to this bot...
+
+            // Get callbacks
+            $callbacks = $this->commandCallbacks[$command] ?? [];
+
+            foreach ($callbacks as $callback) {
+                $callback($update, $this);
+            }
+        }
+    }
+
+    /**
+     * @var array<class-string<Event>, array<callable>>
+     */
+    protected array $eventListeners = [];
+
+    /**
+     * @param  class-string<Event>      $event
+     * @param  callable|array<callable> $callback
+     * @return $this
+     */
+    public function registerEventListener(string $event, callable|array $callback): static
+    {
+        if (is_callable($callback)) {
+            $callback = [$callback];
+        }
+
+        if (! is_subclass_of($event, Event::class)) {
+            throw new InvalidArgumentException("$event is not a PhpTelegramBot Event");
+        }
+
+        $this->eventListeners[$event] = array_merge($this->eventListeners[$event] ?? [], $callback);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<class-string<Event>, callable|array<callable>> $callbacks
+     * @return $this
+     */
+    public function registerEventListeners(array $callbacks): static
+    {
+        foreach ($callbacks as $event => $callback) {
+            $this->registerEventListener($event, $callback);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @var array<string, array<callable>>
+     */
+    protected array $updateTypeCallbacks = [];
+
+    /**
+     * @param  callable|array<callable> $callback
+     * @return $this
+     */
+    public function registerUpdateType(string $updateType, callable|array $callback): static
+    {
+        if (is_callable($callback)) {
+            $callback = [$callback];
+        }
+
+        $this->updateTypeCallbacks[$updateType] = array_merge($this->updateTypeCallbacks[$updateType] ?? [], $callback);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<string, callable|array<callable>> $callbacks
+     * @return $this
+     */
+    public function registerUpdateTypes(array $callbacks): Telegram
+    {
+        foreach ($callbacks as $type => $callback) {
+            $this->registerUpdateType($type, $callback);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @var array<string, array<callable>>
+     */
+    protected array $messageTypeCallbacks = [];
+
+    /**
+     * @param  callable|array<callable> $callback
+     * @return $this
+     */
+    public function registerMessageType(string $messageType, array|callable $callback): static
+    {
+        if (is_callable($callback)) {
+            $callback = [$callback];
+        }
+
+        $this->messageTypeCallbacks[$messageType] = array_merge($this->messageTypeCallbacks[$messageType] ?? [], $callback);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<string, callable|array<callable>> $callbacks
+     * @return $this
+     */
+    public function registerMessageTypes(array $callbacks): static
+    {
+        foreach ($callbacks as $messageType => $callback) {
+            $this->registerMessageType($messageType, $callback);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @var array<string, array<callable>>
+     */
+    protected array $commandCallbacks = [];
+
+    /**
+     * @param  callable|array<callable> $callback
+     * @return $this
+     */
+    public function registerCommand(string $command, callable|array $callback): static
+    {
+        $command = ltrim($command, '/');
+
+        if (is_callable($callback)) {
+            $callback = [$callback];
+        }
+
+        $this->commandCallbacks[$command] = array_merge($this->commandCallbacks[$command] ?? [], $callback);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<string, callable|array<callable>> $callbacks
+     * @return $this
+     */
+    public function registerCommands(array $callbacks): static
+    {
+        foreach ($callbacks as $command => $callback) {
+            $this->registerCommand($command, $callback);
+        }
+
+        return $this;
     }
 }

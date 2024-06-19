@@ -24,7 +24,7 @@ abstract class Entity implements JsonSerializable
 
     public function __get(string $name)
     {
-        return $this->fields[$name];
+        return $this->fields[$name] ?? null;
     }
 
     public function __set(string $name, $value): void
@@ -64,10 +64,10 @@ abstract class Entity implements JsonSerializable
 
     private function getField(string $name): mixed
     {
-        $data = $this->fields[$name];
+        $data = $this->fields[$name] ?? null;
 
         $subEntities = static::subEntities();
-        if (! isset($subEntities[$name])) {
+        if (is_null($data) || ! isset($subEntities[$name])) {
             return $data;
         }
 
@@ -110,6 +110,6 @@ abstract class Entity implements JsonSerializable
 
     public function jsonSerialize(): mixed
     {
-        return array_filter($this->fields, fn ($value, $key) => ! is_null($value) && str_starts_with($key, '__'), ARRAY_FILTER_USE_BOTH);
+        return array_filter($this->fields, fn ($value) => ! is_null($value));
     }
 }
