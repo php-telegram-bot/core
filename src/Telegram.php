@@ -11,6 +11,9 @@ use PhpTelegramBot\Core\Contracts\Factory;
 use PhpTelegramBot\Core\Entities\Update;
 use PhpTelegramBot\Core\Events\Event;
 use PhpTelegramBot\Core\Events\IncomingUpdate;
+use PhpTelegramBot\Core\Events\UnregisteredCommand;
+use PhpTelegramBot\Core\Events\UnregisteredMessageType;
+use PhpTelegramBot\Core\Events\UnregisteredUpdateType;
 use PhpTelegramBot\Core\Exceptions\InvalidArgumentException;
 use PhpTelegramBot\Core\Exceptions\TelegramException;
 use Psr\Http\Message\StreamInterface;
@@ -208,19 +211,27 @@ class Telegram
         $this->dispatch(new IncomingUpdate($update));
 
         // Update Types
+        $registeredUpdateType = false;
         foreach ($this->updateTypeCallbacks as $key => $callbacks) {
             if (! is_null($update->$key)) {
+                $registeredUpdateType = true;
                 foreach ($callbacks as $callback) {
                     $callback($update, $this);
                 }
             }
         }
 
+        if (! $registeredUpdateType) {
+            $this->dispatch(new UnregisteredUpdateType($update));
+        }
+
         // Message Types
+        $registeredMessageType = false;
         $message = $update->getMessage();
         if ($message !== null) {
             foreach ($this->messageTypeCallbacks as $key => $callbacks) {
                 if (! is_null($message->$key)) {
+                    $registeredMessageType = true;
                     foreach ($callbacks as $callback) {
                         $callback($update, $this);
                     }
@@ -228,7 +239,12 @@ class Telegram
             }
         }
 
+        if (! $registeredMessageType) {
+            $this->dispatch(new UnregisteredMessageType($update));
+        }
+
         // Commands
+        $registeredCommand = false;
         $command = $update->getMessage()?->getText() ?? null;
         if ($command !== null && str_starts_with($command, '/')) {
             // Cut / from beginning
@@ -243,9 +259,17 @@ class Telegram
             // Get callbacks
             $callbacks = $this->commandCallbacks[$command] ?? [];
 
+            if (! empty($callbacks)) {
+                $registeredCommand = true;
+            }
+
             foreach ($callbacks as $callback) {
                 $callback($update, $this);
             }
+        }
+
+        if (! $registeredCommand) {
+            $this->dispatch(new UnregisteredCommand($update));
         }
     }
 
