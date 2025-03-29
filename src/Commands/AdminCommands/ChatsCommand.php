@@ -53,7 +53,7 @@ class ChatsCommand extends AdminCommand
      */
     public function execute(): ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
 
         $chat_id = $message->getChat()->getId();
         $text    = trim($message->getText(true));

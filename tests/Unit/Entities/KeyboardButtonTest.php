@@ -14,7 +14,7 @@ namespace Longman\TelegramBot\Tests\Unit\Entities;
 use Longman\TelegramBot\Entities\KeyboardButton;
 use Longman\TelegramBot\Entities\KeyboardButtonPollType;
 use Longman\TelegramBot\Entities\KeyboardButtonRequestChat;
-use Longman\TelegramBot\Entities\KeyboardButtonRequestUser;
+use Longman\TelegramBot\Entities\KeyboardButtonRequestUsers;
 use Longman\TelegramBot\Entities\WebAppInfo;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Tests\Unit\TestCase;
@@ -31,7 +31,7 @@ class KeyboardButtonTest extends TestCase
     public function testKeyboardButtonSuccess(): void
     {
         new KeyboardButton(['text' => 'message']);
-        new KeyboardButton(['text' => 'message', 'request_user' => new KeyboardButtonRequestUser([])]);
+        new KeyboardButton(['text' => 'message', 'request_users' => new KeyboardButtonRequestUsers([])]);
         new KeyboardButton(['text' => 'message', 'request_chat' => new KeyboardButtonRequestChat([])]);
         new KeyboardButton(['text' => 'message', 'request_contact' => true]);
         new KeyboardButton(['text' => 'message', 'request_location' => true]);
@@ -49,8 +49,8 @@ class KeyboardButtonTest extends TestCase
     public function testReturnsSubentitiesOnArray()
     {
         $button = new KeyboardButton('message');
-        $button->request_user = [];
-        $this->assertInstanceOf(KeyboardButtonRequestUser::class, $button->getRequestUser());
+        $button->request_users = [];
+        $this->assertInstanceOf(KeyboardButtonRequestUsers::class, $button->getRequestUsers());
 
         $button = new KeyboardButton('message');
         $button->request_chat = [];

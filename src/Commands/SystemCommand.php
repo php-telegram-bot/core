@@ -53,7 +53,7 @@ abstract class SystemCommand extends Command
      */
     protected function executeActiveConversation(): ?ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
         if ($message === null) {
             return null;
         }
@@ -84,7 +84,7 @@ abstract class SystemCommand extends Command
      */
     protected function executeDeprecatedSystemCommand(): ?ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
         if ($message === null) {
             return null;
         }

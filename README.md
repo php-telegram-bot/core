@@ -1,3 +1,5 @@
+
+<h1 align="center">The development of the project is currently on hold until further notice. We will provide updates as soon as they become available.</h1>
 <h1 align="center">
     PHP Telegram Bot<br>
 	<br>
@@ -7,7 +9,7 @@
 
 A Telegram Bot based on the official [Telegram Bot API]
 
-[![API Version](https://img.shields.io/badge/Bot%20API-6.7%20%28April%202023%29-32a2da.svg)](https://core.telegram.org/bots/api-changelog#april-21-2023)
+[![API Version](https://img.shields.io/badge/Bot%20API-7.1%20%28February%202024%29-32a2da.svg)](https://core.telegram.org/bots/api-changelog#february-16-2024)
 [![Join the bot support group on Telegram](https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg)](https://telegram.me/PHP_Telegram_Bot_Support)
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg)](#donate)
 
@@ -18,7 +20,7 @@ A Telegram Bot based on the official [Telegram Bot API]
 [![Dependencies](https://tidelift.com/badges/github/php-telegram-bot/core?style=flat)][Tidelift]
 [![Total Downloads](https://img.shields.io/packagist/dt/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D7.3-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D8.1-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
 
 ## Table of Contents
@@ -78,7 +80,7 @@ This Bot aims to provide a platform where one can simply write a bot and have in
 
 The Bot can:
 - Retrieve updates with [webhook](#webhook-installation) and [getUpdates](#getupdates-installation) methods.
-- Supports all types and methods according to Telegram Bot API 6.7 (April 2023).
+- Supports all types and methods according to Telegram Bot API 7.1 (February 2024).
 - Supports supergroups.
 - Handle commands in chat with other bots.
 - Manage Channel from the bot admin interface.
@@ -176,7 +178,7 @@ Create *composer.json* file
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "php": ">=7.3",
+        "php": "^8.1",
         "longman/telegram-bot": "*"
     }
 }
@@ -334,7 +336,7 @@ $ ./getUpdatesCLI.php
 
 ### getUpdates without database
 
-If you choose to / or are obliged to use the `getUpdates` method without a database, you can replace the `$telegram->useMySQL(...);` line above with:
+If you choose to / or are obliged to use the `getUpdates` method without a database, you can replace the `$telegram->enableMySql(...);` line above with:
 ```php
 $telegram->useGetUpdatesWithoutDatabase();
 ```
@@ -389,15 +391,15 @@ The reason for denying an update can be defined with the `$reason` parameter. Th
 
 ### Types
 
-All types are implemented according to Telegram API 6.7 (April 2023).
+All types are implemented according to Telegram API 7.1 (February 2024).
 
 ### Inline Query
 
-Full support for inline query according to Telegram API 6.7 (April 2023).
+Full support for inline query according to Telegram API 7.1 (February 2024).
 
 ### Methods
 
-All methods are implemented according to Telegram API 6.7 (April 2023).
+All methods are implemented according to Telegram API 7.1 (February 2024).
 
 #### Send Message
 
@@ -646,6 +648,7 @@ Here's a list of projects that feats this library, feel free to add yours!
 - [OSMdeWikiBot](https://github.com/OSM-de/TelegramWikiBot) ([@OSM_de](https://t.me/OSM_de))
 - [pass-generator-webbot](https://github.com/OxMohsen/pass-generator-webbot)
 - [Chess Quiz Bot](https://github.com/1int/chess-quiz-bot)
+- [PHP Telegram Bot - Symfony Bundle](https://github.com/m4n50n/telegram_bot_bundle)
 
 ## Troubleshooting
 

@@ -128,11 +128,11 @@ abstract class Command
      */
     protected $need_mysql = false;
 
-    /*
-    * Make sure this command only executes on a private chat.
-    *
-    * @var bool
-    */
+    /**
+     * Make sure this command only executes on a private chat.
+     *
+     * @var bool
+     */
     protected $private_only = false;
 
     /**
@@ -184,7 +184,7 @@ abstract class Command
         }
 
         if ($this->isPrivateOnly() && $this->removeNonPrivateMessage()) {
-            $message = $this->getMessage();
+            $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
 
             if ($user = $message->getFrom()) {
                 return Request::sendMessage([
@@ -193,7 +193,7 @@ abstract class Command
                     'text'       => sprintf(
                         "/%s command is only available in a private chat.\n(`%s`)",
                         $this->getName(),
-                        $message->getText()
+                        $message->getText(),
                     ),
                 ]);
             }
@@ -418,10 +418,16 @@ abstract class Command
     public function replyToChat(string $text, array $data = []): ServerResponse
     {
         if ($message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost()) {
-            return Request::sendMessage(array_merge([
+            $reply = [
                 'chat_id' => $message->getChat()->getId(),
                 'text'    => $text,
-            ], $data));
+            ];
+
+            if ($message->getIsTopicMessage()) {
+                $reply['message_thread_id'] = $message->getMessageThreadId();
+            }
+
+            return Request::sendMessage(array_merge($reply, $data));
         }
 
         return Request::emptyResponse();

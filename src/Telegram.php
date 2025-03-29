@@ -37,7 +37,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.81.0';
+    protected $version = '0.83.0';
 
     /**
      * Telegram API key
@@ -303,7 +303,7 @@ class Telegram
                     }
                 }
             } catch (Exception $e) {
-                throw new TelegramException('Error getting commands from path: ' . $path, $e);
+                throw new TelegramException('Error getting commands from path: ' . $path, 0, $e);
             }
         }
 

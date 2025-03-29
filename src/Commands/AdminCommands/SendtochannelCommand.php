@@ -63,7 +63,7 @@ class SendtochannelCommand extends AdminCommand
      */
     public function execute(): ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
         $chat_id = $message->getChat()->getId();
         $user_id = $message->getFrom()->getId();
 
@@ -359,7 +359,7 @@ class SendtochannelCommand extends AdminCommand
      */
     public function executeNoDb(): ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
         $text    = trim($message->getText(true));
 
         if ($text === '') {

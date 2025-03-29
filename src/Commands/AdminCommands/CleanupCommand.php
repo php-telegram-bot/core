@@ -365,7 +365,7 @@ class CleanupCommand extends AdminCommand
      */
     public function execute(): ServerResponse
     {
-        $message = $this->getMessage();
+        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
         $text    = $message->getText(true);
 
         // Dry run?
