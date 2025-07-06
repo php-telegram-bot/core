@@ -13,6 +13,54 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [1.0.3] - 2024-05-07
+### Notes
+- [:ledger: View file changes][1.0.3]
+- Support for Telegram Bot API 7.3.
+### Added
+- **Poll Enhancements:**
+    - New entity `InputPollOption` (`src/Entities/Poll/InputPollOption.php`) with properties `text` and optional `text_entities`.
+    - Added optional property `question_entities` (array of `MessageEntity`) to `src/Entities/Poll.php`.
+    - Added optional property `text_entities` (array of `MessageEntity`) to `src/Entities/PollOption.php`.
+    - Updated `sendPoll` method in `src/Request.php`:
+        - Changed `options` parameter to be an array of `InputPollOption`.
+        - Added optional parameters `question_parse_mode` (string) and `question_entities` (array of `MessageEntity`).
+- **Chat and getChat Method Refactoring:**
+    - New entity `ChatFullInfo` (`src/Entities/ChatFullInfo.php`) containing all properties from `Chat` entity plus properties from `getChat` (e.g., `description`, `invite_link`, `pinned_message`, `bio`) and new optional property `max_reaction_count` (integer).
+    - Updated `getChat` method in `src/Request.php` docblock to return a `ServerResponse` with a `ChatFullInfo` object.
+- **Miscellaneous Updates:**
+    - New Chat Background entities:
+        - `src/Entities/ChatBackground.php`
+        - `src/Entities/Background/BackgroundType.php`
+        - `src/Entities/Background/BackgroundFill.php`
+    - Added optional property `chat_background_set` (`ChatBackground`) to `src/Entities/Message.php`.
+    - Added optional property `via_join_request` (boolean) to `src/Entities/ChatMemberUpdated.php`.
+    - Added optional parameter `live_period` (integer) to `editMessageLiveLocation` method in `src/Request.php`.
+### Changed
+- Version bumped to 1.0.3.
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [1.0.2] - 2025-07-04
+### Notes
+- [:ledger: View file changes][1.0.2]
+- Support for Telegram Bot API 7.2.
+### Added
+- Bot API 7.2 support. This includes:
+    - Business Account Integration (New entities: `BusinessConnection`, `BusinessMessagesDeleted`; Updated `Update.php`, `Request.php`, `Message.php`)
+    - Business Information Entities (New entities: `BusinessIntro`, `BusinessLocation`, `BusinessOpeningHours`, `BusinessOpeningHoursInterval`; Updated `Chat.php`)
+    - Sticker Pack Modifications (Updated `StickerSet.php`, `InputSticker.php`, `Request.php`)
+    - Request & Shared Object Improvements (New entity: `SharedUser`; Updated `KeyboardButtonRequestUsers.php`, `KeyboardButtonRequestChat.php`, `UsersShared.php`, `ChatShared.php`)
+    - Miscellaneous Changes (New entity: `Birthdate`; Updated `Chat.php`, `Message.php`, `User.php`)
+### Changed
+- Version bumped to 1.0.2.
+### Deprecated
+### Removed
+### Fixed
+### Security
+
 ## [0.83.0] - 2024-05-25
 ### Notes
 - [:ledger: View file changes][0.83.0] ∙ [:page_with_curl: DB migration script][0.83.0-sql-migration]
@@ -694,7 +742,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
-[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[Unreleased]: https://github.com/php-telegram-bot/core/compare/1.0.3...develop
+[1.0.3]: https://github.com/php-telegram-bot/core/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/php-telegram-bot/core/compare/0.83.0...1.0.2
 [0.83.0]: https://github.com/php-telegram-bot/core/compare/0.82.0...0.83.0
 [0.82.0]: https://github.com/php-telegram-bot/core/compare/0.81.0...0.82.0
 [0.81.0]: https://github.com/php-telegram-bot/core/compare/0.80.0...0.81.0

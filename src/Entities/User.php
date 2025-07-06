@@ -27,6 +27,7 @@ namespace Longman\TelegramBot\Entities;
  * @method bool   getCanJoinGroups()           Optional. True, if the bot can be invited to groups. Returned only in getMe.
  * @method bool   getCanReadAllGroupMessages() Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
  * @method bool   getSupportsInlineQueries()   Optional. True, if the bot supports inline queries. Returned only in getMe.
+ * @method bool   getCanConnectToBusiness()    Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.
  */
 class User extends Entity
 {
