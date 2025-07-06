@@ -31,6 +31,7 @@ namespace Longman\TelegramBot\Entities;
  * @method MessageEntity[] getExplanationEntities()   Optional. Special entities like usernames, URLs, bot commands, etc. that appear in the explanation
  * @method int             getOpenPeriod()            Optional. Amount of time in seconds the poll will be active after creation
  * @method int             getCloseDate()             Optional. Point in time (Unix timestamp) when the poll will be automatically closed
+ * @method MessageEntity[] getQuestionEntities()      Optional. Special entities that appear in the question. Currently, only custom emoji entities are allowed in poll questions
  */
 class Poll extends Entity
 {
@@ -42,6 +43,7 @@ class Poll extends Entity
         return [
             'options'              => [PollOption::class],
             'explanation_entities' => [MessageEntity::class],
+            'question_entities'    => [MessageEntity::class],
         ];
     }
 }

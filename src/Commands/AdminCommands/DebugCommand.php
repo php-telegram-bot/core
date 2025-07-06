@@ -13,7 +13,6 @@ namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Exception;
 use Longman\TelegramBot\Commands\AdminCommand;
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -51,7 +50,6 @@ class DebugCommand extends AdminCommand
      */
     public function execute(): ServerResponse
     {
-        $pdo     = DB::getPdo();
         $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
         $chat    = $message->getChat();
         $text    = strtolower($message->getText(true));
@@ -83,8 +81,7 @@ class DebugCommand extends AdminCommand
         $debug_info[] = sprintf('*PHP version:* `%1$s%2$s; %3$s; %4$s`', PHP_VERSION, $php_bit, PHP_SAPI, PHP_OS);
         $debug_info[] = sprintf('*Maximum PHP script execution time:* `%d seconds`', ini_get('max_execution_time'));
 
-        $mysql_version = $pdo ? $pdo->query('SELECT VERSION() AS version')->fetchColumn() : null;
-        $debug_info[]  = sprintf('*MySQL version:* `%s`', $mysql_version ?: 'disabled');
+        $debug_info[]  = sprintf('*MySQL version:* `%s`', 'disabled');
 
         $debug_info[] = sprintf('*Operating System:* `%s`', php_uname());
 

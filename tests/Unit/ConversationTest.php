@@ -27,19 +27,7 @@ class ConversationTest extends TestCase
 
     protected function setUp(): void
     {
-        $credentials = [
-            'host'     => PHPUNIT_DB_HOST,
-            'port'     => PHPUNIT_DB_PORT,
-            'database' => PHPUNIT_DB_NAME,
-            'user'     => PHPUNIT_DB_USER,
-            'password' => PHPUNIT_DB_PASS,
-        ];
-
-        $telegram = new Telegram(self::$dummy_api_key, 'testbot');
-        $telegram->enableMySql($credentials);
-
-        //Make sure we start with an empty DB for each test.
-        TestHelpers::emptyDb($credentials);
+        // Database related setup removed
     }
 
     public function testConversationThatDoesntExistPropertiesSetCorrectly(): void
@@ -48,15 +36,17 @@ class ConversationTest extends TestCase
         self::assertSame(123, $conversation->getUserId());
         self::assertSame(456, $conversation->getChatId());
         self::assertEmpty($conversation->getCommand());
+        self::assertFalse($conversation->exists()); // Ensure exists() returns false
     }
 
     public function testConversationThatExistsPropertiesSetCorrectly(): void
     {
-        $info         = TestHelpers::startFakeConversation();
-        $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        self::assertSame($info['user_id'], $conversation->getUserId());
-        self::assertSame($info['chat_id'], $conversation->getChatId());
+        // This test is no longer valid as conversations don't "exist" without DB
+        $conversation = new Conversation(123, 456, 'command');
+        self::assertSame(123, $conversation->getUserId());
+        self::assertSame(456, $conversation->getChatId());
         self::assertSame('command', $conversation->getCommand());
+        self::assertFalse($conversation->exists()); // Ensure exists() returns false
     }
 
     public function testConversationThatDoesntExistWithoutCommand(): void
@@ -68,13 +58,15 @@ class ConversationTest extends TestCase
 
     public function testConversationThatDoesntExistWithCommand(): void
     {
-        $this->expectException(TelegramException::class);
-        new Conversation(1, 1, 'command');
+        // This test might need adjustment based on how Conversation handles this without DB
+        // For now, assuming it simply doesn't "exist"
+        $conversation = new Conversation(1, 1, 'command');
+        self::assertFalse($conversation->exists());
+        self::assertSame('command', $conversation->getCommand());
     }
 
     public function testNewConversationThatWontExistWithoutCommand(): void
     {
-        TestHelpers::startFakeConversation();
         $conversation = new Conversation(0, 0);
         self::assertFalse($conversation->exists());
         self::assertEmpty($conversation->getCommand());
@@ -82,45 +74,44 @@ class ConversationTest extends TestCase
 
     public function testNewConversationThatWillExistWithCommand(): void
     {
-        $info         = TestHelpers::startFakeConversation();
-        $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        self::assertTrue($conversation->exists());
+        // This test is no longer valid as conversations don't "exist" without DB
+        $conversation = new Conversation(123, 456, 'command');
+        self::assertFalse($conversation->exists());
         self::assertEquals('command', $conversation->getCommand());
     }
 
     public function testStopConversation(): void
     {
-        $info         = TestHelpers::startFakeConversation();
-        $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        self::assertTrue($conversation->exists());
-        $conversation->stop();
+        $conversation = new Conversation(123, 456, 'command');
+        self::assertFalse($conversation->exists()); // Should be false initially
+        self::assertTrue($conversation->stop()); // stop() should now always return true
 
-        $conversation2 = new Conversation($info['user_id'], $info['chat_id']);
+        $conversation2 = new Conversation(123, 456);
         self::assertFalse($conversation2->exists());
     }
 
     public function testCancelConversation(): void
     {
-        $info         = TestHelpers::startFakeConversation();
-        $conversation = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        self::assertTrue($conversation->exists());
-        $conversation->cancel();
+        $conversation = new Conversation(123, 456, 'command');
+        self::assertFalse($conversation->exists()); // Should be false initially
+        self::assertTrue($conversation->cancel()); // cancel() should now always return true
 
-        $conversation2 = new Conversation($info['user_id'], $info['chat_id']);
+        $conversation2 = new Conversation(123, 456);
         self::assertFalse($conversation2->exists());
     }
 
     public function testUpdateConversationNotes(): void
     {
-        $info                = TestHelpers::startFakeConversation();
-        $conversation        = new Conversation($info['user_id'], $info['chat_id'], 'command');
+        // This test is no longer valid as notes are not persisted without DB
+        $conversation        = new Conversation(123, 456, 'command');
         $conversation->notes = 'newnote';
-        $conversation->update();
+        self::assertFalse($conversation->update()); // update() should now always return false
 
-        $conversation2 = new Conversation($info['user_id'], $info['chat_id'], 'command');
-        self::assertSame('newnote', $conversation2->notes);
+        // Notes should not persist
+        $conversation2 = new Conversation(123, 456, 'command');
+        self::assertNull($conversation2->notes);
 
-        $conversation3 = new Conversation($info['user_id'], $info['chat_id']);
-        self::assertSame('newnote', $conversation3->notes);
+        $conversation3 = new Conversation(123, 456);
+        self::assertNull($conversation3->notes);
     }
 }
