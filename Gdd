@@ -1,0 +1,171 @@
+<?php
+
+$token = "7743718966:AAFGn1c3d3UefoIWvUJWa_V_9GShw95JXWQ";
+define('API_URL', "https://api.telegram.org/bot$token/");
+$admin_id = 7804324760; // ← ضع ID الأدمن هنا
+
+$content = file_get_contents("php://input");
+$update = json_decode($content, true);
+
+$message = $update['message'] ?? null;
+$callback_query = $update['callback_query'] ?? null;
+
+function sendMessage($chat_id, $text, $inline_keyboard = null) {
+    $data = [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'parse_mode' => 'Markdown'
+    ];
+
+    if ($inline_keyboard) {
+        $data['reply_markup'] = json_encode(['inline_keyboard' => $inline_keyboard]);
+    }
+
+    file_get_contents(API_URL . "sendMessage?" . http_build_query($data));
+}
+
+function answerCallback($callback_id, $text = '') {
+    file_get_contents(API_URL . "answerCallbackQuery?" . http_build_query([
+        'callback_query_id' => $callback_id,
+        'text' => $text,
+        'show_alert' => false
+    ]));
+}
+
+function loadPackages($game) {
+    $file = "products_$game.json";
+    return file_exists($file) ? json_decode(file_get_contents($file), true) : [];
+}
+
+function savePackages($game, $packages) {
+    file_put_contents("products_$game.json", json_encode($packages, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
+
+// callback query
+if ($callback_query) {
+    $chat_id = $callback_query['message']['chat']['id'];
+    $data = $callback_query['data'];
+    $callback_id = $callback_query['id'];
+
+    if ($data == "pubg" || $data == "freefire") {
+        $step = $data == "pubg" ? "pubg_id" : "ff_id";
+        $gameName = $data == "pubg" ? "ببجي" : "فري فاير";
+        sendMessage($chat_id, "🔹 أدخل ID حسابك في $gameName:");
+        file_put_contents("user_step_$chat_id.txt", $step);
+    } elseif ($data == "deposit") {
+        sendMessage($chat_id, "💳 أرسل الآن المبلغ الذي تريد إيداعه:");
+        file_put_contents("user_step_$chat_id.txt", "deposit_amount");
+    }
+
+    answerCallback($callback_id);
+    exit;
+}
+
+// message handler
+if ($message) {
+    $chat_id = $message['chat']['id'];
+    $text = trim($message['text'] ?? '');
+    $step = @file_get_contents("user_step_$chat_id.txt");
+
+    // ⚙️ أوامر الأدمن
+    if ($chat_id == $admin_id) {
+        if ($text == '/admin') {
+            sendMessage($chat_id, "🛠️ مرحباً بك، هذه أوامر التحكم:\n" .
+                "/add_pubg_package [الاسم]\n" .
+                "/add_ff_package [الاسم]\n" .
+                "/list_products\n" .
+                "/delete_package [pubg|ff] [الرقم]");
+            exit;
+        }
+
+        if (strpos($text, "/add_pubg_package") === 0) {
+            $name = trim(str_replace("/add_pubg_package", "", $text));
+            if ($name != "") {
+                $packages = loadPackages("pubg");
+                $packages[] = $name;
+                savePackages("pubg", $packages);
+                sendMessage($chat_id, "✅ تم إضافة باقة ببجي: $name");
+            } else {
+                sendMessage($chat_id, "❗ اكتب اسم الباقة بعد الأمر.");
+            }
+            exit;
+        }
+
+        if (strpos($text, "/add_ff_package") === 0) {
+            $name = trim(str_replace("/add_ff_package", "", $text));
+            if ($name != "") {
+                $packages = loadPackages("ff");
+                $packages[] = $name;
+                savePackages("ff", $packages);
+                sendMessage($chat_id, "✅ تم إضافة باقة فري فاير: $name");
+            } else {
+                sendMessage($chat_id, "❗ اكتب اسم الباقة بعد الأمر.");
+            }
+            exit;
+        }
+
+        if ($text == '/list_products') {
+            $pubg = loadPackages("pubg");
+            $ff = loadPackages("ff");
+            $msg = "📦 *الباقات المتوفرة:*\n\n*ببجي:*\n";
+            foreach ($pubg as $i => $p) $msg .= ($i+1).". $p\n";
+            $msg .= "\n*فري فاير:*\n";
+            foreach ($ff as $i => $p) $msg .= ($i+1).". $p\n";
+            sendMessage($chat_id, $msg);
+            exit;
+        }
+
+        if (strpos($text, "/delete_package") === 0) {
+            $parts = explode(" ", $text);
+            if (count($parts) == 3) {
+                $game = $parts[1];
+                $index = (int)$parts[2] - 1;
+                $packages = loadPackages($game);
+                if (isset($packages[$index])) {
+                    $removed = $packages[$index];
+                    unset($packages[$index]);
+                    savePackages($game, array_values($packages));
+                    sendMessage($chat_id, "❌ تم حذف الباقة: $removed");
+                } else {
+                    sendMessage($chat_id, "❗ رقم غير صحيح.");
+                }
+            } else {
+                sendMessage($chat_id, "❗ الصيغة: /delete_package pubg 1");
+            }
+            exit;
+        }
+    }
+
+    // المستخدم العادي
+    if ($text == '/start') {
+        $buttons = [
+            [['text' => '🎯 شحن ببجي موبايل', 'callback_data' => 'pubg'], ['text' => '🔥 شحن فري فاير', 'callback_data' => 'freefire']],
+            [['text' => '💳 إيداع الرصيد', 'callback_data' => 'deposit']]
+        ];
+        if ($chat_id == $admin_id) {
+            $buttons[] = [['text' => '🛠️ لوحة التحكم', 'callback_data' => 'admin']];
+        }
+        sendMessage($chat_id, "🎮 *مرحباً بك في بوت شحن الألعاب*\nاختر أحد الخيارات:", $buttons);
+        exit;
+    }
+
+    // التعامل مع الخطوات
+    if ($step == "pubg_id") {
+        file_put_contents("pubg_id_$chat_id.txt", $text);
+        $packs = loadPackages("pubg");
+        $keyboard = array_map(fn($p) => [['text' => $p, 'callback_data' => 'none']], $packs);
+        sendMessage($chat_id, "✅ ID: *$text*\nاختر الباقة:", $keyboard);
+        unlink("user_step_$chat_id.txt");
+    } elseif ($step == "ff_id") {
+        file_put_contents("ff_id_$chat_id.txt", $text);
+        $packs = loadPackages("ff");
+        $keyboard = array_map(fn($p) => [['text' => $p, 'callback_data' => 'none']], $packs);
+        sendMessage($chat_id, "✅ ID: *$text*\nاختر الباقة:", $keyboard);
+        unlink("user_step_$chat_id.txt");
+    } elseif ($step == "deposit_amount") {
+        sendMessage($chat_id, "✅ تم استلام المبلغ: *$text*.\nسيتم التواصل معك قريباً.");
+        unlink("user_step_$chat_id.txt");
+    } else {
+        sendMessage($chat_id, "❓ اكتب /start لعرض الخيارات.");
+    }
+}
