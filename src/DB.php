@@ -14,19 +14,9 @@ namespace Longman\TelegramBot;
 
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\Chat;
-use Longman\TelegramBot\Entities\ChatBoostRemoved;
-use Longman\TelegramBot\Entities\ChatBoostUpdated;
-use Longman\TelegramBot\Entities\ChatJoinRequest;
-use Longman\TelegramBot\Entities\ChatMemberUpdated;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
-use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginChannel;
-use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginChat;
-use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginHiddenUser;
-use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginUser;
-use Longman\TelegramBot\Entities\MessageReactionCountUpdated;
-use Longman\TelegramBot\Entities\MessageReactionUpdated;
 use Longman\TelegramBot\Entities\Payments\PreCheckoutQuery;
 use Longman\TelegramBot\Entities\Payments\ShippingQuery;
 use Longman\TelegramBot\Entities\Poll;
@@ -82,18 +72,13 @@ class DB
         array $credentials,
         Telegram $telegram,
         $table_prefix = '',
-        $encoding = 'utf8mb4',
+        $encoding = 'utf8mb4'
     ): PDO {
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
         }
-        if (isset($credentials['unix_socket'])) {
-            $dsn = 'mysql:unix_socket=' . $credentials['unix_socket'];
-        } else {
-            $dsn = 'mysql:host=' . $credentials['host'];
-        }
-        $dsn .= ';dbname=' . $credentials['database'];
 
+        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
         if (!empty($credentials['port'])) {
             $dsn .= ';port=' . $credentials['port'];
         }
@@ -131,7 +116,7 @@ class DB
     public static function externalInitialize(
         PDO $external_pdo_connection,
         Telegram $telegram,
-        string $table_prefix = '',
+        string $table_prefix = ''
     ): PDO {
         if ($external_pdo_connection === null) {
             throw new TelegramException('MySQL external connection not provided!');
@@ -155,19 +140,13 @@ class DB
         $tables = [
             'callback_query',
             'chat',
-            'chat_boost_updated',
-            'chat_boost_removed',
-            'chat_join_request',
-            'chat_member_updated',
             'chosen_inline_result',
             'edited_message',
             'inline_query',
             'message',
-            'message_reaction',
-            'message_reaction_count',
+            'pre_checkout_query',
             'poll',
             'poll_answer',
-            'pre_checkout_query',
             'request_limiter',
             'shipping_query',
             'telegram_update',
@@ -304,12 +283,12 @@ class DB
     /**
      * Convert array of Entity items to a JSON array
      *
+     * @todo Find a better way, as json_* functions are very heavy
+     *
      * @param array $entities
      * @param mixed $default
      *
      * @return mixed
-     * @todo Find a better way, as json_* functions are very heavy
-     *
      */
     public static function entitiesArrayToJson(array $entities, $default = null)
     {
@@ -328,6 +307,21 @@ class DB
     /**
      * Insert entry to telegram_update table
      *
+     * @param int         $update_id
+     * @param int|null    $chat_id
+     * @param int|null    $message_id
+     * @param int|null    $edited_message_id
+     * @param int|null    $channel_post_id
+     * @param int|null    $edited_channel_post_id
+     * @param string|null $inline_query_id
+     * @param string|null $chosen_inline_result_id
+     * @param string|null $callback_query_id
+     * @param string|null $shipping_query_id
+     * @param string|null $pre_checkout_query_id
+     * @param string|null $poll_id
+     * @param string|null $poll_answer_poll_id
+     *
+     * @return bool If the insert was successful
      * @throws TelegramException
      */
     protected static function insertTelegramUpdate(
@@ -337,23 +331,16 @@ class DB
         ?int $edited_message_id = null,
         ?int $channel_post_id = null,
         ?int $edited_channel_post_id = null,
-        ?string $message_reaction_id = null,
-        ?string $message_reaction_count_id = null,
         ?string $inline_query_id = null,
         ?string $chosen_inline_result_id = null,
         ?string $callback_query_id = null,
         ?string $shipping_query_id = null,
         ?string $pre_checkout_query_id = null,
         ?string $poll_id = null,
-        ?string $poll_answer_poll_id = null,
-        ?string $my_chat_member_updated_id = null,
-        ?string $chat_member_updated_id = null,
-        ?string $chat_join_request_id = null,
-        ?string $chat_boost_updated_id = null,
-        ?string $chat_boost_removed_id = null,
+        ?string $poll_answer_poll_id = null
     ): ?bool {
-        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $message_reaction_id === null && $message_reaction_count_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null && $my_chat_member_updated_id === null && $chat_member_updated_id === null && $chat_join_request_id === null && $chat_boost_updated_id === null && $chat_boost_removed_id === null) {
-            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, message_reaction_id, message_reaction_count_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id, my_chat_member_updated_id, chat_member_updated_id, chat_join_request_id, chat_boost_updated_id, chat_boost_removed_id are all null');
+        if ($message_id === null && $edited_message_id === null && $channel_post_id === null && $edited_channel_post_id === null && $inline_query_id === null && $chosen_inline_result_id === null && $callback_query_id === null && $shipping_query_id === null && $pre_checkout_query_id === null && $poll_id === null && $poll_answer_poll_id === null) {
+            throw new TelegramException('message_id, edited_message_id, channel_post_id, edited_channel_post_id, inline_query_id, chosen_inline_result_id, callback_query_id, shipping_query_id, pre_checkout_query_id, poll_id, poll_answer_poll_id are all null');
         }
 
         if (!self::isDbConnected()) {
@@ -363,21 +350,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_TELEGRAM_UPDATE . '`
-                (
-                    `id`, `chat_id`, `message_id`, `edited_message_id`,
-                    `channel_post_id`, `edited_channel_post_id`, `message_reaction_id`, `message_reaction_count_id`,
-                    `inline_query_id`, `chosen_inline_result_id`,
-                    `callback_query_id`, `shipping_query_id`, `pre_checkout_query_id`,
-                    `poll_id`, `poll_answer_poll_id`, `my_chat_member_updated_id`, `chat_member_updated_id`,
-                    `chat_join_request_id`, `chat_boost_updated_id`, `chat_boost_removed_id`
-                ) VALUES (
-                    :id, :chat_id, :message_id, :edited_message_id,
-                    :channel_post_id, :edited_channel_post_id, :message_reaction_id, :message_reaction_count_id,
-                    :inline_query_id, :chosen_inline_result_id,
-                    :callback_query_id, :shipping_query_id, :pre_checkout_query_id,
-                    :poll_id, :poll_answer_poll_id, :my_chat_member_updated_id, :chat_member_updated_id,
-                    :chat_join_request_id, :chat_boost_updated_id, :chat_boost_removed_id
-                )
+                (`id`, `chat_id`, `message_id`, `edited_message_id`, `channel_post_id`, `edited_channel_post_id`, `inline_query_id`, `chosen_inline_result_id`, `callback_query_id`, `shipping_query_id`, `pre_checkout_query_id`, `poll_id`, `poll_answer_poll_id`)
+                VALUES
+                (:id, :chat_id, :message_id, :edited_message_id, :channel_post_id, :edited_channel_post_id, :inline_query_id, :chosen_inline_result_id, :callback_query_id, :shipping_query_id, :pre_checkout_query_id, :poll_id, :poll_answer_poll_id)
             ');
 
             $sth->bindValue(':id', $update_id);
@@ -386,8 +361,6 @@ class DB
             $sth->bindValue(':edited_message_id', $edited_message_id);
             $sth->bindValue(':channel_post_id', $channel_post_id);
             $sth->bindValue(':edited_channel_post_id', $edited_channel_post_id);
-            $sth->bindValue(':message_reaction_id', $message_reaction_id);
-            $sth->bindValue(':message_reaction_count_id', $message_reaction_count_id);
             $sth->bindValue(':inline_query_id', $inline_query_id);
             $sth->bindValue(':chosen_inline_result_id', $chosen_inline_result_id);
             $sth->bindValue(':callback_query_id', $callback_query_id);
@@ -395,11 +368,6 @@ class DB
             $sth->bindValue(':pre_checkout_query_id', $pre_checkout_query_id);
             $sth->bindValue(':poll_id', $poll_id);
             $sth->bindValue(':poll_answer_poll_id', $poll_answer_poll_id);
-            $sth->bindValue(':my_chat_member_updated_id', $my_chat_member_updated_id);
-            $sth->bindValue(':chat_member_updated_id', $chat_member_updated_id);
-            $sth->bindValue(':chat_join_request_id', $chat_join_request_id);
-            $sth->bindValue(':chat_boost_updated_id', $chat_boost_updated_id);
-            $sth->bindValue(':chat_boost_removed_id', $chat_boost_removed_id);
 
             return $sth->execute();
         } catch (PDOException $e) {
@@ -426,18 +394,16 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
-                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `is_premium`, `added_to_attachment_menu`, `created_at`, `updated_at`)
+                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :is_premium, :added_to_attachment_menu, :created_at, :updated_at)
+                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
-                    `is_bot`                   = VALUES(`is_bot`),
-                    `username`                 = VALUES(`username`),
-                    `first_name`               = VALUES(`first_name`),
-                    `last_name`                = VALUES(`last_name`),
-                    `language_code`            = VALUES(`language_code`),
-                    `is_premium`               = VALUES(`is_premium`),
-                    `added_to_attachment_menu` = VALUES(`added_to_attachment_menu`),
-                    `updated_at`               = VALUES(`updated_at`)
+                    `is_bot`         = VALUES(`is_bot`),
+                    `username`       = VALUES(`username`),
+                    `first_name`     = VALUES(`first_name`),
+                    `last_name`      = VALUES(`last_name`),
+                    `language_code`  = VALUES(`language_code`),
+                    `updated_at`     = VALUES(`updated_at`)
             ');
 
             $sth->bindValue(':id', $user->getId());
@@ -446,8 +412,6 @@ class DB
             $sth->bindValue(':first_name', $user->getFirstName());
             $sth->bindValue(':last_name', $user->getLastName());
             $sth->bindValue(':language_code', $user->getLanguageCode());
-            $sth->bindValue(':is_premium', $user->getIsPremium(), PDO::PARAM_INT);
-            $sth->bindValue(':added_to_attachment_menu', $user->getAddedToAttachmentMenu(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
@@ -498,16 +462,16 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `is_forum`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :first_name, :last_name, :is_forum, :created_at, :updated_at, :old_id)
+                (:id, :type, :title, :username, :first_name, :last_name, :all_members_are_administrators, :created_at, :updated_at, :old_id)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = VALUES(`type`),
                     `title`                          = VALUES(`title`),
                     `username`                       = VALUES(`username`),
                     `first_name`                     = VALUES(`first_name`),
                     `last_name`                      = VALUES(`last_name`),
-                    `is_forum`                       = VALUES(`is_forum`),
+                    `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
                     `updated_at`                     = VALUES(`updated_at`)
             ');
 
@@ -529,7 +493,7 @@ class DB
             $sth->bindValue(':username', $chat->getUsername());
             $sth->bindValue(':first_name', $chat->getFirstName());
             $sth->bindValue(':last_name', $chat->getLastName());
-            $sth->bindValue(':is_forum', $chat->getIsForum());
+            $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
@@ -543,12 +507,12 @@ class DB
     /**
      * Insert request into database
      *
+     * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
+     *
      * @param Update $update
      *
      * @return bool
      * @throws TelegramException
-     * @todo self::$pdo->lastInsertId() - unsafe usage if expected previous insert fails?
-     *
      */
     public static function insertRequest(Update $update): bool
     {
@@ -556,25 +520,18 @@ class DB
             return false;
         }
 
-        $chat_id                   = null;
-        $message_id                = null;
-        $edited_message_id         = null;
-        $channel_post_id           = null;
-        $edited_channel_post_id    = null;
-        $message_reaction_id       = null;
-        $message_reaction_count_id = null;
-        $inline_query_id           = null;
-        $chosen_inline_result_id   = null;
-        $callback_query_id         = null;
-        $shipping_query_id         = null;
-        $pre_checkout_query_id     = null;
-        $poll_id                   = null;
-        $poll_answer_poll_id       = null;
-        $my_chat_member_updated_id = null;
-        $chat_member_updated_id    = null;
-        $chat_join_request_id      = null;
-        $chat_boost_updated_id     = null;
-        $chat_boost_removed_id     = null;
+        $chat_id                 = null;
+        $message_id              = null;
+        $edited_message_id       = null;
+        $channel_post_id         = null;
+        $edited_channel_post_id  = null;
+        $inline_query_id         = null;
+        $chosen_inline_result_id = null;
+        $callback_query_id       = null;
+        $shipping_query_id       = null;
+        $pre_checkout_query_id   = null;
+        $poll_id                 = null;
+        $poll_answer_poll_id     = null;
 
         if (($message = $update->getMessage()) && self::insertMessageRequest($message)) {
             $chat_id    = $message->getChat()->getId();
@@ -588,14 +545,6 @@ class DB
         } elseif (($edited_channel_post = $update->getEditedChannelPost()) && self::insertEditedMessageRequest($edited_channel_post)) {
             $chat_id                = $edited_channel_post->getChat()->getId();
             $edited_channel_post_id = (int) self::$pdo->lastInsertId();
-        } elseif (($message_reaction = $update->getMessageReaction()) && self::insertMessageReaction($message_reaction)) {
-            $chat_id             = $message_reaction->getChat()->getId();
-            $message_id          = $message_reaction->getMessageId();
-            $message_reaction_id = self::$pdo->lastInsertId();
-        } elseif (($message_reaction_count = $update->getMessageReactionCount()) && self::insertMessageReactionCount($message_reaction_count)) {
-            $chat_id                   = $message_reaction_count->getChat()->getId();
-            $message_id                = $message_reaction_count->getMessageId();
-            $message_reaction_count_id = self::$pdo->lastInsertId();
         } elseif (($inline_query = $update->getInlineQuery()) && self::insertInlineQueryRequest($inline_query)) {
             $inline_query_id = $inline_query->getId();
         } elseif (($chosen_inline_result = $update->getChosenInlineResult()) && self::insertChosenInlineResultRequest($chosen_inline_result)) {
@@ -610,16 +559,6 @@ class DB
             $poll_id = $poll->getId();
         } elseif (($poll_answer = $update->getPollAnswer()) && self::insertPollAnswerRequest($poll_answer)) {
             $poll_answer_poll_id = $poll_answer->getPollId();
-        } elseif (($my_chat_member = $update->getMyChatMember()) && self::insertChatMemberUpdatedRequest($my_chat_member)) {
-            $my_chat_member_updated_id = self::$pdo->lastInsertId();
-        } elseif (($chat_member = $update->getChatMember()) && self::insertChatMemberUpdatedRequest($chat_member)) {
-            $chat_member_updated_id = self::$pdo->lastInsertId();
-        } elseif (($chat_join_request = $update->getChatJoinRequest()) && self::insertChatJoinRequestRequest($chat_join_request)) {
-            $chat_join_request_id = self::$pdo->lastInsertId();
-        } elseif (($chat_boost_updated = $update->getChatBoost()) && self::insertChatBoostUpdatedRequest($chat_boost_updated)) {
-            $chat_boost_updated_id = self::$pdo->lastInsertId();
-        } elseif (($chat_boost_removed = $update->getRemovedChatBoost()) && self::insertChatBoostRemovedRequest($chat_boost_removed)) {
-            $chat_boost_removed_id = self::$pdo->lastInsertId();
         } else {
             return false;
         }
@@ -631,100 +570,14 @@ class DB
             $edited_message_id,
             $channel_post_id,
             $edited_channel_post_id,
-            $message_reaction_id,
-            $message_reaction_count_id,
             $inline_query_id,
             $chosen_inline_result_id,
             $callback_query_id,
             $shipping_query_id,
             $pre_checkout_query_id,
             $poll_id,
-            $poll_answer_poll_id,
-            $my_chat_member_updated_id,
-            $chat_member_updated_id,
-            $chat_join_request_id,
-            $chat_boost_updated_id,
-            $chat_boost_removed_id,
+            $poll_answer_poll_id
         );
-    }
-
-    public static function insertMessageReaction(MessageReactionUpdated $message_reaction): bool
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-
-        try {
-            $sth = self::$pdo->prepare('
-                INSERT IGNORE INTO `' . TB_MESSAGE_REACTION . '`
-                (`chat_id`, `message_id`, `user_id`, `actor_chat_id`, `old_reaction`, `new_reaction`, `created_at`)
-                VALUES
-                (:chat_id, :message_id, :user_id, :actor_chat_id, :old_reaction, :new_reaction, :created_at)
-            ');
-
-            $date          = self::getTimestamp($message_reaction->getDate());
-            $chat_id       = null;
-            $user_id       = null;
-            $actor_chat_id = null;
-
-            if ($chat = $message_reaction->getChat()) {
-                $chat_id = $chat->getId();
-                self::insertChat($chat, $date);
-            }
-            if ($user = $message_reaction->getUser()) {
-                $user_id = $user->getId();
-                self::insertUser($user, $date);
-            }
-            if ($actor_chat = $message_reaction->getActorChat()) {
-                $actor_chat_id = $actor_chat->getId();
-                self::insertChat($actor_chat, $date);
-            }
-
-            $sth->bindValue(':chat_id', $chat_id);
-            $sth->bindValue(':message_id', $message_reaction->getMessageId());
-            $sth->bindValue(':user_id', $user_id);
-            $sth->bindValue(':actor_chat_id', $actor_chat_id);
-            $sth->bindValue(':old_reaction', self::entitiesArrayToJson($message_reaction->getOldReaction() ?: []));
-            $sth->bindValue(':new_reaction', self::entitiesArrayToJson($message_reaction->getNewReaction() ?: []));
-            $sth->bindValue(':created_at', $date);
-
-            return $sth->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
-    }
-
-    public static function insertMessageReactionCount(MessageReactionCountUpdated $message_reaction_count): bool
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-
-        try {
-            $sth = self::$pdo->prepare('
-                INSERT IGNORE INTO `' . TB_MESSAGE_REACTION_COUNT . '`
-                (`chat_id`, `message_id`, `reactions`, `created_at`)
-                VALUES
-                (:chat_id, :message_id, :reactions, :created_at)
-            ');
-
-            $date    = self::getTimestamp($message_reaction_count->getDate());
-            $chat_id = null;
-
-            if ($chat = $message_reaction->getChat()) {
-                $chat_id = $chat->getId();
-                self::insertChat($chat, $date);
-            }
-
-            $sth->bindValue(':chat_id', $chat_id);
-            $sth->bindValue(':message_id', $message_reaction_count->getMessageId());
-            $sth->bindValue(':reactions', $message_reaction_count->getReactions());
-            $sth->bindValue(':created_at', $date);
-
-            return $sth->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
     }
 
     /**
@@ -744,9 +597,9 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_INLINE_QUERY . '`
-                (`id`, `user_id`, `location`, `query`, `offset`, `chat_type`, `created_at`)
+                (`id`, `user_id`, `location`, `query`, `offset`, `created_at`)
                 VALUES
-                (:id, :user_id, :location, :query, :offset, :chat_type, :created_at)
+                (:id, :user_id, :location, :query, :offset, :created_at)
             ');
 
             $date    = self::getTimestamp();
@@ -762,7 +615,6 @@ class DB
             $sth->bindValue(':location', $inline_query->getLocation());
             $sth->bindValue(':query', $inline_query->getQuery());
             $sth->bindValue(':offset', $inline_query->getOffset());
-            $sth->bindValue(':chat_type', $inline_query->getChatType());
             $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
@@ -1067,185 +919,6 @@ class DB
     }
 
     /**
-     * Insert chat member updated request into database
-     *
-     * @param ChatMemberUpdated $chat_member_updated
-     *
-     * @return bool If the insert was successful
-     * @throws TelegramException
-     */
-    public static function insertChatMemberUpdatedRequest(ChatMemberUpdated $chat_member_updated): bool
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-
-        try {
-            $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT_MEMBER_UPDATED . '`
-                (`chat_id`, `user_id`, `date`, `old_chat_member`, `new_chat_member`, `invite_link`, `created_at`)
-                VALUES
-                (:chat_id, :user_id, :date, :old_chat_member, :new_chat_member, :invite_link, :created_at)
-            ');
-
-            $date    = self::getTimestamp();
-            $chat_id = null;
-            $user_id = null;
-
-            if ($chat = $chat_member_updated->getChat()) {
-                $chat_id = $chat->getId();
-                self::insertChat($chat, $date);
-            }
-            if ($user = $chat_member_updated->getFrom()) {
-                $user_id = $user->getId();
-                self::insertUser($user, $date);
-            }
-
-            $sth->bindValue(':chat_id', $chat_id);
-            $sth->bindValue(':user_id', $user_id);
-            $sth->bindValue(':date', self::getTimestamp($chat_member_updated->getDate()));
-            $sth->bindValue(':old_chat_member', $chat_member_updated->getOldChatMember());
-            $sth->bindValue(':new_chat_member', $chat_member_updated->getNewChatMember());
-            $sth->bindValue(':invite_link', $chat_member_updated->getInviteLink());
-            $sth->bindValue(':created_at', $date);
-
-            return $sth->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
-    }
-
-    /**
-     * Insert chat join request into database
-     *
-     * @param ChatJoinRequest $chat_join_request
-     *
-     * @return bool If the insert was successful
-     * @throws TelegramException
-     */
-    public static function insertChatJoinRequestRequest(ChatJoinRequest $chat_join_request): bool
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-
-        try {
-            $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT_JOIN_REQUEST . '`
-                (`chat_id`, `user_id`, `date`, `bio`, `invite_link`, `created_at`)
-                VALUES
-                (:chat_id, :user_id, :date, :bio, :invite_link, :created_at)
-            ');
-
-            $date    = self::getTimestamp();
-            $chat_id = null;
-            $user_id = null;
-
-            if ($chat = $chat_join_request->getChat()) {
-                $chat_id = $chat->getId();
-                self::insertChat($chat, $date);
-            }
-            if ($user = $chat_join_request->getFrom()) {
-                $user_id = $user->getId();
-                self::insertUser($user, $date);
-            }
-
-            $sth->bindValue(':chat_id', $chat_id);
-            $sth->bindValue(':user_id', $user_id);
-            $sth->bindValue(':date', self::getTimestamp($chat_join_request->getDate()));
-            $sth->bindValue(':bio', $chat_join_request->getBio());
-            $sth->bindValue(':invite_link', $chat_join_request->getInviteLink());
-            $sth->bindValue(':created_at', $date);
-
-            return $sth->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
-    }
-
-    /**
-     * Insert chat boost updated into database
-     *
-     * @param ChatBoostUpdated $chat_boost_updated
-     *
-     * @return bool If the insert was successful
-     * @throws TelegramException
-     */
-    public static function insertChatBoostUpdatedRequest(ChatBoostUpdated $chat_boost_updated): bool
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-
-        try {
-            $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT_BOOST_UPDATED . '`
-                (`chat_id`, `boost`, `created_at`)
-                VALUES
-                (:chat_id, :boost, :created_at)
-            ');
-
-            $date    = self::getTimestamp();
-            $chat_id = null;
-
-            if ($chat = $chat_boost_updated->getChat()) {
-                $chat_id = $chat->getId();
-                self::insertChat($chat, $date);
-            }
-
-            $sth->bindValue(':chat_id', $chat_id);
-            $sth->bindValue(':boost', $chat_boost_updated->getBoost());
-            $sth->bindValue(':created_at', $date);
-
-            return $sth->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
-    }
-
-    /**
-     * Insert chat boost removed into database
-     *
-     * @param ChatBoostRemoved $chat_boost_removed
-     *
-     * @return bool If the insert was successful
-     * @throws TelegramException
-     */
-    public static function insertChatBoostRemovedRequest(ChatBoostRemoved $chat_boost_removed): bool
-    {
-        if (!self::isDbConnected()) {
-            return false;
-        }
-
-        try {
-            $sth = self::$pdo->prepare('
-                INSERT INTO `' . TB_CHAT_BOOST_REMOVED . '`
-                (`chat_id`, `boost_id`, `remove_date`, `source`, `created_at`)
-                VALUES
-                (:chat_id, :boost_id, :remove_date, :source, :created_at)
-            ');
-
-            $date    = self::getTimestamp();
-            $chat_id = null;
-
-            if ($chat = $chat_boost_removed->getChat()) {
-                $chat_id = $chat->getId();
-                self::insertChat($chat, $date);
-            }
-
-            $sth->bindValue(':chat_id', $chat_id);
-            $sth->bindValue(':boost_id', $chat_boost_removed->getBoostId());
-            $sth->bindValue(':remove_date', self::getTimestamp($chat_boost_removed->getRemoveDate()));
-            $sth->bindValue(':source', $chat_boost_removed->getSource());
-            $sth->bindValue(':created_at', $date);
-
-            return $sth->execute();
-        } catch (PDOException $e) {
-            throw new TelegramException($e->getMessage());
-        }
-    }
-
-    /**
      * Insert Message request in db
      *
      * @param Message $message
@@ -1277,31 +950,15 @@ class DB
         }
 
         // Insert the forwarded message user in users table
-        $forward_from = null;
-        $forward_from_chat = null;
-        $forward_from_message_id = null;
-        $forward_signature = null;
-        $forward_sender_name = null;
-        $forward_date = null;
+        $forward_date = $message->getForwardDate() ? self::getTimestamp($message->getForwardDate()) : null;
 
-        if ($forward_origin = $message->getForwardOrigin()) {
-            $forward_date = self::getTimestamp($forward_origin->getDate());
-
-            if ($forward_origin instanceof MessageOriginUser) {
-                self::insertUser($forward_origin->getSenderUser());
-                $forward_from = $forward_origin->getSenderUser()->getId();
-            } elseif ($forward_origin instanceof MessageOriginHiddenUser) {
-                $forward_sender_name = $forward_origin->getSenderUserName();
-            } elseif ($forward_origin instanceof MessageOriginChat) {
-                self::insertChat($forward_origin->getChat());
-                $forward_from_chat = $forward_origin->getChat()->getId();
-                $forward_signature = $forward_origin->getAuthorSignature();
-            } elseif ($forward_origin instanceof MessageOriginChannel) {
-                self::insertChat($forward_origin->getChat());
-                $forward_from_chat = $forward_origin->getChat()->getId();
-                $forward_from_message_id = $forward_origin->getMessageId();
-                $forward_signature = $forward_origin->getAuthorSignature();
-            }
+        if ($forward_from = $message->getForwardFrom()) {
+            self::insertUser($forward_from);
+            $forward_from = $forward_from->getId();
+        }
+        if ($forward_from_chat = $message->getForwardFromChat()) {
+            self::insertChat($forward_from_chat);
+            $forward_from_chat = $forward_from_chat->getId();
         }
 
         $via_bot_id = null;
@@ -1335,27 +992,23 @@ class DB
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                    `id`, `user_id`, `chat_id`, `message_thread_id`, `sender_chat_id`, `sender_boost_count`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
-                    `forward_signature`, `forward_sender_name`, `forward_date`, `is_topic_message`,
-                    `reply_to_chat`, `reply_to_message`, `external_reply`, `quote`, `reply_to_story`, `via_bot`, `link_preview_options`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
-                    `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `story`, `video`, `voice`, `video_note`, `caption`, `has_media_spoiler`, `contact`,
+                    `id`, `user_id`, `chat_id`, `sender_chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
+                    `forward_signature`, `forward_sender_name`, `forward_date`,
+                    `reply_to_chat`, `reply_to_message`, `via_bot`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
+                    `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
-                    `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
-                    `pinned_message`, `invoice`, `successful_payment`, `users_shared`, `chat_shared`, `connected_website`, `write_access_allowed`, `passport_data`, `proximity_alert_triggered`, `boost_added`,
-                    `forum_topic_created`, `forum_topic_edited`, `forum_topic_closed`, `forum_topic_reopened`, `general_forum_topic_hidden`, `general_forum_topic_unhidden`,
-                    `video_chat_scheduled`, `video_chat_started`, `video_chat_ended`, `video_chat_participants_invited`, `web_app_data`, `reply_markup`
+                    `supergroup_chat_created`, `channel_chat_created`, `migrate_to_chat_id`, `migrate_from_chat_id`,
+                    `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `proximity_alert_triggered`, `reply_markup`
                 ) VALUES (
-                    :message_id, :user_id, :chat_id, :message_thread_id, :sender_chat_id, :sender_boost_count, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
-                    :forward_signature, :forward_sender_name, :forward_date, :is_topic_message,
-                    :reply_to_chat, :reply_to_message, :external_reply, :quote, :reply_to_story, :via_bot, :link_preview_options, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
-                    :audio, :document, :animation, :game, :photo, :sticker, :story, :video, :voice, :video_note, :caption, :has_media_spoiler, :contact,
+                    :message_id, :user_id, :chat_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
+                    :forward_signature, :forward_sender_name, :forward_date,
+                    :reply_to_chat, :reply_to_message, :via_bot, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
+                    :audio, :document, :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
-                    :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
-                    :pinned_message, :invoice, :successful_payment, :users_shared, :chat_shared, :connected_website, :write_access_allowed, :passport_data, :proximity_alert_triggered, :boost_added,
-                    :forum_topic_created, :forum_topic_edited, :forum_topic_closed, :forum_topic_reopened, :general_forum_topic_hidden, :general_forum_topic_unhidden,
-                    :video_chat_scheduled, :video_chat_started, :video_chat_ended, :video_chat_participants_invited, :web_app_data, :reply_markup
+                    :supergroup_chat_created, :channel_chat_created, :migrate_to_chat_id, :migrate_from_chat_id,
+                    :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :proximity_alert_triggered, :reply_markup
                 )
             ');
 
@@ -1373,17 +1026,14 @@ class DB
             $sth->bindValue(':message_id', $message->getMessageId());
             $sth->bindValue(':chat_id', $chat_id);
             $sth->bindValue(':sender_chat_id', $sender_chat_id);
-            $sth->bindValue(':message_thread_id', $message->getMessageThreadId());
             $sth->bindValue(':user_id', $user_id);
-            $sth->bindValue(':sender_boost_count', $message->getSenderBoostCount());
             $sth->bindValue(':date', $date);
             $sth->bindValue(':forward_from', $forward_from);
             $sth->bindValue(':forward_from_chat', $forward_from_chat);
-            $sth->bindValue(':forward_from_message_id', $forward_from_message_id);
-            $sth->bindValue(':forward_signature', $forward_signature);
-            $sth->bindValue(':forward_sender_name', $forward_sender_name);
+            $sth->bindValue(':forward_from_message_id', $message->getForwardFromMessageId());
+            $sth->bindValue(':forward_signature', $message->getForwardSignature());
+            $sth->bindValue(':forward_sender_name', $message->getForwardSenderName());
             $sth->bindValue(':forward_date', $forward_date);
-            $sth->bindValue(':is_topic_message', $message->getIsTopicMessage());
 
             $reply_to_chat_id = null;
             if ($reply_to_message_id !== null) {
@@ -1391,13 +1041,9 @@ class DB
             }
             $sth->bindValue(':reply_to_chat', $reply_to_chat_id);
             $sth->bindValue(':reply_to_message', $reply_to_message_id);
-            $sth->bindValue(':external_reply', $message->getExternalReply());
 
-            $sth->bindValue(':quote', $message->getQuote());
-            $sth->bindValue(':reply_to_story', $message->getReplyToStory());
             $sth->bindValue(':via_bot', $via_bot_id);
-            $sth->bindValue(':link_preview_options', $message->getLinkPreviewOptions());
-            $sth->bindValue(':edit_date', self::getTimestamp($message->getEditDate()));
+            $sth->bindValue(':edit_date', $message->getEditDate());
             $sth->bindValue(':media_group_id', $message->getMediaGroupId());
             $sth->bindValue(':author_signature', $message->getAuthorSignature());
             $sth->bindValue(':text', $message->getText());
@@ -1409,12 +1055,10 @@ class DB
             $sth->bindValue(':game', $message->getGame());
             $sth->bindValue(':photo', self::entitiesArrayToJson($message->getPhoto() ?: []));
             $sth->bindValue(':sticker', $message->getSticker());
-            $sth->bindValue(':story', $message->getStory());
             $sth->bindValue(':video', $message->getVideo());
             $sth->bindValue(':voice', $message->getVoice());
             $sth->bindValue(':video_note', $message->getVideoNote());
             $sth->bindValue(':caption', $message->getCaption());
-            $sth->bindValue(':has_media_spoiler', $message->getHasMediaSpoiler());
             $sth->bindValue(':contact', $message->getContact());
             $sth->bindValue(':location', $message->getLocation());
             $sth->bindValue(':venue', $message->getVenue());
@@ -1428,30 +1072,14 @@ class DB
             $sth->bindValue(':group_chat_created', $message->getGroupChatCreated());
             $sth->bindValue(':supergroup_chat_created', $message->getSupergroupChatCreated());
             $sth->bindValue(':channel_chat_created', $message->getChannelChatCreated());
-            $sth->bindValue(':message_auto_delete_timer_changed', $message->getMessageAutoDeleteTimerChanged());
             $sth->bindValue(':migrate_to_chat_id', $message->getMigrateToChatId());
             $sth->bindValue(':migrate_from_chat_id', $message->getMigrateFromChatId());
             $sth->bindValue(':pinned_message', $message->getPinnedMessage());
             $sth->bindValue(':invoice', $message->getInvoice());
             $sth->bindValue(':successful_payment', $message->getSuccessfulPayment());
-            $sth->bindValue(':users_shared', $message->getUsersShared());
-            $sth->bindValue(':chat_shared', $message->getChatShared());
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
-            $sth->bindValue(':write_access_allowed', $message->getWriteAccessAllowed());
             $sth->bindValue(':passport_data', $message->getPassportData());
             $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
-            $sth->bindValue(':boost_added', $message->getBoostAdded());
-            $sth->bindValue(':forum_topic_created', $message->getForumTopicCreated());
-            $sth->bindValue(':forum_topic_edited', $message->getForumTopicEdited());
-            $sth->bindValue(':forum_topic_closed', $message->getForumTopicClosed());
-            $sth->bindValue(':forum_topic_reopened', $message->getForumTopicReopened());
-            $sth->bindValue(':general_forum_topic_hidden', $message->getGeneralForumTopicHidden());
-            $sth->bindValue(':general_forum_topic_unhidden', $message->getGeneralForumTopicUnhidden());
-            $sth->bindValue(':video_chat_scheduled', $message->getVideoChatScheduled());
-            $sth->bindValue(':video_chat_started', $message->getVideoChatStarted());
-            $sth->bindValue(':video_chat_ended', $message->getVideoChatEnded());
-            $sth->bindValue(':video_chat_participants_invited', $message->getVideoChatParticipantsInvited());
-            $sth->bindValue(':web_app_data', $message->getWebAppData());
             $sth->bindValue(':reply_markup', $message->getReplyMarkup());
 
             return $sth->execute();
@@ -1631,13 +1259,13 @@ class DB
     /**
      * Get Telegram API request count for current chat / message
      *
-     * @param int|string|null $chat_id
-     * @param string|null     $inline_message_id
+     * @param int|null    $chat_id
+     * @param string|null $inline_message_id
      *
      * @return array|bool Array containing TOTAL and CURRENT fields or false on invalid arguments
      * @throws TelegramException
      */
-    public static function getTelegramRequestCount($chat_id = null, string $inline_message_id = null)
+    public static function getTelegramRequestCount(int $chat_id = null, string $inline_message_id = null)
     {
         if (!self::isDbConnected()) {
             return false;

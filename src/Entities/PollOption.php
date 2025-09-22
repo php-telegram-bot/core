@@ -18,10 +18,19 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#polloption
  *
- * @method string getText()       Option text, 1-100 characters
- * @method int    getVoterCount() Number of users that voted for this option
+ * @method string          getText()          Option text, 1-100 characters
+ * @method int             getVoterCount()    Number of users that voted for this option
+ * @method MessageEntity[] getTextEntities()  Optional. Special entities that appear in the option text. Currently, only custom emoji entities are allowed in poll option texts
  */
 class PollOption extends Entity
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    protected function subEntities(): array
+    {
+        return [
+            'text_entities' => [MessageEntity::class],
+        ];
+    }
 }

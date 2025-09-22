@@ -35,28 +35,12 @@ class GenericmessageCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $version = '1.2.0';
+    protected $version = '1.2.1'; // Updated version
 
     /**
      * @var bool
      */
-    protected $need_mysql = true;
-
-    /**
-     * Execution if MySQL is required but not available
-     *
-     * @return ServerResponse
-     * @throws TelegramException
-     */
-    public function executeNoDb(): ServerResponse
-    {
-        // Try to execute any deprecated system commands.
-        if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
-            return $deprecated_system_command_response;
-        }
-
-        return Request::emptyResponse();
-    }
+    protected $need_mysql = false; // MySQL is no longer used
 
     /**
      * Execute command
@@ -66,11 +50,7 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        // Try to continue any active conversation.
-        if ($active_conversation_response = $this->executeActiveConversation()) {
-            return $active_conversation_response;
-        }
-
+        // Conversation logic removed.
         // Try to execute any deprecated system commands.
         if (self::$execute_deprecated && $deprecated_system_command_response = $this->executeDeprecatedSystemCommand()) {
             return $deprecated_system_command_response;

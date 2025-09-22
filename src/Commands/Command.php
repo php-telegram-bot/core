@@ -179,7 +179,7 @@ abstract class Command
      */
     public function preExecute(): ServerResponse
     {
-        if ($this->need_mysql && !($this->telegram->isDbEnabled() && DB::isDbConnected())) {
+        if ($this->need_mysql && !$this->telegram->isDbEnabled()) {
             return $this->executeNoDb();
         }
 
