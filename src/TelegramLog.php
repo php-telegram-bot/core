@@ -70,7 +70,7 @@ class TelegramLog
      * @param LoggerInterface|null $logger
      * @param LoggerInterface|null $update_logger
      */
-    public static function initialize(LoggerInterface $logger = null, LoggerInterface $update_logger = null): void
+    public static function initialize(?LoggerInterface $logger = null, ?LoggerInterface $update_logger = null): void
     {
         self::$logger        = $logger ?: new NullLogger();
         self::$update_logger = $update_logger ?: new NullLogger();
