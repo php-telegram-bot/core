@@ -26,7 +26,6 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  *   'input_message_content' => <InputMessageContent>,
  *   'reply_markup'          => <InlineKeyboard>,
  *   'url'                   => '',
- *   'hide_url'              => true,
  *   'description'           => '',
  *   'thumbnail_url'         => '',
  *   'thumbnail_width'       => 30,
@@ -40,7 +39,6 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method InputMessageContent  getInputMessageContent() Content of the message to be sent
  * @method InlineKeyboard       getReplyMarkup()         Optional. Inline keyboard attached to the message
  * @method string               getUrl()                 Optional. URL of the result
- * @method bool                 getHideUrl()             Optional. Pass True, if you don't want the URL to be shown in the message
  * @method string               getDescription()         Optional. Short description of the result
  * @method string               getThumbnailUrl()        Optional. Url of the thumbnail for the result
  * @method int                  getThumbnailWidth()      Optional. Thumbnail width
@@ -51,7 +49,6 @@ use Longman\TelegramBot\Entities\InputMessageContent\InputMessageContent;
  * @method $this setInputMessageContent(InputMessageContent $input_message_content) Content of the message to be sent
  * @method $this setReplyMarkup(InlineKeyboard $reply_markup)                       Optional. Inline keyboard attached to the message
  * @method $this setUrl(string $url)                                                Optional. URL of the result
- * @method $this setHideUrl(bool $hide_url)                                         Optional. Pass True, if you don't want the URL to be shown in the message
  * @method $this setDescription(string $description)                                Optional. Short description of the result
  * @method $this setThumbnailUrl(string $thumbnail_url)                             Optional. Url of the thumbnail for the result
  * @method $this setThumbnailWidth(int $thumbnail_width)                            Optional. Thumbnail width

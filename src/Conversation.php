@@ -17,7 +17,8 @@ use Longman\TelegramBot\Exception\TelegramException;
  * Class Conversation
  *
  * Only one conversation can be active at any one time.
- * A conversation is directly linked to a user, chat and the command that is managing the conversation.
+ * A conversation is directly linked to a user, chat and the command that is man
+aging the conversation.
  */
 class Conversation
 {

@@ -201,25 +201,8 @@ class TestHelpers
      */
     public static function startFakeConversation()
     {
-        if (!DB::isDbConnected()) {
-            return false;
-        }
-
-        //Just get some random values.
-        $message_id = mt_rand();
-        $user_id    = mt_rand();
-        $chat_id    = mt_rand();
-
-        try {
-            //Make sure we have a valid user and chat available.
-            $message = self::getFakeMessageObject(['message_id' => $message_id], ['id' => $user_id], ['id' => $chat_id]);
-            DB::insertMessageRequest($message);
-            DB::insertUser($message->getFrom(), null, $message->getChat());
-
-            return compact('message_id', 'user_id', 'chat_id');
-        } catch (TelegramException $e) {
-            return false;
-        }
+        // This function is no longer needed as DB is removed
+        return false;
     }
 
     /**
@@ -229,23 +212,6 @@ class TestHelpers
      */
     public static function emptyDb(array $credentials): void
     {
-        $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        if (!empty($credentials['port'])) {
-            $dsn .= ';port=' . $credentials['port'];
-        }
-
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
-
-        $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
-        $pdo->prepare('
-            DELETE FROM `conversation`;
-            DELETE FROM `telegram_update`;
-            DELETE FROM `chosen_inline_result`;
-            DELETE FROM `inline_query`;
-            DELETE FROM `message`;
-            DELETE FROM `user_chat`;
-            DELETE FROM `chat`;
-            DELETE FROM `user`;
-        ')->execute();
+        // This function is no longer needed as DB is removed
     }
 }

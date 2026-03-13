@@ -12,23 +12,25 @@
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Entities\Games\CallbackGame;
-use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * Class InlineKeyboardButton
  *
  * @link https://core.telegram.org/bots/api#inlinekeyboardbutton
  *
- * @method string       getText()                         Label text on the button
- * @method string       getUrl()                          Optional. HTTP url to be opened when button is pressed
- * @method LoginUrl     getLoginUrl()                     Optional. An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
- * @method string       getCallbackData()                 Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
- * @method WebAppInfo   getWebApp()                       Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot.
- * @method string       getSwitchInlineQuery()            Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
- * @method string       getSwitchInlineQueryCurrentChat() Optional. If set, pressing the button will insert the bot‘s username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot’s username will be inserted.
+ * @method string         getText()                         Label text on the button
+ * @method string         getUrl()                          Optional. HTTP url to be opened when button is pressed
+ * @method LoginUrl       getLoginUrl()                     Optional. An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
+ * @method string         getCallbackData()                 Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
+ * @method WebAppInfo     getWebApp()                       Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot.
+ * @method string         getSwitchInlineQuery()            Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
+ * @method string         getSwitchInlineQueryCurrentChat() Optional. If set, pressing the button will insert the bot‘s username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot’s username will be inserted.
  * @method SwitchInlineQueryChosenChat getSwitchInlineQueryChosenChat() Optional. If set, pressing the button will prompt the user to select one of their chats of the specified type, open that chat and insert the bot's username and the specified inline query in the input field
- * @method CallbackGame getCallbackGame()                 Optional. Description of the game that will be launched when the user presses the button.
- * @method bool         getPay()                          Optional. Specify True, to send a Pay button.
+ * @method CallbackGame   getCallbackGame()                 Optional. Description of the game that will be launched when the user presses the button.
+ * @method bool           getPay()                          Optional. Specify True, to send a Pay button.
+ * @method CopyTextButton getCopyText()                     Optional. Description of the button that copies the specified text to the clipboard.
+ * @method string         getStyle()                        Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
+ * @method string         getIconCustomEmojiId()            Optional. Unique identifier of the custom emoji shown as the button icon.
  *
  * @method $this setText(string $text)                                                     Label text on the button
  * @method $this setUrl(string $url)                                                       Optional. HTTP url to be opened when button is pressed
@@ -40,9 +42,26 @@ use Longman\TelegramBot\Exception\TelegramException;
  * @method $this setSwitchInlineQueryChosenChat(SwitchInlineQueryChosenChat $switch_inline_query_chosen_chat) Optional. If set, pressing the button will prompt the user to select one of their chats of the specified type, open that chat and insert the bot's username and the specified inline query in the input field
  * @method $this setCallbackGame(CallbackGame $callback_game)                              Optional. Description of the game that will be launched when the user presses the button.
  * @method $this setPay(bool $pay)                                                         Optional. Specify True, to send a Pay button.
+ * @method $this setCopyText(CopyTextButton $copy_text)                                    Optional. Description of the button that copies the specified text to the clipboard.
+ * @method $this setStyle(string $style)                                                   Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
+ * @method $this setIconCustomEmojiId(string $icon_custom_emoji_id)                        Optional. Unique identifier of the custom emoji shown as the button icon.
  */
 class InlineKeyboardButton extends KeyboardButton
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function subEntities(): array
+    {
+        return [
+            'login_url'                   => LoginUrl::class,
+            'web_app'                     => WebAppInfo::class,
+            'switch_inline_query_chosen_chat' => SwitchInlineQueryChosenChat::class,
+            'callback_game'               => CallbackGame::class,
+            'copy_text'                   => CopyTextButton::class,
+        ];
+    }
+
     /**
      * Check if the passed data array could be an InlineKeyboardButton.
      *
@@ -61,7 +80,8 @@ class InlineKeyboardButton extends KeyboardButton
                 array_key_exists('switch_inline_query_current_chat', $data) ||
                 array_key_exists('switch_inline_query_chosen_chat', $data) ||
                 array_key_exists('callback_game', $data) ||
-                array_key_exists('pay', $data)
+                array_key_exists('pay', $data) ||
+                array_key_exists('copy_text', $data)
             );
     }
 
@@ -71,8 +91,8 @@ class InlineKeyboardButton extends KeyboardButton
     public function __call($method, $args)
     {
         // Only 1 of these can be set, so clear the others when setting a new one.
-        if (in_array($method, ['setUrl', 'setLoginUrl', 'setCallbackData', 'setWebApp', 'setSwitchInlineQuery', 'setSwitchInlineQueryCurrentChat', 'setSwitchInlineQueryChosenChat', 'setCallbackGame', 'setPay'], true)) {
-            unset($this->url, $this->login_url, $this->callback_data, $this->web_app, $this->switch_inline_query, $this->switch_inline_query_current_chat, $this->switch_inline_query_chosen_chat, $this->callback_game, $this->pay);
+        if (in_array($method, ['setUrl', 'setLoginUrl', 'setCallbackData', 'setWebApp', 'setSwitchInlineQuery', 'setSwitchInlineQueryCurrentChat', 'setSwitchInlineQueryChosenChat', 'setCallbackGame', 'setPay', 'setCopyText'], true)) {
+            unset($this->url, $this->login_url, $this->callback_data, $this->web_app, $this->switch_inline_query, $this->switch_inline_query_current_chat, $this->switch_inline_query_chosen_chat, $this->callback_game, $this->pay, $this->copy_text);
         }
 
         return parent::__call($method, $args);

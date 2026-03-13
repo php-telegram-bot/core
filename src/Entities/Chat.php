@@ -28,6 +28,7 @@ use Longman\TelegramBot\Entities\ReactionType\ReactionType;
  * @method string          getFirstName()                          Optional. First name of the other party in a private chat
  * @method string          getLastName()                           Optional. Last name of the other party in a private chat
  * @method bool            getIsForum()                            Optional. True, if the supergroup chat is a forum (has topics enabled)
+ * @method bool            getIsDirectMessages()                   Optional. True, if the chat is the direct messages chat of a channel
  * @method int             getAccentColorId()                      Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details.
  * @method ChatPhoto       getPhoto()                              Optional. Chat photo. Returned only in getChat.
  * @method string[]        getActiveUsernames()                    Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
@@ -58,6 +59,11 @@ use Longman\TelegramBot\Entities\ReactionType\ReactionType;
  * @method string          getCustomEmojiStickerSetName()          Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group.
  * @method int             getLinkedChatId()                       Optional. Unique identifier for the linked chat. Returned only in getChat.
  * @method ChatLocation    getLocation()                           Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
+ * @method BusinessIntro   getBusinessIntro()                      Optional. For private chats with business accounts, the intro of the business. Returned only in getChat.
+ * @method BusinessLocation getBusinessLocation()                  Optional. For private chats with business accounts, the location of the business. Returned only in getChat.
+ * @method BusinessOpeningHours getBusinessOpeningHours()          Optional. For private chats with business accounts, the opening hours of the business. Returned only in getChat.
+ * @method Chat            getPersonalChat()                       Optional. For private chats, the personal channel of the user. Returned only in getChat.
+ * @method Birthdate       getBirthdate()                          Optional. For private chats with ordinary users, the user's birthdate. Returned only in getChat.
  */
 class Chat extends Entity
 {
@@ -67,11 +73,16 @@ class Chat extends Entity
     protected function subEntities(): array
     {
         return [
-            'photo'               => ChatPhoto::class,
-            'available_reactions' => [ReactionTypeFactory::class],
-            'pinned_message'      => Message::class,
-            'permissions'         => ChatPermissions::class,
-            'location'            => ChatLocation::class,
+            'photo'                 => ChatPhoto::class,
+            'available_reactions'   => [ReactionTypeFactory::class],
+            'pinned_message'        => Message::class,
+            'permissions'           => ChatPermissions::class,
+            'location'              => ChatLocation::class,
+            'business_intro'        => BusinessIntro::class,
+            'business_location'     => BusinessLocation::class,
+            'business_opening_hours' => BusinessOpeningHours::class,
+            'personal_chat'         => Chat::class,
+            'birthdate'             => Birthdate::class,
         ];
     }
 

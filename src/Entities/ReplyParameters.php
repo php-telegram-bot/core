@@ -23,6 +23,7 @@ namespace Longman\TelegramBot\Entities;
  * @method string          getQuoteParseMode()           Optional. Mode for parsing entities in the quote. See formatting options for more details.
  * @method MessageEntity[] getQuoteEntities()            Optional. A JSON-serialized list of special entities that appear in the quote. It can be specified instead of quote_parse_mode.
  * @method int             getQuotePosition()            Optional. Position of the quote in the original message in UTF-16 code units
+ * @method int             getChecklistTaskId()          Optional. Identifier of the specific checklist task to be replied to
  */
 class ReplyParameters extends Entity
 {

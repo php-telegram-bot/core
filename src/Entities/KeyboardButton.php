@@ -32,6 +32,8 @@ namespace Longman\TelegramBot\Entities;
  * @method bool                       getRequestLocation() Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
  * @method KeyboardButtonPollType     getRequestPoll()     Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
  * @method WebAppInfo                 getWebApp()          Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
+ * @method string                     getStyle()           Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
+ * @method string                     getIconCustomEmojiId() Optional. Unique identifier of the custom emoji shown as the button icon.
  *
  * @method $this setText(string $text)                                      Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
  * @method $this setRequestUsers(KeyboardButtonRequestUsers $request_users) Optional. If specified, pressing the button will open a list of suitable users. Identifiers of selected users will be sent to the bot in a “users_shared” service message. Available in private chats only.
@@ -40,6 +42,8 @@ namespace Longman\TelegramBot\Entities;
  * @method $this setRequestLocation(bool $request_location)                 Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
  * @method $this setRequestPoll(KeyboardButtonPollType $request_poll)       Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
  * @method $this setWebApp(WebAppInfo $web_app)                             Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
+ * @method $this setStyle(string $style)                                    Optional. Style of the button. Must be one of “danger” (red), “success” (green) or “primary” (blue). If omitted, then an app-specific style is used.
+ * @method $this setIconCustomEmojiId(string $icon_custom_emoji_id)         Optional. Unique identifier of the custom emoji shown as the button icon.
  */
 class KeyboardButton extends Entity
 {

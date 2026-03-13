@@ -6,8 +6,85 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
+
+## [1.2.0] - 2026-03-01
+### Notes
+- [:ledger: View file changes][1.2.0]
+- [API 9.4 and 9.5 Features Documentation](API_9.4_9.5_FEATURES.md)
+- [API 9.3 Features Documentation](API_9.3_FEATURES.md)
+- Support for Telegram Bot API 7.4 through 9.5.
 ### Added
+- **Bot API 9.5:**
+    - New `MessageEntity` type `date_time` with `unix_time` and `date_time_format`.
+    - Support for `sendMessageDraft` for all bots.
+    - Member tags support in `ChatMemberMember`, `ChatMemberRestricted`, and `setChatMemberTag`.
+    - New permissions `can_edit_tag` and `can_manage_tags`.
+- **Bot API 9.4:**
+    - Topics in private chats via `createForumTopic`.
+    - Colored and custom emoji buttons (`KeyboardButton` and `InlineKeyboardButton`).
+    - Bot profile photo management (`setMyProfilePhoto`, `removeMyProfilePhoto`).
+    - Enhanced video and audio metadata (`VideoQuality`, `UserProfileAudios`, `first_profile_audio`).
+- **Private Chat Topics:** Support for forum topics in private chats.
+- **Message Streaming:** Added `sendMessageDraft` for streaming partial messages.
+- **Gifts Enhancement:** Added `getUserGifts`, `getChatGifts`, and support for Unique Gifts with colors and blockchain info.
+- **Business Accounts:** Complete support for managed business accounts, including story reposting, checklist management, and profile settings.
+- **Telegram Stars:** Full support for Star transactions, subscriptions, and affiliate programs.
+- **Channel Direct Messages:** Support for direct messages in channels and suggested posts.
+- **New Entities:** `VideoQuality`, `UserRating`, `AffiliateInfo`, `StarTransaction`, `PaidMediaPurchased`, `PreparedInlineMessage`, `WebAppUser`, `ChatOwnerLeft`, `ChatOwnerChanged`, `UserProfileAudios`.
+- **New Request Methods:** `repostStory`, `verifyUser`, `verifyChat`, `removeUserVerification`, `removeChatVerification`, `createChatSubscriptionInviteLink`, `editChatSubscriptionInviteLink`, `editUserStarSubscription`, `refundStarPayment`, `savePreparedInlineMessage`.
 ### Changed
+- Updated `User`, `Message`, `Chat`, `ChatFullInfo`, `Poll`, `InlineKeyboardButton`, `KeyboardButton`, and many other entities with new fields.
+- Replaced `last_resale_star_count` with `last_resale_currency` and `last_resale_amount` in `UniqueGiftInfo`.
+### Deprecated
+### Removed
+- Deprecated `hide_url` from `InlineQueryResultArticle`.
+- Replaced fields in `UniqueGiftInfo` as per API 9.3.
+### Fixed
+### Security
+
+## [1.0.3] - 2024-05-07
+### Notes
+- [:ledger: View file changes][1.0.3]
+- Support for Telegram Bot API 7.3.
+### Added
+- **Poll Enhancements:**
+    - New entity `InputPollOption` (`src/Entities/Poll/InputPollOption.php`) with properties `text` and optional `text_entities`.
+    - Added optional property `question_entities` (array of `MessageEntity`) to `src/Entities/Poll.php`.
+    - Added optional property `text_entities` (array of `MessageEntity`) to `src/Entities/PollOption.php`.
+    - Updated `sendPoll` method in `src/Request.php`:
+        - Changed `options` parameter to be an array of `InputPollOption`.
+        - Added optional parameters `question_parse_mode` (string) and `question_entities` (array of `MessageEntity`).
+- **Chat and getChat Method Refactoring:**
+    - New entity `ChatFullInfo` (`src/Entities/ChatFullInfo.php`) containing all properties from `Chat` entity plus properties from `getChat` (e.g., `description`, `invite_link`, `pinned_message`, `bio`) and new optional property `max_reaction_count` (integer).
+    - Updated `getChat` method in `src/Request.php` docblock to return a `ServerResponse` with a `ChatFullInfo` object.
+- **Miscellaneous Updates:**
+    - New Chat Background entities:
+        - `src/Entities/ChatBackground.php`
+        - `src/Entities/Background/BackgroundType.php`
+        - `src/Entities/Background/BackgroundFill.php`
+    - Added optional property `chat_background_set` (`ChatBackground`) to `src/Entities/Message.php`.
+    - Added optional property `via_join_request` (boolean) to `src/Entities/ChatMemberUpdated.php`.
+    - Added optional parameter `live_period` (integer) to `editMessageLiveLocation` method in `src/Request.php`.
+### Changed
+- Version bumped to 1.0.3.
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [1.0.2] - 2025-07-04
+### Notes
+- [:ledger: View file changes][1.0.2]
+- Support for Telegram Bot API 7.2.
+### Added
+- Bot API 7.2 support. This includes:
+    - Business Account Integration (New entities: `BusinessConnection`, `BusinessMessagesDeleted`; Updated `Update.php`, `Request.php`, `Message.php`)
+    - Business Information Entities (New entities: `BusinessIntro`, `BusinessLocation`, `BusinessOpeningHours`, `BusinessOpeningHoursInterval`; Updated `Chat.php`)
+    - Sticker Pack Modifications (Updated `StickerSet.php`, `InputSticker.php`, `Request.php`)
+    - Request & Shared Object Improvements (New entity: `SharedUser`; Updated `KeyboardButtonRequestUsers.php`, `KeyboardButtonRequestChat.php`, `UsersShared.php`, `ChatShared.php`)
+    - Miscellaneous Changes (New entity: `Birthdate`; Updated `Chat.php`, `Message.php`, `User.php`)
+### Changed
+- Version bumped to 1.0.2.
 ### Deprecated
 ### Removed
 ### Fixed
@@ -694,7 +771,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
-[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[Unreleased]: https://github.com/php-telegram-bot/core/compare/1.2.0...develop
+[1.2.0]: https://github.com/php-telegram-bot/core/compare/1.0.3...1.2.0
+[1.0.3]: https://github.com/php-telegram-bot/core/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/php-telegram-bot/core/compare/0.83.0...1.0.2
 [0.83.0]: https://github.com/php-telegram-bot/core/compare/0.82.0...0.83.0
 [0.82.0]: https://github.com/php-telegram-bot/core/compare/0.81.0...0.82.0
 [0.81.0]: https://github.com/php-telegram-bot/core/compare/0.80.0...0.81.0

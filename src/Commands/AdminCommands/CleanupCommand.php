@@ -12,7 +12,6 @@
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
 use Longman\TelegramBot\Commands\AdminCommand;
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -365,71 +364,6 @@ class CleanupCommand extends AdminCommand
      */
     public function execute(): ServerResponse
     {
-        $message = $this->getMessage() ?: $this->getEditedMessage() ?: $this->getChannelPost() ?: $this->getEditedChannelPost();
-        $text    = $message->getText(true);
-
-        // Dry run?
-        $dry_run = strpos($text, 'dry') !== false;
-        $text    = trim(str_replace('dry', '', $text));
-
-        $settings = $this->getSettings($text);
-        $queries  = $this->getQueries($settings);
-
-        if ($dry_run) {
-            return $this->replyToUser('Queries:' . PHP_EOL . implode(PHP_EOL, $queries));
-        }
-
-        $infos = [];
-        foreach ($settings['tables_to_clean'] as $table) {
-            $info = "*{$table}*";
-
-            if (isset($settings['clean_older_than'][$table])) {
-                $info .= " ({$settings['clean_older_than'][$table]})";
-            }
-
-            $infos[] = $info;
-        }
-
-        $data = [
-            'chat_id'    => $message->getFrom()->getId(),
-            'parse_mode' => 'Markdown',
-        ];
-
-        $data['text'] = 'Cleaning up tables:' . PHP_EOL . implode(PHP_EOL, $infos);
-        Request::sendMessage($data);
-
-        $rows = 0;
-        $pdo  = DB::getPdo();
-        try {
-            $pdo->beginTransaction();
-
-            foreach ($queries as $query) {
-                // Delete in chunks to not block / improve speed on big tables.
-                $query .= ' LIMIT 10000';
-                while ($dbq = $pdo->query($query)) {
-                    if ($dbq->rowCount() === 0) {
-                        continue 2;
-                    }
-                    $rows += $dbq->rowCount();
-                }
-
-                TelegramLog::error('Error while executing query: ' . $query);
-            }
-
-            // commit changes to the database and end transaction
-            $pdo->commit();
-
-            $data['text'] = "*Database cleanup done!* _(removed {$rows} rows)_";
-        } catch (PDOException $e) {
-            $data['text'] = '*Database cleanup failed!* _(check your error logs)_';
-
-            // rollback changes on exception
-            // useful if you want to track down error you can't replicate it when some of the data is already deleted
-            $pdo->rollBack();
-
-            TelegramLog::error($e->getMessage());
-        }
-
-        return Request::sendMessage($data);
+        return $this->replyToChat('This command is not available because the database feature has been removed.' . PHP_EOL . 'Type /debug to see all available information.');
     }
 }

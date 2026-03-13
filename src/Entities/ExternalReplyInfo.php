@@ -11,6 +11,8 @@
 
 namespace Longman\TelegramBot\Entities;
 
+use Longman\TelegramBot\Entities\MessageOrigin\Factory as MessageOriginFactory;
+
 /**
  * This object contains information about a message that is being replied to, which may come from another chat or forum topic.
  *
@@ -30,6 +32,7 @@ namespace Longman\TelegramBot\Entities;
  * @method VideoNote          getVideoNote()          Optional. Message is a video note, information about the video message
  * @method Voice              getVoice()              Optional. Message is a voice message, information about the file
  * @method bool               getHasMediaSpoiler()    Optional. True, if the message media is covered by a spoiler animation
+ * @method Checklist          getChecklist()          Optional. Message is a checklist
  * @method Contact            getContact()            Optional. Message is a shared contact, information about the contact
  * @method Dice               getDice()               Optional. Message is a dice with random value
  * @method Game               getGame()               Optional. Message is a game, information about the game. More about games »
@@ -39,6 +42,7 @@ namespace Longman\TelegramBot\Entities;
  * @method Location           getLocation()           Optional. Message is a shared location, information about the location
  * @method Poll               getPoll()               Optional. Message is a native poll, information about the poll
  * @method Venue              getVenue()              Optional. Message is a venue, information about the venue
+ * @method PaidMediaInfo      getPaidMedia()          Optional. Message is a paid media purchase, information about the paid media
  */
 class ExternalReplyInfo extends Entity
 {
@@ -48,7 +52,7 @@ class ExternalReplyInfo extends Entity
     protected function subEntities(): array
     {
         return [
-            'origin'               => MessageOrigin::class,
+            'origin'               => MessageOriginFactory::class,
             'chat'                 => Chat::class,
             'link_preview_options' => LinkPreviewOptions::class,
             'animation'            => Animation::class,
@@ -60,6 +64,7 @@ class ExternalReplyInfo extends Entity
             'video'                => Video::class,
             'video_note'           => VideoNote::class,
             'voice'                => Voice::class,
+            'checklist'            => Checklist::class,
             'contact'              => Contact::class,
             'dice'                 => Dice::class,
             'game'                 => Game::class,
@@ -69,6 +74,7 @@ class ExternalReplyInfo extends Entity
             'location'             => Location::class,
             'poll'                 => Poll::class,
             'venue'                => Venue::class,
+            'paid_media'           => PaidMediaInfo::class,
         ];
     }
 }

@@ -34,34 +34,34 @@ use Throwable;
  * @method static ServerResponse getMe()                                      A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
  * @method static ServerResponse logOut()                                     Use this method to log out from the cloud Bot API server before launching the bot locally. Requires no parameters. Returns True on success.
  * @method static ServerResponse close()                                      Use this method to close the bot instance before moving it from one local server to another. Requires no parameters. Returns True on success.
- * @method static ServerResponse forwardMessage(array $data)                  Use this method to forward messages of any kind. On success, the sent Message is returned.
- * @method static ServerResponse forwardMessages(array $data)                 Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned.
- * @method static ServerResponse copyMessage(array $data)                     Use this method to copy messages of any kind. The method is analogous to the method forwardMessages, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
- * @method static ServerResponse copyMessages(array $data)                    Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.
- * @method static ServerResponse sendPhoto(array $data)                       Use this method to send photos. On success, the sent Message is returned.
- * @method static ServerResponse sendAudio(array $data)                       Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
- * @method static ServerResponse sendDocument(array $data)                    Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
- * @method static ServerResponse sendSticker(array $data)                     Use this method to send .webp stickers. On success, the sent Message is returned.
- * @method static ServerResponse sendVideo(array $data)                       Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
- * @method static ServerResponse sendAnimation(array $data)                   Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
- * @method static ServerResponse sendVoice(array $data)                       Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
- * @method static ServerResponse sendVideoNote(array $data)                   Use this method to send video messages. On success, the sent Message is returned.
- * @method static ServerResponse sendMediaGroup(array $data)                  Use this method to send a group of photos or videos as an album. On success, an array of the sent Messages is returned.
- * @method static ServerResponse sendLocation(array $data)                    Use this method to send point on the map. On success, the sent Message is returned.
- * @method static ServerResponse editMessageLiveLocation(array $data)         Use this method to edit live location messages sent by the bot or via the bot (for inline bots). A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse forwardMessage(array $data)                  Use this method to forward messages of any kind. On success, the sent Message is returned. The parameters video_start_timestamp can be used to set a new start timestamp for the forwarded video in the message. message_effect_id can be used to add a message effect to the message. message_thread_id can be used to send to a specific topic in private chats. direct_messages_topic_id can be used to send to a direct messages chat topic. suggested_post_parameters can be used to send a suggested post.
+ * @method static ServerResponse forwardMessages(array $data)                 Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned. message_thread_id can be used to send to a specific topic in private chats. direct_messages_topic_id can be used to send to a direct messages chat topic.
+ * @method static ServerResponse copyMessage(array $data)                     Use this method to copy messages of any kind. The method is analogous to the method forwardMessages, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. The parameters video_start_timestamp can be used to set a new start timestamp for the copied video in the message. message_effect_id can be used to add a message effect to the message. message_thread_id can be used to send to a specific topic in private chats. direct_messages_topic_id can be used to send to a direct messages chat topic. suggested_post_parameters can be used to send a suggested post.
+ * @method static ServerResponse copyMessages(array $data)                    Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned. message_thread_id can be used to send to a specific topic in private chats. direct_messages_topic_id can be used to send to a direct messages chat topic.
+ * @method static ServerResponse sendPhoto(array $data)                       Use this method to send photos. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendAudio(array $data)                       Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendDocument(array $data)                    Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendSticker(array $data)                     Use this method to send .webp stickers. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendVideo(array $data)                       Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future. The video cover must be in the .jpg format and not exceed 320px in width and height. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendAnimation(array $data)                   Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendVoice(array $data)                       Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendVideoNote(array $data)                   Use this method to send video messages. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendMediaGroup(array $data)                  Use this method to send a group of photos or videos as an album. On success, an array of the sent Messages is returned. message_thread_id, direct_messages_topic_id are supported.
+ * @method static ServerResponse sendLocation(array $data)                    Use this method to send point on the map. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse editMessageLiveLocation(array $data)         Use this method to edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse stopMessageLiveLocation(array $data)         Use this method to stop updating a live location message sent by the bot or via the bot (for inline bots) before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
- * @method static ServerResponse sendVenue(array $data)                       Use this method to send information about a venue. On success, the sent Message is returned.
- * @method static ServerResponse sendContact(array $data)                     Use this method to send phone contacts. On success, the sent Message is returned.
- * @method static ServerResponse sendPoll(array $data)                        Use this method to send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
- * @method static ServerResponse sendDice(array $data)                        Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent Message is returned.
- * @method static ServerResponse sendChatAction(array $data)                  Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
+ * @method static ServerResponse sendVenue(array $data)                       Use this method to send information about a venue. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendContact(array $data)                     Use this method to send phone contacts. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendPoll(array $data)                        Use this method to send a native poll. On success, the sent Message containing the poll is returned. message_thread_id is supported.
+ * @method static ServerResponse sendDice(array $data)                        Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
+ * @method static ServerResponse sendChatAction(array $data)                  Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success. message_thread_id is supported in private chats.
  * @method static ServerResponse setMessageReaction(array $data)              Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.
  * @method static ServerResponse getUserProfilePhotos(array $data)            Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
  * @method static ServerResponse getFile(array $data)                         Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
  * @method static ServerResponse banChatMember(array $data)                   Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
  * @method static ServerResponse unbanChatMember(array $data)                 Use this method to unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
  * @method static ServerResponse restrictChatMember(array $data)              Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
- * @method static ServerResponse promoteChatMember(array $data)               Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean parameters to demote a user. Returns True on success.
+ * @method static ServerResponse promoteChatMember(array $data)               Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean parameters to demote a user. Returns True on success. The parameters can_manage_direct_messages and can_manage_tags can be used to pass the rights.
  * @method static ServerResponse setChatAdministratorCustomTitle(array $data) Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.
  * @method static ServerResponse banChatSenderChat(array $data)               Use this method to ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.
  * @method static ServerResponse unbanChatSenderChat(array $data)             Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must be an administrator for this to work and must have the appropriate administrator rights. Returns True on success.
@@ -80,19 +80,19 @@ use Throwable;
  * @method static ServerResponse unpinChatMessage(array $data)                Use this method to unpin a message in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
  * @method static ServerResponse unpinAllChatMessages(array $data)            Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in a supergroup or 'can_edit_messages' admin right in a channel. Returns True on success.
  * @method static ServerResponse leaveChat(array $data)                       Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
- * @method static ServerResponse getChat(array $data)                         Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
+ * @method static ServerResponse getChat(array $data)                         Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a ChatFullInfo object on success.
  * @method static ServerResponse getChatAdministrators(array $data)           Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
  * @method static ServerResponse getChatMemberCount(array $data)              Use this method to get the number of members in a chat. Returns Int on success.
  * @method static ServerResponse getChatMember(array $data)                   Use this method to get information about a member of a chat. Returns a ChatMember object on success.
  * @method static ServerResponse setChatStickerSet(array $data)               Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse deleteChatStickerSet(array $data)            Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse getForumTopicIconStickers(array $data)       Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects
- * @method static ServerResponse createForumTopic(array $data)                Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
- * @method static ServerResponse editForumTopic(array $data)                  Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
- * @method static ServerResponse closeForumTopic(array $data)                 Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
- * @method static ServerResponse reopenForumTopic(array $data)                Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
- * @method static ServerResponse deleteForumTopic(array $data)                Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
- * @method static ServerResponse unpinAllForumTopicMessages(array $data)      Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
+ * @method static ServerResponse createForumTopic(array $data)                Use this method to create a topic in a forum supergroup chat or a private chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
+ * @method static ServerResponse editForumTopic(array $data)                  Use this method to edit name and icon of a topic in a forum supergroup chat or a private chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success. message_thread_id is supported in private chats.
+ * @method static ServerResponse closeForumTopic(array $data)                 Use this method to close an open topic in a forum supergroup chat or a private chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+ * @method static ServerResponse reopenForumTopic(array $data)                Use this method to reopen a closed topic in a forum supergroup chat or a private chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+ * @method static ServerResponse deleteForumTopic(array $data)                Use this method to delete a forum topic along with all its messages in a forum supergroup chat or a private chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success. message_thread_id is supported in private chats.
+ * @method static ServerResponse unpinAllForumTopicMessages(array $data)      Use this method to clear the list of pinned messages in a forum topic in a forum supergroup chat or a private chat. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success. message_thread_id is supported in private chats.
  * @method static ServerResponse editGeneralForumTopic(array $data)           Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.
  * @method static ServerResponse closeGeneralForumTopic(array $data)          Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
  * @method static ServerResponse reopenGeneralForumTopic(array $data)         Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
@@ -105,17 +105,17 @@ use Throwable;
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
  * @method static ServerResponse deleteMyCommands(array $data)                Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
  * @method static ServerResponse getMyCommands(array $data)                   Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success.
- * @method static ServerResponse setMyName(array $data)                       Use this method to change the bot's name. Returns True on success.
- * @method static ServerResponse getMyName(array $data)                       Use this method to get the current bot name for the given user language. Returns BotName on success.
- * @method static ServerResponse setMyDescription(array $data)                Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
- * @method static ServerResponse getMyDescription(array $data)                Use this method to get the current bot description for the given user language. Returns BotDescription on success.
- * @method static ServerResponse setMyShortDescription(array $data)           Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
- * @method static ServerResponse getMyShortDescription(array $data)           Use this method to get the current bot short description for the given user language. Returns BotShortDescription on success.
+ * @method static ServerResponse setMyName(array $data)                       Use this method to change the bot's name. At least one of the optional parameters must be used. On success, True is returned.
+ * @method static ServerResponse getMyName(array $data)                       Use this method to get the current bot name for the given user language. On success, returns a BotName object.
+ * @method static ServerResponse setMyDescription(array $data)                Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. At least one of the optional parameters must be used. On success, True is returned.
+ * @method static ServerResponse getMyDescription(array $data)                Use this method to get the current bot description for the given user language. On success, returns a BotDescription object.
+ * @method static ServerResponse setMyShortDescription(array $data)           Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. At least one of the optional parameters must be used. On success, True is returned.
+ * @method static ServerResponse getMyShortDescription(array $data)           Use this method to get the current bot short description for the given user language. On success, returns a BotShortDescription object.
  * @method static ServerResponse setChatMenuButton(array $data)               Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success.
  * @method static ServerResponse getChatMenuButton(array $data)               Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns MenuButton on success.
  * @method static ServerResponse setMyDefaultAdministratorRights(array $data) Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns True on success.
  * @method static ServerResponse getMyDefaultAdministratorRights(array $data) Use this method to get the current default administrator rights of the bot. Returns ChatAdministratorRights on success.
- * @method static ServerResponse editMessageText(array $data)                 Use this method to edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
+ * @method static ServerResponse editMessageText(array $data)                 Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageCaption(array $data)              Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageMedia(array $data)                Use this method to edit audio, document, photo, or video messages. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
  * @method static ServerResponse editMessageReplyMarkup(array $data)          Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -125,8 +125,9 @@ use Throwable;
  * @method static ServerResponse getStickerSet(array $data)                   Use this method to get a sticker set. On success, a StickerSet object is returned.
  * @method static ServerResponse getCustomEmojiStickers(array $data)          Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
  * @method static ServerResponse uploadStickerFile(array $data)               Use this method to upload a .png file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
- * @method static ServerResponse createNewStickerSet(array $data)             Use this method to create new sticker set owned by a user. The bot will be able to edit the created sticker set. Returns True on success.
+ * @method static ServerResponse createNewStickerSet(array $data)             Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
  * @method static ServerResponse addStickerToSet(array $data)                 Use this method to add a new sticker to a set created by the bot. Returns True on success.
+ * @method static ServerResponse replaceStickerInSet(array $data)             Use this method to replace a sticker in a set created by the bot with a new one. The sticker must be in WEBP, TGS, or WEBM format. Returns True on success.
  * @method static ServerResponse setStickerPositionInSet(array $data)         Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.
  * @method static ServerResponse deleteStickerFromSet(array $data)            Use this method to delete a sticker from a set created by the bot. Returns True on success.
  * @method static ServerResponse setStickerEmojiList(array $data)             Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
@@ -137,14 +138,56 @@ use Throwable;
  * @method static ServerResponse setCustomEmojiStickerSetThumbnail(array $data) Use this method to set the thumbnail of a custom emoji sticker set. Returns True on success.
  * @method static ServerResponse deleteStickerSet(array $data)                Use this method to delete a sticker set that was created by the bot. Returns True on success.
  * @method static ServerResponse answerWebAppQuery(array $data)               Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.
- * @method static ServerResponse sendInvoice(array $data)                     Use this method to send invoices. On success, the sent Message is returned.
+ * @method static ServerResponse sendInvoice(array $data)                     Use this method to send invoices. On success, the sent Message is returned. message_thread_id, direct_messages_topic_id, suggested_post_parameters are supported.
  * @method static ServerResponse createInvoiceLink(array $data)               Use this method to create a link for an invoice. Returns the created invoice link as String on success.
  * @method static ServerResponse answerShippingQuery(array $data)             If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
  * @method static ServerResponse answerPreCheckoutQuery(array $data)          Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
  * @method static ServerResponse setPassportDataErrors(array $data)           Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success. Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
- * @method static ServerResponse sendGame(array $data)                        Use this method to send a game. On success, the sent Message is returned.
+ * @method static ServerResponse sendGame(array $data)                        Use this method to send a game. On success, the sent Message is returned. message_thread_id is supported.
  * @method static ServerResponse setGameScore(array $data)                    Use this method to set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited Message, otherwise returns True. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
  * @method static ServerResponse getGameHighScores(array $data)               Use this method to get data for high score tables. Will return the score of the specified user and several of his neighbors in a game. On success, returns an Array of GameHighScore objects.
+ * @method static ServerResponse sendGift(array $data)                        Use this method to send a gift. On success, Returns True on success.
+ * @method static ServerResponse readBusinessMessage(array $data)             Marks incoming message as read on behalf of a business account. Requires the can_read_messages business bot right. Returns True on success.
+ * @method static ServerResponse deleteBusinessMessages(array $data)          Delete messages on behalf of a business account. Requires the can_delete_sent_messages business bot right to delete messages sent by the bot itself, or the can_delete_all_messages business bot right to delete any message. Returns True on success.
+ * @method static ServerResponse setBusinessAccountName(array $data)          Changes the first and last name of a managed business account. Requires the can_change_name business bot right. Returns True on success.
+ * @method static ServerResponse setBusinessAccountUsername(array $data)      Changes the username of a managed business account. Requires the can_change_username business bot right. Returns True on success.
+ * @method static ServerResponse setBusinessAccountBio(array $data)           Changes the bio of a managed business account. Requires the can_change_bio business bot right. Returns True on success.
+ * @method static ServerResponse setBusinessAccountProfilePhoto(array $data)  Changes the profile photo of a managed business account. Requires the can_edit_profile_photo business bot right. Returns True on success.
+ * @method static ServerResponse removeBusinessAccountProfilePhoto(array $data) Removes the current profile photo of a managed business account. Requires the can_edit_profile_photo business bot right. Returns True on success.
+ * @method static ServerResponse setBusinessAccountGiftSettings(array $data)  Changes the privacy settings pertaining to incoming gifts in a managed business account. Requires the can_change_gift_settings business bot right. Returns True on success.
+ * @method static ServerResponse getBusinessAccountStarBalance(array $data)   Returns the amount of Telegram Stars owned by a managed business account. Requires the can_view_gifts_and_stars business bot right. Returns StarAmount on success.
+ * @method static ServerResponse getMyStarBalance()                           A method to get the current Telegram Stars balance of the bot. Requires no parameters. On success, returns a StarAmount object.
+ * @method static ServerResponse transferBusinessAccountStars(array $data)    Transfers Telegram Stars from the business account balance to the bot's balance. Requires the can_transfer_stars business bot right. Returns True on success.
+ * @method static ServerResponse getBusinessAccountGifts(array $data)         Returns the gifts received and owned by a managed business account. Requires the can_view_gifts_and_stars business bot right. Returns OwnedGifts on success. Supports new parameters exclude_limited_upgradable, exclude_limited_non_upgradable, exclude_from_blockchain.
+ * @method static ServerResponse convertGiftToStars(array $data)              Converts a given regular gift to Telegram Stars. Requires the can_convert_gifts_to_stars business bot right. Returns True on success.
+ * @method static ServerResponse upgradeGift(array $data)                     Upgrades a given regular gift to a unique gift. Requires the can_transfer_and_upgrade_gifts business bot right. Additionally requires the can_transfer_stars business bot right if the upgrade is paid. Returns True on success.
+ * @method static ServerResponse transferGift(array $data)                    Transfers an owned unique gift to another user. Requires the can_transfer_and_upgrade_gifts business bot right. Requires can_transfer_stars business bot right if the transfer is paid. Returns True on success.
+ * @method static ServerResponse postStory(array $data)                       Posts a story on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns Story on success.
+ * @method static ServerResponse editStory(array $data)                       Edits a story previously posted by the bot on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns Story on success.
+ * @method static ServerResponse deleteStory(array $data)                     Deletes a story previously posted by the bot on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns True on success.
+ * @method static ServerResponse sendChecklist(array $data)                   Use this method to send a checklist on behalf of a connected business account. On success, the sent Message is returned.
+ * @method static ServerResponse editMessageChecklist(array $data)            Use this method to edit a checklist on behalf of a connected business account. On success, the edited Message is returned.
+ * @method static ServerResponse giftPremiumSubscription(array $data)         Gifts a Telegram Premium subscription to the given user. Returns True on success.
+ * @method static ServerResponse sendMessageDraft(array $data)                Stream a partial message to a user while the message is being generated. Returns True on success.
+ * @method static ServerResponse getUserGifts(array $data)                    Returns the gifts owned and hosted by a user. Returns OwnedGifts on success.
+ * @method static ServerResponse getChatGifts(array $data)                    Returns the gifts owned by a chat. Returns OwnedGifts on success.
+ * @method static ServerResponse repostStory(array $data)                     Reposts a story on behalf of a business account from another business account. Both business accounts must be managed by the same bot, and the story on the source account must have been posted (or reposted) by the bot. Requires the can_manage_stories business bot right for both business accounts. Returns Story on success.
+ * @method static ServerResponse approveSuggestedPost(array $data)            Use this method to approve a suggested post in a direct messages chat. The bot must have the 'can_post_messages' administrator right in the corresponding channel chat. Returns True on success.
+ * @method static ServerResponse declineSuggestedPost(array $data)            Use this method to decline a suggested post in a direct messages chat. The bot must have the 'can_manage_direct_messages' administrator right in the corresponding channel chat. Returns True on success.
+ * @method static ServerResponse setChatMemberTag(array $data)                Use this method to set a tag for a regular member in a group or a supergroup. Returns True on success.
+ * @method static ServerResponse setMyProfilePhoto(array $data)               Use this method to set a new profile photo for the bot. Returns True on success.
+ * @method static ServerResponse removeMyProfilePhoto(array $data)            Use this method to remove the current profile photo of the bot. Returns True on success.
+ * @method static ServerResponse getUserProfileAudios(array $data)            Use this method to get a list of audios added to the profile of a user. Returns a UserProfileAudios object.
+ * @method static ServerResponse verifyUser(array $data)                      Use this method to verify a user on behalf of an organization. Returns True on success.
+ * @method static ServerResponse verifyChat(array $data)                      Use this method to verify a chat on behalf of an organization. Returns True on success.
+ * @method static ServerResponse removeUserVerification(array $data)          Use this method to remove verification from a user on behalf of an organization. Returns True on success.
+ * @method static ServerResponse removeChatVerification(array $data)          Use this method to remove verification from a chat on behalf of an organization. Returns True on success.
+ * @method static ServerResponse createChatSubscriptionInviteLink(array $data) Use this method to create a subscription invite link for a channel chat. Returns the new invite link as ChatInviteLink object.
+ * @method static ServerResponse editChatSubscriptionInviteLink(array $data)   Use this method to edit a subscription invite link created by the bot. Returns the edited invite link as a ChatInviteLink object.
+ * @method static ServerResponse editUserStarSubscription(array $data)        Use this method to cancel or restore the self-renewal of a Telegram Star subscription for a user. Returns True on success.
+ * @method static ServerResponse refundStarPayment(array $data)               Use this method to refund a successful payment in Telegram Stars. Returns True on success.
+ * @method static ServerResponse savePreparedInlineMessage(array $data)       Use this method to save a message that can be sent by a user from a Mini App via the method shareMessage. Returns a PreparedInlineMessage object.
+ * @method static ServerResponse setChatBottomButton(array $data)             Use this method to set a bottom button for a chat. Returns True on success.
  */
 class Request
 {
@@ -191,6 +234,13 @@ class Request
     private static $limiter_interval;
 
     /**
+     * Guzzle Client timeout
+     *
+     * @var int
+     */
+    private static $timeout = 60;
+
+    /**
      * The current action that is being executed
      *
      * @var string
@@ -235,6 +285,7 @@ class Request
         'sendContact',
         'sendPoll',
         'sendDice',
+        'sendInvoice',
         'sendChatAction',
         'setMessageReaction',
         'getUserProfilePhotos',
@@ -308,6 +359,7 @@ class Request
         'uploadStickerFile',
         'createNewStickerSet',
         'addStickerToSet',
+        'replaceStickerInSet',
         'setStickerPositionInSet',
         'deleteStickerFromSet',
         'setStickerEmojiList',
@@ -326,6 +378,51 @@ class Request
         'sendGame',
         'setGameScore',
         'getGameHighScores',
+        'getBusinessConnection',
+        'sendChecklist',
+        'editMessageChecklist',
+        'sendPaidMedia',
+        'getStarTransactions',
+        'sendGift',
+        'readBusinessMessage',
+        'deleteBusinessMessages',
+        'setBusinessAccountName',
+        'setBusinessAccountUsername',
+        'setBusinessAccountBio',
+        'setBusinessAccountProfilePhoto',
+        'removeBusinessAccountProfilePhoto',
+        'setBusinessAccountGiftSettings',
+        'getBusinessAccountStarBalance',
+        'getMyStarBalance',
+        'transferBusinessAccountStars',
+        'getBusinessAccountGifts',
+        'convertGiftToStars',
+        'upgradeGift',
+        'transferGift',
+        'postStory',
+        'editStory',
+        'deleteStory',
+        'giftPremiumSubscription',
+        'sendMessageDraft',
+        'getUserGifts',
+        'getChatGifts',
+        'repostStory',
+        'approveSuggestedPost',
+        'declineSuggestedPost',
+        'setChatMemberTag',
+        'setMyProfilePhoto',
+        'removeMyProfilePhoto',
+        'getUserProfileAudios',
+        'verifyUser',
+        'verifyChat',
+        'removeUserVerification',
+        'removeChatVerification',
+        'createChatSubscriptionInviteLink',
+        'editChatSubscriptionInviteLink',
+        'editUserStarSubscription',
+        'refundStarPayment',
+        'savePreparedInlineMessage',
+        'setChatBottomButton',
     ];
 
     /**
@@ -353,6 +450,8 @@ class Request
         'getChatMenuButton',
         'setMyDefaultAdministratorRights',
         'getMyDefaultAdministratorRights',
+        'getMyStarBalance',
+        'removeMyProfilePhoto',
     ];
 
     /**
@@ -368,7 +467,7 @@ class Request
         'sendPhoto'           => ['photo'],
         'sendAudio'           => ['audio', 'thumbnail'],
         'sendDocument'        => ['document', 'thumbnail'],
-        'sendVideo'           => ['video', 'thumbnail'],
+        'sendVideo'           => ['video', 'thumbnail', 'cover'],
         'sendAnimation'       => ['animation', 'thumbnail'],
         'sendVoice'           => ['voice'],
         'sendVideoNote'       => ['video_note', 'thumbnail'],
@@ -379,6 +478,7 @@ class Request
         // 'createNewStickerSet' => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
         // 'addStickerToSet'     => ['png_sticker', 'tgs_sticker', 'webm_sticker'],
         'setStickerSetThumbnail' => ['thumbnail'],
+        'setMyProfilePhoto'   => ['photo'],
     ];
 
     /**
@@ -418,6 +518,16 @@ class Request
         if ($api_base_download_uri !== '') {
             self::$api_base_download_uri = $api_base_download_uri;
         }
+    }
+
+    /**
+     * Set a custom Guzzle Client timeout
+     *
+     * @param int $timeout
+     */
+    public static function setClientTimeout(int $timeout): void
+    {
+        self::$timeout = $timeout;
     }
 
     /**
@@ -609,8 +719,9 @@ class Request
      */
     public static function execute(string $action, array $data = []): string
     {
-        $request_params          = self::setUpRequestParams($data);
-        $request_params['debug'] = TelegramLog::getDebugLogTempStream();
+        $request_params            = self::setUpRequestParams($data);
+        $request_params['debug']   = TelegramLog::getDebugLogTempStream();
+        $request_params['timeout'] = self::$timeout;
 
         try {
             $response = self::$client->post(
@@ -744,9 +855,7 @@ class Request
 
         // Special case for sent polls, which need to be saved specially.
         // @todo Take into account if DB gets extracted into separate module.
-        if ($response->isOk() && ($message = $response->getResult()) && ($message instanceof Message) && $poll = $message->getPoll()) {
-            DB::insertPollRequest($poll);
-        }
+        // DB::insertPollRequest($poll); // Database functionality removed
 
         // Reset current action after completion.
         self::$current_action = '';
@@ -814,10 +923,28 @@ class Request
      *
      * @link https://core.telegram.org/bots/api#sendmessage
      *
-     * @todo Splitting formatted text may break the message.
-     *
-     * @param array      $data
+     * @param array $data {
+     *     @var int|string             $chat_id
+     *     @var string                 $text
+     *     @var string                 $parse_mode
+     *     @var Entities\MessageEntity[] $entities
+     *     @var Entities\LinkPreviewOptions $link_preview_options Optional. Link preview generation options for the message
+     *     @var bool                   $disable_notification
+     *     @var bool                   $protect_content
+     *     @var int                    $reply_to_message_id
+     *     @var bool                   $allow_sending_without_reply
+     *     @var Entities\InlineKeyboard|Entities\ReplyKeyboard|Entities\ReplyKeyboardRemove|Entities\ForceReply $reply_markup
+     *     @var string                 $business_connection_id      Optional. Unique identifier of the business connection on behalf of which the message will be sent
+     *     @var int                    $message_thread_id           Optional. Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
+     *     @var bool                   $disable_web_page_preview    Optional. Disables link previews for links in this message (deprecated, use link_preview_options instead)
+     *     @var int                    $direct_messages_topic_id    Optional. Unique identifier for the target direct messages topic of the channel
+     *     @var Entities\SuggestedPostParameters $suggested_post_parameters Optional. Parameters of the suggested post
+     *     @var string                 $message_effect_id           Optional. Unique identifier of the message effect to be added to the message
+     *     @var bool                   $allow_paid_broadcast        Optional. Pass True to allow the message to be sent even if the bot's Telegram Stars balance is insufficient
+     * }
      * @param array|null $extras
+     *
+     * @todo Splitting formatted text may break the message.
      *
      * @return ServerResponse
      * @throws TelegramException
@@ -835,10 +962,17 @@ class Request
 
         $responses = [];
 
+        // business_connection_id should be in all split messages
+        $business_connection_id = $data['business_connection_id'] ?? null;
+
         do {
             // Chop off and send the first message.
-            $data['text'] = mb_substr($text, 0, $max_length, $encoding);
-            $responses[]  = self::send('sendMessage', $data);
+            $current_data = $data; // Create a copy to avoid modifying the original $data array in loop
+            $current_data['text'] = mb_substr($text, 0, $max_length, $encoding);
+            if ($business_connection_id !== null) {
+                $current_data['business_connection_id'] = $business_connection_id;
+            }
+            $responses[]  = self::send('sendMessage', $current_data);
 
             // Prepare the next message.
             $text = mb_substr($text, $max_length, null, $encoding);
@@ -893,19 +1027,8 @@ class Request
         array $data,
         array $select_chats_params
     ): array {
-        self::ensureValidAction($callback_function);
-
-        $chats = DB::selectChats($select_chats_params);
-
-        $results = [];
-        if (is_array($chats)) {
-            foreach ($chats as $row) {
-                $data['chat_id'] = $row['chat_id'];
-                $results[]       = self::send($callback_function, $data);
-            }
-        }
-
-        return $results;
+        // Always return empty array as DB is removed, so no chats to select.
+        return [];
     }
 
     /**
@@ -918,20 +1041,8 @@ class Request
      */
     public static function setLimiter(bool $enable = true, array $options = []): void
     {
-        if (DB::isDbConnected()) {
-            $options_default = [
-                'interval' => 1,
-            ];
-
-            $options = array_merge($options_default, $options);
-
-            if (!is_numeric($options['interval']) || $options['interval'] <= 0) {
-                throw new TelegramException('Interval must be a number and must be greater than zero!');
-            }
-
-            self::$limiter_interval = $options['interval'];
-            self::$limiter_enabled  = $enable;
-        }
+        // Limiter is disabled as DB is removed
+        self::$limiter_enabled = false;
     }
 
     /**
@@ -1001,26 +1112,9 @@ class Request
                         throw new TelegramException('Timed out while waiting for a request spot!');
                     }
 
-                    if (!($requests = DB::getTelegramRequestCount($chat_id, $inline_message_id))) {
-                        break;
-                    }
-
-                    // Make sure we're handling integers here.
-                    $requests = array_map('intval', $requests);
-
-                    $chat_per_second   = ($requests['LIMIT_PER_SEC'] === 0);    // No more than one message per second inside a particular chat
-                    $global_per_second = ($requests['LIMIT_PER_SEC_ALL'] < 30); // No more than 30 messages per second to different chats
-                    $groups_per_minute = (((is_numeric($chat_id) && $chat_id > 0) || $inline_message_id !== null) || ((!is_numeric($chat_id) || $chat_id < 0) && $requests['LIMIT_PER_MINUTE'] < 20));    // No more than 20 messages per minute in groups and channels
-
-                    if ($chat_per_second && $global_per_second && $groups_per_minute) {
-                        break;
-                    }
-
-                    $timeout--;
-                    usleep((int) (self::$limiter_interval * 1000000));
+                    // Limiter logic removed as DB is removed
+                    break;
                 }
-
-                DB::insertTelegramRequest($action, $data);
             }
         }
     }
@@ -1038,5 +1132,70 @@ class Request
     public static function kickChatMember(array $data = []): ServerResponse
     {
         return static::banChatMember($data);
+    }
+
+    /**
+     * Use this method to send paid media. On success, the sent Message is returned.
+     *
+     * @link https://core.telegram.org/bots/api#sendpaidmedia
+     *
+     * @param  array $data
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    public static function sendPaidMedia(array $data): ServerResponse
+    {
+        return static::send('sendPaidMedia', $data);
+    }
+
+    /**
+     * Returns the bot's Telegram Star transactions in chronological order.
+     *
+     * @link https://core.telegram.org/bots/api#getstartransactions
+     *
+     * @param  array $data
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    public static function getStarTransactions(array $data): ServerResponse
+    {
+        return static::send('getStarTransactions', $data);
+    }
+
+    /**
+     * A method to get the current Telegram Stars balance of the bot.
+     *
+     * @link https://core.telegram.org/bots/api#getmystarbalance
+     *
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    public static function getMyStarBalance(): ServerResponse
+    {
+        return static::send('getMyStarBalance');
+    }
+
+    /**
+     * Use this method to change the bot's menu button in a private chat, or the default menu button.
+     *
+     * @link https://core.telegram.org/bots/api#setchatmenubutton
+     *
+     * @param  array $data
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    public static function setChatMenuButton(array $data): ServerResponse
+    {
+        return static::send('setChatMenuButton', $data);
+    }
+
+    /**
+     * Get the secret token header from the request
+     *
+     * @return string|null
+     */
+    public static function getSecretTokenHeader(): ?string
+    {
+        return $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
     }
 }

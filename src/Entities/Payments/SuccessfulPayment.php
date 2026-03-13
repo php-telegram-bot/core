@@ -20,13 +20,17 @@ use Longman\TelegramBot\Entities\Entity;
  *
  * @link https://core.telegram.org/bots/api#successfulpayment
  *
- * @method string    getCurrency()                Three-letter ISO 4217 currency code
- * @method int       getTotalAmount()             Total price in the smallest units of the currency (integer, not float/double).
- * @method string    getInvoicePayload()          Bot specified invoice payload
- * @method string    getShippingOptionId()        Optional. Identifier of the shipping option chosen by the user
- * @method OrderInfo getOrderInfo()               Optional. Order info provided by the user
- * @method string    getTelegramPaymentChargeId() Telegram payment identifier
- * @method string    getProviderPaymentChargeId() Provider payment identifier
+ * @method string    getCurrency()                   Three-letter ISO 4217 currency code
+ * @method int       getTotalAmount()                Total price in the smallest units of the currency (integer, not float/double).
+ * @method string    getInvoicePayload()             Bot specified invoice payload
+ * @method int       getSubscriptionPeriod()         Optional. The duration of the paid subscription
+ * @method int       getSubscriptionExpirationDate() Optional. Expiration date of the paid subscription in Unix time
+ * @method bool      getIsRecurring()                Optional. True, if the payment is a recurring payment
+ * @method bool      getIsFirstRecurring()           Optional. True, if the payment is the first recurring payment
+ * @method string    getShippingOptionId()           Optional. Identifier of the shipping option chosen by the user
+ * @method OrderInfo getOrderInfo()                  Optional. Order info provided by the user
+ * @method string    getTelegramPaymentChargeId()    Telegram payment identifier
+ * @method string    getProviderPaymentChargeId()    Provider payment identifier
  **/
 class SuccessfulPayment extends Entity
 {

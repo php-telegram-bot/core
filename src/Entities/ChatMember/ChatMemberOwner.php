@@ -14,6 +14,7 @@ use Longman\TelegramBot\Entities\User;
  * @method User   getUser()        Information about the user
  * @method string getCustomTitle() Custom title for this user
  * @method bool   getIsAnonymous() True, if the user's presence in the chat is hidden
+ * @method string getTag()         Optional. Tag of the member
  */
 class ChatMemberOwner extends Entity implements ChatMember
 {

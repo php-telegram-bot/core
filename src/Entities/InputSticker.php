@@ -13,6 +13,7 @@ namespace Longman\TelegramBot\Entities;
  * @method string[]     getEmojiList()    List of 1-20 emoji associated with the sticker
  * @method MaskPosition getMaskPosition() Optional. Position where the mask should be placed on faces. For “mask” stickers only.
  * @method string[]     getKeywords()     Optional. List of 0-20 search keywords for the sticker with total length of up to 64 characters. For “regular” and “custom_emoji” stickers only.
+ * @method string       getFormat()       Format of the sticker, must be one of “static”, “animated”, “video”
  */
 class InputSticker extends Entity
 {

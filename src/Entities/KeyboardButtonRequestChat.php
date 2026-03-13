@@ -17,6 +17,9 @@ namespace Longman\TelegramBot\Entities;
  * @method ChatAdministratorRights getUserAdministratorRights() Optional. A JSON-serialized object listing the required administrator rights of the user in the chat. The rights must be a superset of bot_administrator_rights. If not specified, no additional restrictions are applied.
  * @method ChatAdministratorRights getBotAdministratorRights()  Optional. A JSON-serialized object listing the required administrator rights of the bot in the chat. The rights must be a subset of user_administrator_rights. If not specified, no additional restrictions are applied.
  * @method bool getBotIsMember()                                Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
+ * @method bool getRequestTitle()                               Optional. Pass True to request the chat's title
+ * @method bool getRequestUsername()                            Optional. Pass True to request the chat's username
+ * @method bool getRequestPhoto()                               Optional. Pass True to request the chat's photo
  *
  * @method $this setRequestId(int $request_id)                                                  Signed 32-bit identifier of the request, which will be received back in the ChatShared object. Must be unique within the message
  * @method $this setChatIsChannel(bool $chat_is_channel)                                        Pass True to request a channel chat, pass False to request a group or a supergroup chat.
@@ -26,6 +29,9 @@ namespace Longman\TelegramBot\Entities;
  * @method $this setUserAdministratorRights(ChatAdministratorRights $user_administrator_rights) Optional. A JSON-serialized object listing the required administrator rights of the user in the chat. The rights must be a superset of bot_administrator_rights. If not specified, no additional restrictions are applied.
  * @method $this setBotAdministratorRights(ChatAdministratorRights $bot_administrator_rights)   Optional. A JSON-serialized object listing the required administrator rights of the bot in the chat. The rights must be a subset of user_administrator_rights. If not specified, no additional restrictions are applied.
  * @method $this setBotIsMember(bool $bot_is_member)                                            Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
+ * @method $this setRequestTitle(bool $request_title)                                           Optional. Pass True to request the chat's title
+ * @method $this setRequestUsername(bool $request_username)                                     Optional. Pass True to request the chat's username
+ * @method $this setRequestPhoto(bool $request_photo)                                           Optional. Pass True to request the chat's photo
  */
 class KeyboardButtonRequestChat extends Entity
 {

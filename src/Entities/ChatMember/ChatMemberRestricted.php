@@ -27,6 +27,8 @@ use Longman\TelegramBot\Entities\User;
  * @method bool   getCanSendPolls()          True, if the user is allowed to send polls
  * @method bool   getCanSendOtherMessages()  True, if the user is allowed to send animations, games, stickers and use inline bots
  * @method bool   getCanAddWebPagePreviews() True, if the user is allowed to add web page previews to their messages
+ * @method bool   getCanEditTag()            True, if the user is allowed to edit their own tag
+ * @method string getTag()                   Optional. Tag of the member
  * @method int    getUntilDate()             Date when restrictions will be lifted for this user; unix time
  */
 class ChatMemberRestricted extends Entity implements ChatMember

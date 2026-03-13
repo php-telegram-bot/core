@@ -25,7 +25,6 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 use Longman\TelegramBot\Exception\TelegramException;
-use PDO;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -37,7 +36,17 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.83.0';
+    protected $version = '1.2.0';
+
+    /** @var \Redis|null */
+    private static $redis_connection;
+
+    /**
+     * Update retention time in Redis (in seconds)
+     *
+     * @var int
+     */
+    private static $update_retention_time = 60;
 
     /**
      * Telegram API key
@@ -66,6 +75,13 @@ class Telegram
      * @var string
      */
     protected $input = '';
+
+    /**
+     * Secret token to authorise webhook requests
+     *
+     * @var string
+     */
+    protected $secret_token = '';
 
     /**
      * Custom commands paths
@@ -121,20 +137,6 @@ class Telegram
      * @var string
      */
     protected $download_path = '';
-
-    /**
-     * MySQL integration
-     *
-     * @var bool
-     */
-    protected $mysql_enabled = false;
-
-    /**
-     * PDO object
-     *
-     * @var PDO
-     */
-    protected $pdo;
 
     /**
      * Commands config
@@ -222,43 +224,6 @@ class Telegram
         $this->addCommandsPath(TB_BASE_COMMANDS_PATH . '/SystemCommands');
 
         Request::initialize($this);
-    }
-
-    /**
-     * Initialize Database connection
-     *
-     * @param array  $credentials
-     * @param string $table_prefix
-     * @param string $encoding
-     *
-     * @return Telegram
-     * @throws TelegramException
-     */
-    public function enableMySql(array $credentials, string $table_prefix = '', string $encoding = 'utf8mb4'): Telegram
-    {
-        $this->pdo = DB::initialize($credentials, $this, $table_prefix, $encoding);
-        ConversationDB::initializeConversation();
-        $this->mysql_enabled = true;
-
-        return $this;
-    }
-
-    /**
-     * Initialize Database external connection
-     *
-     * @param PDO    $external_pdo_connection PDO database object
-     * @param string $table_prefix
-     *
-     * @return Telegram
-     * @throws TelegramException
-     */
-    public function enableExternalMySql(PDO $external_pdo_connection, string $table_prefix = ''): Telegram
-    {
-        $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
-        ConversationDB::initializeConversation();
-        $this->mysql_enabled = true;
-
-        return $this;
     }
 
     /**
@@ -378,6 +343,16 @@ class Telegram
             if ($command_class) {
                 $command_obj = new $command_class($this, $this->update);
 
+                // Automatic dependency injection for Redis
+                if (self::$redis_connection) {
+                    $reflection = new \ReflectionClass($command_obj);
+                    if ($reflection->hasProperty('redis')) {
+                        $redis_property = $reflection->getProperty('redis');
+                        $redis_property->setAccessible(true);
+                        $redis_property->setValue($command_obj, self::$redis_connection);
+                    }
+                }
+
                 if ($auth === Command::AUTH_SYSTEM && $command_obj instanceof SystemCommand) {
                     return $command_obj;
                 }
@@ -461,15 +436,7 @@ class Telegram
             throw new TelegramException('Bot Username is not defined!');
         }
 
-        if (!DB::isDbConnected() && !$this->getupdates_without_database) {
-            return new ServerResponse(
-                [
-                    'ok'          => false,
-                    'description' => 'getUpdates needs MySQL connection! (This can be overridden - see documentation)',
-                ],
-                $this->bot_username
-            );
-        }
+        // DB connection check removed
 
         $offset = 0;
         $limit  = null;
@@ -504,11 +471,7 @@ class Telegram
                 throw new TelegramException('Invalid custom input JSON: ' . $e->getMessage());
             }
         } else {
-            if (DB::isDbConnected() && $last_update = DB::selectTelegramUpdate(1)) {
-                // Get last Update id from the database.
-                $last_update          = reset($last_update);
-                $this->last_update_id = $last_update['id'] ?? null;
-            }
+            // DB::isDbConnected() && $last_update = DB::selectTelegramUpdate(1) // DB related last_update_id fetching removed
 
             if ($this->last_update_id !== null) {
                 $offset = $this->last_update_id + 1; // As explained in the telegram bot API documentation.
@@ -527,7 +490,8 @@ class Telegram
                 $this->processUpdate($update);
             }
 
-            if (!DB::isDbConnected() && !$custom_input && $this->last_update_id !== null && $offset === 0) {
+            // DB related check removed
+            if (!$custom_input && $this->last_update_id !== null && $offset === 0) {
                 // Mark update(s) as read after handling
                 $offset = $this->last_update_id + 1;
                 $limit  = 1;
@@ -550,6 +514,10 @@ class Telegram
     {
         if ($this->bot_username === '') {
             throw new TelegramException('Bot Username is not defined!');
+        }
+
+        if ($this->secret_token !== '' && $this->secret_token !== Request::getSecretTokenHeader()) {
+            throw new TelegramException('Secret token is invalid!');
         }
 
         $input = Request::getInput();
@@ -596,6 +564,17 @@ class Telegram
     {
         $this->update         = $update;
         $this->last_update_id = $update->getUpdateId();
+
+        // If Redis is enabled, check if this update has already been processed.
+        if (self::$redis_connection) {
+            $redis_key = 'telegram_update_' . $this->last_update_id;
+            if (self::$redis_connection->get($redis_key)) {
+                // Return a fake success response to prevent Telegram from retrying.
+                return new ServerResponse(['ok' => true, 'result' => true], $this->bot_username);
+            }
+            // Store the update ID in Redis with a TTL of 60 seconds (matching the default timeout).
+            self::$redis_connection->setex($redis_key, self::$update_retention_time, '1');
+        }
 
         if (is_callable($this->update_filter)) {
             $reason = 'Update denied by update_filter';
@@ -646,13 +625,8 @@ class Telegram
         }
 
         //Make sure we don't try to process update that was already processed
-        $last_id = DB::selectTelegramUpdate(1, $this->update->getUpdateId());
-        if ($last_id && count($last_id) === 1) {
-            TelegramLog::debug('Duplicate update received, processing aborted!');
-            return Request::emptyResponse();
-        }
-
-        DB::insertRequest($this->update);
+        // DB related check removed
+        // DB related insert removed
 
         return $this->executeCommand($command);
     }
@@ -789,7 +763,7 @@ class Telegram
      */
     public function isDbEnabled(): bool
     {
-        return $this->mysql_enabled;
+        return false; // MySQL is removed, so DB is never enabled.
     }
 
     /**
@@ -1147,6 +1121,65 @@ class Telegram
     }
 
     /**
+     * Enable Redis connection
+     *
+     * @param array $config
+     * @return Telegram
+     */
+    public function enableRedis(array $config = []): Telegram
+    {
+        if (empty($config)) {
+            $config = [
+                'host'   => '127.0.0.1',
+                'port'   => 6379,
+            ];
+        }
+
+        $redis = new \Redis();
+        $redis->connect($config['host'], $config['port']);
+
+        if (!empty($config['password'])) {
+            $redis->auth($config['password']);
+        }
+
+        self::$redis_connection = $redis;
+
+        return $this;
+    }
+
+    /**
+     * Set a custom Redis connection
+     *
+     * @param \Redis $redis
+     * @return void
+     */
+    public static function setRedis(\Redis $redis): void
+    {
+        self::$redis_connection = $redis;
+    }
+
+    /**
+     * Set the update retention time in Redis
+     *
+     * @param int $seconds
+     * @return void
+     */
+    public static function setUpdateRetentionTime(int $seconds): void
+    {
+        self::$update_retention_time = $seconds;
+    }
+
+    /**
+     * Get the shared Redis client instance.
+     *
+     * @return \Redis|null
+     */
+    public static function getRedis(): ?\Redis
+    {
+        return self::$redis_connection;
+    }
+
+    /**
      * Enable requests limiter
      *
      * @param array $options
@@ -1299,6 +1332,20 @@ class Telegram
     public function getUpdateFilter(): ?callable
     {
         return $this->update_filter;
+    }
+
+    /**
+     * Set the secret token to be used for webhook verification
+     *
+     * @param string $secret_token
+     *
+     * @return Telegram
+     */
+    public function setSecretToken(string $secret_token): Telegram
+    {
+        $this->secret_token = $secret_token;
+
+        return $this;
     }
 
     /**

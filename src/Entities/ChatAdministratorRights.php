@@ -20,6 +20,8 @@ namespace Longman\TelegramBot\Entities;
  * @method bool getCanEditStories()      Optional. True, if the administrator can edit stories posted by other users; channels only
  * @method bool getCanDeleteStories()    Optional. True, if the administrator can delete stories posted by other users; channels only
  * @method bool getCanManageTopics()     Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
+ * @method bool getCanManageDirectMessages() Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+ * @method bool getCanManageTags()       Optional. True, if the administrator can manage chat member tags; for groups and supergroups only
  *
  * @method $this setIsAnonymous(bool $is_anonymous)                   True, if the user's presence in the chat is hidden
  * @method $this setCanManageChat(bool $can_manage_chat)              True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
@@ -36,6 +38,8 @@ namespace Longman\TelegramBot\Entities;
  * @method $this setCanEditStories(bool $can_edit_stories)            Optional. True, if the administrator can edit stories posted by other users; channels only
  * @method $this setCanDeleteStories(bool $can_delete_stories)        Optional. True, if the administrator can delete stories posted by other users; channels only
  * @method $this setCanManageTopics(bool $can_manage_topics)          Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
+ * @method $this setCanManageDirectMessages(bool $can_manage_direct_messages) Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+ * @method $this setCanManageTags(bool $can_manage_tags)              Optional. True, if the administrator can manage chat member tags; for groups and supergroups only
  */
 class ChatAdministratorRights extends Entity
 {

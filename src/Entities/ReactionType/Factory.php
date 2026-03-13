@@ -11,6 +11,7 @@ class Factory extends \Longman\TelegramBot\Entities\Factory
         $type = [
             'emoji'        => ReactionTypeEmoji::class,
             'custom_emoji' => ReactionTypeCustomEmoji::class,
+            'paid'         => ReactionTypePaid::class,
         ];
 
         if (!isset($type[$data['type'] ?? ''])) {

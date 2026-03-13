@@ -16,17 +16,21 @@ namespace Longman\TelegramBot\Entities;
  *
  * @link https://core.telegram.org/bots/api#user
  *
- * @method int    getId()                      Unique identifier for this user or bot
- * @method bool   getIsBot()                   True, if this user is a bot
- * @method string getFirstName()               User's or bot’s first name
- * @method string getLastName()                Optional. User's or bot’s last name
- * @method string getUsername()                Optional. User's or bot’s username
- * @method string getLanguageCode()            Optional. IETF language tag of the user's language
- * @method bool   getIsPremium()               Optional. True, if this user is a Telegram Premium user
- * @method bool   getAddedToAttachmentMenu()   Optional. True, if this user added the bot to the attachment menu
- * @method bool   getCanJoinGroups()           Optional. True, if the bot can be invited to groups. Returned only in getMe.
- * @method bool   getCanReadAllGroupMessages() Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
- * @method bool   getSupportsInlineQueries()   Optional. True, if the bot supports inline queries. Returned only in getMe.
+ * @method int    getId()                         Unique identifier for this user or bot
+ * @method bool   getIsBot()                      True, if this user is a bot
+ * @method string getFirstName()                  User's or bot’s first name
+ * @method string getLastName()                   Optional. User's or bot’s last name
+ * @method string getUsername()                   Optional. User's or bot’s username
+ * @method string getLanguageCode()               Optional. IETF language tag of the user's language
+ * @method bool   getIsPremium()                  Optional. True, if this user is a Telegram Premium user
+ * @method bool   getAddedToAttachmentMenu()      Optional. True, if this user added the bot to the attachment menu
+ * @method bool   getCanJoinGroups()              Optional. True, if the bot can be invited to groups. Returned only in getMe.
+ * @method bool   getCanReadAllGroupMessages()    Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
+ * @method bool   getSupportsInlineQueries()      Optional. True, if the bot supports inline queries. Returned only in getMe.
+ * @method bool   getCanConnectToBusiness()       Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.
+ * @method bool   getHasMainWebApp()              Optional. True, if the bot has a main Web App. Returned only in getMe.
+ * @method bool   getHasTopicsEnabled()           Optional. True, if the bot has forum topic mode enabled in private chats. Returned only in getMe.
+ * @method bool   getAllowsUsersToCreateTopics() Optional. True, if the bot allows users to create forum topics in private chats. Returned only in getMe.
  */
 class User extends Entity
 {

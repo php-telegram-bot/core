@@ -14,6 +14,7 @@ use Longman\TelegramBot\Entities\Entity;
  * @method string getName()              Name of the topic
  * @method int    getIconColor()         Color of the topic icon in RGB format
  * @method string getIconCustomEmojiId() Optional. Unique identifier of the custom emoji shown as the topic icon
+ * @method bool   getIsNameImplicit()    Optional. True, if the name of the topic wasn't specified explicitly by its creator and likely needs to be changed by the bot
  */
 class ForumTopicCreated extends Entity
 {

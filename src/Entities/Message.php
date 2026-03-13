@@ -38,22 +38,27 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @link https://core.telegram.org/bots/api#message
  *
  * @method int                                    getMessageId()                              Unique message identifier
- * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
+ * @method int                                    getMessageThreadId()                        Optional. Unique identifier of a message thread to which the message belongs; for supergroups and private chats with topic mode enabled only
+ * @method DirectMessagesTopic                    getDirectMessagesTopic()                    Optional. Information about the direct messages chat topic that contains the message
  * @method User                                   getFrom()                                   Optional. Sender, can be empty for messages sent to channels
  * @method Chat                                   getSenderChat()                             Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
  * @method int                                    getSenderBoostCount()                       Optional. If the sender of the message boosted the chat, the number of boosts added by the user
+ * @method string                                 getSenderTag()                              Optional. Tag or custom title of the sender of the message; for supergroups only
  * @method int                                    getDate()                                   Date the message was sent in Unix time
  * @method Chat                                   getChat()                                   Conversation the message belongs to
  * @method MessageOrigin                          getForwardOrigin()                          Optional. Information about the original message for forwarded messages
- * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic
+ * @method bool                                   getIsTopicMessage()                         Optional. True, if the message is sent to a forum topic or a private chat with topic mode enabled
+ * @method GiftInfo                               getGiftUpgradeSent()                        Optional. Service message: upgrade of a gift was purchased after the gift was sent
  * @method bool                                   getIsAutomaticForward()                     Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @method ReplyToMessage                         getReplyToMessage()                         Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @method ExternalReplyInfo                      getExternalReply()                          Optional. Information about the message that is being replied to, which may come from another chat or forum topic
  * @method TextQuote                              getQuote()                                  Optional. For replies that quote part of the original message, the quoted part of the message
  * @method Story                                  getReplyToStory()                           Optional. For replies to a story, the original story
+ * @method int                                    getReplyToChecklistTaskId()                 Optional. Identifier of the specific checklist task that is being replied to
  * @method User                                   getViaBot()                                 Optional. Bot through which the message was sent
  * @method int                                    getEditDate()                               Optional. Date the message was last edited in Unix time
  * @method bool                                   getHasProtectedContent()                    Optional. True, if the message can't be forwarded
+ * @method SuggestedPostInfo                      getSuggestedPostInfo()                      Optional. Information about suggested post parameters if the message is a suggested post in a channel direct messages chat. If the message is an approved or declined suggested post, then it can't be edited.
  * @method string                                 getMediaGroupId()                           Optional. The unique identifier of a media message group this message belongs to
  * @method string                                 getAuthorSignature()                        Optional. Signature of the post author for messages in channels
  * @method LinkPreviewOptions                     getLinkPreviewOptions()                     Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
@@ -71,6 +76,8 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method VideoNote                              getVideoNote()                              Optional. Message is a video note message, information about the video
  * @method string                                 getCaption()                                Optional. Caption for the document, photo or video, 0-200 characters
  * @method bool                                   getHasMediaSpoiler()                        Optional. True, if the message media is covered by a spoiler animation
+ * @method bool                                   getShowCaptionAboveMedia()                  Optional. True, if the caption must be shown above the message media
+ * @method Checklist                              getChecklist()                              Optional. Message is a checklist
  * @method Contact                                getContact()                                Optional. Message is a shared contact, information about the contact
  * @method Location                               getLocation()                               Optional. Message is a shared location, information about the location
  * @method Venue                                  getVenue()                                  Optional. Message is a venue, information about the venue
@@ -113,6 +120,29 @@ use Longman\TelegramBot\Entities\Topics\GeneralForumTopicUnhidden;
  * @method VideoChatParticipantsInvited           getVideoChatParticipantsInvited()           Optional. Service message: new participants invited to a voice chat
  * @method WebAppData                             getWebAppData()                             Optional. Service message: data sent by a Web App
  * @method InlineKeyboard                         getReplyMarkup()                            Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
+ * @method string                                 getBusinessConnectionId()                   Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message is business_message.
+ * @method User                                   getSenderBusinessBot()                      Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the business account.
+ * @method bool                                   getIsFromOffline()                          Optional. True, if the message was sent by an offline user. Applicable to messages sent by the bot on behalf of a user to a fellow user in a private chat.
+ * @method ChatBackground                         getChatBackgroundSet()                      Optional. Service message: chat background set
+ * @method ChecklistTasksDone                     getChecklistTasksDone()                     Optional. Service message: some tasks in a checklist were marked as done or not done
+ * @method ChecklistTasksAdded                    getChecklistTasksAdded()                    Optional. Service message: tasks were added to a checklist
+ * @method DirectMessagePriceChanged              getDirectMessagePriceChanged()              Optional. Service message: the price for paid messages in the corresponding direct messages chat of a channel has changed
+ * @method string                                 getMessageEffectId()                        Optional. Unique identifier of the message effect added to the message
+ * @method ChatOwnerLeft                          getChatOwnerLeft()                          Optional. Service message: the chat owner left the chat
+ * @method ChatOwnerChanged                       getChatOwnerChanged()                       Optional. Service message: the chat owner was changed
+ * @method bool                                   getIsPaidPost()                             Optional. True, if the message is a paid post
+ * @method PaidMediaInfo                          getPaidMedia()                              Optional. Message contains paid media; information about the paid media
+ * @method StarTransaction                        getTransaction()                            Optional. Message is a service message about a successful payment for Telegram Stars, information about the transaction.
+ * @method WebAppInfo                             getWebApp()                                 Optional. Service message: a Web App was launched for the user
+ * @method GiftInfo                               getGift()                                   Optional. Service message: a regular gift was sent or received
+ * @method UniqueGiftInfo                         getUniqueGift()                             Optional. Service message: a unique gift was sent or received
+ * @method PaidMessagePriceChanged                getPaidMessagePriceChanged()                Optional. Service message: the price for paid messages has changed in the chat
+ * @method SuggestedPostApproved                  getSuggestedPostApproved()                  Optional. Service message: a suggested post was approved
+ * @method SuggestedPostApprovalFailed            getSuggestedPostApprovalFailed()            Optional. Service message: approval of a suggested post has failed
+ * @method SuggestedPostDeclined                  getSuggestedPostDeclined()                  Optional. Service message: a suggested post was declined
+ * @method SuggestedPostPaid                      getSuggestedPostPaid()                      Optional. Service message: payment for a suggested post was received
+ * @method SuggestedPostRefunded                  getSuggestedPostRefunded()                  Optional. Service message: payment for a suggested post was refunded
+ * @method int                                    getPaidStarCount()                          Optional. The number of Telegram Stars that were paid by the sender of the message to send it
  */
 class Message extends Entity implements MaybeInaccessibleMessage
 {
@@ -122,6 +152,7 @@ class Message extends Entity implements MaybeInaccessibleMessage
     protected function subEntities(): array
     {
         return [
+            'direct_messages_topic'             => DirectMessagesTopic::class,
             'from'                              => User::class,
             'sender_chat'                       => Chat::class,
             'chat'                              => Chat::class,
@@ -178,6 +209,26 @@ class Message extends Entity implements MaybeInaccessibleMessage
             'video_chat_participants_invited'   => VideoChatParticipantsInvited::class,
             'web_app_data'                      => WebAppData::class,
             'reply_markup'                      => InlineKeyboard::class,
+            'chat_background_set'               => ChatBackground::class,
+            'checklist'                         => Checklist::class,
+            'checklist_tasks_done'              => ChecklistTasksDone::class,
+            'checklist_tasks_added'             => ChecklistTasksAdded::class,
+            'direct_message_price_changed'      => DirectMessagePriceChanged::class,
+            'paid_media'                        => PaidMediaInfo::class,
+            'transaction'                       => StarTransaction::class,
+            'web_app'                           => WebAppInfo::class,
+            'gift'                              => GiftInfo::class,
+            'unique_gift'                       => UniqueGiftInfo::class,
+            'suggested_post_info'               => SuggestedPostInfo::class,
+            'gift_upgrade_sent'                 => GiftInfo::class,
+            'paid_message_price_changed'        => PaidMessagePriceChanged::class,
+            'suggested_post_approved'           => SuggestedPostApproved::class,
+            'suggested_post_approval_failed'    => SuggestedPostApprovalFailed::class,
+            'suggested_post_declined'           => SuggestedPostDeclined::class,
+            'suggested_post_paid'               => SuggestedPostPaid::class,
+            'suggested_post_refunded'           => SuggestedPostRefunded::class,
+            'chat_owner_left'                   => ChatOwnerLeft::class,
+            'chat_owner_changed'                => ChatOwnerChanged::class,
         ];
     }
 
@@ -325,6 +376,9 @@ class Message extends Entity implements MaybeInaccessibleMessage
             'video_chat_participants_invited',
             'web_app_data',
             'reply_markup',
+            'chat_background_set',
+            'chat_owner_left',
+            'chat_owner_changed',
         ];
 
         $is_command = $this->getCommand() !== null;

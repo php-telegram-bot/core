@@ -1,15 +1,21 @@
 {
-    "name": "longman/telegram-bot",
+    "name": "devrabie/php-telegram-bot-plus",
     "type": "library",
-    "description": "PHP Telegram bot",
+    "description": "A community-driven and updated fork of the popular php-telegram-bot/core library, with support for the latest Telegram Bot API features.",
     "keywords": ["telegram", "bot", "api"],
     "license": "MIT",
-    "homepage": "https://github.com/php-telegram-bot/core",
+    "homepage": "https://github.com/devrabie/php-telegram-bot-plus",
     "support": {
-        "issues": "https://github.com/php-telegram-bot/core/issues",
-        "source": "https://github.com/php-telegram-bot/core"
+        "issues": "https://github.com/devrabie/php-telegram-bot-plus/issues",
+        "source": "https://github.com/devrabie/php-telegram-bot-plus"
     },
     "authors": [
+        {
+            "name": "Rabie",
+            "email": "devrabie@gmail.com",
+            "homepage": "https://github.com/devrabie",
+            "role": "Maintainer"
+        },
         {
             "name": "Avtandil Kikabidze aka LONGMAN",
             "email": "akalongman@gmail.com",
@@ -34,14 +40,14 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "psr/log": "^1.1|^2.0|^3.0",
-        "guzzlehttp/guzzle": "^6.0|^7.0"
+        "guzzlehttp/guzzle": "^7.9",
+        "psr/log": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.6",
-        "dms/phpunit-arraysubset-asserts": "^0.2",
-        "monolog/monolog": "^2.1"
+        "phpunit/phpunit": "^10.5",
+        "squizlabs/php_codesniffer": "^3.11",
+        "dms/phpunit-arraysubset-asserts": "^0.5",
+        "monolog/monolog": "^3.8"
     },
     "autoload": {
         "psr-4": {
