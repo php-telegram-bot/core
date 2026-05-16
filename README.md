@@ -201,7 +201,7 @@ The bot can handle updates with [**Webhook**](#webhook-installation) or [**getUp
 | ---- | :----: | :----: |
 | Description | Telegram sends the updates directly to your host | You have to fetch Telegram updates manually |
 | Host with https | Required | Not required |
-| MySQL | Not required | ([Not](#getupdates-without-database)) Required  |
+| MySQL / MariaDB | Not required | ([Not](#getupdates-without-database)) Required  |
 
 ## Using a custom Bot API server
 
@@ -290,7 +290,7 @@ Edit *[unset.php]* with your bot credentials and execute it.
 
 ## getUpdates installation
 
-For best performance, the MySQL database should be enabled for the `getUpdates` method!
+For best performance, a MySQL or MariaDB database should be enabled for the `getUpdates` method!
 
 Create *[getUpdatesCLI.php]* with the following contents:
 ```php
@@ -484,6 +484,8 @@ You can also broadcast a message to users, from the private chat with your bot. 
 ## Utils
 
 ### MySQL storage (Recommended)
+
+MariaDB is supported via the same PDO `mysql` driver and `enableMySql()` setup (CI tests use a MariaDB image).
 
 If you want to save messages/users/chats for further usage in commands, create a new database (`utf8mb4_unicode_520_ci`), import *[structure.sql]* and enable MySQL support BEFORE `handle()` method:
 
