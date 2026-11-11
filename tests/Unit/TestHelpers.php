@@ -66,7 +66,6 @@ class TestHelpers
     {
         $ref_object   = new \ReflectionObject($object);
         $ref_property = $ref_object->getProperty($property);
-        $ref_property->setAccessible(true);
         $ref_property->setValue($object, $value);
     }
 
@@ -82,7 +81,6 @@ class TestHelpers
     public static function setStaticProperty(string $class, string $property, $value): void
     {
         $ref_property = new \ReflectionProperty($class, $property);
-        $ref_property->setAccessible(true);
         $ref_property->setValue(null, $value);
     }
 
