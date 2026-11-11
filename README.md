@@ -58,7 +58,7 @@ A Telegram Bot based on the official [Telegram Bot API]
         - [Set Admins](#set-admins)
         - [Channel Administration](#channel-administration)
 - [Upload and Download directory path](#upload-and-download-directory-path)
-- [Logging](doc/01-utils.md)
+- [Logging](docs/01-utils.md)
 - [Documentation](#documentation)
 - [Assets](#assets)
 - [Example bot](#example-bot)

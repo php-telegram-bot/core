@@ -31,7 +31,7 @@ Four static or central classes in `src/` do most of the work:
 - `Telegram` is the entry object the library user constructs. It owns command discovery, the admin list, and the update loop (`handle()` for webhooks, `handleGetUpdates()` for polling). Its constructor calls `Request::initialize($this)`.
 - `Request` is fully static. API methods are not real PHP methods: `Request::sendPhoto([...])` goes through `__callStatic` into `send()`, which validates the name against the `$actions` whitelist. The `@method` docblock on the class is the only declaration. Fields that accept file uploads are listed in `$input_file_fields`, and parameterless methods in `$actions_need_dummy_param`.
 - `DB` is fully static, MySQL through PDO, and optional (`Telegram::enableMySql()`). Table names are global constants (`TB_MESSAGE`, `TB_USER`, ...) defined at init from `DB::defineTables()` with the user's table prefix. Every method starts with an `isDbConnected()` guard and returns `false` when the database is off, so the library works without it.
-- `TelegramLog` is a static PSR-3 facade with three streams (error, debug, update); see `doc/01-utils.md`.
+- `TelegramLog` is a static PSR-3 facade with three streams (error, debug, update); see `docs/01-utils.md`.
 
 ### Update flow
 
