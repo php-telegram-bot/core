@@ -82,3 +82,14 @@ jobs:
 #         wget https://scrutinizer-ci.com/ocular.phar
 #         composer test-cov
 #         composer test-cov-upload
+
+  # Single status for branch protection, so the PHP matrix can change without touching repository settings.
+  tests-passed:
+    name: Tests
+    if: always()
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check matrix result
+      run: test "${{ needs.tests.result }}" = "success"
