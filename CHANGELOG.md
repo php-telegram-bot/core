@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
 - The DB migration script replaces a foreign key on `telegram_update`, which can take a while on a large table.
 - The unused `botan_shortener` table and `message.new_chat_member` column are not removed by the script and can be dropped manually.
+- :exclamation: Guzzle 7.15.2+ required! Guzzle 6 and older Guzzle 7 versions can no longer be installed alongside this library.
 ### Added
 ### Changed
 ### Deprecated
@@ -21,6 +22,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `TypeError` when saving a callback query whose message is inaccessible. (@akalongman) (#1495)
 - PHP 8.4 deprecation of the implicitly nullable parameter in `DB::getTelegramRequestCount()`. (@akalongman) (#1487)
 - PHP 8.5 deprecation of `PDO::MYSQL_ATTR_INIT_COMMAND`. (@akalongman)
+- PHP 8.4 deprecation of the implicitly nullable parameters in `TelegramLog::initialize()`. (@gedbko) (#1499)
+- Error when saving a message forwarded from a chat, `MessageOriginChat` provides `getSenderChat()`. (@r3bers) (#1472)
+- `CleanupCommand` now also cleans `telegram_update` entries of channel posts. (@r3bers) (#1472)
 ### Security
 - Minimum Guzzle version raised to 7.15.2, which contains fixes for several security advisories. Guzzle 6 is no longer supported. (@akalongman)
 
