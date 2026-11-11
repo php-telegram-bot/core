@@ -16,6 +16,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Namespace of the `PassportElementError` classes, which could not be autoloaded. (@akalongman)
 - Foreign key of `telegram_update.poll_answer_poll_id` now references `poll.id`, so the schema loads on MySQL 8.4+. (@akalongman)
 - Migration script drops the foreign keys left behind on the unused `botan_shortener.user_id` and `message.new_chat_member`. (@akalongman)
+- Saving `message_reaction_count` updates to the DB: undefined variable, reactions not stored as JSON. (@akalongman) (#1470)
+- `message_reaction` and `message_reaction_count` updates for messages unknown to the DB were silently missing from `telegram_update`. (@akalongman)
+- `TypeError` when saving a callback query whose message is inaccessible. (@akalongman) (#1495)
+- PHP 8.4 deprecation of the implicitly nullable parameter in `DB::getTelegramRequestCount()`. (@akalongman) (#1487)
 ### Security
 
 ## [0.83.0] - 2024-05-25

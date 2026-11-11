@@ -240,6 +240,9 @@ class TestHelpers
         $pdo->prepare('
             DELETE FROM `conversation`;
             DELETE FROM `telegram_update`;
+            DELETE FROM `message_reaction`;
+            DELETE FROM `message_reaction_count`;
+            DELETE FROM `callback_query`;
             DELETE FROM `chosen_inline_result`;
             DELETE FROM `inline_query`;
             DELETE FROM `message`;
