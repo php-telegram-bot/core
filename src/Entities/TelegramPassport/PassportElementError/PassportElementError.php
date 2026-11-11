@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Entities\TelegramPassport\PassportElementError;
+namespace Longman\TelegramBot\Entities\TelegramPassport\PassportElementError;
 
 interface PassportElementError
 {

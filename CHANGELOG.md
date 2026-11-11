@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Namespace of the `PassportElementError` classes, which could not be autoloaded. (@akalongman)
 ### Security
 
 ## [0.83.0] - 2024-05-25
