@@ -29,7 +29,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Verify MariaDB connection
       run: |
@@ -46,14 +46,14 @@ jobs:
         for SCHEMA_UPDATE_FILE in $(ls utils/db-schema-update); do mysql -h127.0.0.1 -P3306 -uroot -proot -e "use telegrambot_migrations; source utils/db-schema-update/${SCHEMA_UPDATE_FILE};"; done;
 
     - name: Install PHP
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
       with:
         php-version: ${{ matrix.php }}
         extensions: pdo_mysql
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v3
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
