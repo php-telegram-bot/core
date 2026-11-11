@@ -4,3 +4,4 @@
 /phpunit.xml.dist export-ignore
 /tests export-ignore
 /docs/specs export-ignore
+/CLAUDE.md export-ignore
