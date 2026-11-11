@@ -79,6 +79,7 @@ A new API version usually touches several places that must stay in step:
 - Every file starts with the package license header and every class and method has a docblock (see `CONTRIBUTING.md` for the exact text).
 - Pull requests target `dev`, the default branch (git flow). Record user-visible changes under `[Unreleased]` in `CHANGELOG.md`, crediting the author handle and PR number in the existing style.
 - Version format is `0.<version>.<hotfix>`. The version string lives in `Telegram::$version` and the `branch-alias` in `composer.json`.
+- Design records for larger changes live in `docs/specs/` and are committed, because they explain why the code is the way it is. Step-by-step implementation plans are working files: keep them in `docs/plans/`, which is ignored, and never commit them.
 
 ## Releasing
 
