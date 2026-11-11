@@ -16,11 +16,13 @@ vendor/bin/phpunit tests/Unit/Entities/MessageTest.php
 vendor/bin/phpunit --filter testGetCommand
 vendor/bin/phpcbf                       # auto-fix coding standard violations
 composer test-cov                       # coverage (needs Xdebug), writes clover.xml
+composer db-prepare                     # drops and recreates telegrambot and telegrambot_migrations on the server DB_HOST and DB_PORT name (default 127.0.0.1:3306), so point it at a throwaway server
+composer schema-diff                    # compares those two databases: exit 0 clean, 1 differences, 2 errors
 ```
 
-Test database: only `tests/Unit/ConversationTest.php` touches MySQL. It reads the `PHPUNIT_DB_*` constants from the PHPUnit config and expects a database (default name `telegrambot`) loaded from `structure.sql`. To use other credentials, copy `phpunit.xml.dist` to `phpunit.xml` (gitignored) and edit the constants there. `TestHelpers::emptyDb()` deletes every row from the core tables, so never point it at a database holding real data.
+Test database: `tests/Unit/ConversationTest.php` and `tests/Unit/DBTest.php` touch MySQL. They read the `PHPUNIT_DB_*` constants from the PHPUnit config and expect a database (default name `telegrambot`) loaded from `structure.sql`. To use other credentials, copy `phpunit.xml.dist` to `phpunit.xml` (gitignored) and edit the constants there. `TestHelpers::emptyDb()` deletes every row from the core tables, so never point it at a database holding real data.
 
-CI runs MariaDB 10.3, which is more permissive than MySQL 8.4 (for example, MySQL 8.4 rejects a foreign key that references a non-unique column). Keep `structure.sql` loadable on both with default settings. The older migration files are MariaDB-only (`DROP FOREIGN KEY IF EXISTS`).
+CI runs every job against its own fresh database server: PHP 8.1 through 8.5 on MariaDB 12.3, and PHP 8.5 on MariaDB 10.11, MySQL 9.7 and MySQL 8.4. On each of these four servers it runs the migration chain and the schema diff (see Database schema), then the test suite against the `telegrambot` database that `composer db-prepare` built. MySQL is stricter than MariaDB (for example, it rejects a foreign key that references a non-unique column), so keep `structure.sql` loadable on all four with default settings.
 
 The PHPUnit config defines the constant `PHPUNIT_TESTSUITE`. When it is defined, `Request::send()` returns a fake `ServerResponse` built by `Request::generateGeneralFakeServerResponse()` and never calls the network, so tests need no HTTP mocking and cannot assert on real API behavior.
 
@@ -71,7 +73,11 @@ A new API version usually touches several places that must stay in step:
 
 ### Database schema
 
-`structure.sql` is the full current schema. Each release that changes it also adds `utils/db-schema-update/<from>-<to>.sql`; during development the file is named `<last release>-unreleased.sql` and linked from the `[Unreleased]` notes in `CHANGELOG.md`. CI loads the 0.44.1 schema, applies every migration in order, and separately loads the current `structure.sql`; both must succeed, so a schema change needs both files edited. Note that CI does not diff the two results.
+`structure.sql` is the full current schema. Each release that changes it also adds `utils/db-schema-update/<from>-<to>.sql`; during development the file is named `<last release>-unreleased.sql` and linked from the `[Unreleased]` notes in `CHANGELOG.md`. On each of the four CI servers, `composer db-prepare` loads the current `structure.sql` into `telegrambot` and the 0.44.1 schema plus every migration in order into `telegrambot_migrations`, stopping at the first file that fails. `composer schema-diff` then compares the two through `information_schema`: tables, columns, indexes, and foreign keys by column (not comments or column order). It fails on any difference not listed in `utils/db-schema-diff-accepted.txt`, and on any entry there that no longer matches a difference. Both must pass, so a schema change needs both files edited to the same result. Adding an entry to the accepted list needs the maintainer's agreement.
+
+Every migration is plain SQL that runs unchanged on all four servers: no stored procedures and no client commands (`source`, `delimiter`). MariaDB-only syntax such as `DROP FOREIGN KEY IF EXISTS` fails on MySQL, and generated key names differ between servers, so look a key up by column in `information_schema` and apply the change through `PREPARE`, as `0.83.1-0.84.0.sql` does.
+
+To run both scripts locally, start a throwaway server and point them at its port: `docker run -d --name tg-db -p 127.0.0.1:33123:3306 -e MARIADB_ROOT_PASSWORD=root mariadb:12.3`, then `DB_PORT=33123 DB_PASSWORD=root composer db-prepare` and `DB_PORT=33123 DB_PASSWORD=root composer schema-diff`.
 
 ## Conventions
 
