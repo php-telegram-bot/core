@@ -21,6 +21,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `TypeError` when saving a callback query whose message is inaccessible. (@akalongman) (#1495)
 - PHP 8.4 deprecation of the implicitly nullable parameter in `DB::getTelegramRequestCount()`. (@akalongman) (#1487)
 ### Security
+- Minimum Guzzle version raised to 7.15.2, which contains fixes for several security advisories. Guzzle 6 is no longer supported. (@akalongman)
 
 ## [0.83.0] - 2024-05-25
 ### Notes
