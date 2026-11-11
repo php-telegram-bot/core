@@ -733,7 +733,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
-[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...dev
 [0.84.0]: https://github.com/php-telegram-bot/core/compare/0.83.1...0.84.0
 [0.83.1]: https://github.com/php-telegram-bot/core/compare/0.83.0...0.83.1
 [0.83.0]: https://github.com/php-telegram-bot/core/compare/0.82.0...0.83.0

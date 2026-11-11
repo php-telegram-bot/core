@@ -77,14 +77,14 @@ A new API version usually touches several places that must stay in step:
 
 - PSR-12, enforced by `phpcs.xml.dist`.
 - Every file starts with the package license header and every class and method has a docblock (see `CONTRIBUTING.md` for the exact text).
-- Pull requests target `develop` (git flow). Record user-visible changes under `[Unreleased]` in `CHANGELOG.md`, crediting the author handle and PR number in the existing style.
+- Pull requests target `dev`, the default branch (git flow). Record user-visible changes under `[Unreleased]` in `CHANGELOG.md`, crediting the author handle and PR number in the existing style.
 - Version format is `0.<version>.<hotfix>`. The version string lives in `Telegram::$version` and the `branch-alias` in `composer.json`.
 
 ## Releasing
 
 Packagist publishes every pushed tag within a minute, so a tag is the release. Tags can be created only by repository admins and can never be moved or deleted. Worked example, releasing 0.84.0 after 0.83.1:
 
-1. On `develop`, make one commit titled `Version 0.84.0`:
+1. On `dev`, make one commit titled `Version 0.84.0`:
    - set `Telegram::$version` to `0.84.0`;
    - rename `utils/db-schema-update/0.83.1-unreleased.sql` to `0.83.1-0.84.0.sql` (skip when the release has no migration);
    - in `CHANGELOG.md`, turn `[Unreleased]` into `## [0.84.0] - <date>`, add a fresh empty `[Unreleased]` block above it, and update the link definitions at the bottom: `[0.84.0]` compares `0.83.1...0.84.0`, and `[0.84.0-sql-migration]` points at the file under `tree/0.84.0/`.
@@ -92,6 +92,6 @@ Packagist publishes every pushed tag within a minute, so a tag is the release. T
 3. Tag that exact commit `0.84.0` (lightweight, no `v` prefix) and push the tag.
 4. Create the GitHub release `Version 0.84.0` for the tag, with the changelog section as notes and the reference-style links written out in full.
 5. Fast-forward `master` to the tag. `master` only ever moves to release commits.
-6. On `develop`, raise the `dev-develop` branch alias in `composer.json` to the next version line (`0.85.x-dev`).
+6. On `dev`, raise the `dev-dev` branch alias in `composer.json` to the next version line (`0.85.x-dev`).
 
 Use a hotfix number (`0.84.1`) only for fixes that change no dependency constraint and need no migration.
