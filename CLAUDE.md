@@ -21,6 +21,8 @@ composer db-prepare                     # drops and recreates telegrambot and te
 composer schema-diff                    # compares those two databases: exit 0 clean, 1 differences, 2 errors
 ```
 
+PHPStan is pinned to an exact version in `composer.json`, because `composer.lock` is not committed and the baseline records exact error counts per file; a commit that raises that version also regenerates `phpstan-baseline.neon`.
+
 Test database: `tests/Unit/ConversationTest.php` and `tests/Unit/DBTest.php` touch MySQL. They read the `PHPUNIT_DB_*` constants from the PHPUnit config and expect a database (default name `telegrambot`) loaded from `structure.sql`. To use other credentials, copy `phpunit.xml.dist` to `phpunit.xml` (gitignored) and edit the constants there. `TestHelpers::emptyDb()` deletes every row from the core tables, so never point it at a database holding real data.
 
 CI runs every job against its own fresh database server: PHP 8.1 through 8.5 on MariaDB 12.3, and PHP 8.5 on MariaDB 10.11, MySQL 9.7 and MySQL 8.4. On each of these four servers it runs the migration chain and the schema diff (see Database schema), then the test suite against the `telegrambot` database that `composer db-prepare` built. MySQL is stricter than MariaDB (for example, it rejects a foreign key that references a non-unique column), so keep `structure.sql` loadable on all four with default settings.
