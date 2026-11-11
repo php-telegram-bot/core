@@ -20,6 +20,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `message_reaction` and `message_reaction_count` updates for messages unknown to the DB were silently missing from `telegram_update`. (@akalongman)
 - `TypeError` when saving a callback query whose message is inaccessible. (@akalongman) (#1495)
 - PHP 8.4 deprecation of the implicitly nullable parameter in `DB::getTelegramRequestCount()`. (@akalongman) (#1487)
+- PHP 8.5 deprecation of `PDO::MYSQL_ATTR_INIT_COMMAND`. (@akalongman)
 ### Security
 - Minimum Guzzle version raised to 7.15.2, which contains fixes for several security advisories. Guzzle 6 is no longer supported. (@akalongman)
 

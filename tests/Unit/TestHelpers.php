@@ -234,7 +234,8 @@ class TestHelpers
             $dsn .= ';port=' . $credentials['port'];
         }
 
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
+        $init_command = PHP_VERSION_ID >= 80400 ? \Pdo\Mysql::ATTR_INIT_COMMAND : \PDO::MYSQL_ATTR_INIT_COMMAND;
+        $options      = [$init_command => 'SET NAMES utf8'];
 
         $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
         $pdo->prepare('

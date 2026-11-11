@@ -99,7 +99,9 @@ class DB
             $dsn .= ';port=' . $credentials['port'];
         }
 
-        $options = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
+        // PDO::MYSQL_ATTR_INIT_COMMAND is deprecated since PHP 8.5, its replacement exists since PHP 8.4.
+        $init_command = PHP_VERSION_ID >= 80400 ? \Pdo\Mysql::ATTR_INIT_COMMAND : PDO::MYSQL_ATTR_INIT_COMMAND;
+        $options      = [$init_command => 'SET NAMES ' . $encoding];
         try {
             $pdo = new PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
