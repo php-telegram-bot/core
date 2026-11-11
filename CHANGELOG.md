@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL. If an earlier upgrade stopped in one of them, run that file again and continue with the later ones. `0.62.0-0.63.0.sql` also removes the duplicate foreign key on `message.forward_from`, found by column instead of by the generated name `message_ibfk_6`. (@akalongman)
 ### Security
 
 ## [0.84.0] - 2026-11-11
