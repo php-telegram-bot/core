@@ -97,13 +97,36 @@ jobs:
 #         composer test-cov
 #         composer test-cov-upload
 
-  # Single status for branch protection, so the PHP matrix can change without touching repository settings.
-  tests-passed:
-    name: Tests
-    if: always()
-    needs: tests
+  # Runs once, on the newest PHP; the errors that existed when PHPStan was added are listed in phpstan-baseline.neon.
+  static-analysis:
+    name: Static analysis
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check matrix result
-      run: test "${{ needs.tests.result }}" = "success"
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      with:
+        php-version: '8.5'
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run static analysis
+      run: composer analyse
+
+  # Single status for branch protection, so jobs and the PHP matrix can change without touching repository
+  # settings. Every other job must be listed in its needs.
+  tests-passed:
+    name: Tests
+    if: always()
+    needs: [tests, static-analysis]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check job results
+      run: |
+        test "${{ needs.tests.result }}" = "success"
+        test "${{ needs.static-analysis.result }}" = "success"

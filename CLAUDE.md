@@ -11,6 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 composer install
 composer check-code                     # phpcs, PSR-12 over src/, tests/, utils/ (must print nothing)
+composer analyse                        # PHPStan level 5 over src/, must exit 0; after fixing an error listed in phpstan-baseline.neon, regenerate that file with vendor/bin/phpstan analyse --generate-baseline
 composer test                           # phpunit, whole suite
 vendor/bin/phpunit tests/Unit/Entities/MessageTest.php
 vendor/bin/phpunit --filter testGetCommand

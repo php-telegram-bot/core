@@ -38,6 +38,7 @@
         "guzzlehttp/guzzle": "^7.15.2"
     },
     "require-dev": {
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.6",
         "dms/phpunit-arraysubset-asserts": "^0.2",
@@ -57,6 +58,9 @@
     "scripts": {
         "check-code": [
             "\"vendor/bin/phpcs\""
+        ],
+        "analyse": [
+            "\"vendor/bin/phpstan\" analyse --memory-limit=1G"
         ],
         "test": [
             "\"vendor/bin/phpunit\""

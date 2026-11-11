@@ -1,0 +1,15 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    ignoreErrors:
+        # DB::defineTables() and ConversationDB::initializeConversation() define the table
+        # constants at runtime, with the configured table prefix, so static analysis cannot
+        # see them. Each name is listed, so a misspelt constant still fails; a table added to
+        # DB::defineTables() needs its constant added here.
+        -
+            message: '#^Constant TB_(?:CALLBACK_QUERY|CHAT|CHAT_BOOST_REMOVED|CHAT_BOOST_UPDATED|CHAT_JOIN_REQUEST|CHAT_MEMBER_UPDATED|CHOSEN_INLINE_RESULT|CONVERSATION|EDITED_MESSAGE|INLINE_QUERY|MESSAGE|MESSAGE_REACTION|MESSAGE_REACTION_COUNT|POLL|POLL_ANSWER|PRE_CHECKOUT_QUERY|REQUEST_LIMITER|SHIPPING_QUERY|TELEGRAM_UPDATE|USER|USER_CHAT) not found\.$#'
+            identifier: constant.notFound
