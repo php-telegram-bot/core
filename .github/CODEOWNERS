@@ -1,0 +1,5 @@
+# Changes to these paths affect every installation or the release pipeline.
+/.github/                 @akalongman
+/composer.json            @akalongman
+/structure.sql            @akalongman
+/utils/db-schema-update/  @akalongman
