@@ -5,7 +5,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- [:ledger: View file changes][Unreleased]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.84.0] - 2026-11-11
+### Notes
+- [:ledger: View file changes][0.84.0] ∙ [:page_with_curl: DB migration script][0.84.0-sql-migration]
 - The DB migration script replaces a foreign key on `telegram_update`, which can take a while on a large table.
 - The unused `botan_shortener` table and `message.new_chat_member` column are not removed by the script and can be dropped manually.
 - :exclamation: Guzzle 7.15.2+ required! Guzzle 6 and older Guzzle 7 versions can no longer be installed alongside this library.
@@ -27,6 +37,19 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - `CleanupCommand` now also cleans `telegram_update` entries of channel posts. (@r3bers) (#1472)
 ### Security
 - Minimum Guzzle version raised to 7.15.2, which contains fixes for several security advisories. Guzzle 6 is no longer supported. (@akalongman)
+
+## [0.83.1] - 2024-06-10
+### Notes
+- [:ledger: View file changes][0.83.1]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Saving forwarded messages to the DB, using the `forward_origin` field of Bot API 7.0. (@r3bers) (#1467)
+- `Request::setCustomBotApiUri()` throws an exception when called after the `Telegram` object was instantiated, where it had no effect. (@TiiFuchs) (#1296)
+- Missing `chat_boost_updated_id` and `chat_boost_removed_id` columns of `telegram_update` in the DB structure and migration script. (@r3bers, @noplanman) (#1468)
+### Security
 
 ## [0.83.0] - 2024-05-25
 ### Notes
@@ -664,7 +687,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
-[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.83.1-unreleased.sql
+[0.84.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/0.84.0/utils/db-schema-update/0.83.1-0.84.0.sql
 [0.83.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.82.0-0.83.0.sql
 [0.83.0-bc-minimum-php-81]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-81
 [0.83.0-bc-user-to-users]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#user-to-users
@@ -711,6 +734,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[0.84.0]: https://github.com/php-telegram-bot/core/compare/0.83.1...0.84.0
+[0.83.1]: https://github.com/php-telegram-bot/core/compare/0.83.0...0.83.1
 [0.83.0]: https://github.com/php-telegram-bot/core/compare/0.82.0...0.83.0
 [0.82.0]: https://github.com/php-telegram-bot/core/compare/0.81.0...0.82.0
 [0.81.0]: https://github.com/php-telegram-bot/core/compare/0.80.0...0.81.0
