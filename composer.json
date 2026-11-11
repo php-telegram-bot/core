@@ -50,7 +50,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Longman\\TelegramBot\\Tests\\Unit\\": "tests/Unit"
+            "Longman\\TelegramBot\\Tests\\Unit\\": "tests/Unit",
+            "Longman\\TelegramBot\\Utils\\": "utils"
         }
     },
     "scripts": {
@@ -65,6 +66,12 @@
         ],
         "test-cov-upload": [
             "@php ocular.phar code-coverage:upload --format=php-clover clover.xml"
+        ],
+        "db-prepare": [
+            "bash utils/db-prepare.sh"
+        ],
+        "schema-diff": [
+            "@php utils/db-schema-diff.php telegrambot telegrambot_migrations"
         ]
     },
     "config": {
