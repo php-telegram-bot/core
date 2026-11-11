@@ -408,7 +408,7 @@ CREATE TABLE IF NOT EXISTS `telegram_update` (
   FOREIGN KEY (`shipping_query_id`) REFERENCES `shipping_query` (`id`),
   FOREIGN KEY (`pre_checkout_query_id`) REFERENCES `pre_checkout_query` (`id`),
   FOREIGN KEY (`poll_id`) REFERENCES `poll` (`id`),
-  FOREIGN KEY (`poll_answer_poll_id`) REFERENCES `poll_answer` (`poll_id`),
+  FOREIGN KEY (`poll_answer_poll_id`) REFERENCES `poll` (`id`),
   FOREIGN KEY (`my_chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`),
   FOREIGN KEY (`chat_member_updated_id`) REFERENCES `chat_member_updated` (`id`),
   FOREIGN KEY (`chat_join_request_id`) REFERENCES `chat_join_request` (`id`),

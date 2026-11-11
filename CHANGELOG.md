@@ -5,13 +5,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Notes
-- [:ledger: View file changes][Unreleased]
+- [:ledger: View file changes][Unreleased] ∙ [:page_with_curl: DB migration script][unreleased-sql-migration]
+- The DB migration script replaces a foreign key on `telegram_update`, which can take a while on a large table.
+- The unused `botan_shortener` table and `message.new_chat_member` column are not removed by the script and can be dropped manually.
 ### Added
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 - Namespace of the `PassportElementError` classes, which could not be autoloaded. (@akalongman)
+- Foreign key of `telegram_update.poll_answer_poll_id` now references `poll.id`, so the schema loads on MySQL 8.4+. (@akalongman)
+- Migration script drops the foreign keys left behind on the unused `botan_shortener.user_id` and `message.new_chat_member`. (@akalongman)
 ### Security
 
 ## [0.83.0] - 2024-05-25
@@ -650,6 +654,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[unreleased-sql-migration]: https://github.com/php-telegram-bot/core/tree/develop/utils/db-schema-update/0.83.1-unreleased.sql
 [0.83.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.82.0-0.83.0.sql
 [0.83.0-bc-minimum-php-81]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-81
 [0.83.0-bc-user-to-users]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#user-to-users
