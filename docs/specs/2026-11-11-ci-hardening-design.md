@@ -117,10 +117,20 @@ schema diff, and runs the test suite.
 A script under `utils/` compares two databases on one server through
 `information_schema` and prints every difference:
 
-- tables present on one side only;
-- per column: type, nullability, default, character set and collation;
-- indexes with their columns and uniqueness;
-- foreign keys by column and referenced column, ignoring generated names.
+- tables present on one side only, and for a table on both sides its engine
+  and collation;
+- per column: type, nullability, default, character set, collation and extra
+  attributes such as `AUTO_INCREMENT` and `ON UPDATE CURRENT_TIMESTAMP`;
+- indexes with their columns and uniqueness, the primary key told apart from
+  a unique index on the same columns;
+- foreign keys by column and referenced column, with their `ON DELETE` and
+  `ON UPDATE` rules, ignoring generated names.
+
+Engine, collation, extra attributes, the primary key and the foreign key rules
+were added after the final review (2026-11-12): drift in any of them breaks an
+upgraded install while both schemas still load. For example, an `id` that is
+`AUTO_INCREMENT` in `structure.sql` and plain `bigint` in the migration fails
+every upgraded install's first insert.
 
 Column comments and column order are not compared (maintainer may overrule;
 see open calls). Accepted differences live in one small file next to the

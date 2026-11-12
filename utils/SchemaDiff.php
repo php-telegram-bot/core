@@ -16,20 +16,25 @@ use InvalidArgumentException;
 /**
  * Compare two database schema snapshots, a fresh one and a migrated one.
  *
- * A snapshot maps each table name to its columns, indexes and foreign keys:
+ * A snapshot maps each table name to its options, columns, indexes and foreign keys:
  *
- *     'user' => [
- *         'columns'      => ['username' => 'char(191)|YES|NULL|utf8mb4|utf8mb4_unicode_520_ci'],
- *         'indexes'      => ['1:id', '0:username'],
- *         'foreign_keys' => ['chat_id>chat(id)'],
+ *     'user_chat' => [
+ *         'options'      => 'InnoDB|utf8mb4_unicode_520_ci',
+ *         'columns'      => ['user_id' => 'bigint|NO|NULL|||'],
+ *         'indexes'      => ['p:user_id,chat_id', '0:chat_id'],
+ *         'foreign_keys' => ['chat_id>chat(id) ON DELETE CASCADE ON UPDATE CASCADE'],
  *     ]
  *
- * A column is "<type>|<nullable>|<default>|<charset>|<collation>", an index is
- * "<unique 0/1>:<col,col>" and a foreign key is "<col,col>><ref_table>(<col,col>)".
+ * The options are "<engine>|<collation>" of the table. A column is
+ * "<type>|<nullable>|<default>|<charset>|<collation>|<extra>", where extra holds attributes
+ * such as auto_increment. An index is "<kind>:<col,col>", the kind "p" for the primary key,
+ * "1" for a unique and "0" for a non-unique index. A foreign key is
+ * "<col,col>><ref_table>(<col,col>) ON DELETE <rule> ON UPDATE <rule>".
  * Index and foreign key names are not part of a snapshot, so generated names never differ.
  *
  * Each difference is keyed "table <t>", "column <t>.<c>", "index <t>(<cols>)" or
- * "fk <t>(<cols>)", the keys listed in the accepted differences file.
+ * "fk <t>(<cols>)", the keys listed in the accepted differences file. A table present on
+ * both sides with other options is reported under its "table" key.
  */
 class SchemaDiff
 {
@@ -38,11 +43,11 @@ class SchemaDiff
      *
      * A table present on one side only yields its "table" key and nothing for its columns.
      * Indexes and foreign keys are grouped by their columns: two indexes over the same
-     * columns are compared as a list with repeats, and a uniqueness change or a changed
-     * reference is reported under the key of those columns.
+     * columns are compared as a list with repeats, and a change of index kind or a changed
+     * reference or rule is reported under the key of those columns.
      *
-     * @param array<string, array{columns: array<string, string>, indexes: array<int, string>, foreign_keys: array<int, string>}> $fresh
-     * @param array<string, array{columns: array<string, string>, indexes: array<int, string>, foreign_keys: array<int, string>}> $migrated
+     * @param array<string, array{options: string, columns: array<string, string>, indexes: array<int, string>, foreign_keys: array<int, string>}> $fresh
+     * @param array<string, array{options: string, columns: array<string, string>, indexes: array<int, string>, foreign_keys: array<int, string>}> $migrated
      *
      * @return array<string, string> Difference key to human-readable detail
      * @throws InvalidArgumentException When either snapshot has no tables
@@ -68,6 +73,10 @@ class SchemaDiff
         }
 
         foreach (array_intersect_key($fresh, $migrated) as $table => $definition) {
+            if ($definition['options'] !== $migrated[$table]['options']) {
+                $differences['table ' . $table] = self::describe([$definition['options']], [$migrated[$table]['options']]);
+            }
+
             $differences += self::compareColumns($table, $definition['columns'], $migrated[$table]['columns']);
             $differences += self::compareGroups(
                 'index ' . $table,
@@ -190,7 +199,7 @@ class SchemaDiff
     }
 
     /**
-     * Group index entries by their columns, each group a sorted list of "unique" and "non-unique".
+     * Group index entries by their columns, each group a sorted list of "primary", "unique" and "non-unique".
      *
      * @param array<int, string> $indexes
      *
@@ -198,12 +207,13 @@ class SchemaDiff
      */
     private static function groupIndexes(array $indexes): array
     {
+        $kinds  = ['p' => 'primary', '1' => 'unique', '0' => 'non-unique'];
         $groups = [];
 
         foreach ($indexes as $index) {
-            [$unique, $columns] = explode(':', $index, 2);
+            [$kind, $columns] = explode(':', $index, 2);
 
-            $groups[$columns][] = $unique === '1' ? 'unique' : 'non-unique';
+            $groups[$columns][] = $kinds[$kind] ?? $kind;
         }
 
         return self::sortGroups($groups);
