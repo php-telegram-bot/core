@@ -6,11 +6,51 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
+- A MySQL database upgraded past 0.61.0 needs DB migration scripts run again: `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql`, then `0.82.0-0.83.0.sql` if the database is at 0.83.0 or later. Other files that applied without an error must not be run again. The migration scripts are tested on MariaDB 10.11 and 12.3 and on MySQL 8.4 and 9.7.
 ### Added
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+- DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL, and both can be run more than once on any database. `0.62.0-0.63.0.sql` was meant to drop a duplicate foreign key on `message.forward_from` named `message_ibfk_6`; servers that name it differently, such as MariaDB 12, kept the duplicate, and a re-run of the file removes it. (@akalongman) (#1505)
+### Security
+
+## [0.84.0] - 2026-11-11
+### Notes
+- [:ledger: View file changes][0.84.0] ∙ [:page_with_curl: DB migration script][0.84.0-sql-migration]
+- The DB migration script replaces a foreign key on `telegram_update`, which can take a while on a large table.
+- The unused `botan_shortener` table and `message.new_chat_member` column are not removed by the script and can be dropped manually.
+- :exclamation: Guzzle 7.15.2+ required! Guzzle 6 and older Guzzle 7 versions can no longer be installed alongside this library.
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Namespace of the `PassportElementError` classes, which could not be autoloaded. (@akalongman)
+- Foreign key of `telegram_update.poll_answer_poll_id` now references `poll.id`, so the schema loads on MySQL 8.4+. (@akalongman)
+- Migration script drops the foreign keys left behind on the unused `botan_shortener.user_id` and `message.new_chat_member`. (@akalongman)
+- Saving `message_reaction_count` updates to the DB: undefined variable, reactions not stored as JSON. (@akalongman) (#1470)
+- `message_reaction` and `message_reaction_count` updates for messages unknown to the DB were silently missing from `telegram_update`. (@akalongman)
+- `TypeError` when saving a callback query whose message is inaccessible. (@akalongman) (#1495)
+- PHP 8.4 deprecation of the implicitly nullable parameter in `DB::getTelegramRequestCount()`. (@akalongman) (#1487)
+- PHP 8.5 deprecation of `PDO::MYSQL_ATTR_INIT_COMMAND`. (@akalongman)
+- PHP 8.4 deprecation of the implicitly nullable parameters in `TelegramLog::initialize()`. (@gedbko) (#1499)
+- Error when saving a message forwarded from a chat, `MessageOriginChat` provides `getSenderChat()`. (@r3bers) (#1472)
+- `CleanupCommand` now also cleans `telegram_update` entries of channel posts. (@r3bers) (#1472)
+### Security
+- Minimum Guzzle version raised to 7.15.2, which contains fixes for several security advisories. Guzzle 6 is no longer supported. (@akalongman)
+
+## [0.83.1] - 2024-06-10
+### Notes
+- [:ledger: View file changes][0.83.1]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Saving forwarded messages to the DB, using the `forward_origin` field of Bot API 7.0. (@r3bers) (#1467)
+- `Request::setCustomBotApiUri()` throws an exception when called after the `Telegram` object was instantiated, where it had no effect. (@TiiFuchs) (#1296)
+- Missing `chat_boost_updated_id` and `chat_boost_removed_id` columns of `telegram_update` in the DB structure and migration script. (@r3bers, @noplanman) (#1468)
 ### Security
 
 ## [0.83.0] - 2024-05-25
@@ -649,6 +689,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 - Move `hideKeyboard` to `removeKeyboard`.
 
+[0.84.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/0.84.0/utils/db-schema-update/0.83.1-0.84.0.sql
 [0.83.0-sql-migration]: https://github.com/php-telegram-bot/core/tree/master/utils/db-schema-update/0.82.0-0.83.0.sql
 [0.83.0-bc-minimum-php-81]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#minimum-php-81
 [0.83.0-bc-user-to-users]: https://github.com/php-telegram-bot/core/wiki/Breaking-backwards-compatibility#user-to-users
@@ -694,7 +735,9 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
-[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...develop
+[Unreleased]: https://github.com/php-telegram-bot/core/compare/master...dev
+[0.84.0]: https://github.com/php-telegram-bot/core/compare/0.83.1...0.84.0
+[0.83.1]: https://github.com/php-telegram-bot/core/compare/0.83.0...0.83.1
 [0.83.0]: https://github.com/php-telegram-bot/core/compare/0.82.0...0.83.0
 [0.82.0]: https://github.com/php-telegram-bot/core/compare/0.81.0...0.82.0
 [0.81.0]: https://github.com/php-telegram-bot/core/compare/0.80.0...0.81.0

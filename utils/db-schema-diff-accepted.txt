@@ -1,0 +1,20 @@
+# Accepted differences between a fresh database (structure.sql) and one migrated
+# from 0.44.1 through utils/db-schema-update, as keys printed by db-schema-diff.php.
+# One key per line, the reason in a comment above each group. An entry that no
+# longer matches a difference fails the diff, so remove it when it is fixed.
+# An entry accepts the key, not the detail, so it also hides any later change
+# reported under the same key (for example a collation change of user.username).
+# Adding an entry needs the maintainer's agreement.
+
+# Botan.io integration, removed in 0.58.0. The table is unused and kept on purpose,
+# so the migration does not drop user data.
+table botan_shortener
+
+# Replaced by message.new_chat_members in 0.45.0. Unused and kept on purpose,
+# so the migration does not drop user data.
+column message.new_chat_member
+index message(new_chat_member)
+
+# CHAR(255) in databases created before 0.45.0, CHAR(191) in structure.sql since then.
+# Shrinking a column is not done silently.
+column user.username

@@ -66,7 +66,6 @@ class TestHelpers
     {
         $ref_object   = new \ReflectionObject($object);
         $ref_property = $ref_object->getProperty($property);
-        $ref_property->setAccessible(true);
         $ref_property->setValue($object, $value);
     }
 
@@ -82,7 +81,6 @@ class TestHelpers
     public static function setStaticProperty(string $class, string $property, $value): void
     {
         $ref_property = new \ReflectionProperty($class, $property);
-        $ref_property->setAccessible(true);
         $ref_property->setValue(null, $value);
     }
 
@@ -234,12 +232,16 @@ class TestHelpers
             $dsn .= ';port=' . $credentials['port'];
         }
 
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
+        $init_command = PHP_VERSION_ID >= 80400 ? \Pdo\Mysql::ATTR_INIT_COMMAND : \PDO::MYSQL_ATTR_INIT_COMMAND;
+        $options      = [$init_command => 'SET NAMES utf8'];
 
         $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
         $pdo->prepare('
             DELETE FROM `conversation`;
             DELETE FROM `telegram_update`;
+            DELETE FROM `message_reaction`;
+            DELETE FROM `message_reaction_count`;
+            DELETE FROM `callback_query`;
             DELETE FROM `chosen_inline_result`;
             DELETE FROM `inline_query`;
             DELETE FROM `message`;

@@ -21,6 +21,7 @@ use Longman\TelegramBot\Entities\ChatMemberUpdated;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Message\InaccessibleMessage;
 use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginChannel;
 use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginChat;
 use Longman\TelegramBot\Entities\MessageOrigin\MessageOriginHiddenUser;
@@ -98,7 +99,9 @@ class DB
             $dsn .= ';port=' . $credentials['port'];
         }
 
-        $options = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
+        // PDO::MYSQL_ATTR_INIT_COMMAND is deprecated since PHP 8.5, its replacement exists since PHP 8.4.
+        $init_command = PHP_VERSION_ID >= 80400 ? \Pdo\Mysql::ATTR_INIT_COMMAND : PDO::MYSQL_ATTR_INIT_COMMAND;
+        $options      = [$init_command => 'SET NAMES ' . $encoding];
         try {
             $pdo = new PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -589,12 +592,12 @@ class DB
             $chat_id                = $edited_channel_post->getChat()->getId();
             $edited_channel_post_id = (int) self::$pdo->lastInsertId();
         } elseif (($message_reaction = $update->getMessageReaction()) && self::insertMessageReaction($message_reaction)) {
+            // The message itself is referenced by the reaction entry, it may be unknown to the DB.
             $chat_id             = $message_reaction->getChat()->getId();
-            $message_id          = $message_reaction->getMessageId();
             $message_reaction_id = self::$pdo->lastInsertId();
         } elseif (($message_reaction_count = $update->getMessageReactionCount()) && self::insertMessageReactionCount($message_reaction_count)) {
+            // The message itself is referenced by the reaction count entry, it may be unknown to the DB.
             $chat_id                   = $message_reaction_count->getChat()->getId();
-            $message_id                = $message_reaction_count->getMessageId();
             $message_reaction_count_id = self::$pdo->lastInsertId();
         } elseif (($inline_query = $update->getInlineQuery()) && self::insertInlineQueryRequest($inline_query)) {
             $inline_query_id = $inline_query->getId();
@@ -711,14 +714,14 @@ class DB
             $date    = self::getTimestamp($message_reaction_count->getDate());
             $chat_id = null;
 
-            if ($chat = $message_reaction->getChat()) {
+            if ($chat = $message_reaction_count->getChat()) {
                 $chat_id = $chat->getId();
                 self::insertChat($chat, $date);
             }
 
             $sth->bindValue(':chat_id', $chat_id);
             $sth->bindValue(':message_id', $message_reaction_count->getMessageId());
-            $sth->bindValue(':reactions', $message_reaction_count->getReactions());
+            $sth->bindValue(':reactions', self::entitiesArrayToJson($message_reaction_count->getReactions() ?: []));
             $sth->bindValue(':created_at', $date);
 
             return $sth->execute();
@@ -858,7 +861,13 @@ class DB
                     LIMIT 1
                 ')->rowCount();
 
-                if ($is_message) {
+                if ($message instanceof InaccessibleMessage) {
+                    // Only chat and message ID are available, so there is no message to store.
+                    self::insertChat($message->getChat(), $date);
+                    if (!$is_message) {
+                        $message_id = null;
+                    }
+                } elseif ($is_message) {
                     self::insertEditedMessageRequest($message);
                 } else {
                     self::insertMessageRequest($message);
@@ -1293,8 +1302,8 @@ class DB
             } elseif ($forward_origin instanceof MessageOriginHiddenUser) {
                 $forward_sender_name = $forward_origin->getSenderUserName();
             } elseif ($forward_origin instanceof MessageOriginChat) {
-                self::insertChat($forward_origin->getChat());
-                $forward_from_chat = $forward_origin->getChat()->getId();
+                self::insertChat($forward_origin->getSenderChat());
+                $forward_from_chat = $forward_origin->getSenderChat()->getId();
                 $forward_signature = $forward_origin->getAuthorSignature();
             } elseif ($forward_origin instanceof MessageOriginChannel) {
                 self::insertChat($forward_origin->getChat());
@@ -1637,7 +1646,7 @@ class DB
      * @return array|bool Array containing TOTAL and CURRENT fields or false on invalid arguments
      * @throws TelegramException
      */
-    public static function getTelegramRequestCount($chat_id = null, string $inline_message_id = null)
+    public static function getTelegramRequestCount($chat_id = null, ?string $inline_message_id = null)
     {
         if (!self::isDbConnected()) {
             return false;

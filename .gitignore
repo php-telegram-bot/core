@@ -24,3 +24,6 @@ phpdoc-*
 ._*
 .Spotlight-V100
 .Trashes
+
+# Implementation plans are working files; design records live in docs/specs
+/docs/plans/

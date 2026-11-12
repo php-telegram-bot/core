@@ -1,5 +1,13 @@
 /.* export-ignore
 /composer.lock export-ignore
 /phpcs.xml.dist export-ignore
+/phpstan-baseline.neon export-ignore
+/phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
 /tests export-ignore
+/docs/specs export-ignore
+/CLAUDE.md export-ignore
+/utils/db-prepare.sh export-ignore
+/utils/SchemaDiff.php export-ignore
+/utils/db-schema-diff.php export-ignore
+/utils/db-schema-diff-accepted.txt export-ignore

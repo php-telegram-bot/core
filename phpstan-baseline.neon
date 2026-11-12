@@ -1,0 +1,571 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Commands/AdminCommands/ChatsCommand.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Commands/AdminCommands/ChatsCommand.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Commands/AdminCommands/CleanupCommand.php
+
+		-
+			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Longman\\TelegramBot\\Entities\\ServerResponse\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Commands/AdminCommands/DebugCommand.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Commands/AdminCommands/DebugCommand.php
+
+		-
+			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Longman\\TelegramBot\\Entities\\ServerResponse\.$#'
+			identifier: return.phpDocType
+			count: 2
+			path: src/Commands/AdminCommands/SendtochannelCommand.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 2
+			path: src/Commands/AdminCommands/SendtochannelCommand.php
+
+		-
+			message: '#^Variable \$result might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Commands/AdminCommands/SendtochannelCommand.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Commands/AdminCommands/WhoisCommand.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Commands/AdminCommands/WhoisCommand.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 4
+			path: src/Commands/Command.php
+
+		-
+			message: '#^Method Longman\\TelegramBot\\Commands\\Command\:\:__call\(\) should return Longman\\TelegramBot\\Commands\\Command but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Commands/Command.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 4
+			path: src/Commands/Command.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: src/Commands/Command.php
+
+		-
+			message: '#^Result of \|\| is always false\.$#'
+			identifier: booleanOr.alwaysFalse
+			count: 1
+			path: src/Commands/SystemCommand.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between Longman\\TelegramBot\\Entities\\Chat and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Commands/SystemCommand.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between Longman\\TelegramBot\\Entities\\Message and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 2
+			path: src/Commands/SystemCommand.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between Longman\\TelegramBot\\Entities\\User and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Commands/SystemCommand.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between array\<Longman\\TelegramBot\\Entities\\PhotoSize\|Longman\\TelegramBot\\Entities\\User\>\|bool\|int\|Longman\\TelegramBot\\Entities\\Message\\MaybeInaccessibleMessage\|Longman\\TelegramBot\\Entities\\Payments\\SuccessfulPayment\|Longman\\TelegramBot\\Entities\\User\|string and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Commands/SystemCommand.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 2
+			path: src/Commands/SystemCommand.php
+
+		-
+			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Longman\\TelegramBot\\Entities\\ServerResponse\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Commands/SystemCommands/InlinequeryCommand.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 23
+			path: src/DB.php
+
+		-
+			message: '#^Instanceof between Longman\\TelegramBot\\Entities\\User and Longman\\TelegramBot\\Entities\\User will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/DB.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 18
+			path: src/DB.php
+
+		-
+			message: '#^Parameter \#1 \$edited_message of static method Longman\\TelegramBot\\DB\:\:insertEditedMessageRequest\(\) expects Longman\\TelegramBot\\Entities\\Message, Longman\\TelegramBot\\Entities\\Message\\MaybeInaccessibleMessage given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DB.php
+
+		-
+			message: '#^Parameter \#1 \$message of static method Longman\\TelegramBot\\DB\:\:insertMessageRequest\(\) expects Longman\\TelegramBot\\Entities\\Message, Longman\\TelegramBot\\Entities\\Message\\MaybeInaccessibleMessage given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DB.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between int and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/DB.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between PDO and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/DB.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 2
+			path: src/DB.php
+
+		-
+			message: '#^Access to an undefined property Longman\\TelegramBot\\Entities\\Chat\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entities/Chat.php
+
+		-
+			message: '#^PHPDoc tag @property has invalid value \(string type Type of chat, can be either "private ", "group", "supergroup" or "channel"\)\: Unexpected token "type", expected variable at offset 113 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Entities/Chat.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ChatBoost\:\:getSource\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\ChatBoostSource\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ChatBoost.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ChatBoostRemoved\:\:getSource\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\ChatBoostSource\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ChatBoostRemoved.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\Game not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\Giveaway not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\GiveawayWinners not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\Invoice not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\MessageOrigin not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ExternalReplyInfo\:\:getGame\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\Game\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ExternalReplyInfo\:\:getGiveaway\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\Giveaway\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ExternalReplyInfo\:\:getGiveawayWinners\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\GiveawayWinners\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ExternalReplyInfo\:\:getInvoice\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\Invoice\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\ExternalReplyInfo\:\:getOrigin\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\MessageOrigin\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultAudio\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultAudio.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedAudio\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedAudio.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedDocument\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedDocument.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedGif\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedGif.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedMpeg4Gif\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedMpeg4Gif.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedPhoto\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedPhoto.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedVideo\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedVideo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultCachedVoice\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultCachedVoice.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultDocument\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultDocument.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultGif\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultGif.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultMpeg4Gif\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultMpeg4Gif.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultPhoto\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultPhoto.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultVideo\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultVideo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InlineQuery\\InlineQueryResultVoice\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InlineQuery\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InlineQuery/InlineQueryResultVoice.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMedia\\InputMediaAnimation\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMedia\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMedia/InputMediaAnimation.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMedia\\InputMediaAudio\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMedia\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMedia/InputMediaAudio.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMedia\\InputMediaDocument\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMedia\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMedia/InputMediaDocument.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMedia\\InputMediaPhoto\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMedia\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMedia/InputMediaPhoto.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMedia\\InputMediaVideo\:\:getCaptionEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMedia\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMedia/InputMediaVideo.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMessageContent\\InputInvoiceMessageContent\:\:getPrices\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMessageContent\\LabeledPrice\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMessageContent/InputInvoiceMessageContent.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMessageContent\\InputInvoiceMessageContent\:\:setPrices\(\) parameter \#1 \$prices contains unknown class Longman\\TelegramBot\\Entities\\InputMessageContent\\LabeledPrice\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMessageContent/InputInvoiceMessageContent.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMessageContent\\InputTextMessageContent\:\:getEntities\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMessageContent\\MessageEntity\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMessageContent/InputTextMessageContent.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMessageContent\\InputTextMessageContent\:\:getLinkPreviewOptions\(\) return type contains unknown class Longman\\TelegramBot\\Entities\\InputMessageContent\\LinkPreviewOptions\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMessageContent/InputTextMessageContent.php
+
+		-
+			message: '#^PHPDoc tag @method for method Longman\\TelegramBot\\Entities\\InputMessageContent\\InputTextMessageContent\:\:setLinkPreviewOptions\(\) parameter \#1 \$link_preview_options contains unknown class Longman\\TelegramBot\\Entities\\InputMessageContent\\LinkPreviewOptions\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/InputMessageContent/InputTextMessageContent.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 2
+			path: src/Entities/Keyboard.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\MenuButton\\MenuButtonCommands constructor invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Entities/MenuButton/Factory.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\MenuButton\\MenuButtonDefault constructor invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Entities/MenuButton/Factory.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\MenuButton\\MenuButtonWebApp constructor invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Entities/MenuButton/Factory.php
+
+		-
+			message: '#^Instanceof between Longman\\TelegramBot\\Entities\\User and Longman\\TelegramBot\\Entities\\User will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Entities/Message.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\ReactionType\\ReactionTypeCustomEmoji constructor invoked with 2 parameters, 0\-1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Entities/ReactionType/Factory.php
+
+		-
+			message: '#^Class Longman\\TelegramBot\\Entities\\ReactionType\\ReactionTypeEmoji constructor invoked with 2 parameters, 0\-1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Entities/ReactionType/Factory.php
+
+		-
+			message: '#^Method Longman\\TelegramBot\\Entities\\ServerResponse\:\:createResultObject\(\) has invalid return type Longman\\TelegramBot\\Entities\\MenuButton\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entities/ServerResponse.php
+
+		-
+			message: '#^Method Longman\\TelegramBot\\Entities\\ServerResponse\:\:createResultObjects\(\) should return array\<Longman\\TelegramBot\\Entities\\BotCommand\|Longman\\TelegramBot\\Entities\\ChatMember\\ChatMember\|Longman\\TelegramBot\\Entities\\Games\\GameHighScore\|Longman\\TelegramBot\\Entities\\Message\|Longman\\TelegramBot\\Entities\\Sticker\|Longman\\TelegramBot\\Entities\\Update\> but returns list\<Longman\\TelegramBot\\Entities\\Entity\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entities/ServerResponse.php
+
+		-
+			message: '#^PHPDoc tag @return with type Longman\\TelegramBot\\Entities\\BotDescription\|Longman\\TelegramBot\\Entities\\BotName\|Longman\\TelegramBot\\Entities\\BotShortDescription\|Longman\\TelegramBot\\Entities\\Chat\|Longman\\TelegramBot\\Entities\\ChatAdministratorRights\|Longman\\TelegramBot\\Entities\\ChatMember\\ChatMember\|Longman\\TelegramBot\\Entities\\File\|Longman\\TelegramBot\\Entities\\MenuButton\|Longman\\TelegramBot\\Entities\\Message\|Longman\\TelegramBot\\Entities\\Poll\|Longman\\TelegramBot\\Entities\\SentWebAppMessage\|Longman\\TelegramBot\\Entities\\StickerSet\|Longman\\TelegramBot\\Entities\\User\|Longman\\TelegramBot\\Entities\\UserProfilePhotos\|Longman\\TelegramBot\\Entities\\WebhookInfo is not subtype of native type Longman\\TelegramBot\\Entities\\Entity\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Entities/ServerResponse.php
+
+		-
+			message: '#^Method Longman\\TelegramBot\\Entities\\Update\:\:getUpdateContent\(\) should return Longman\\TelegramBot\\Entities\\CallbackQuery\|Longman\\TelegramBot\\Entities\\ChatBoostRemoved\|Longman\\TelegramBot\\Entities\\ChatBoostUpdated\|Longman\\TelegramBot\\Entities\\ChatJoinRequest\|Longman\\TelegramBot\\Entities\\ChatMemberUpdated\|Longman\\TelegramBot\\Entities\\ChosenInlineResult\|Longman\\TelegramBot\\Entities\\InlineQuery\|Longman\\TelegramBot\\Entities\\Message\|Longman\\TelegramBot\\Entities\\MessageReactionCountUpdated\|Longman\\TelegramBot\\Entities\\MessageReactionUpdated\|Longman\\TelegramBot\\Entities\\Payments\\PreCheckoutQuery\|Longman\\TelegramBot\\Entities\\Payments\\ShippingQuery\|Longman\\TelegramBot\\Entities\\Poll\|Longman\\TelegramBot\\Entities\\PollAnswer but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entities/Update.php
+
+		-
+			message: '#^Access to an undefined property Longman\\TelegramBot\\Entities\\InputMedia\\InputMedia\:\:\$media\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Access to an undefined property Longman\\TelegramBot\\Entities\\InputMedia\\InputMedia\:\:\$raw_data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Access to an undefined property Longman\\TelegramBot\\Entities\\InputMedia\\InputMedia\:\:\$thumbnail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Call to an undefined method GuzzleHttp\\ClientInterface\:\:get\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Call to an undefined method GuzzleHttp\\ClientInterface\:\:post\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Call to an undefined method Longman\\TelegramBot\\Entities\\InputMedia\\InputMedia\:\:getMedia\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Call to an undefined method Longman\\TelegramBot\\Entities\\InputMedia\\InputMedia\:\:getThumbnail\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Request.php
+
+		-
+			message: '#^Call to function is_callable\(\) with callable\(\)\: mixed will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Telegram.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 3
+			path: src/Telegram.php
+
+		-
+			message: '#^Parameter \#2 \$id of static method Longman\\TelegramBot\\DB\:\:selectTelegramUpdate\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: src/Telegram.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between Longman\\TelegramBot\\Entities\\CallbackQuery\|Longman\\TelegramBot\\Entities\\ChosenInlineResult\|Longman\\TelegramBot\\Entities\\InlineQuery\|Longman\\TelegramBot\\Entities\\Message and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Telegram.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Telegram.php

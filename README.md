@@ -1,5 +1,3 @@
-
-<h1 align="center">The development of the project is currently on hold until further notice. We will provide updates as soon as they become available.</h1>
 <h1 align="center">
     PHP Telegram Bot<br>
 	<br>
@@ -58,7 +56,7 @@ A Telegram Bot based on the official [Telegram Bot API]
         - [Set Admins](#set-admins)
         - [Channel Administration](#channel-administration)
 - [Upload and Download directory path](#upload-and-download-directory-path)
-- [Logging](doc/01-utils.md)
+- [Logging](docs/01-utils.md)
 - [Documentation](#documentation)
 - [Assets](#assets)
 - [Example bot](#example-bot)
