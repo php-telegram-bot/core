@@ -11,39 +11,45 @@ permissions:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }} Test
+    name: PHP ${{ matrix.php }}, ${{ matrix.db }}
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        # Every PHP version on the current MariaDB LTS; the newest PHP also on the
+        # oldest maintained MariaDB LTS and on both maintained MySQL LTS lines.
+        include:
+          - php: '8.1'
+            db: 'mariadb:12.3'
+          - php: '8.2'
+            db: 'mariadb:12.3'
+          - php: '8.3'
+            db: 'mariadb:12.3'
+          - php: '8.4'
+            db: 'mariadb:12.3'
+          - php: '8.5'
+            db: 'mariadb:12.3'
+          - php: '8.5'
+            db: 'mariadb:10.11'
+          - php: '8.5'
+            db: 'mysql:9.7'
+          - php: '8.5'
+            db: 'mysql:8.4'
 
+    # No health check: the admin binary differs per image, and db-prepare waits for the server.
     services:
-      mariadb:
-        image: mariadb:10.3
+      db:
+        image: ${{ matrix.db }}
         ports:
           - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: root
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+          MARIADB_ROOT_PASSWORD: root
 
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-    - name: Verify MariaDB connection
-      run: |
-        while ! mysqladmin ping -h127.0.0.1 -P3306 --silent; do
-          sleep 1
-        done
-
-    - name: Test migrations
-      run: |
-        git fetch origin 0.44.1 && git checkout FETCH_HEAD -- structure.sql
-        mysql -h127.0.0.1 -P3306 -uroot -proot -e "create database telegrambot_migrations; use telegrambot_migrations; source structure.sql;"
-        git checkout HEAD -- structure.sql
-        mysql -h127.0.0.1 -P3306 -uroot -proot -e "create database telegrambot; use telegrambot; source structure.sql;"
-        for SCHEMA_UPDATE_FILE in $(ls utils/db-schema-update); do mysql -h127.0.0.1 -P3306 -uroot -proot -e "use telegrambot_migrations; source utils/db-schema-update/${SCHEMA_UPDATE_FILE};"; done;
 
     - name: Install PHP
       uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
@@ -66,6 +72,14 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
+    # Fresh schema, then the 0.44.1 schema plus every migration, then the diff of the two.
+    - name: Prepare databases and diff the schemas
+      env:
+        DB_PASSWORD: root
+      run: |
+        composer db-prepare
+        composer schema-diff
+
     - name: Check PHP code
       run: composer check-code
 
@@ -83,13 +97,36 @@ jobs:
 #         composer test-cov
 #         composer test-cov-upload
 
-  # Single status for branch protection, so the PHP matrix can change without touching repository settings.
-  tests-passed:
-    name: Tests
-    if: always()
-    needs: tests
+  # Runs once, on the newest PHP; the errors that existed when PHPStan was added are listed in phpstan-baseline.neon.
+  static-analysis:
+    name: Static analysis
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check matrix result
-      run: test "${{ needs.tests.result }}" = "success"
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      with:
+        php-version: '8.5'
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run static analysis
+      run: composer analyse
+
+  # Single status for branch protection, so jobs and the PHP matrix can change without touching repository
+  # settings. Every other job must be listed in its needs.
+  tests-passed:
+    name: Tests
+    if: always()
+    needs: [tests, static-analysis]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check job results
+      run: |
+        test "${{ needs.tests.result }}" = "success"
+        test "${{ needs.static-analysis.result }}" = "success"

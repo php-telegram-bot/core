@@ -38,6 +38,7 @@
         "guzzlehttp/guzzle": "^7.15.2"
     },
     "require-dev": {
+        "phpstan/phpstan": "2.3.5",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.6",
         "dms/phpunit-arraysubset-asserts": "^0.2",
@@ -50,12 +51,16 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Longman\\TelegramBot\\Tests\\Unit\\": "tests/Unit"
+            "Longman\\TelegramBot\\Tests\\Unit\\": "tests/Unit",
+            "Longman\\TelegramBot\\Utils\\": "utils"
         }
     },
     "scripts": {
         "check-code": [
             "\"vendor/bin/phpcs\""
+        ],
+        "analyse": [
+            "\"vendor/bin/phpstan\" analyse --memory-limit=1G"
         ],
         "test": [
             "\"vendor/bin/phpunit\""
@@ -65,6 +70,12 @@
         ],
         "test-cov-upload": [
             "@php ocular.phar code-coverage:upload --format=php-clover clover.xml"
+        ],
+        "db-prepare": [
+            "bash utils/db-prepare.sh"
+        ],
+        "schema-diff": [
+            "@php utils/db-schema-diff.php telegrambot telegrambot_migrations"
         ]
     },
     "config": {

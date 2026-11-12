@@ -81,9 +81,9 @@ file, so more may appear once these are fixed):
 Rules for a repaired file:
 
 - It runs unchanged on MariaDB and MySQL.
-- It can be run again on a database where an earlier attempt stopped part-way.
-  This is what lets a stuck MySQL user recover: re-run the file that failed,
-  then continue the chain.
+- It can be run again on any database, including one where an earlier attempt
+  stopped part-way. This is what lets a stuck MySQL user recover: re-run, in
+  order, each file that stopped on their database, and none that applied.
 - Foreign keys are found by column in `information_schema`, never by a
   generated name such as `message_ibfk_6`.
 
@@ -92,6 +92,16 @@ Worked example. A MySQL user upgraded 0.62.0 to 0.63.0 in 2020. The four
 stopped. Their `message` table has no `via_bot`. After this change they re-run
 `0.62.0-0.63.0.sql`: the `poll` columns are detected as present and skipped,
 the primary key is rebuilt, `via_bot` is added, and every later file applies.
+
+A second case was measured on MySQL 8.4 after the final review (2026-11-12).
+A user who kept upgrading release by release (Composer updates the library
+whether or not a migration applied) ran every file and went on after each
+error: `0.60.0-0.61.0.sql`, `0.62.0-0.63.0.sql` and `0.82.0-0.83.0.sql`
+stopped, and every other file applied. Re-running only those three, in that
+order, ends without an error and with a clean schema diff. Re-running every
+file from the first failure on does not: ten files stop on duplicate or
+unknown columns, and `0.72.0-0.73.0.sql` adds back a column that
+`0.76.1-0.77.0.sql` had renamed. The changelog gives the first recovery.
 
 Proof that MariaDB is unaffected: before touching a file, dump the migrated
 MariaDB schema; after the repair the dump must be identical.
@@ -117,10 +127,20 @@ schema diff, and runs the test suite.
 A script under `utils/` compares two databases on one server through
 `information_schema` and prints every difference:
 
-- tables present on one side only;
-- per column: type, nullability, default, character set and collation;
-- indexes with their columns and uniqueness;
-- foreign keys by column and referenced column, ignoring generated names.
+- tables present on one side only, and for a table on both sides its engine
+  and collation;
+- per column: type, nullability, default, character set, collation and extra
+  attributes such as `AUTO_INCREMENT` and `ON UPDATE CURRENT_TIMESTAMP`;
+- indexes with their columns and uniqueness, the primary key told apart from
+  a unique index on the same columns;
+- foreign keys by column and referenced column, with their `ON DELETE` and
+  `ON UPDATE` rules, ignoring generated names.
+
+Engine, collation, extra attributes, the primary key and the foreign key rules
+were added after the final review (2026-11-12): drift in any of them breaks an
+upgraded install while both schemas still load. For example, an `id` that is
+`AUTO_INCREMENT` in `structure.sql` and plain `bigint` in the migration fails
+every upgraded install's first insert.
 
 Column comments and column order are not compared (maintainer may overrule;
 see open calls). Accepted differences live in one small file next to the
@@ -144,7 +164,7 @@ baseline stays reviewable; the builder measures and proposes it.
 ### Documentation
 
 `CLAUDE.md` (commands, the database section) and `CHANGELOG.md` are updated.
-The changelog tells MySQL users which file to re-run if an old upgrade stopped.
+The changelog tells MySQL users which files to re-run if an old upgrade stopped.
 
 ## Calls made by the author, open to correction
 
