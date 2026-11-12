@@ -18,7 +18,7 @@ vendor/bin/phpunit --filter testGetCommand
 vendor/bin/phpcbf                       # auto-fix coding standard violations
 composer test-cov                       # coverage (needs Xdebug), writes clover.xml
 composer db-prepare                     # drops and recreates telegrambot and telegrambot_migrations on the server DB_HOST and DB_PORT name (default 127.0.0.1:3306), so point it at a throwaway server; stops with exit 1 before dropping anything if either holds a row, unless DB_PREPARE_FORCE=1
-composer schema-diff                    # compares those two databases: exit 0 clean, 1 a difference not in utils/db-schema-diff-accepted.txt or an entry there that matches no difference, 2 a usage or connection error or a missing or empty database
+composer schema-diff                    # compares those two databases: exit 0 clean, 1 a difference not in utils/db-schema-diff-accepted.txt or an entry there that matches no difference, 2 a usage, connection or schema read error, an unreadable accepted file, or a missing or empty database
 ```
 
 PHPStan is pinned to an exact version in `composer.json`, because `composer.lock` is not committed and the baseline records exact error counts per file; a commit that raises that version also regenerates `phpstan-baseline.neon`.

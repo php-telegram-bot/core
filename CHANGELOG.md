@@ -6,7 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
-- A MySQL database upgraded past 0.61.0 needs DB migration scripts run again: `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql`, then `0.82.0-0.83.0.sql` if the database is at 0.83.0 or later. Files that applied without an error must not be run again. The migration scripts are tested on MariaDB 10.11 and 12.3 and on MySQL 8.4 and 9.7.
+- A MySQL database upgraded past 0.61.0 needs DB migration scripts run again: `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql`, then `0.82.0-0.83.0.sql` if the database is at 0.83.0 or later. Other files that applied without an error must not be run again. The migration scripts are tested on MariaDB 10.11 and 12.3 and on MySQL 8.4 and 9.7.
 ### Added
 ### Changed
 ### Deprecated
