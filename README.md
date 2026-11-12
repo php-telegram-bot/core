@@ -485,7 +485,7 @@ You can also broadcast a message to users, from the private chat with your bot. 
 
 ### MySQL storage (Recommended)
 
-MariaDB is supported via the same PDO `mysql` driver and `enableMySql()` setup (CI tests use a MariaDB image).
+MariaDB is supported via the same PDO `mysql` driver and `enableMySql()` setup (CI tests MariaDB 10.11 and 12.3 and MySQL 8.4 and 9.7).
 
 If you want to save messages/users/chats for further usage in commands, create a new database (`utf8mb4_unicode_520_ci`), import *[structure.sql]* and enable MySQL support BEFORE `handle()` method:
 
