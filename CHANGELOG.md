@@ -12,7 +12,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
-- DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL, and both can be run more than once on any database. `0.62.0-0.63.0.sql` was meant to drop a duplicate foreign key on `message.forward_from` named `message_ibfk_6`; servers that name it differently, such as MariaDB 12, kept the duplicate, and a re-run of the file removes it. (@akalongman)
+- DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL, and both can be run more than once on any database. `0.62.0-0.63.0.sql` was meant to drop a duplicate foreign key on `message.forward_from` named `message_ibfk_6`; servers that name it differently, such as MariaDB 12, kept the duplicate, and a re-run of the file removes it. (@akalongman) (#1505)
 ### Security
 
 ## [0.84.0] - 2026-11-11
