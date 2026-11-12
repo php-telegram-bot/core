@@ -86,7 +86,7 @@ To run both scripts locally, start a throwaway server and point them at its port
 
 - PSR-12, enforced by `phpcs.xml.dist`.
 - Every file starts with the package license header and every class and method has a docblock (see `CONTRIBUTING.md` for the exact text).
-- Pull requests target `dev`, the default branch (git flow). Record user-visible changes under `[Unreleased]` in `CHANGELOG.md`, crediting the author handle and PR number in the existing style.
+- Pull requests target `dev`, the default branch (git flow). `dev` accepts only a commit whose `Tests` check has passed, so every change reaches it through a pull request, a maintainer's or an agent's included; an admin can override this only by ticking the bypass box when merging a pull request. Record user-visible changes under `[Unreleased]` in `CHANGELOG.md`, crediting the author handle and PR number in the existing style.
 - Version format is `0.<version>.<hotfix>`. The version string lives in `Telegram::$version` and the `branch-alias` in `composer.json`.
 - Design records for larger changes live in `docs/specs/` and are committed, because they explain why the code is the way it is. Step-by-step implementation plans are working files: keep them in `docs/plans/`, which is ignored, and never commit them.
 
@@ -94,14 +94,15 @@ To run both scripts locally, start a throwaway server and point them at its port
 
 Packagist publishes every pushed tag within a minute, so a tag is the release. Tags can be created only by repository admins and can never be moved or deleted. Worked example, releasing 0.84.0 after 0.83.1:
 
-1. On `dev`, make one commit titled `Version 0.84.0`:
+1. Create the branch `release/0.84.0` from an up-to-date `dev`, with one commit titled `Version 0.84.0`:
    - set `Telegram::$version` to `0.84.0`;
    - rename `utils/db-schema-update/0.83.1-unreleased.sql` to `0.83.1-0.84.0.sql` (skip when the release has no migration);
    - in `CHANGELOG.md`, turn `[Unreleased]` into `## [0.84.0] - <date>`, add a fresh empty `[Unreleased]` block above it, and update the link definitions at the bottom: `[0.84.0]` compares `0.83.1...0.84.0`, and `[0.84.0-sql-migration]` points at the file under `tree/0.84.0/`.
-2. Push and wait for the `Tests` workflow to pass on that commit.
-3. Tag that exact commit `0.84.0` (lightweight, no `v` prefix) and push the tag.
-4. Create the GitHub release `Version 0.84.0` for the tag, with the changelog section as notes and the reference-style links written out in full.
-5. Fast-forward `master` to the tag. `master` only ever moves to release commits.
-6. On `dev`, raise the `dev-dev` branch alias in `composer.json` to the next version line (`0.85.x-dev`).
+2. Push the branch, open a pull request into `dev`, and wait for `Tests` to pass on it.
+3. Fast-forward `dev` to that commit (`git push origin release/0.84.0:dev`), so the commit `Tests` passed on is the one that lands; GitHub then marks the pull request merged. If `dev` moved meanwhile, rebase the branch onto it and wait for `Tests` again. Then wait for the `Tests` run on `dev` to pass.
+4. Tag that exact commit `0.84.0` (lightweight, no `v` prefix) and push the tag.
+5. Create the GitHub release `Version 0.84.0` for the tag, with the changelog section as notes and the reference-style links written out in full.
+6. Fast-forward `master` to the tag. `master` only ever moves to release commits.
+7. Raise the `dev-dev` branch alias in `composer.json` to the next version line (`0.85.x-dev`) through a second pull request.
 
 Use a hotfix number (`0.84.1`) only for fixes that change no dependency constraint and need no migration.
