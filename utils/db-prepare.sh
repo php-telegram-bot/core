@@ -15,10 +15,17 @@
 # server. The 0.44.1 schema is read through git, fetching the tag from origin
 # when it is missing; the working tree is never touched.
 #
+# Before dropping anything, it reads every base table of both databases and
+# stops with exit 1 when one holds a row, naming the database, because the
+# defaults point at a local server where telegrambot may hold real data.
+# DB_PREPARE_FORCE=1 skips that check and drops them anyway.
+#
 # Connection over TCP from DB_HOST (default 127.0.0.1), DB_PORT (3306),
-# DB_USER (root) and DB_PASSWORD; the client is DB_CLIENT (mysql). Waits up to
-# 120 s for the server. Stops at the first failing file and names it on
-# standard error.
+# DB_USER (root) and DB_PASSWORD; the client is DB_CLIENT (mysql). DB_PASSWORD
+# cannot contain a double quote or a newline. Waits up to 120 s for the server,
+# each attempt with a 5 s connect timeout, and stops at once when the server
+# refuses the login (ERROR 1045 or 1044). Stops at the first failing file and
+# names it on standard error.
 
 set -euo pipefail
 
@@ -30,6 +37,7 @@ DB_PORT="${DB_PORT:-3306}"
 DB_USER="${DB_USER:-root}"
 DB_PASSWORD="${DB_PASSWORD:-}"
 DB_CLIENT="${DB_CLIENT:-mysql}"
+DB_PREPARE_FORCE="${DB_PREPARE_FORCE:-}"
 
 baseline_tag=0.44.1
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -55,6 +63,14 @@ fail() {
     echo "db-prepare: $1" >&2
     exit 1
 }
+
+# The option file holds the password between double quotes, which cannot carry
+# a double quote or a newline. The message does not repeat the password.
+case "$DB_PASSWORD" in
+    *'"'* | *$'\n'*)
+        fail "DB_PASSWORD contains a double quote or a newline, which the client option file cannot hold."
+        ;;
+esac
 
 # The password goes through an option file, so it shows neither in the process
 # list nor in a client warning. --defaults-file keeps other option files out.
@@ -87,6 +103,21 @@ run_sql() {
     fail "$label failed; later files were not applied."
 }
 
+# query <label> <client arguments>: prints the result rows, tab-separated and
+# without a header. On failure prints the client's error and stops, naming the label.
+query() {
+    local label=$1
+    shift
+
+    if db --batch --skip-column-names "$@" 2> "$work/client.err"; then
+        return 0
+    fi
+
+    end_progress
+    cat "$work/client.err" >&2
+    fail "$label failed; nothing was dropped."
+}
+
 if ! command -v "$DB_CLIENT" > /dev/null; then
     fail "database client '$DB_CLIENT' not found; set DB_CLIENT."
 fi
@@ -103,7 +134,15 @@ if ! git -C "$root" show "refs/tags/$baseline_tag:structure.sql" > "$work/struct
 fi
 
 deadline=$((SECONDS + 120))
-until db --execute='SELECT 1' > /dev/null 2> "$work/client.err"; do
+until db --connect-timeout=5 --execute='SELECT 1' > /dev/null 2> "$work/client.err"; do
+    # A refused login does not change while the server starts, so it is not retried.
+    denied="$(sed -n 's/^ERROR \(104[45]\) .*/\1/p' "$work/client.err")"
+    if [ -n "$denied" ]; then
+        end_progress
+        cat "$work/client.err" >&2
+        fail "the server at $DB_HOST:$DB_PORT refused the login (ERROR $denied); check DB_USER and DB_PASSWORD."
+    fi
+
     if [ "$SECONDS" -ge "$deadline" ]; then
         end_progress
         cat "$work/client.err" >&2
@@ -113,6 +152,26 @@ until db --execute='SELECT 1' > /dev/null 2> "$work/client.err"; do
     progress "Waiting for the database server at $DB_HOST:$DB_PORT, $((deadline - SECONDS)) s left"
     sleep 1
 done
+
+# Each table is read, since the TABLE_ROWS estimate can be 0 for a table that
+# holds rows. A database that does not exist has no tables and passes.
+if [ "$DB_PREPARE_FORCE" != 1 ]; then
+    for database in telegrambot telegrambot_migrations; do
+        progress "Checking $database for rows"
+        query "listing the tables of $database" --execute="SELECT TABLE_NAME FROM information_schema.TABLES
+            WHERE TABLE_SCHEMA = '$database' AND TABLE_TYPE = 'BASE TABLE'" > "$work/tables"
+
+        : > "$work/rows.sql"
+        while IFS= read -r table; do
+            printf "SELECT 1 FROM \`%s\`.\`%s\` LIMIT 1;\n" "$database" "${table//\`/\`\`}" >> "$work/rows.sql"
+        done < "$work/tables"
+
+        query "reading the tables of $database" < "$work/rows.sql" > "$work/rows"
+        if [ -s "$work/rows" ]; then
+            fail "database $database at $DB_HOST:$DB_PORT holds rows; nothing was dropped. Point DB_HOST and DB_PORT at a throwaway server, or set DB_PREPARE_FORCE=1 to drop it anyway."
+        fi
+    done
+fi
 
 for database in telegrambot telegrambot_migrations; do
     progress "Recreating $database"
