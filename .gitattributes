@@ -7,3 +7,7 @@
 /tests export-ignore
 /docs/specs export-ignore
 /CLAUDE.md export-ignore
+/utils/db-prepare.sh export-ignore
+/utils/SchemaDiff.php export-ignore
+/utils/db-schema-diff.php export-ignore
+/utils/db-schema-diff-accepted.txt export-ignore
