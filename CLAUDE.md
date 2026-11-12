@@ -50,7 +50,7 @@ Four static or central classes in `src/` do most of the work:
 
 ### Commands
 
-`Command` has three abstract children that define authorization: `SystemCommand`, `AdminCommand`, `UserCommand`. Resolution order is System, then Admin (admins only), then User. A class is found either through `Telegram::addCommandClass()` or by convention: file `FooCommand.php` in a commands path, class `FooCommand`, with the namespace read from the file itself. Command names are the lowercased class name minus `Command`, so `FooBarCommand` is `/foobar`.
+`Command` has three abstract children that define authorization: `SystemCommand`, `AdminCommand`, `UserCommand`. Resolution order is System, then Admin (admins only), then User. A class is found either through `Telegram::addCommandClass()` or by convention: file `FooCommand.php` in a commands path, class `FooCommand`, with the namespace read from the file itself. A class found in a commands path is registered under its class name minus `Command`, with an underscore before each inner capital, lowercased: `FooBarCommand` is `/foo_bar`. `/foobar` reaches it too, but only when the class sits in a default `Longman\TelegramBot\Commands\*Commands` namespace, because the fallback lookup builds a class name in that namespace and PHP class names are case-insensitive. The `$name` property sets the command name only for classes added through `addCommandClass()`.
 
 A command with an empty `$usage` is treated as non-executable by the message router. `Command::__call` relays unknown methods to the current `Update`, so `$this->getMessage()` inside a command is `$this->getUpdate()->getMessage()`.
 
