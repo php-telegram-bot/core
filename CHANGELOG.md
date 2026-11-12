@@ -6,12 +6,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
+- A MySQL database upgraded past 0.61.0 needs DB migration scripts run again: `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql`, then `0.82.0-0.83.0.sql` if the database is at 0.83.0 or later. Files that applied without an error must not be run again. The migration scripts are tested on MariaDB 10.11 and 12.3 and on MySQL 8.4 and 9.7.
 ### Added
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
-- DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL. If an earlier upgrade stopped in one of them, run that file again and continue with the later ones. `0.62.0-0.63.0.sql` also removes the duplicate foreign key on `message.forward_from`, found by column instead of by the generated name `message_ibfk_6`. (@akalongman)
+- DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL, and both can be run more than once on any database. `0.62.0-0.63.0.sql` was meant to drop a duplicate foreign key on `message.forward_from` named `message_ibfk_6`; servers that name it differently, such as MariaDB 12, kept the duplicate, and a re-run of the file removes it. (@akalongman)
 ### Security
 
 ## [0.84.0] - 2026-11-11
