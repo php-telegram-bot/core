@@ -21,9 +21,14 @@ use Longman\TelegramBot\Telegram;
  */
 class DBTest extends TestCase
 {
+    /**
+     * @var array<string, string>
+     */
+    private array $credentials;
+
     protected function setUp(): void
     {
-        $credentials = [
+        $this->credentials = [
             'host'     => PHPUNIT_DB_HOST,
             'port'     => PHPUNIT_DB_PORT,
             'database' => PHPUNIT_DB_NAME,
@@ -32,9 +37,9 @@ class DBTest extends TestCase
         ];
 
         $telegram = new Telegram(self::$dummy_api_key, 'testbot');
-        $telegram->enableMySql($credentials);
+        $telegram->enableMySql($this->credentials);
 
-        TestHelpers::emptyDb($credentials);
+        TestHelpers::emptyDb($this->credentials);
     }
 
     public function testInsertMessageReactionCountUpdateForChannelPost(): void
@@ -112,5 +117,33 @@ class DBTest extends TestCase
         self::assertEquals(111, $row['user_id']);
         self::assertEquals(222, $row['chat_id']);
         self::assertNull($row['message_id']);
+    }
+
+    public function testEmptyDbClearsTablesThatReferenceAMessage(): void
+    {
+        $message = [
+            'message_id' => 45,
+            'from'       => ['id' => 111, 'is_bot' => false, 'first_name' => 'First'],
+            'chat'       => ['id' => 222, 'type' => 'private', 'first_name' => 'First'],
+            'date'       => time(),
+            'text'       => 'text',
+        ];
+
+        self::assertTrue(DB::insertRequest(new Update(['update_id' => 1005, 'message' => $message], 'testbot')));
+        self::assertTrue(DB::insertRequest(new Update([
+            'update_id'      => 1006,
+            'edited_message' => $message + ['edit_date' => time()],
+        ], 'testbot')));
+        self::assertEquals(1, DB::getPdo()->query('SELECT COUNT(*) FROM `edited_message`')->fetchColumn());
+
+        TestHelpers::emptyDb($this->credentials);
+
+        foreach (['edited_message', 'message', 'chat', 'user'] as $table) {
+            self::assertEquals(
+                0,
+                DB::getPdo()->query('SELECT COUNT(*) FROM `' . $table . '`')->fetchColumn(),
+                'Rows left in ' . $table
+            );
+        }
     }
 }
