@@ -853,13 +853,18 @@ class DB
                 $chat_id    = $message->getChat()->getId();
                 $message_id = $message->getMessageId();
 
-                $is_message = self::$pdo->query('
+                $sth_message = self::$pdo->prepare('
                     SELECT *
                     FROM `' . TB_MESSAGE . '`
-                    WHERE `id` = ' . $message_id . '
-                      AND `chat_id` = ' . $chat_id . '
+                    WHERE `id` = :id
+                      AND `chat_id` = :chat_id
                     LIMIT 1
-                ')->rowCount();
+                ');
+                $sth_message->bindValue(':id', $message_id);
+                $sth_message->bindValue(':chat_id', $chat_id);
+                $sth_message->execute();
+
+                $is_message = $sth_message->rowCount();
 
                 if ($message instanceof InaccessibleMessage) {
                     // Only chat and message ID are available, so there is no message to store.
