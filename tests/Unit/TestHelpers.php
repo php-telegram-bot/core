@@ -236,18 +236,20 @@ class TestHelpers
         $options      = [$init_command => 'SET NAMES utf8'];
 
         $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
-        $pdo->prepare('
-            DELETE FROM `conversation`;
-            DELETE FROM `telegram_update`;
-            DELETE FROM `message_reaction`;
-            DELETE FROM `message_reaction_count`;
-            DELETE FROM `callback_query`;
-            DELETE FROM `chosen_inline_result`;
-            DELETE FROM `inline_query`;
-            DELETE FROM `message`;
-            DELETE FROM `user_chat`;
-            DELETE FROM `chat`;
-            DELETE FROM `user`;
-        ')->execute();
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        // The tables come from the server, so a table added to the schema is emptied too.
+        // One statement per call: in a batch, a failing statement ends the batch unnoticed.
+        $tables = $pdo->query("
+            SELECT `TABLE_NAME`
+            FROM `information_schema`.`TABLES`
+            WHERE `TABLE_SCHEMA` = DATABASE()
+              AND `TABLE_TYPE` = 'BASE TABLE'
+        ")->fetchAll(\PDO::FETCH_COLUMN);
+
+        $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
+        foreach ($tables as $table) {
+            $pdo->exec('DELETE FROM `' . str_replace('`', '``', $table) . '`');
+        }
     }
 }
