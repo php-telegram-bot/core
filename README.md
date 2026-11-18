@@ -19,7 +19,7 @@ A Telegram Bot based on the official [Telegram Bot API]
 [![Total Downloads](https://img.shields.io/packagist/dt/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Downloads Month](https://img.shields.io/packagist/dm/longman/telegram-bot.svg)](https://packagist.org/packages/longman/telegram-bot)
 [![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D8.1-8892BF.svg)](https://php.net/)
-[![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/LICENSE)
+[![License](https://img.shields.io/packagist/l/longman/telegram-bot.svg)](https://github.com/php-telegram-bot/core/blob/master/LICENSE)
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -708,8 +708,8 @@ Credit list in [CREDITS](CREDITS)
 [AdminCommands-folder]: https://github.com/php-telegram-bot/core/tree/master/src/Commands/AdminCommands "Admin commands folder"
 [ExampleCommands-folder]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands "Example commands folder"
 [ImageCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/Other/ImageCommand.php "example /image command"
-[WhoamiCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/WhoamiCommand.php "example /whoami command"
-[HelpCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/HelpCommand.php "example /help command"
+[WhoamiCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/Other/WhoamiCommand.php "example /whoami command"
+[HelpCommand.php]: https://github.com/php-telegram-bot/example-bot/blob/master/Commands/Other/HelpCommand.php "example /help command"
 [SendtochannelCommand.php]: https://github.com/php-telegram-bot/core/blob/master/src/Commands/AdminCommands/SendtochannelCommand.php "/sendtochannel admin command"
 [DB::selectChats]: https://github.com/php-telegram-bot/core/blob/0.70.0/src/DB.php#L1148 "DB::selectChats() parameters"
 [structure.sql]: https://github.com/php-telegram-bot/core/blob/master/structure.sql "DB structure for importing"
