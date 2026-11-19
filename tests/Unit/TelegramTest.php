@@ -62,6 +62,10 @@ class TelegramTest extends TestCase
         foreach ($this->custom_commands_paths as $custom_path) {
             rmdir($custom_path);
         }
+
+        unset($_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN']);
+        TestHelpers::setStaticProperty(TelegramLog::class, 'logger', null);
+        TestHelpers::setStaticProperty(TelegramLog::class, 'update_logger', null);
     }
 
     public function testNewInstanceWithoutApiKeyParam(): void
@@ -310,5 +314,109 @@ class TelegramTest extends TestCase
         } catch (TelegramException $e) {
             self::assertSame('Kq7_x-41', $this->telegram->getWebhookSecretToken());
         }
+    }
+
+    public function testHandleProcessesRequestWithMatchingSecretToken(): void
+    {
+        $handler = $this->updateLogHandler();
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+        $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = 'Kq7_x-41';
+        $this->telegram->setCustomInput($this->webhookInput());
+
+        self::assertTrue($this->telegram->handle());
+        self::assertSame(77, $this->telegram->getLastUpdateId());
+        self::assertCount(1, $handler->getRecords());
+    }
+
+    /**
+     * @dataProvider refusedSecretTokenHeaderProvider
+     *
+     * @param mixed $header The header value, null for a request without the header
+     */
+    public function testHandleRefusesRequestWithoutMatchingSecretToken($header): void
+    {
+        $handler = $this->updateLogHandler();
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+        if ($header !== null) {
+            $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = $header;
+        }
+        $this->telegram->setCustomInput($this->webhookInput());
+
+        try {
+            $this->telegram->handle();
+            self::fail('The request was processed');
+        } catch (TelegramException $e) {
+            self::assertStringNotContainsString('Kq7_x-41', $e->getMessage());
+        }
+
+        self::assertNull($this->telegram->getLastUpdateId());
+        self::assertSame([], $handler->getRecords());
+    }
+
+    public function refusedSecretTokenHeaderProvider(): array
+    {
+        return [
+            'no header'      => [null],
+            'empty'          => [''],
+            'different'      => ['guess'],
+            'shorter'        => ['Kq7_x-4'],
+            'different case' => ['kq7_x-41'],
+            'leading space'  => [' Kq7_x-41'],
+            'not a string'   => [['Kq7_x-41']],
+        ];
+    }
+
+    /**
+     * @dataProvider anySecretTokenHeaderProvider
+     */
+    public function testHandleWithoutConfiguredSecretTokenProcessesEveryRequest(?string $header): void
+    {
+        if ($header !== null) {
+            $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = $header;
+        }
+        $this->telegram->setCustomInput($this->webhookInput());
+
+        self::assertTrue($this->telegram->handle());
+        self::assertSame(77, $this->telegram->getLastUpdateId());
+    }
+
+    public function anySecretTokenHeaderProvider(): array
+    {
+        return [
+            'no header'   => [null],
+            'some header' => ['anything'],
+        ];
+    }
+
+    /**
+     * Return the JSON body of a webhook request that carries a plain text message
+     *
+     * @return string
+     */
+    private function webhookInput(): string
+    {
+        return json_encode([
+            'update_id' => 77,
+            'message'   => [
+                'message_id' => 1,
+                'date'       => 1700000000,
+                'from'       => ['id' => 1, 'is_bot' => false, 'first_name' => 'a'],
+                'chat'       => ['id' => 1, 'type' => 'private'],
+                'text'       => 'hello',
+            ],
+        ], JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * Send the update log to a test handler and return that handler
+     *
+     * @return \Monolog\Handler\TestHandler
+     */
+    private function updateLogHandler(): \Monolog\Handler\TestHandler
+    {
+        $handler = new \Monolog\Handler\TestHandler();
+        TelegramLog::initialize(null, new \Monolog\Logger('updates', [$handler]));
+
+        return $handler;
     }
 }

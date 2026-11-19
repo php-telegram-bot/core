@@ -559,6 +559,18 @@ class Telegram
             throw new TelegramException('Bot Username is not defined!');
         }
 
+        // Refuse a request without the configured secret token, before the body is read.
+        $secret_token = $this->getWebhookSecretToken();
+        if ($secret_token !== '') {
+            // A header that is not a string is refused before hash_equals(), which throws a TypeError for it.
+            $header = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
+            if (!is_string($header) || !hash_equals($secret_token, $header)) {
+                throw new TelegramException(
+                    'Webhook secret token is missing or wrong! The webhook must not be called manually, only by Telegram.'
+                );
+            }
+        }
+
         $input = Request::getInput();
         if (empty($input)) {
             throw new TelegramException('Input is empty! The webhook must not be called manually, only by Telegram.');
