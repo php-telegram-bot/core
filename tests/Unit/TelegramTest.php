@@ -258,4 +258,57 @@ class TelegramTest extends TestCase
         self::assertStringContainsString('Invalid user, update denied.', $debug_log);
         file_exists($debug_log_file) && unlink($debug_log_file);
     }
+
+    public function testWebhookSecretTokenIsEmptyByDefault(): void
+    {
+        self::assertSame('', $this->telegram->getWebhookSecretToken());
+    }
+
+    public function testSetWebhookSecretToken(): void
+    {
+        self::assertSame($this->telegram, $this->telegram->setWebhookSecretToken('Kq7_x-41'));
+        self::assertSame('Kq7_x-41', $this->telegram->getWebhookSecretToken());
+    }
+
+    public function testSetWebhookSecretTokenAcceptsTheLongestToken(): void
+    {
+        $token = str_repeat('aZ0_-', 51) . 'a';
+
+        self::assertSame(256, strlen($token));
+        self::assertSame($token, $this->telegram->setWebhookSecretToken($token)->getWebhookSecretToken());
+    }
+
+    /**
+     * @dataProvider invalidWebhookSecretTokenProvider
+     */
+    public function testSetWebhookSecretTokenRefusesWhatTelegramRefuses(string $token): void
+    {
+        $this->expectException(TelegramException::class);
+
+        $this->telegram->setWebhookSecretToken($token);
+    }
+
+    public function invalidWebhookSecretTokenProvider(): array
+    {
+        return [
+            'empty'            => [''],
+            'too long'         => [str_repeat('a', 257)],
+            'space'            => ['Kq7 x41'],
+            'dot'              => ['Kq7.x41'],
+            'non-ASCII letter' => ['Kq7_x-41ü'],
+            'trailing newline' => ["Kq7_x-41\n"],
+        ];
+    }
+
+    public function testRefusedWebhookSecretTokenKeepsThePreviousOne(): void
+    {
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+
+        try {
+            $this->telegram->setWebhookSecretToken('not a token');
+            self::fail('The token was accepted');
+        } catch (TelegramException $e) {
+            self::assertSame('Kq7_x-41', $this->telegram->getWebhookSecretToken());
+        }
+    }
 }

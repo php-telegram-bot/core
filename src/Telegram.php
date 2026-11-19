@@ -197,6 +197,13 @@ class Telegram
     protected $update_filter;
 
     /**
+     * Webhook secret token, empty when none is set
+     *
+     * @var string
+     */
+    protected $webhook_secret_token = '';
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -1299,6 +1306,39 @@ class Telegram
     public function getUpdateFilter(): ?callable
     {
         return $this->update_filter;
+    }
+
+    /**
+     * Set the webhook secret token
+     *
+     * Telegram accepts 1 to 256 characters from A-Z, a-z, 0-9, _ and -.
+     *
+     * @param string $secret_token
+     *
+     * @return Telegram
+     * @throws TelegramException
+     */
+    public function setWebhookSecretToken(string $secret_token): Telegram
+    {
+        if (!preg_match('/\A[A-Za-z0-9_-]{1,256}\z/', $secret_token)) {
+            throw new TelegramException(
+                'Invalid webhook secret token! It must be 1 to 256 characters from A-Z, a-z, 0-9, _ and -.'
+            );
+        }
+
+        $this->webhook_secret_token = $secret_token;
+
+        return $this;
+    }
+
+    /**
+     * Return the webhook secret token, or an empty string when none is set
+     *
+     * @return string
+     */
+    public function getWebhookSecretToken(): string
+    {
+        return $this->webhook_secret_token;
     }
 
     /**
