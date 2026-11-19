@@ -30,6 +30,7 @@ A Telegram Bot based on the official [Telegram Bot API]
 - [Using a custom Bot API server](#using-a-custom-bot-api-server)
 - [Webhook installation](#webhook-installation)
     - [Self Signed Certificate](#self-signed-certificate)
+    - [Securing the webhook](#securing-the-webhook)
     - [Unset Webhook](#unset-webhook)
 - [getUpdates installation](#getupdates-installation)
     - [getUpdates without database](#getupdates-without-database)
@@ -239,6 +240,9 @@ try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($bot_api_key, $bot_username);
 
+    // Have Telegram sign its requests, see "Securing the webhook"
+    $telegram->setWebhookSecretToken('your-secret-token');
+
     // Set webhook
     $result = $telegram->setWebhook($hook_url);
     if ($result->isOk()) {
@@ -266,6 +270,9 @@ try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($bot_api_key, $bot_username);
 
+    // Refuse requests that do not come from Telegram, see "Securing the webhook"
+    $telegram->setWebhookSecretToken('your-secret-token');
+
     // Handle telegram webhook request
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
@@ -281,6 +288,22 @@ Upload the certificate and add the path as a parameter in *set.php*:
 ```php
 $result = $telegram->setWebhook($hook_url, ['certificate' => '/path/to/certificate']);
 ```
+
+### Securing the webhook
+
+Anyone who knows the URL of *hook.php* can post an update to it, and the library cannot tell it from one sent by Telegram. Set a secret token to have `handle()` refuse such requests:
+
+```php
+$telegram->setWebhookSecretToken('your-secret-token');
+```
+
+Add this line to *set.php* before `setWebhook()`, which then registers the token with Telegram, and to *hook.php* before `handle()`. Telegram sends the token in the `X-Telegram-Bot-Api-Secret-Token` header of every request, and `handle()` throws a `TelegramException` when the header is missing or different.
+
+The token is 1 to 256 characters long and may contain `A-Z`, `a-z`, `0-9`, `_` and `-`. Keep it out of version control, like the API key.
+
+On a bot that is already running, change *set.php* and run it first, then change *hook.php*. In the other order every update is refused until the webhook is registered again.
+
+`handle()` reads the header from `$_SERVER`. On a server that does not fill `$_SERVER` for each request, leave the token unset in *hook.php* and compare the header in your own code with `hash_equals()`.
 
 ### Unset Webhook
 
