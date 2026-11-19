@@ -629,8 +629,10 @@ class Request
         //Logging verbose debug output
         if (TelegramLog::$always_log_request_and_response || $response === null) {
             // Never log the webhook secret token; only the logged copy is changed.
-            $logged_data = $data;
-            if (array_key_exists('secret_token', $logged_data)) {
+            // A null or empty secret_token carries no token and is logged as it is.
+            $logged_data  = $data;
+            $secret_token = $logged_data['secret_token'] ?? null;
+            if ($secret_token !== null && $secret_token !== '') {
                 $logged_data['secret_token'] = 'SECRET_TOKEN_REMOVED';
             }
 

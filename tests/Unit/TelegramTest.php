@@ -316,6 +316,16 @@ class TelegramTest extends TestCase
         }
     }
 
+    public function testRefusedWebhookSecretTokenIsNotInTheExceptionMessage(): void
+    {
+        try {
+            $this->telegram->setWebhookSecretToken('Kq7 x41');
+            self::fail('The token was accepted');
+        } catch (TelegramException $e) {
+            self::assertStringNotContainsString('Kq7 x41', $e->getMessage());
+        }
+    }
+
     public function testHandleProcessesRequestWithMatchingSecretToken(): void
     {
         $handler = $this->updateLogHandler();
@@ -360,6 +370,7 @@ class TelegramTest extends TestCase
             'empty'          => [''],
             'different'      => ['guess'],
             'shorter'        => ['Kq7_x-4'],
+            'longer'         => ['Kq7_x-41x'],
             'different case' => ['kq7_x-41'],
             'leading space'  => [' Kq7_x-41'],
             'not a string'   => [['Kq7_x-41']],
@@ -431,6 +442,33 @@ class TelegramTest extends TestCase
         $this->telegram->setWebhookSecretToken('Kq7_x-41');
 
         self::assertTrue($this->telegram->setWebhook('https://example.com/hook.php')->isOk());
+    }
+
+    public function testSetWebhookBuildsItsDataWithBuildWebhookData(): void
+    {
+        $telegram = new class (self::$dummy_api_key, 'testbot') extends Telegram {
+            /**
+             * @var array|null The request parameters buildWebhookData() returned last
+             */
+            public $built_webhook_data;
+
+            /**
+             * Record the request parameters the parent builds and return them unchanged
+             *
+             * @param string $url
+             * @param array  $data
+             *
+             * @return array
+             */
+            protected function buildWebhookData(string $url, array $data): array
+            {
+                return $this->built_webhook_data = parent::buildWebhookData($url, $data);
+            }
+        };
+        $telegram->setWebhookSecretToken('Kq7_x-41');
+
+        self::assertTrue($telegram->setWebhook('https://example.com/hook.php')->isOk());
+        self::assertSame('Kq7_x-41', $telegram->built_webhook_data['secret_token'] ?? null);
     }
 
     /**

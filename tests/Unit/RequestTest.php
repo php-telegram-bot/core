@@ -38,7 +38,9 @@ class RequestTest extends TestCase
     protected function setUp(): void
     {
         foreach ($this->staticPropertiesToRestore() as [$class, $property]) {
-            $this->saved_static_properties[$class][$property] = (new \ReflectionProperty($class, $property))->getValue();
+            $saved_value = (new \ReflectionProperty($class, $property))->getValue();
+
+            $this->saved_static_properties[$class][$property] = $saved_value;
         }
     }
 
@@ -75,6 +77,29 @@ class RequestTest extends TestCase
     }
 
     /**
+     * @dataProvider emptySecretTokenProvider
+     */
+    public function testExecuteLogsASecretTokenThatCarriesNoTokenUnchanged(?string $secret_token): void
+    {
+        $data = ['url' => 'https://example.com/hook.php', 'secret_token' => $secret_token];
+
+        [, $handler] = $this->executeAgainstFailingTelegram('setWebhook', $data);
+
+        foreach ($handler->getRecords() as $record) {
+            self::assertStringNotContainsString('SECRET_TOKEN_REMOVED', $record['message']);
+        }
+        self::assertTrue($handler->hasDebug('Request data:' . PHP_EOL . print_r($data, true)));
+    }
+
+    public function emptySecretTokenProvider(): array
+    {
+        return [
+            'null'         => [null],
+            'empty string' => [''],
+        ];
+    }
+
+    /**
      * Execute a request against a client that answers 400, with a debug logger that records every line
      *
      * @param string $action
@@ -90,7 +115,10 @@ class RequestTest extends TestCase
         $mock = new MockHandler([
             new Response(400, [], '{"ok":false,"error_code":400,"description":"Bad Request"}'),
         ]);
-        Request::setClient(new Client(['base_uri' => 'https://api.telegram.org', 'handler' => HandlerStack::create($mock)]));
+        Request::setClient(new Client([
+            'base_uri' => 'https://api.telegram.org',
+            'handler'  => HandlerStack::create($mock),
+        ]));
 
         $handler = new TestHandler();
         TelegramLog::initialize(new Logger('bot_log', [$handler]));
