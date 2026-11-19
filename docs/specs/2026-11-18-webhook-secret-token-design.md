@@ -139,8 +139,9 @@ $telegram->handle();
 ### Rolling it out on a running bot
 
 The order matters. If `hook.php` starts checking before Telegram knows the
-token, every real update is refused and Telegram retries them until they
-expire.
+token, every real update is refused. Telegram retries only a request answered
+with a status other than 2xx, and the README's `hook.php` catches the
+exception and answers 200, so those updates are lost.
 
 1. Add the setter to `set.php` and run it. Telegram now sends the header, and
    `hook.php` ignores it.
