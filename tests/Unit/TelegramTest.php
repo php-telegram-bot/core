@@ -388,6 +388,51 @@ class TelegramTest extends TestCase
         ];
     }
 
+    public function testWebhookDataKeepsOnlyKnownParameters(): void
+    {
+        $data = $this->telegramExposingWebhookData()->webhookData(
+            'https://example.com/hook.php',
+            ['max_connections' => 5, 'unknown' => 1]
+        );
+
+        self::assertEquals(['url' => 'https://example.com/hook.php', 'max_connections' => 5], $data);
+    }
+
+    public function testWebhookDataCarriesTheConfiguredSecretToken(): void
+    {
+        $telegram = $this->telegramExposingWebhookData();
+        $telegram->setWebhookSecretToken('Kq7_x-41');
+
+        self::assertEquals(
+            ['url' => 'https://example.com/hook.php', 'secret_token' => 'Kq7_x-41'],
+            $telegram->webhookData('https://example.com/hook.php')
+        );
+    }
+
+    public function testWebhookDataPrefersTheSecretTokenPassedIn(): void
+    {
+        $telegram = $this->telegramExposingWebhookData();
+        $telegram->setWebhookSecretToken('Kq7_x-41');
+
+        $data = $telegram->webhookData('https://example.com/hook.php', ['secret_token' => 'Other-1']);
+
+        self::assertSame('Other-1', $data['secret_token']);
+    }
+
+    public function testWebhookDataHasNoSecretTokenWhenNoneIsConfigured(): void
+    {
+        $data = $this->telegramExposingWebhookData()->webhookData('https://example.com/hook.php');
+
+        self::assertArrayNotHasKey('secret_token', $data);
+    }
+
+    public function testSetWebhookWithConfiguredSecretToken(): void
+    {
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+
+        self::assertTrue($this->telegram->setWebhook('https://example.com/hook.php')->isOk());
+    }
+
     /**
      * Return the JSON body of a webhook request that carries a plain text message
      *
@@ -418,5 +463,28 @@ class TelegramTest extends TestCase
         TelegramLog::initialize(null, new \Monolog\Logger('updates', [$handler]));
 
         return $handler;
+    }
+
+    /**
+     * Return a Telegram object that exposes the request parameters setWebhook() sends
+     *
+     * @return Telegram
+     */
+    private function telegramExposingWebhookData(): Telegram
+    {
+        return new class (self::$dummy_api_key, 'testbot') extends Telegram {
+            /**
+             * Return the request parameters setWebhook() would send for these arguments
+             *
+             * @param string $url
+             * @param array  $data
+             *
+             * @return array
+             */
+            public function webhookData(string $url, array $data = []): array
+            {
+                return $this->buildWebhookData($url, $data);
+            }
+        };
     }
 }

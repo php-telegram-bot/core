@@ -1091,15 +1091,7 @@ class Telegram
             throw new TelegramException('Hook url is empty!');
         }
 
-        $data        = array_intersect_key($data, array_flip([
-            'certificate',
-            'ip_address',
-            'max_connections',
-            'allowed_updates',
-            'drop_pending_updates',
-            'secret_token',
-        ]));
-        $data['url'] = $url;
+        $data = $this->buildWebhookData($url, $data);
 
         // If the certificate is passed as a path, encode and add the file to the data array.
         if (!empty($data['certificate']) && is_string($data['certificate'])) {
@@ -1115,6 +1107,37 @@ class Telegram
         }
 
         return $result;
+    }
+
+    /**
+     * Build the request parameters for setWebhook, before the certificate is encoded
+     *
+     * The configured webhook secret token is added unless $data has a secret_token key.
+     *
+     * @param string $url
+     * @param array  $data Optional parameters, unknown ones are dropped.
+     *
+     * @return array
+     */
+    protected function buildWebhookData(string $url, array $data): array
+    {
+        $data        = array_intersect_key($data, array_flip([
+            'certificate',
+            'ip_address',
+            'max_connections',
+            'allowed_updates',
+            'drop_pending_updates',
+            'secret_token',
+        ]));
+        $data['url'] = $url;
+
+        // A secret_token passed by the caller wins, whatever its value.
+        $secret_token = $this->getWebhookSecretToken();
+        if ($secret_token !== '' && !array_key_exists('secret_token', $data)) {
+            $data['secret_token'] = $secret_token;
+        }
+
+        return $data;
     }
 
     /**
