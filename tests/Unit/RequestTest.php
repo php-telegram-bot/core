@@ -67,6 +67,40 @@ class RequestTest extends TestCase
         self::assertTrue($handler->hasDebugThatContains('[secret_token] => SECRET_TOKEN_REMOVED'));
     }
 
+    /**
+     * A secret token that PHP treats as falsy or that is not a string is still kept out of the debug log
+     *
+     * The bare value is not checked: '0' also occurs in unrelated log text, such as the 400 status.
+     *
+     * @dataProvider zeroOrIntegerSecretTokenProvider
+     *
+     * @param int|string $secret_token
+     */
+    public function testExecuteKeepsAZeroOrIntegerSecretTokenOutOfTheDebugLog(int|string $secret_token): void
+    {
+        $data = ['url' => 'https://example.com/hook.php', 'secret_token' => $secret_token];
+
+        [, $handler] = $this->executeAgainstFailingTelegram('setWebhook', $data);
+
+        foreach ($handler->getRecords() as $record) {
+            self::assertStringNotContainsString('[secret_token] => ' . $secret_token, $record['message']);
+        }
+        self::assertTrue($handler->hasDebugThatContains('[secret_token] => SECRET_TOKEN_REMOVED'));
+    }
+
+    /**
+     * Return secret tokens that a check on emptiness or on the string type would log in clear
+     *
+     * @return array
+     */
+    public function zeroOrIntegerSecretTokenProvider(): array
+    {
+        return [
+            'zero string' => ['0'],
+            'integer'     => [12345],
+        ];
+    }
+
     public function testExecuteLogsRequestDataWithoutSecretTokenUnchanged(): void
     {
         $data = ['chat_id' => 1, 'text' => 'hello'];
