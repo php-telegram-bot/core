@@ -6,6 +6,16 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Notes
 - [:ledger: View file changes][Unreleased]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.85.0] - 2026-11-24
+### Notes
+- [:ledger: View file changes][0.85.0]
 - A MySQL database upgraded past 0.61.0 needs DB migration scripts run again: `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql`, then `0.82.0-0.83.0.sql` if the database is at 0.83.0 or later. Other files that applied without an error must not be run again. The migration scripts are tested on MariaDB 10.11 and 12.3 and on MySQL 8.4 and 9.7.
 ### Added
 - `Telegram::setWebhookSecretToken()`: `handle()` refuses a webhook request whose `X-Telegram-Bot-Api-Secret-Token` header does not carry the token, and `setWebhook()` registers the token with Telegram. (@akalongman)
@@ -741,6 +751,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-longman-telegram-bot?utm_source=packagist-longman-telegram-bot&utm_medium=referral&utm_campaign=changelog
 
 [Unreleased]: https://github.com/php-telegram-bot/core/compare/master...dev
+[0.85.0]: https://github.com/php-telegram-bot/core/compare/0.84.0...0.85.0
 [0.84.0]: https://github.com/php-telegram-bot/core/compare/0.83.1...0.84.0
 [0.83.1]: https://github.com/php-telegram-bot/core/compare/0.83.0...0.83.1
 [0.83.0]: https://github.com/php-telegram-bot/core/compare/0.82.0...0.83.0
