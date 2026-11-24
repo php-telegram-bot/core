@@ -86,7 +86,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-dev": "0.85.x-dev"
+            "dev-dev": "0.86.x-dev"
         }
     }
 }
