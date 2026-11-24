@@ -197,6 +197,13 @@ class Telegram
     protected $update_filter;
 
     /**
+     * Webhook secret token, empty when none is set
+     *
+     * @var string
+     */
+    protected $webhook_secret_token = '';
+
+    /**
      * Telegram constructor.
      *
      * @param string $api_key
@@ -550,6 +557,19 @@ class Telegram
     {
         if ($this->bot_username === '') {
             throw new TelegramException('Bot Username is not defined!');
+        }
+
+        // Refuse a request without the configured secret token, before the body is read.
+        $secret_token = $this->getWebhookSecretToken();
+        if ($secret_token !== '') {
+            // A header that is not a string is refused before hash_equals(), which throws a TypeError for it.
+            $header = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
+            if (!is_string($header) || !hash_equals($secret_token, $header)) {
+                throw new TelegramException(
+                    'Webhook secret token is missing or wrong! '
+                    . 'The webhook must not be called manually, only by Telegram.'
+                );
+            }
         }
 
         $input = Request::getInput();
@@ -1072,6 +1092,37 @@ class Telegram
             throw new TelegramException('Hook url is empty!');
         }
 
+        // A new variable, so the configured secret token is not an argument of this frame in a stack trace.
+        $webhook_data = $this->buildWebhookData($url, $data);
+
+        // If the certificate is passed as a path, encode and add the file to the data array.
+        if (!empty($webhook_data['certificate']) && is_string($webhook_data['certificate'])) {
+            $webhook_data['certificate'] = Request::encodeFile($webhook_data['certificate']);
+        }
+
+        $result = Request::setWebhook($webhook_data);
+
+        if (!$result->isOk()) {
+            throw new TelegramException(
+                'Webhook was not set! Error: ' . $result->getErrorCode() . ' ' . $result->getDescription()
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Build the request parameters for setWebhook, before the certificate is encoded
+     *
+     * The configured webhook secret token is added unless $data has a secret_token key.
+     *
+     * @param string $url
+     * @param array  $data Optional parameters, unknown ones are dropped.
+     *
+     * @return array
+     */
+    protected function buildWebhookData(string $url, array $data): array
+    {
         $data        = array_intersect_key($data, array_flip([
             'certificate',
             'ip_address',
@@ -1082,20 +1133,13 @@ class Telegram
         ]));
         $data['url'] = $url;
 
-        // If the certificate is passed as a path, encode and add the file to the data array.
-        if (!empty($data['certificate']) && is_string($data['certificate'])) {
-            $data['certificate'] = Request::encodeFile($data['certificate']);
+        // A secret_token passed by the caller wins, whatever its value.
+        $secret_token = $this->getWebhookSecretToken();
+        if ($secret_token !== '' && !array_key_exists('secret_token', $data)) {
+            $data['secret_token'] = $secret_token;
         }
 
-        $result = Request::setWebhook($data);
-
-        if (!$result->isOk()) {
-            throw new TelegramException(
-                'Webhook was not set! Error: ' . $result->getErrorCode() . ' ' . $result->getDescription()
-            );
-        }
-
-        return $result;
+        return $data;
     }
 
     /**
@@ -1299,6 +1343,39 @@ class Telegram
     public function getUpdateFilter(): ?callable
     {
         return $this->update_filter;
+    }
+
+    /**
+     * Set the webhook secret token
+     *
+     * Telegram accepts 1 to 256 characters from A-Z, a-z, 0-9, _ and -.
+     *
+     * @param string $secret_token
+     *
+     * @return Telegram
+     * @throws TelegramException
+     */
+    public function setWebhookSecretToken(#[\SensitiveParameter] string $secret_token): Telegram
+    {
+        if (!preg_match('/\A[A-Za-z0-9_-]{1,256}\z/', $secret_token)) {
+            throw new TelegramException(
+                'Invalid webhook secret token! It must be 1 to 256 characters from A-Z, a-z, 0-9, _ and -.'
+            );
+        }
+
+        $this->webhook_secret_token = $secret_token;
+
+        return $this;
+    }
+
+    /**
+     * Return the webhook secret token, or an empty string when none is set
+     *
+     * @return string
+     */
+    public function getWebhookSecretToken(): string
+    {
+        return $this->webhook_secret_token;
     }
 
     /**

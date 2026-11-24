@@ -40,6 +40,8 @@ Four static or central classes in `src/` do most of the work:
 
 ### Update flow
 
+With a secret token configured, `Telegram::handle()` compares it with the `X-Telegram-Bot-Api-Secret-Token` header and throws before it reads the body; polling through `handleGetUpdates()` is not affected.
+
 `Telegram::processUpdate()` is the router:
 
 1. Run the optional update filter callback.

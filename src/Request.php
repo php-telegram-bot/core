@@ -628,7 +628,15 @@ class Request
 
         //Logging verbose debug output
         if (TelegramLog::$always_log_request_and_response || $response === null) {
-            TelegramLog::debug('Request data:' . PHP_EOL . print_r($data, true));
+            // Never log the webhook secret token; only the logged copy is changed.
+            // A null or empty secret_token carries no token and is logged as it is.
+            $logged_data  = $data;
+            $secret_token = $logged_data['secret_token'] ?? null;
+            if ($secret_token !== null && $secret_token !== '') {
+                $logged_data['secret_token'] = 'SECRET_TOKEN_REMOVED';
+            }
+
+            TelegramLog::debug('Request data:' . PHP_EOL . print_r($logged_data, true));
             TelegramLog::debug('Response data:' . PHP_EOL . $result);
             TelegramLog::endDebugLogTempStream('Verbose HTTP Request output:' . PHP_EOL . '%s' . PHP_EOL);
         }

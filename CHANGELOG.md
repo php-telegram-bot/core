@@ -8,13 +8,17 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][Unreleased]
 - A MySQL database upgraded past 0.61.0 needs DB migration scripts run again: `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql`, then `0.82.0-0.83.0.sql` if the database is at 0.83.0 or later. Other files that applied without an error must not be run again. The migration scripts are tested on MariaDB 10.11 and 12.3 and on MySQL 8.4 and 9.7.
 ### Added
+- `Telegram::setWebhookSecretToken()`: `handle()` refuses a webhook request whose `X-Telegram-Bot-Api-Secret-Token` header does not carry the token, and `setWebhook()` registers the token with Telegram. (@akalongman)
 ### Changed
+- The debug log replaces the `secret_token` of a logged request with `SECRET_TOKEN_REMOVED`, also when `TelegramLog::$remove_bot_token` is `false`. (@akalongman)
 ### Deprecated
 ### Removed
 ### Fixed
 - DB migration scripts `0.60.0-0.61.0.sql` and `0.62.0-0.63.0.sql` now run on MySQL, and both can be run more than once on any database. `0.62.0-0.63.0.sql` was meant to drop a duplicate foreign key on `message.forward_from` named `message_ibfk_6`; servers that name it differently, such as MariaDB 12, kept the duplicate, and a re-run of the file removes it. (@akalongman) (#1505)
 ### Security
 - Vulnerabilities are reported privately through GitHub instead of the Tidelift security contact, see [SECURITY.md](SECURITY.md). (@akalongman) (#1509)
+- SQL injection when saving a callback query to the DB: the message id and chat id of the update were placed in a query unbound, so a forged request to the webhook could run SQL on the bot's database. Bots that use the webhook with MySQL enabled should update. Reported by @NotAFlightRisk. (@akalongman) ([GHSA-8h9r-j624-v4jx](https://github.com/php-telegram-bot/core/security/advisories/GHSA-8h9r-j624-v4jx))
+- A bot that uses the webhook accepts a request from anyone who knows its URL until a secret token is configured, see [Securing the webhook](README.md#securing-the-webhook). (@akalongman)
 
 ## [0.84.0] - 2026-11-11
 ### Notes

@@ -113,4 +113,48 @@ class DBTest extends TestCase
         self::assertEquals(222, $row['chat_id']);
         self::assertNull($row['message_id']);
     }
+
+    /**
+     * @dataProvider forgedCallbackQueryIdsProvider
+     *
+     * @param int|string $message_id
+     * @param int|string $chat_id
+     */
+    public function testInsertCallbackQueryDoesNotRunForgedIdsAsSql($message_id, $chat_id): void
+    {
+        $update = new Update([
+            'update_id'      => 1004,
+            'callback_query' => [
+                'id'            => '5946640685727949872',
+                'from'          => ['id' => 111, 'is_bot' => false, 'first_name' => 'First'],
+                'message'       => [
+                    'chat'       => ['id' => $chat_id, 'type' => 'private', 'first_name' => 'First'],
+                    'message_id' => $message_id,
+                    'date'       => 0,
+                ],
+                'chat_instance' => '123',
+                'data'          => 'data',
+            ],
+        ], 'testbot');
+
+        DB::insertRequest($update);
+
+        $first_name = DB::getPdo()->query('SELECT `first_name` FROM `user` WHERE `id` = 111')->fetchColumn();
+        self::assertSame('First', $first_name, 'An id taken from the update must not run as SQL');
+    }
+
+    /**
+     * A webhook request can carry any JSON value where Telegram sends an integer.
+     *
+     * @return array<string, array{0: int|string, 1: int|string}>
+     */
+    public function forgedCallbackQueryIdsProvider(): array
+    {
+        $statement = "UPDATE `user` SET `first_name` = 'injected' WHERE `id` = 111";
+
+        return [
+            'message id' => ['0; ' . $statement . '; SELECT 1 FROM DUAL WHERE 1 = 1', 222],
+            'chat id'    => [43, '222; ' . $statement],
+        ];
+    }
 }

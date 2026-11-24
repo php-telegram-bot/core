@@ -62,6 +62,10 @@ class TelegramTest extends TestCase
         foreach ($this->custom_commands_paths as $custom_path) {
             rmdir($custom_path);
         }
+
+        unset($_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN']);
+        TestHelpers::setStaticProperty(TelegramLog::class, 'logger', null);
+        TestHelpers::setStaticProperty(TelegramLog::class, 'update_logger', null);
     }
 
     public function testNewInstanceWithoutApiKeyParam(): void
@@ -257,5 +261,268 @@ class TelegramTest extends TestCase
         $debug_log = file_get_contents($debug_log_file);
         self::assertStringContainsString('Invalid user, update denied.', $debug_log);
         file_exists($debug_log_file) && unlink($debug_log_file);
+    }
+
+    public function testWebhookSecretTokenIsEmptyByDefault(): void
+    {
+        self::assertSame('', $this->telegram->getWebhookSecretToken());
+    }
+
+    public function testSetWebhookSecretToken(): void
+    {
+        self::assertSame($this->telegram, $this->telegram->setWebhookSecretToken('Kq7_x-41'));
+        self::assertSame('Kq7_x-41', $this->telegram->getWebhookSecretToken());
+    }
+
+    public function testSetWebhookSecretTokenAcceptsTheLongestToken(): void
+    {
+        $token = str_repeat('aZ0_-', 51) . 'a';
+
+        self::assertSame(256, strlen($token));
+        self::assertSame($token, $this->telegram->setWebhookSecretToken($token)->getWebhookSecretToken());
+    }
+
+    /**
+     * @dataProvider invalidWebhookSecretTokenProvider
+     */
+    public function testSetWebhookSecretTokenRefusesWhatTelegramRefuses(string $token): void
+    {
+        $this->expectException(TelegramException::class);
+
+        $this->telegram->setWebhookSecretToken($token);
+    }
+
+    public function invalidWebhookSecretTokenProvider(): array
+    {
+        return [
+            'empty'            => [''],
+            'too long'         => [str_repeat('a', 257)],
+            'space'            => ['Kq7 x41'],
+            'dot'              => ['Kq7.x41'],
+            'non-ASCII letter' => ['Kq7_x-41ü'],
+            'trailing newline' => ["Kq7_x-41\n"],
+        ];
+    }
+
+    public function testRefusedWebhookSecretTokenKeepsThePreviousOne(): void
+    {
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+
+        try {
+            $this->telegram->setWebhookSecretToken('not a token');
+            self::fail('The token was accepted');
+        } catch (TelegramException $e) {
+            self::assertSame('Kq7_x-41', $this->telegram->getWebhookSecretToken());
+        }
+    }
+
+    public function testRefusedWebhookSecretTokenIsNotInTheExceptionMessage(): void
+    {
+        try {
+            $this->telegram->setWebhookSecretToken('Kq7 x41');
+            self::fail('The token was accepted');
+        } catch (TelegramException $e) {
+            self::assertStringNotContainsString('Kq7 x41', $e->getMessage());
+        }
+    }
+
+    public function testHandleProcessesRequestWithMatchingSecretToken(): void
+    {
+        $handler = $this->updateLogHandler();
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+        $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = 'Kq7_x-41';
+        $this->telegram->setCustomInput($this->webhookInput());
+
+        self::assertTrue($this->telegram->handle());
+        self::assertSame(77, $this->telegram->getLastUpdateId());
+        self::assertCount(1, $handler->getRecords());
+    }
+
+    /**
+     * @dataProvider refusedSecretTokenHeaderProvider
+     *
+     * @param mixed $header The header value, null for a request without the header
+     */
+    public function testHandleRefusesRequestWithoutMatchingSecretToken($header): void
+    {
+        $handler = $this->updateLogHandler();
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+        if ($header !== null) {
+            $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = $header;
+        }
+        $this->telegram->setCustomInput($this->webhookInput());
+
+        try {
+            $this->telegram->handle();
+            self::fail('The request was processed');
+        } catch (TelegramException $e) {
+            self::assertStringNotContainsString('Kq7_x-41', $e->getMessage());
+        }
+
+        self::assertNull($this->telegram->getLastUpdateId());
+        self::assertSame([], $handler->getRecords());
+    }
+
+    public function refusedSecretTokenHeaderProvider(): array
+    {
+        return [
+            'no header'      => [null],
+            'empty'          => [''],
+            'different'      => ['guess'],
+            'shorter'        => ['Kq7_x-4'],
+            'longer'         => ['Kq7_x-41x'],
+            'different case' => ['kq7_x-41'],
+            'leading space'  => [' Kq7_x-41'],
+            'not a string'   => [['Kq7_x-41']],
+        ];
+    }
+
+    /**
+     * @dataProvider anySecretTokenHeaderProvider
+     */
+    public function testHandleWithoutConfiguredSecretTokenProcessesEveryRequest(?string $header): void
+    {
+        if ($header !== null) {
+            $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = $header;
+        }
+        $this->telegram->setCustomInput($this->webhookInput());
+
+        self::assertTrue($this->telegram->handle());
+        self::assertSame(77, $this->telegram->getLastUpdateId());
+    }
+
+    public function anySecretTokenHeaderProvider(): array
+    {
+        return [
+            'no header'   => [null],
+            'some header' => ['anything'],
+        ];
+    }
+
+    public function testWebhookDataKeepsOnlyKnownParameters(): void
+    {
+        $data = $this->telegramExposingWebhookData()->webhookData(
+            'https://example.com/hook.php',
+            ['max_connections' => 5, 'unknown' => 1]
+        );
+
+        self::assertEquals(['url' => 'https://example.com/hook.php', 'max_connections' => 5], $data);
+    }
+
+    public function testWebhookDataCarriesTheConfiguredSecretToken(): void
+    {
+        $telegram = $this->telegramExposingWebhookData();
+        $telegram->setWebhookSecretToken('Kq7_x-41');
+
+        self::assertEquals(
+            ['url' => 'https://example.com/hook.php', 'secret_token' => 'Kq7_x-41'],
+            $telegram->webhookData('https://example.com/hook.php')
+        );
+    }
+
+    public function testWebhookDataPrefersTheSecretTokenPassedIn(): void
+    {
+        $telegram = $this->telegramExposingWebhookData();
+        $telegram->setWebhookSecretToken('Kq7_x-41');
+
+        $data = $telegram->webhookData('https://example.com/hook.php', ['secret_token' => 'Other-1']);
+
+        self::assertSame('Other-1', $data['secret_token']);
+    }
+
+    public function testWebhookDataHasNoSecretTokenWhenNoneIsConfigured(): void
+    {
+        $data = $this->telegramExposingWebhookData()->webhookData('https://example.com/hook.php');
+
+        self::assertArrayNotHasKey('secret_token', $data);
+    }
+
+    public function testSetWebhookWithConfiguredSecretToken(): void
+    {
+        $this->telegram->setWebhookSecretToken('Kq7_x-41');
+
+        self::assertTrue($this->telegram->setWebhook('https://example.com/hook.php')->isOk());
+    }
+
+    public function testSetWebhookBuildsItsDataWithBuildWebhookData(): void
+    {
+        $telegram = new class (self::$dummy_api_key, 'testbot') extends Telegram {
+            /**
+             * @var array|null The request parameters buildWebhookData() returned last
+             */
+            public $built_webhook_data;
+
+            /**
+             * Record the request parameters the parent builds and return them unchanged
+             *
+             * @param string $url
+             * @param array  $data
+             *
+             * @return array
+             */
+            protected function buildWebhookData(string $url, array $data): array
+            {
+                return $this->built_webhook_data = parent::buildWebhookData($url, $data);
+            }
+        };
+        $telegram->setWebhookSecretToken('Kq7_x-41');
+
+        self::assertTrue($telegram->setWebhook('https://example.com/hook.php')->isOk());
+        self::assertSame('Kq7_x-41', $telegram->built_webhook_data['secret_token'] ?? null);
+    }
+
+    /**
+     * Return the JSON body of a webhook request that carries a plain text message
+     *
+     * @return string
+     */
+    private function webhookInput(): string
+    {
+        return json_encode([
+            'update_id' => 77,
+            'message'   => [
+                'message_id' => 1,
+                'date'       => 1700000000,
+                'from'       => ['id' => 1, 'is_bot' => false, 'first_name' => 'a'],
+                'chat'       => ['id' => 1, 'type' => 'private'],
+                'text'       => 'hello',
+            ],
+        ], JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * Send the update log to a test handler and return that handler
+     *
+     * @return \Monolog\Handler\TestHandler
+     */
+    private function updateLogHandler(): \Monolog\Handler\TestHandler
+    {
+        $handler = new \Monolog\Handler\TestHandler();
+        TelegramLog::initialize(null, new \Monolog\Logger('updates', [$handler]));
+
+        return $handler;
+    }
+
+    /**
+     * Return a Telegram object that exposes the request parameters setWebhook() sends
+     *
+     * @return Telegram
+     */
+    private function telegramExposingWebhookData(): Telegram
+    {
+        return new class (self::$dummy_api_key, 'testbot') extends Telegram {
+            /**
+             * Return the request parameters setWebhook() would send for these arguments
+             *
+             * @param string $url
+             * @param array  $data
+             *
+             * @return array
+             */
+            public function webhookData(string $url, array $data = []): array
+            {
+                return $this->buildWebhookData($url, $data);
+            }
+        };
     }
 }

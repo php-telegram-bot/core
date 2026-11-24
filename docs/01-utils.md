@@ -53,6 +53,8 @@ This behaviour can be changed by setting the appropriate variable:
 \Longman\TelegramBot\TelegramLog::$remove_bot_token = false;
 ```
 
+A `secret_token` in the logged request data, such as the webhook secret token that `setWebhook()` sends, is replaced with `SECRET_TOKEN_REMOVED` unless it is `null` or an empty string. Setting `$remove_bot_token` to `false` does not change this.
+
 [PSR-3]: https://www.php-fig.org/psr/psr-3
 [PSR-3-providers]: https://packagist.org/providers/psr/log-implementation
 [Monolog]: https://github.com/Seldaek/monolog
